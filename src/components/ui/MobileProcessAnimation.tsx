@@ -4,7 +4,7 @@ interface MobileProcessAnimationProps {
     activeStep: number
     scrollProgress: number
     glowColor: string
-    IconComponent: React.ElementType
+    IconComponent: React.ComponentType<any>
     totalSteps: number
 }
 
