@@ -3,7 +3,9 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { ScrollModel3D } from '@/components/ui/ScrollModel3D'
+import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
 import { Search, Lightbulb, Cpu, Rocket, BarChart, ArrowRight } from 'lucide-react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const steps = [
     {
@@ -62,6 +64,7 @@ export function ConnectionSection() {
     const containerRef = useRef<HTMLElement>(null)
     const [scrollProgress, setScrollProgress] = useState(0)
     const [activeStep, setActiveStep] = useState(0)
+    const isMobile = useIsMobile()
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -129,10 +132,20 @@ export function ConnectionSection() {
                                 }}
                                 transition={{ duration: 0.8 }}
                             />
-                            <ScrollModel3D
-                                scrollProgress={scrollProgress}
-                                className="relative z-10"
-                            />
+                            {!isMobile ? (
+                                <ScrollModel3D
+                                    scrollProgress={scrollProgress}
+                                    className="relative z-10"
+                                />
+                            ) : (
+                                <MobileProcessAnimation
+                                    activeStep={activeStep}
+                                    scrollProgress={scrollProgress}
+                                    glowColor={steps[activeStep].glowColor}
+                                    IconComponent={steps[activeStep].icon}
+                                    totalSteps={steps.length}
+                                />
+                            )}
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
                                 <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
@@ -186,20 +199,18 @@ export function ConnectionSection() {
                                                 scale: isActive ? 1 : 0.98,
                                             }}
                                             transition={{ duration: 0.4 }}
-                                            className={`relative flex items-start gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl transition-colors duration-300 ${
-                                                isActive ? 'bg-white/5' : ''
-                                            }`}
+                                            className={`relative flex items-start gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl transition-colors duration-300 ${isActive ? 'bg-white/5' : ''
+                                                }`}
                                         >
                                             {/* Icon */}
                                             <div className="relative z-10 flex-shrink-0">
                                                 <div
-                                                    className={`w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-500 ${
-                                                        isActive
-                                                            ? `bg-gradient-to-br ${step.color} shadow-lg`
-                                                            : isPast
-                                                                ? 'bg-neutral-800'
-                                                                : 'bg-neutral-900 border border-neutral-800'
-                                                    }`}
+                                                    className={`w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-500 ${isActive
+                                                        ? `bg-gradient-to-br ${step.color} shadow-lg`
+                                                        : isPast
+                                                            ? 'bg-neutral-800'
+                                                            : 'bg-neutral-900 border border-neutral-800'
+                                                        }`}
                                                 >
                                                     <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${isActive || isPast ? 'text-white' : 'text-neutral-500'}`} />
                                                 </div>
@@ -366,13 +377,12 @@ export function ConnectionSection() {
                     {steps.map((step, index) => (
                         <motion.div
                             key={step.id}
-                            className={`h-1 rounded-full transition-all duration-500 ${
-                                index === activeStep
-                                    ? `w-6 sm:w-8 bg-gradient-to-r ${step.color}`
-                                    : index < activeStep
-                                        ? 'w-3 sm:w-4 bg-neutral-600'
-                                        : 'w-3 sm:w-4 bg-neutral-800'
-                            }`}
+                            className={`h-1 rounded-full transition-all duration-500 ${index === activeStep
+                                ? `w-6 sm:w-8 bg-gradient-to-r ${step.color}`
+                                : index < activeStep
+                                    ? 'w-3 sm:w-4 bg-neutral-600'
+                                    : 'w-3 sm:w-4 bg-neutral-800'
+                                }`}
                         />
                     ))}
                 </div>

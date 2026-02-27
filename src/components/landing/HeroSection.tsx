@@ -5,9 +5,11 @@ import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null)
+    const isMobile = useIsMobile()
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ['start start', 'end start']
@@ -277,10 +279,12 @@ export function HeroSection() {
 
                         {/* Spline container with explicit z-index and pointer events */}
                         <div className="relative z-20 w-full h-full">
-                            <SplineScene
-                                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                                className="w-full h-full cursor-pointer"
-                            />
+                            {!isMobile && (
+                                <SplineScene
+                                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                                    className="w-full h-full cursor-pointer"
+                                />
+                            )}
                         </div>
                     </motion.div>
                 </div>
