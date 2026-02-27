@@ -13,17 +13,17 @@ export function MobileProcessAnimation({ activeStep, scrollProgress, glowColor, 
     return (
         <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
             {/* Base SVG Grid/Circles */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 -20 400 240" preserveAspectRatio="xMidYMid">
                 {/* Central connecting lines that animate based on scroll */}
                 <motion.path
-                    d="M 50,150 Q 200,50 350,150"
+                    d="M 50,100 Q 200,30 350,100"
                     fill="transparent"
                     stroke={`rgba(255, 255, 255, 0.1)`}
                     strokeWidth="2"
                     strokeDasharray="4 4"
                 />
                 <motion.path
-                    d="M 50,150 Q 200,250 350,150"
+                    d="M 50,100 Q 200,170 350,100"
                     fill="transparent"
                     stroke={`rgba(255, 255, 255, 0.1)`}
                     strokeWidth="2"
@@ -32,7 +32,7 @@ export function MobileProcessAnimation({ activeStep, scrollProgress, glowColor, 
 
                 {/* Animated progress lines */}
                 <motion.path
-                    d="M 50,150 Q 200,50 350,150"
+                    d="M 50,100 Q 200,30 350,100"
                     fill="transparent"
                     stroke={glowColor}
                     strokeWidth="3"
@@ -42,7 +42,7 @@ export function MobileProcessAnimation({ activeStep, scrollProgress, glowColor, 
                     }}
                 />
                 <motion.path
-                    d="M 50,150 Q 200,250 350,150"
+                    d="M 50,100 Q 200,170 350,100"
                     fill="transparent"
                     stroke={glowColor}
                     strokeWidth="3"
@@ -62,23 +62,23 @@ export function MobileProcessAnimation({ activeStep, scrollProgress, glowColor, 
                         <g key={step}>
                             <motion.circle
                                 cx={cx}
-                                cy={150}
-                                r={isActive ? 16 : 10}
-                                fill={isActive ? glowColor : isPast ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.2)'}
-                                animate={{
-                                    scale: isActive ? [1, 1.2, 1] : 1,
-                                    opacity: isActive ? 1 : 0.5,
-                                }}
-                                transition={{
-                                    repeat: isActive ? Infinity : 0,
-                                    duration: 2,
-                                    ease: "easeInOut"
-                                }}
+                                cy="100"
+                                r={isActive ? 12 : 8}
+                                fill={isActive ? glowColor : isPast ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)'}
+                                className="transition-all duration-300"
                             />
+                            {/* Inner dot */}
+                            <circle
+                                cx={cx}
+                                cy="100"
+                                r="3"
+                                fill={isActive ? '#fff' : isPast ? '#ccc' : '#666'}
+                            />
+                            {/* Pulsing effect for active */}
                             {isActive && (
                                 <motion.circle
                                     cx={cx}
-                                    cy={150}
+                                    cy="100"
                                     r={24}
                                     fill="transparent"
                                     stroke={glowColor}

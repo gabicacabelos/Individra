@@ -87,7 +87,7 @@ export function ConnectionSection() {
             ref={containerRef}
             id="proceso"
             className="relative bg-black"
-            style={{ height: '500vh' }}
+            style={{ height: isMobile ? '350vh' : '500vh' }}
         >
             {/* Sticky container */}
             <div className="sticky top-0 h-screen overflow-hidden">
@@ -117,11 +117,11 @@ export function ConnectionSection() {
 
                 {/* Content */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="h-full flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-16 pt-14 sm:pt-20 lg:pt-0">
+                    <div className="h-full flex flex-col justify-center lg:flex-row lg:items-center gap-2 sm:gap-4 lg:gap-16 pt-4 sm:pt-10 lg:pt-0">
 
                         {/* Mobile: 3D Model at top */}
                         <motion.div
-                            className="lg:hidden relative h-[200px] sm:h-[250px] flex-shrink-0"
+                            className="lg:hidden relative h-[140px] sm:h-[200px] flex-shrink-0"
                             style={{ opacity: modelOpacity }}
                         >
                             {/* Glow effect */}
@@ -156,7 +156,7 @@ export function ConnectionSection() {
                         </motion.div>
 
                         {/* Text content */}
-                        <motion.div className="flex-1 space-y-3 lg:space-y-6">
+                        <motion.div className="flex-none lg:flex-1 space-y-2 lg:space-y-6 pb-2 sm:pb-0">
                             {/* Section header */}
                             <motion.div style={{ y: titleY, opacity: titleOpacity }}>
                                 <span className="text-violet-400 text-xs sm:text-sm font-semibold uppercase tracking-widest">
@@ -199,7 +199,7 @@ export function ConnectionSection() {
                                                 scale: isActive ? 1 : 0.98,
                                             }}
                                             transition={{ duration: 0.4 }}
-                                            className={`relative flex items-start gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl transition-colors duration-300 ${isActive ? 'bg-white/5' : ''
+                                            className={`relative flex items-start gap-3 sm:gap-4 py-1.5 px-2 sm:p-3 rounded-xl transition-colors duration-300 ${isActive ? 'bg-white/5' : ''
                                                 }`}
                                         >
                                             {/* Icon */}
@@ -270,7 +270,7 @@ export function ConnectionSection() {
                                     opacity: useTransform(scrollYProgress, [0.8, 0.95], [0, 1]),
                                     y: useTransform(scrollYProgress, [0.8, 0.95], [20, 0]),
                                 }}
-                                className="pt-2"
+                                className="pt-1 sm:pt-4"
                             >
                                 <a
                                     href="#contacto"

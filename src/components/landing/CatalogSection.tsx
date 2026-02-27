@@ -106,7 +106,7 @@ export function CatalogSection() {
     }
 
     return (
-        <section ref={sectionRef} id="soluciones" className="relative py-32 bg-black overflow-hidden">
+        <section ref={sectionRef} id="soluciones" className="relative pt-4 pb-24 md:py-32 bg-black overflow-hidden">
             {/* Background */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent" />
 
@@ -116,7 +116,7 @@ export function CatalogSection() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="text-center mb-10 md:mb-16"
                 >
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -149,119 +149,120 @@ export function CatalogSection() {
                     >
                         Seleccioná tu industria y descubrí qué podemos automatizar.
                     </motion.p>
-                </motion.div>
+                </motion.div >
 
                 {/* Accordion */}
-                <motion.div
+                < motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.5 }}
                     className="space-y-4"
                 >
-                    {categories.map((category, categoryIndex) => {
-                        const CategoryIcon = category.icon
-                        const isExpanded = expandedId === category.id
+                    {
+                        categories.map((category, categoryIndex) => {
+                            const CategoryIcon = category.icon
+                            const isExpanded = expandedId === category.id
 
-                        return (
-                            <motion.div
-                                key={category.id}
-                                initial={{ opacity: 0, x: -30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: categoryIndex * 0.1 }}
-                                className="rounded-2xl border border-white/10 bg-neutral-900/50 backdrop-blur-sm overflow-hidden"
-                            >
-                                {/* Header */}
-                                <motion.button
-                                    onClick={() => toggleCategory(category.id)}
-                                    className="w-full p-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
-                                    whileTap={{ scale: 0.99 }}
+                            return (
+                                <motion.div
+                                    key={category.id}
+                                    initial={{ opacity: 0, x: -30 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: categoryIndex * 0.1 }}
+                                    className="rounded-2xl border border-white/10 bg-neutral-900/50 backdrop-blur-sm overflow-hidden"
                                 >
-                                    <div className="flex items-center gap-4">
-                                        <motion.div
-                                            animate={{
-                                                scale: isExpanded ? 1.1 : 1,
-                                                rotate: isExpanded ? 5 : 0,
-                                            }}
-                                            transition={{ type: 'spring', stiffness: 300 }}
-                                            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center`}
-                                        >
-                                            <CategoryIcon className="w-6 h-6 text-white" />
-                                        </motion.div>
-                                        <div className="text-left">
-                                            <h3 className="text-lg font-semibold text-white">{category.label}</h3>
-                                            <p className="text-neutral-500 text-sm">{category.items.length} automatizaciones</p>
-                                        </div>
-                                    </div>
-                                    <motion.div
-                                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                                            isExpanded ? 'bg-violet-500/20 text-violet-400' : 'bg-neutral-800 text-neutral-400'
-                                        }`}
+                                    {/* Header */}
+                                    <motion.button
+                                        onClick={() => toggleCategory(category.id)}
+                                        className="w-full p-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                                        whileTap={{ scale: 0.99 }}
                                     >
-                                        <ChevronDown className="w-5 h-5" />
-                                    </motion.div>
-                                </motion.button>
-
-                                {/* Content */}
-                                <AnimatePresence>
-                                    {isExpanded && (
+                                        <div className="flex items-center gap-4">
+                                            <motion.div
+                                                animate={{
+                                                    scale: isExpanded ? 1.1 : 1,
+                                                    rotate: isExpanded ? 5 : 0,
+                                                }}
+                                                transition={{ type: 'spring', stiffness: 300 }}
+                                                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center`}
+                                            >
+                                                <CategoryIcon className="w-6 h-6 text-white" />
+                                            </motion.div>
+                                            <div className="text-left">
+                                                <h3 className="text-lg font-semibold text-white">{category.label}</h3>
+                                                <p className="text-neutral-500 text-sm">{category.items.length} automatizaciones</p>
+                                            </div>
+                                        </div>
                                         <motion.div
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{ height: 'auto', opacity: 1 }}
-                                            exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                                            className="overflow-hidden"
+                                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                                            transition={{ duration: 0.3 }}
+                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isExpanded ? 'bg-violet-500/20 text-violet-400' : 'bg-neutral-800 text-neutral-400'
+                                                }`}
                                         >
-                                            <div className="px-5 pb-5 pt-2 grid sm:grid-cols-2 gap-3">
-                                                {category.items.map((item, itemIndex) => {
-                                                    const ItemIcon = item.icon
+                                            <ChevronDown className="w-5 h-5" />
+                                        </motion.div>
+                                    </motion.button>
 
-                                                    return (
-                                                        <motion.div
-                                                            key={itemIndex}
-                                                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                            transition={{
-                                                                delay: itemIndex * 0.08,
-                                                                duration: 0.4,
-                                                                ease: [0.23, 1, 0.32, 1]
-                                                            }}
-                                                            whileHover={{
-                                                                scale: 1.02,
-                                                                backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                                                            }}
-                                                            className="p-4 rounded-xl border border-white/5 bg-neutral-900/50 cursor-default transition-colors"
-                                                        >
-                                                            <div className="flex items-start gap-3">
-                                                                <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${category.color} bg-opacity-20 flex items-center justify-center flex-shrink-0`}>
-                                                                    <ItemIcon className="w-4 h-4 text-white" />
-                                                                </div>
-                                                                <div className="flex-1 min-w-0">
-                                                                    <h4 className="font-medium text-white text-sm">{item.title}</h4>
-                                                                    <p className="text-neutral-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
-                                                                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20">
-                                                                        <Sparkles className="w-3 h-3 text-violet-400" />
-                                                                        <span className="text-xs text-violet-300">{item.benefit}</span>
+                                    {/* Content */}
+                                    <AnimatePresence>
+                                        {isExpanded && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="px-5 pb-5 pt-2 grid sm:grid-cols-2 gap-3">
+                                                    {category.items.map((item, itemIndex) => {
+                                                        const ItemIcon = item.icon
+
+                                                        return (
+                                                            <motion.div
+                                                                key={itemIndex}
+                                                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                                transition={{
+                                                                    delay: itemIndex * 0.08,
+                                                                    duration: 0.4,
+                                                                    ease: [0.23, 1, 0.32, 1]
+                                                                }}
+                                                                whileHover={{
+                                                                    scale: 1.02,
+                                                                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                                                }}
+                                                                className="p-4 rounded-xl border border-white/5 bg-neutral-900/50 cursor-default transition-colors"
+                                                            >
+                                                                <div className="flex items-start gap-3">
+                                                                    <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${category.color} bg-opacity-20 flex items-center justify-center flex-shrink-0`}>
+                                                                        <ItemIcon className="w-4 h-4 text-white" />
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <h4 className="font-medium text-white text-sm">{item.title}</h4>
+                                                                        <p className="text-neutral-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
+                                                                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20">
+                                                                            <Sparkles className="w-3 h-3 text-violet-400" />
+                                                                            <span className="text-xs text-violet-300">{item.benefit}</span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </motion.div>
-                                                    )
-                                                })}
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </motion.div>
-                        )
-                    })}
-                </motion.div>
+                                                            </motion.div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            )
+                        })
+                    }
+                </motion.div >
 
                 {/* Custom Solution CTA */}
-                <motion.div
+                < motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -302,8 +303,8 @@ export function CatalogSection() {
                             </a>
                         </div>
                     </motion.div>
-                </motion.div>
-            </div>
-        </section>
+                </motion.div >
+            </div >
+        </section >
     )
 }
