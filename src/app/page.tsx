@@ -2,8 +2,8 @@ import {
     Navbar,
     HeroSection,
     ServicesSection,
+    ConnectionSection,
     CatalogSection,
-    ProcessSection,
     FAQSection,
     ContactSection,
     Footer,
@@ -16,8 +16,8 @@ export default function Home() {
             <Navbar />
             <HeroSection />
             <ServicesSection />
+            <ConnectionSection />
             <CatalogSection />
-            <ProcessSection />
             <FAQSection />
             <ContactSection />
             <Footer />
