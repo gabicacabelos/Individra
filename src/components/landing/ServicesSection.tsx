@@ -32,10 +32,10 @@ const services = [
     },
 ]
 
-// SVG Filter for electric effect - one per card color
+// SVG Filter for electric effect - ONLY FOR DESKTOP
 function ElectricFilters() {
     return (
-        <svg className="absolute w-0 h-0" aria-hidden="true">
+        <svg className="absolute w-0 h-0 hidden lg:block" aria-hidden="true">
             <defs>
                 {services.map((_, index) => (
                     <filter
@@ -79,7 +79,7 @@ function ElectricFilters() {
     )
 }
 
-// Desktop Card with dramatic electric border
+// Desktop Card with dramatic electric border (heavy effect - OK for desktop)
 function DesktopCard({ service, index }: { service: typeof services[0], index: number }) {
     const [isHovered, setIsHovered] = useState(false)
     const [showShine, setShowShine] = useState(false)
@@ -102,14 +102,8 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className="relative cursor-pointer group"
-            style={{
-                '--electric-color': service.electricColor,
-                '--electric-rgb': service.electricColorRgb,
-            } as React.CSSProperties}
         >
-            {/* Card Container with electric effect */}
             <div
-                className="electric-card-container"
                 style={{
                     padding: '2px',
                     borderRadius: '24px',
@@ -117,9 +111,7 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                     background: `linear-gradient(-30deg, rgba(${service.electricColorRgb}, 0.3), transparent, rgba(${service.electricColorRgb}, 0.3)), linear-gradient(to bottom, rgb(23, 23, 23), rgb(23, 23, 23))`,
                 }}
             >
-                {/* Inner container with borders */}
                 <div className="relative">
-                    {/* Outer border */}
                     <div
                         style={{
                             border: `2px solid rgba(${service.electricColorRgb}, 0.5)`,
@@ -128,9 +120,7 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                             paddingBottom: '4px',
                         }}
                     >
-                        {/* Main electric border - the one with filter */}
                         <div
-                            className="electric-main-border"
                             style={{
                                 width: '100%',
                                 height: '340px',
@@ -143,7 +133,6 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                         />
                     </div>
 
-                    {/* Glow layer 1 */}
                     <div
                         style={{
                             border: `2px solid rgba(${service.electricColorRgb}, 0.6)`,
@@ -154,8 +143,6 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                             pointerEvents: 'none',
                         }}
                     />
-
-                    {/* Glow layer 2 */}
                     <div
                         style={{
                             border: `2px solid ${service.electricColor}`,
@@ -168,14 +155,8 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                     />
                 </div>
 
-
-
-                {/* Content */}
                 <div className="absolute inset-0 p-8 flex flex-col">
-                    {/* Shine effect */}
-                    <div
-                        className={`absolute inset-0 pointer-events-none overflow-hidden rounded-3xl transition-opacity duration-300 ${showShine ? 'opacity-100' : 'opacity-0'}`}
-                    >
+                    <div className={`absolute inset-0 pointer-events-none overflow-hidden rounded-3xl transition-opacity duration-300 ${showShine ? 'opacity-100' : 'opacity-0'}`}>
                         <div
                             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                             style={{ animation: showShine ? 'shinePass 0.8s ease-out' : 'none' }}
@@ -191,7 +172,6 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
                     </motion.div>
 
                     <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
-
                     <p className={`leading-relaxed transition-colors duration-300 ${isHovered ? 'text-neutral-300' : 'text-neutral-400'}`}>
                         {service.description}
                     </p>
@@ -208,54 +188,69 @@ function DesktopCard({ service, index }: { service: typeof services[0], index: n
     )
 }
 
-// Mobile 3D Carousel
+// Mobile Carousel - Optimized for performance
 function MobileCarousel() {
     const [activeIndex, setActiveIndex] = useState(1)
 
     const goToPrev = () => setActiveIndex((prev) => (prev === 0 ? services.length - 1 : prev - 1))
     const goToNext = () => setActiveIndex((prev) => (prev === services.length - 1 ? 0 : prev + 1))
 
-    const getCardStyle = (index: number) => {
-        const diff = index - activeIndex
-        const normalizedDiff = ((diff + services.length + 1) % services.length) - 1
-
-        if (normalizedDiff === 0) {
-            return { transform: 'translateX(0) scale(1) translateZ(0)', zIndex: 30, opacity: 1 }
-        } else if (normalizedDiff === -1 || (activeIndex === 0 && index === services.length - 1)) {
-            return { transform: 'translateX(-60%) scale(0.8) translateZ(-100px)', zIndex: 10, opacity: 0.5 }
-        } else if (normalizedDiff === 1 || (activeIndex === services.length - 1 && index === 0)) {
-            return { transform: 'translateX(60%) scale(0.8) translateZ(-100px)', zIndex: 10, opacity: 0.5 }
-        }
-        return { transform: 'translateX(0) scale(0.5)', zIndex: 0, opacity: 0 }
-    }
-
     return (
-        <div className="relative px-4">
-            <div className="relative h-[380px] flex items-center justify-center" style={{ perspective: '1000px' }}>
+        <div className="relative px-4" style={{ contain: 'layout style' }}>
+            <div
+                className="relative h-[360px] flex items-center justify-center"
+                style={{ perspective: '800px' }}
+            >
                 {services.map((service, index) => {
-                    const style = getCardStyle(index)
                     const isActive = index === activeIndex
+                    const isPrev = index === (activeIndex === 0 ? services.length - 1 : activeIndex - 1)
+                    const isNext = index === (activeIndex === services.length - 1 ? 0 : activeIndex + 1)
+
+                    let transform = 'translateX(0) scale(0.6)'
+                    let zIndex = 0
+                    let opacity = 0
+
+                    if (isActive) {
+                        transform = 'translateX(0) scale(1)'
+                        zIndex = 30
+                        opacity = 1
+                    } else if (isPrev) {
+                        transform = 'translateX(-55%) scale(0.75)'
+                        zIndex = 10
+                        opacity = 0.5
+                    } else if (isNext) {
+                        transform = 'translateX(55%) scale(0.75)'
+                        zIndex = 10
+                        opacity = 0.5
+                    }
 
                     return (
                         <div
                             key={index}
-                            className="absolute w-[280px] transition-all duration-500 ease-out cursor-pointer"
-                            style={{ ...style, transformStyle: 'preserve-3d' }}
+                            className="absolute w-[270px]"
+                            style={{
+                                transform,
+                                zIndex,
+                                opacity,
+                                transition: 'transform 0.4s ease-out, opacity 0.4s ease-out',
+                                willChange: 'transform, opacity',
+                            }}
                             onClick={() => setActiveIndex(index)}
                         >
-                            <MobileCard service={service} index={index} isActive={isActive} />
+                            <MobileCard service={service} isActive={isActive} />
                         </div>
                     )
                 })}
             </div>
 
             {/* Navigation */}
-            <div className="flex justify-center items-center gap-6 mt-4">
+            <div className="flex justify-center items-center gap-6 mt-2">
                 <button
                     onClick={goToPrev}
-                    className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95 transition-transform"
+                    className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
+                    style={{ transition: 'transform 0.15s' }}
                 >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-5 h-5" />
                 </button>
 
                 <div className="flex gap-2">
@@ -263,125 +258,99 @@ function MobileCarousel() {
                         <button
                             key={index}
                             onClick={() => setActiveIndex(index)}
-                            className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-6 bg-violet-500' : 'w-2 bg-white/30'}`}
+                            className="h-2 rounded-full"
+                            style={{
+                                width: index === activeIndex ? '24px' : '8px',
+                                backgroundColor: index === activeIndex ? '#8b5cf6' : 'rgba(255,255,255,0.3)',
+                                transition: 'width 0.3s, background-color 0.3s',
+                            }}
                         />
                     ))}
                 </div>
 
                 <button
                     onClick={goToNext}
-                    className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95 transition-transform"
+                    className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
+                    style={{ transition: 'transform 0.15s' }}
                 >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-5 h-5" />
                 </button>
             </div>
         </div>
     )
 }
 
-// Mobile Card with electric border
-function MobileCard({ service, index, isActive }: { service: typeof services[0], index: number, isActive: boolean }) {
+// Mobile Card - CSS electric border (NO SVG filter - much lighter)
+function MobileCard({ service, isActive }: { service: typeof services[0], isActive: boolean }) {
     const Icon = service.icon
-    const [showShine, setShowShine] = useState(false)
-
-    useEffect(() => {
-        if (!isActive) return
-        const interval = setInterval(() => {
-            setShowShine(true)
-            setTimeout(() => setShowShine(false), 600)
-        }, 4000)
-        return () => clearInterval(interval)
-    }, [isActive])
 
     return (
         <div
-            className="relative h-[320px]"
-            style={{
-                '--electric-color': service.electricColor,
-                '--electric-rgb': service.electricColorRgb,
-            } as React.CSSProperties}
+            className="relative h-[300px]"
+            style={{ contain: 'layout style paint' }}
         >
-            {/* Electric border container */}
+            {/* CSS Electric Border - GPU accelerated */}
             <div
-                style={{
-                    padding: '2px',
-                    borderRadius: '20px',
-                    position: 'relative',
-                    background: `linear-gradient(-30deg, rgba(${service.electricColorRgb}, 0.25), transparent, rgba(${service.electricColorRgb}, 0.25)), linear-gradient(to bottom, rgb(23, 23, 23), rgb(23, 23, 23))`,
-                }}
+                className="absolute inset-0 rounded-[18px] overflow-hidden"
+                style={{ padding: '2px' }}
             >
-                <div className="relative">
-                    {/* Outer border */}
-                    <div
-                        style={{
-                            border: `1.5px solid rgba(${service.electricColorRgb}, 0.4)`,
-                            borderRadius: '20px',
-                            paddingRight: '3px',
-                            paddingBottom: '3px',
-                        }}
-                    >
-                        {/* Main electric border */}
-                        <div
-                            style={{
-                                width: '100%',
-                                height: '310px',
-                                borderRadius: '20px',
-                                border: `1.5px solid ${service.electricColor}`,
-                                marginTop: '-3px',
-                                marginLeft: '-3px',
-                                filter: `url(#electric-filter-${index})`,
-                            }}
-                        />
-                    </div>
+                <div
+                    className="electric-border-mobile"
+                    style={{
+                        '--electric-color': service.electricColor,
+                    } as React.CSSProperties}
+                />
+            </div>
 
-                    {/* Glow layers */}
-                    <div
-                        style={{
-                            border: `1.5px solid rgba(${service.electricColorRgb}, 0.5)`,
-                            borderRadius: '20px',
-                            position: 'absolute',
-                            inset: 0,
-                            filter: 'blur(1px)',
-                            pointerEvents: 'none',
-                        }}
-                    />
-                    <div
-                        style={{
-                            border: `1.5px solid ${service.electricColor}`,
-                            borderRadius: '20px',
-                            position: 'absolute',
-                            inset: 0,
-                            filter: 'blur(3px)',
-                            pointerEvents: 'none',
-                        }}
-                    />
-                </div>
-
-
+            {/* Card background */}
+            <div
+                className="relative h-full rounded-[18px] bg-neutral-900/95 border border-white/5 overflow-hidden"
+                style={{ margin: '2px' }}
+            >
                 {/* Content */}
-                <div className="absolute inset-0 p-6 flex flex-col overflow-hidden rounded-[20px]">
-                    {/* Shine */}
-                    {showShine && (
-                        <div
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -skew-x-12 pointer-events-none"
-                            style={{ animation: 'mobileShine 0.6s ease-out' }}
-                        />
-                    )}
-
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 shadow-lg`}>
-                        <Icon className="w-6 h-6 text-white" />
+                <div className="p-5 flex flex-col h-full">
+                    <div
+                        className={`w-11 h-11 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4`}
+                        style={{ boxShadow: `0 4px 20px rgba(${service.electricColorRgb}, 0.3)` }}
+                    >
+                        <Icon className="w-5 h-5 text-white" />
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-
+                    <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
                     <p className="text-neutral-400 text-sm leading-relaxed">{service.description}</p>
                 </div>
+
+                {/* Subtle glow line at top */}
+                <div
+                    className="absolute top-0 left-4 right-4 h-px"
+                    style={{
+                        background: `linear-gradient(90deg, transparent, ${service.electricColor}, transparent)`,
+                        opacity: isActive ? 0.6 : 0.3,
+                        transition: 'opacity 0.3s',
+                    }}
+                />
             </div>
 
             <style jsx>{`
-                @keyframes mobileShine {
-                    from { transform: translateX(-100%) skewX(-12deg); }
-                    to { transform: translateX(200%) skewX(-12deg); }
+                .electric-border-mobile {
+                    position: absolute;
+                    inset: -50%;
+                    background: conic-gradient(
+                        from 0deg,
+                        transparent 0deg,
+                        var(--electric-color) 20deg,
+                        transparent 60deg,
+                        transparent 170deg,
+                        var(--electric-color) 190deg,
+                        transparent 230deg,
+                        transparent 360deg
+                    );
+                    animation: electricSpinMobile 3s linear infinite;
+                    will-change: transform;
+                }
+                @keyframes electricSpinMobile {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
                 }
             `}</style>
         </div>
@@ -400,7 +369,7 @@ export function ServicesSection() {
 
     return (
         <section ref={sectionRef} id="servicios" className="relative py-24 lg:py-32 bg-black overflow-hidden">
-            {/* SVG Filters for electric effect */}
+            {/* SVG Filters - DESKTOP ONLY */}
             <ElectricFilters />
 
             {/* Mobile animated background */}
@@ -422,45 +391,21 @@ export function ServicesSection() {
 
             <div className="relative z-10">
                 {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="text-center mb-16 px-6"
-                >
-                    <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="inline-block text-violet-400 text-sm font-semibold uppercase tracking-widest"
-                    >
+                <div className="text-center mb-12 lg:mb-16 px-6">
+                    <span className="inline-block text-violet-400 text-sm font-semibold uppercase tracking-widest">
                         Nuestros Servicios
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                        className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white"
-                    >
+                    </span>
+                    <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
                         Servicios que{' '}
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
                             impulsan tu negocio
                         </span>
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.4 }}
-                        className="mt-6 text-neutral-400 text-base lg:text-lg max-w-2xl mx-auto"
-                    >
+                    </h2>
+                    <p className="mt-6 text-neutral-400 text-base lg:text-lg max-w-2xl mx-auto">
                         Combinamos inteligencia artificial con desarrollo de software para crear
                         soluciones personalizadas que transforman tu operación.
-                    </motion.p>
-                </motion.div>
+                    </p>
+                </div>
 
                 {/* Desktop Grid */}
                 <div className="hidden lg:block max-w-7xl mx-auto px-6">
