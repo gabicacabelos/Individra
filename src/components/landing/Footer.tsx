@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react'
+import { Mail, MapPin, ArrowUpRight } from 'lucide-react'
 
 const navigation = {
     main: [
@@ -52,7 +52,7 @@ export function Footer() {
                                 alt="INDIVIDRA"
                                 width={280}
                                 height={100}
-                                className="h-24 w-auto"
+                                className="h-32 w-auto"
                             />
                         </motion.a>
                         <p className="mt-4 text-neutral-400 text-sm leading-relaxed">
@@ -142,19 +142,6 @@ export function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="https://wa.me/5491100000000"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-sm group"
-                                >
-                                    <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-violet-500/50 transition-colors">
-                                        <Phone className="w-4 h-4" />
-                                    </div>
-                                    +54 9 11 0000-0000
-                                </a>
-                            </li>
-                            <li>
                                 <div className="flex items-center gap-3 text-neutral-400 text-sm">
                                     <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center">
                                         <MapPin className="w-4 h-4" />
@@ -206,7 +193,7 @@ export function Footer() {
                                 alt="INDIVIDRA Logo"
                                 width={70}
                                 height={70}
-                                className="h-16 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300"
+                                className="h-20 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300"
                             />
                         </motion.div>
                     </div>

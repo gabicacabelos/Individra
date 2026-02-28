@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
         // Enviar email
         const { data, error } = await resend.emails.send({
-            from: 'Individra <onboarding@resend.dev>', // Cambia esto cuando verifiques tu dominio
+            from: 'Individra <contacto@individratec.com>',
             to: ['individratec@gmail.com'],
             subject: `Nuevo contacto de ${nombre} - Individra`,
             html: `
