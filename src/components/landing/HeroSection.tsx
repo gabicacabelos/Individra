@@ -109,7 +109,7 @@ export function HeroSection() {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, delay: 0.3 }}
-                        className="flex-1 relative h-[320px] sm:h-[420px] lg:h-[600px] w-full mt-2 sm:mt-10 lg:mt-0"
+                        className="flex-1 relative h-[420px] sm:h-[520px] lg:h-[600px] w-full mt-2 sm:mt-10 lg:mt-0"
                     >
                         {/* Glow effect - pointer-events-none to not block robot interaction */}
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
