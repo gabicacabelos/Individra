@@ -81,12 +81,12 @@ export function HeroSection() {
                             </h1>
 
                             {/* Mobile Animation - Between title and subtitle */}
-                            <div className="lg:hidden my-8 sm:my-10">
+                            <div className="lg:hidden my-2 sm:my-4 -mb-4 sm:-mb-6">
                                 <MobileHeroAnimation />
                             </div>
 
                             {/* Subtitle */}
-                            <p className="mt-6 lg:mt-6 text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="mt-2 lg:mt-6 text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                                 Chatbots que venden. Automatizaciones que ahorran horas. Software que escala.
                                 <span className="text-white font-medium"> Construimos la tecnología que tu negocio necesita para crecer.</span>
                             </p>
