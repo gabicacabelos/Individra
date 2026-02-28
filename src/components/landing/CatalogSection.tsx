@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { MobileCatalogBackground } from '@/components/ui/MobileBackgroundEffects'
 import {
     MessageSquare,
     Calendar,
@@ -107,6 +108,9 @@ export function CatalogSection() {
 
     return (
         <section ref={sectionRef} id="soluciones" className="relative pt-4 pb-24 md:py-32 bg-black overflow-hidden">
+            {/* Mobile animated background */}
+            <MobileCatalogBackground />
+
             {/* Background */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent" />
 

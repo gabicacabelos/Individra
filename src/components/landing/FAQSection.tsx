@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Minus, HelpCircle } from 'lucide-react'
+import { MobileFAQBackground } from '@/components/ui/MobileBackgroundEffects'
 
 const faqs = [
     {
@@ -41,6 +42,9 @@ export function FAQSection() {
 
     return (
         <section id="faq" className="relative py-32 bg-black overflow-hidden">
+            {/* Mobile animated background */}
+            <MobileFAQBackground />
+
             {/* Background Effects */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent" />
 

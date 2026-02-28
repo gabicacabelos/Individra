@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Bot, Zap, Code2 } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { MobileServicesBackground } from '@/components/ui/MobileBackgroundEffects'
 
 const services = [
     {
@@ -195,6 +196,9 @@ export function ServicesSection() {
 
     return (
         <section ref={sectionRef} id="servicios" className="relative py-32 bg-black overflow-hidden">
+            {/* Mobile animated background */}
+            <MobileServicesBackground />
+
             {/* Background Effects with parallax */}
             <motion.div
                 style={{ y: backgroundY }}
