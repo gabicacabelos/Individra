@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { ScrollModel3D } from '@/components/ui/ScrollModel3D'
 import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
@@ -64,6 +64,7 @@ export function ConnectionSection() {
     const containerRef = useRef<HTMLElement>(null)
     const [scrollProgress, setScrollProgress] = useState(0)
     const [activeStep, setActiveStep] = useState(0)
+    const lastUpdateRef = useRef(0)
     const isMobile = useIsMobile()
 
     const { scrollYProgress } = useScroll({
@@ -71,16 +72,30 @@ export function ConnectionSection() {
         offset: ['start start', 'end end']
     })
 
+    // Throttled scroll handler - only update state when step changes or significant progress
     useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-        setScrollProgress(latest)
-        const stepIndex = Math.min(Math.floor(latest * steps.length), steps.length - 1)
-        setActiveStep(stepIndex)
+        const newStepIndex = Math.min(Math.floor(latest * steps.length), steps.length - 1)
+
+        // Only update if step changed or progress changed by more than 2%
+        if (newStepIndex !== activeStep || Math.abs(latest - lastUpdateRef.current) > 0.02) {
+            lastUpdateRef.current = latest
+            setScrollProgress(latest)
+            setActiveStep(newStepIndex)
+        }
     })
 
-    // Transforms for various elements
+    // All transforms declared at component level (not inline)
     const modelOpacity = useTransform(scrollYProgress, [0, 0.08, 0.92, 1], [0, 1, 1, 0])
     const titleY = useTransform(scrollYProgress, [0, 0.1], [30, 0])
     const titleOpacity = useTransform(scrollYProgress, [0, 0.08], [0, 1])
+    const ctaOpacity = useTransform(scrollYProgress, [0.8, 0.95], [0, 1])
+    const ctaY = useTransform(scrollYProgress, [0.8, 0.95], [20, 0])
+    const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
+    const bgX1 = useTransform(scrollYProgress, [0, 1], [-100, 100])
+    const bgX2 = useTransform(scrollYProgress, [0, 1], [100, -100])
+
+    // Memoize the current step data
+    const currentStep = useMemo(() => steps[activeStep], [activeStep])
 
     return (
         <section
@@ -94,17 +109,17 @@ export function ConnectionSection() {
                 {/* Background effects - hidden on mobile for performance */}
                 <div className="absolute inset-0 hidden md:block">
                     <motion.div
-                        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[150px]"
+                        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[80px] will-change-transform"
                         style={{
                             background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-                            x: useTransform(scrollYProgress, [0, 1], [-100, 100]),
+                            x: bgX1,
                         }}
                     />
                     <motion.div
-                        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px]"
+                        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[60px] will-change-transform"
                         style={{
                             background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)',
-                            x: useTransform(scrollYProgress, [0, 1], [100, -100]),
+                            x: bgX2,
                         }}
                     />
                 </div>
@@ -121,16 +136,15 @@ export function ConnectionSection() {
 
                         {/* Mobile: 3D Model at top */}
                         <motion.div
-                            className="lg:hidden relative h-[140px] sm:h-[200px] flex-shrink-0"
+                            className="lg:hidden relative h-[140px] sm:h-[200px] flex-shrink-0 will-change-opacity"
                             style={{ opacity: modelOpacity }}
                         >
-                            {/* Glow effect */}
-                            <motion.div
-                                className="absolute inset-0 rounded-full blur-[60px]"
-                                animate={{
-                                    background: `radial-gradient(circle, ${steps[activeStep].glowColor} 0%, transparent 70%)`,
+                            {/* Glow effect - simplified with CSS transition */}
+                            <div
+                                className="absolute inset-0 rounded-full blur-[40px] transition-all duration-700"
+                                style={{
+                                    background: `radial-gradient(circle, ${currentStep.glowColor} 0%, transparent 70%)`,
                                 }}
-                                transition={{ duration: 0.8 }}
                             />
                             {!isMobile ? (
                                 <ScrollModel3D
@@ -141,17 +155,17 @@ export function ConnectionSection() {
                                 <MobileProcessAnimation
                                     activeStep={activeStep}
                                     scrollProgress={scrollProgress}
-                                    glowColor={steps[activeStep].glowColor}
-                                    IconComponent={steps[activeStep].icon}
+                                    glowColor={currentStep.glowColor}
+                                    IconComponent={currentStep.icon}
                                     totalSteps={steps.length}
                                 />
                             )}
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
                                 <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
-                                    {steps[activeStep].number}
+                                    {currentStep.number}
                                 </span>
-                                <span className="text-white/80 text-sm font-medium">{steps[activeStep].label}</span>
+                                <span className="text-white/80 text-sm font-medium">{currentStep.label}</span>
                             </div>
                         </motion.div>
 
@@ -191,16 +205,14 @@ export function ConnectionSection() {
                                     const isPast = index < activeStep
 
                                     return (
-                                        <motion.div
+                                        <div
                                             key={step.id}
-                                            initial={{ opacity: 0.5 }}
-                                            animate={{
-                                                opacity: isActive ? 1 : isPast ? 0.6 : 0.4,
-                                                scale: isActive ? 1 : 0.98,
+                                            className={`relative flex items-start gap-3 sm:gap-4 py-1.5 px-2 sm:p-3 rounded-xl transition-all duration-300 ${
+                                                isActive ? 'bg-white/5 opacity-100' : isPast ? 'opacity-60' : 'opacity-40'
+                                            }`}
+                                            style={{
+                                                transform: isActive ? 'scale(1)' : 'scale(0.98)',
                                             }}
-                                            transition={{ duration: 0.4 }}
-                                            className={`relative flex items-start gap-3 sm:gap-4 py-1.5 px-2 sm:p-3 rounded-xl transition-colors duration-300 ${isActive ? 'bg-white/5' : ''
-                                                }`}
                                         >
                                             {/* Icon */}
                                             <div className="relative z-10 flex-shrink-0">
@@ -214,7 +226,8 @@ export function ConnectionSection() {
                                                 >
                                                     <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${isActive || isPast ? 'text-white' : 'text-neutral-500'}`} />
                                                 </div>
-                                                {isActive && (
+                                                {/* Pulse effect - desktop only */}
+                                                {isActive && !isMobile && (
                                                     <motion.div
                                                         initial={{ scale: 1, opacity: 0.5 }}
                                                         animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
@@ -227,39 +240,30 @@ export function ConnectionSection() {
                                             {/* Content */}
                                             <div className="flex-1 min-w-0 pt-0.5 sm:pt-1">
                                                 <div className="flex items-center gap-2 mb-0.5">
-                                                    <span className={`text-[10px] sm:text-xs font-mono ${isActive ? 'text-violet-400' : 'text-neutral-600'}`}>
+                                                    <span className={`text-[10px] sm:text-xs font-mono transition-colors duration-300 ${isActive ? 'text-violet-400' : 'text-neutral-600'}`}>
                                                         {step.number}
                                                     </span>
-                                                    <span className={`text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? 'text-white/80' : 'text-neutral-500'}`}>
+                                                    <span className={`text-[10px] sm:text-xs uppercase tracking-wider transition-colors duration-300 ${isActive ? 'text-white/80' : 'text-neutral-500'}`}>
                                                         {step.label}
                                                     </span>
                                                 </div>
-                                                <h3 className={`text-sm sm:text-base font-semibold transition-colors ${isActive ? 'text-white' : 'text-neutral-400'}`}>
+                                                <h3 className={`text-sm sm:text-base font-semibold transition-colors duration-300 ${isActive ? 'text-white' : 'text-neutral-400'}`}>
                                                     {step.title}
                                                 </h3>
                                                 {isActive && (
-                                                    <motion.p
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="mt-1 sm:mt-2 text-xs sm:text-sm text-neutral-400 leading-relaxed"
-                                                    >
+                                                    <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-neutral-400 leading-relaxed animate-fade-in">
                                                         {step.description}
-                                                    </motion.p>
+                                                    </p>
                                                 )}
                                             </div>
 
                                             {/* Arrow for active - hidden on mobile */}
                                             {isActive && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, x: -10 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    className="flex-shrink-0 pt-1 sm:pt-2 hidden sm:block"
-                                                >
+                                                <div className="flex-shrink-0 pt-1 sm:pt-2 hidden sm:block">
                                                     <ArrowRight className="w-4 h-4 text-violet-400" />
-                                                </motion.div>
+                                                </div>
                                             )}
-                                        </motion.div>
+                                        </div>
                                     )
                                 })}
                             </div>
@@ -267,8 +271,8 @@ export function ConnectionSection() {
                             {/* CTA */}
                             <motion.div
                                 style={{
-                                    opacity: useTransform(scrollYProgress, [0.8, 0.95], [0, 1]),
-                                    y: useTransform(scrollYProgress, [0.8, 0.95], [20, 0]),
+                                    opacity: ctaOpacity,
+                                    y: ctaY,
                                 }}
                                 className="pt-1 sm:pt-4"
                             >
@@ -375,7 +379,7 @@ export function ConnectionSection() {
                 {/* Progress bar at bottom */}
                 <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2">
                     {steps.map((step, index) => (
-                        <motion.div
+                        <div
                             key={step.id}
                             className={`h-1 rounded-full transition-all duration-500 ${index === activeStep
                                 ? `w-6 sm:w-8 bg-gradient-to-r ${step.color}`
@@ -391,7 +395,7 @@ export function ConnectionSection() {
                 <motion.div
                     className="absolute bottom-6 right-6 hidden sm:block"
                     style={{
-                        opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]),
+                        opacity: scrollHintOpacity,
                     }}
                 >
                     <motion.div
