@@ -80,8 +80,13 @@ export function HeroSection() {
                                 </span>
                             </h1>
 
+                            {/* Mobile Animation - Between title and subtitle */}
+                            <div className="lg:hidden my-8 sm:my-10">
+                                <MobileHeroAnimation />
+                            </div>
+
                             {/* Subtitle */}
-                            <p className="mt-6 text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="mt-6 lg:mt-6 text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                                 Chatbots que venden. Automatizaciones que ahorran horas. Software que escala.
                                 <span className="text-white font-medium"> Construimos la tecnología que tu negocio necesita para crecer.</span>
                             </p>
@@ -105,24 +110,19 @@ export function HeroSection() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Right Content - 3D Robot (static on mobile, parallax on desktop) */}
+                    {/* Right Content - Desktop Only 3D Robot with parallax */}
                     <motion.div
                         style={{ y: isMobile ? 0 : robotY }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, delay: 0.3 }}
-                        className="flex-1 relative h-[500px] sm:h-[550px] lg:h-[600px] w-full mt-12 sm:mt-16 lg:mt-0"
+                        className="hidden lg:block flex-1 relative h-[600px] w-full"
                     >
                         {/* Glow effect - pointer-events-none to not block robot interaction */}
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
 
-                        {/* === MOBILE ONLY - Spectacular AI Network Animation === */}
-                        <div className="lg:hidden absolute inset-0 z-10">
-                            <MobileHeroAnimation />
-                        </div>
-
                         {/* Spline container - Desktop only */}
-                        <div className="hidden lg:block relative z-20 w-full h-full">
+                        <div className="relative z-20 w-full h-full">
                             <SplineScene
                                 scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
                                 className="w-full h-full cursor-pointer"
