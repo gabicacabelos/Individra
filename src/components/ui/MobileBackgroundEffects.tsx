@@ -1,71 +1,42 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useMemo } from 'react'
 
-// Floating geometric shapes for services section
+// Optimized floating geometric shapes for services section - Pure CSS animations
 export function MobileServicesBackground() {
-    const shapes = useMemo(() => [
-        // Floating triangles
-        { type: 'triangle', x: 10, y: 15, size: 20, rotation: 45, delay: 0 },
-        { type: 'triangle', x: 85, y: 25, size: 15, rotation: -30, delay: 1 },
-        { type: 'triangle', x: 20, y: 70, size: 18, rotation: 60, delay: 2 },
-        { type: 'triangle', x: 90, y: 80, size: 12, rotation: -45, delay: 0.5 },
-
-        // Circles
-        { type: 'circle', x: 5, y: 40, size: 8, delay: 0.3 },
-        { type: 'circle', x: 95, y: 50, size: 6, delay: 1.5 },
-        { type: 'circle', x: 15, y: 90, size: 10, delay: 2.5 },
-        { type: 'circle', x: 80, y: 10, size: 5, delay: 0.8 },
-
-        // Squares
-        { type: 'square', x: 50, y: 5, size: 12, rotation: 45, delay: 1.2 },
-        { type: 'square', x: 30, y: 85, size: 8, rotation: 30, delay: 0.7 },
-        { type: 'square', x: 70, y: 60, size: 10, rotation: -20, delay: 1.8 },
+    // Pre-computed stable positions for particles
+    const particles = useMemo(() => [
+        { left: 15, top: 20, color: 0, delay: 0 },
+        { left: 85, top: 35, color: 1, delay: 0.5 },
+        { left: 25, top: 60, color: 2, delay: 1 },
+        { left: 75, top: 75, color: 0, delay: 1.5 },
+        { left: 45, top: 15, color: 1, delay: 2 },
+        { left: 55, top: 85, color: 2, delay: 2.5 },
     ], [])
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none md:hidden">
-            {/* Animated gradient orbs */}
-            <motion.div
-                className="absolute w-64 h-64 rounded-full"
+            {/* Gradient orbs - CSS animation only, no blur */}
+            <div
+                className="absolute w-64 h-64 rounded-full orb-float-1"
                 style={{
-                    background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(139,92,246,0.04) 50%, transparent 70%)',
                     left: '-10%',
                     top: '20%',
-                }}
-                animate={{
-                    x: [0, 30, 0],
-                    y: [0, -20, 0],
-                    scale: [1, 1.2, 1],
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                    willChange: 'transform',
                 }}
             />
-            <motion.div
-                className="absolute w-48 h-48 rounded-full"
+            <div
+                className="absolute w-48 h-48 rounded-full orb-float-2"
                 style={{
-                    background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.03) 50%, transparent 70%)',
                     right: '-5%',
                     bottom: '30%',
-                }}
-                animate={{
-                    x: [0, -20, 0],
-                    y: [0, 30, 0],
-                    scale: [1, 1.3, 1],
-                }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
+                    willChange: 'transform',
                 }}
             />
 
-            {/* Floating shapes */}
+            {/* SVG shapes with native SMIL animations */}
             <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
                 <defs>
                     <linearGradient id="servicesShapeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -78,148 +49,90 @@ export function MobileServicesBackground() {
                     </linearGradient>
                 </defs>
 
-                {shapes.map((shape, i) => {
-                    if (shape.type === 'circle') {
-                        return (
-                            <motion.circle
-                                key={`shape-${i}`}
-                                cx={`${shape.x}%`}
-                                cy={`${shape.y}%`}
-                                r={shape.size}
-                                fill={i % 2 === 0 ? "url(#servicesShapeGrad1)" : "url(#servicesShapeGrad2)"}
-                                animate={{
-                                    cy: [`${shape.y}%`, `${shape.y - 5}%`, `${shape.y}%`],
-                                    opacity: [0.3, 0.6, 0.3],
-                                    scale: [1, 1.2, 1],
-                                }}
-                                transition={{
-                                    duration: 4 + Math.random() * 2,
-                                    delay: shape.delay,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }}
-                            />
-                        )
-                    }
-                    if (shape.type === 'triangle') {
-                        const size = shape.size
-                        return (
-                            <motion.polygon
-                                key={`shape-${i}`}
-                                points={`0,${size} ${size/2},0 ${size},${size}`}
-                                fill="none"
-                                stroke={i % 2 === 0 ? "rgba(139,92,246,0.3)" : "rgba(59,130,246,0.3)"}
-                                strokeWidth="1"
-                                style={{
-                                    transform: `translate(${shape.x}%, ${shape.y}%) rotate(${shape.rotation}deg)`,
-                                    transformBox: 'fill-box',
-                                    transformOrigin: 'center',
-                                }}
-                                animate={{
-                                    rotate: [shape.rotation || 0, (shape.rotation || 0) + 180, (shape.rotation || 0) + 360],
-                                    opacity: [0.2, 0.5, 0.2],
-                                }}
-                                transition={{
-                                    rotate: { duration: 15 + Math.random() * 10, repeat: Infinity, ease: "linear" },
-                                    opacity: { duration: 3, delay: shape.delay, repeat: Infinity, ease: "easeInOut" }
-                                }}
-                            />
-                        )
-                    }
-                    if (shape.type === 'square') {
-                        return (
-                            <motion.rect
-                                key={`shape-${i}`}
-                                x={`${shape.x}%`}
-                                y={`${shape.y}%`}
-                                width={shape.size}
-                                height={shape.size}
-                                fill="none"
-                                stroke={i % 2 === 0 ? "rgba(139,92,246,0.25)" : "rgba(16,185,129,0.25)"}
-                                strokeWidth="1"
-                                animate={{
-                                    rotate: [shape.rotation || 0, (shape.rotation || 0) + 90],
-                                    opacity: [0.2, 0.4, 0.2],
-                                    scale: [1, 1.1, 1],
-                                }}
-                                transition={{
-                                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                                    opacity: { duration: 4, delay: shape.delay, repeat: Infinity, ease: "easeInOut" },
-                                    scale: { duration: 5, delay: shape.delay, repeat: Infinity, ease: "easeInOut" }
-                                }}
-                                style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-                            />
-                        )
-                    }
-                    return null
-                })}
+                {/* Circles with SMIL */}
+                <circle cx="5%" cy="40%" r="8" fill="url(#servicesShapeGrad1)">
+                    <animate attributeName="cy" values="40%;35%;40%" dur="4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="95%" cy="50%" r="6" fill="url(#servicesShapeGrad2)">
+                    <animate attributeName="cy" values="50%;45%;50%" dur="5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.3;0.5;0.3" dur="5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="80%" cy="10%" r="5" fill="url(#servicesShapeGrad1)">
+                    <animate attributeName="cy" values="10%;5%;10%" dur="4.5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4.5s" repeatCount="indefinite"/>
+                </circle>
 
-                {/* Connecting lines that pulse */}
-                <motion.line
-                    x1="10%" y1="20%"
-                    x2="30%" y2="40%"
-                    stroke="rgba(139,92,246,0.2)"
-                    strokeWidth="1"
-                    strokeDasharray="5 5"
-                    animate={{
-                        opacity: [0.1, 0.3, 0.1],
-                        strokeDashoffset: [0, 20],
-                    }}
-                    transition={{
-                        opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                        strokeDashoffset: { duration: 2, repeat: Infinity, ease: "linear" }
-                    }}
-                />
-                <motion.line
-                    x1="70%" y1="30%"
-                    x2="90%" y2="60%"
-                    stroke="rgba(59,130,246,0.2)"
-                    strokeWidth="1"
-                    strokeDasharray="5 5"
-                    animate={{
-                        opacity: [0.1, 0.3, 0.1],
-                        strokeDashoffset: [0, -20],
-                    }}
-                    transition={{
-                        opacity: { duration: 3, delay: 1, repeat: Infinity, ease: "easeInOut" },
-                        strokeDashoffset: { duration: 2, repeat: Infinity, ease: "linear" }
-                    }}
-                />
+                {/* Triangles with SMIL rotation */}
+                <polygon points="0,20 10,0 20,20" fill="none" stroke="rgba(139,92,246,0.3)" strokeWidth="1"
+                    style={{ transformOrigin: '10% 15%' }}>
+                    <animateTransform attributeName="transform" type="rotate" from="0 40 60" to="360 40 60" dur="20s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite"/>
+                </polygon>
+                <polygon points="0,15 7.5,0 15,15" fill="none" stroke="rgba(59,130,246,0.3)" strokeWidth="1"
+                    style={{ transformOrigin: '85% 25%' }}>
+                    <animateTransform attributeName="transform" type="rotate" from="0 340 100" to="-360 340 100" dur="18s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.2;0.4;0.2" dur="4s" repeatCount="indefinite"/>
+                </polygon>
+
+                {/* Squares with SMIL */}
+                <rect x="50%" y="5%" width="12" height="12" fill="none" stroke="rgba(139,92,246,0.25)" strokeWidth="1">
+                    <animateTransform attributeName="transform" type="rotate" from="45 206 26" to="135 206 26" dur="15s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.2;0.4;0.2" dur="4s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="70%" y="60%" width="10" height="10" fill="none" stroke="rgba(16,185,129,0.25)" strokeWidth="1">
+                    <animateTransform attributeName="transform" type="rotate" from="-20 284 244" to="70 284 244" dur="18s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.2;0.35;0.2" dur="5s" repeatCount="indefinite"/>
+                </rect>
+
+                {/* Connecting lines with SMIL */}
+                <line x1="10%" y1="20%" x2="30%" y2="40%" stroke="rgba(139,92,246,0.2)" strokeWidth="1" strokeDasharray="5 5">
+                    <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" values="0;20" dur="2s" repeatCount="indefinite"/>
+                </line>
+                <line x1="70%" y1="30%" x2="90%" y2="60%" stroke="rgba(59,130,246,0.2)" strokeWidth="1" strokeDasharray="5 5">
+                    <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite" begin="1s"/>
+                    <animate attributeName="stroke-dashoffset" values="0;-20" dur="2s" repeatCount="indefinite"/>
+                </line>
             </svg>
 
-            {/* Floating particles */}
-            {Array.from({ length: 12 }).map((_, i) => (
-                <motion.div
+            {/* Particles with CSS animations */}
+            {particles.map((p, i) => (
+                <div
                     key={`particle-${i}`}
-                    className="absolute w-1 h-1 rounded-full"
+                    className="absolute w-1 h-1 rounded-full particle-float"
                     style={{
-                        left: `${10 + Math.random() * 80}%`,
-                        top: `${10 + Math.random() * 80}%`,
-                        backgroundColor: i % 3 === 0
-                            ? 'rgba(139,92,246,0.6)'
-                            : i % 3 === 1
-                                ? 'rgba(59,130,246,0.6)'
-                                : 'rgba(16,185,129,0.6)',
-                    }}
-                    animate={{
-                        y: [0, -30 - Math.random() * 20, 0],
-                        x: [0, (Math.random() - 0.5) * 20, 0],
-                        opacity: [0, 0.8, 0],
-                        scale: [0.5, 1.5, 0.5],
-                    }}
-                    transition={{
-                        duration: 4 + Math.random() * 3,
-                        delay: Math.random() * 3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
+                        left: `${p.left}%`,
+                        top: `${p.top}%`,
+                        backgroundColor: p.color === 0 ? 'rgba(139,92,246,0.6)' : p.color === 1 ? 'rgba(59,130,246,0.6)' : 'rgba(16,185,129,0.6)',
+                        animationDelay: `${p.delay}s`,
+                        willChange: 'transform, opacity',
                     }}
                 />
             ))}
+
+            <style jsx>{`
+                @keyframes orbFloat1 {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    50% { transform: translate(30px, -20px) scale(1.15); }
+                }
+                @keyframes orbFloat2 {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    50% { transform: translate(-20px, 30px) scale(1.2); }
+                }
+                @keyframes particleFloat {
+                    0%, 100% { transform: translateY(0) scale(0.5); opacity: 0; }
+                    50% { transform: translateY(-25px) scale(1.2); opacity: 0.7; }
+                }
+                .orb-float-1 { animation: orbFloat1 8s ease-in-out infinite; }
+                .orb-float-2 { animation: orbFloat2 10s ease-in-out infinite 1s; }
+                .particle-float { animation: particleFloat 5s ease-in-out infinite; }
+            `}</style>
         </div>
     )
 }
 
-// Tech grid animation for catalog section
+// Tech grid animation for catalog section - Optimized with CSS/SMIL
 export function MobileCatalogBackground() {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none md:hidden">
@@ -246,235 +159,173 @@ export function MobileCatalogBackground() {
                 {/* Animated grid */}
                 <rect width="100%" height="100%" fill="url(#catalogGrid)" />
 
-                {/* Scanning line effect */}
-                <motion.rect
-                    x="0"
-                    width="100%"
-                    height="2"
-                    fill="url(#catalogGridGrad)"
-                    animate={{
-                        y: ['-10%', '110%'],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "linear"
-                    }}
-                />
+                {/* Scanning line effect - SMIL */}
+                <rect x="0" width="100%" height="2" fill="url(#catalogGridGrad)">
+                    <animate attributeName="y" values="-5%;110%" dur="8s" repeatCount="indefinite"/>
+                </rect>
 
-                {/* Vertical scanning line */}
-                <motion.rect
-                    y="0"
-                    width="2"
-                    height="100%"
-                    fill="url(#catalogGridGrad)"
-                    animate={{
-                        x: ['-10%', '110%'],
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: 2
-                    }}
-                />
+                {/* Vertical scanning line - SMIL */}
+                <rect y="0" width="2" height="100%" fill="url(#catalogGridGrad)">
+                    <animate attributeName="x" values="-5%;110%" dur="10s" repeatCount="indefinite" begin="2s"/>
+                </rect>
 
-                {/* Random highlight cells */}
-                {Array.from({ length: 8 }).map((_, i) => (
-                    <motion.rect
-                        key={`cell-${i}`}
-                        x={`${Math.floor(Math.random() * 8) * 12.5}%`}
-                        y={`${Math.floor(Math.random() * 8) * 12.5}%`}
-                        width="50"
-                        height="50"
-                        fill={i % 2 === 0 ? "rgba(139,92,246,0.1)" : "rgba(59,130,246,0.1)"}
-                        animate={{
-                            opacity: [0, 0.5, 0],
-                        }}
-                        transition={{
-                            duration: 2 + Math.random() * 2,
-                            delay: Math.random() * 4,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                    />
-                ))}
+                {/* Pre-defined highlight cells with SMIL */}
+                <rect x="12.5%" y="25%" width="50" height="50" fill="rgba(139,92,246,0.1)">
+                    <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="50%" y="50%" width="50" height="50" fill="rgba(59,130,246,0.1)">
+                    <animate attributeName="opacity" values="0;0.5;0" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+                </rect>
+                <rect x="75%" y="12.5%" width="50" height="50" fill="rgba(139,92,246,0.1)">
+                    <animate attributeName="opacity" values="0;0.5;0" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+                </rect>
+                <rect x="25%" y="75%" width="50" height="50" fill="rgba(59,130,246,0.1)">
+                    <animate attributeName="opacity" values="0;0.5;0" dur="4s" repeatCount="indefinite" begin="0.5s"/>
+                </rect>
             </svg>
 
-            {/* Data flow particles */}
-            {Array.from({ length: 10 }).map((_, i) => (
-                <motion.div
-                    key={`data-${i}`}
-                    className="absolute w-1 h-4 rounded-full"
-                    style={{
-                        left: `${10 + (i * 8)}%`,
-                        background: `linear-gradient(to bottom, transparent, ${
-                            i % 2 === 0 ? 'rgba(139,92,246,0.8)' : 'rgba(59,130,246,0.8)'
-                        }, transparent)`,
-                    }}
-                    animate={{
-                        y: ['-20%', '120%'],
-                        opacity: [0, 1, 1, 0],
-                    }}
-                    transition={{
-                        duration: 3 + Math.random() * 2,
-                        delay: Math.random() * 5,
-                        repeat: Infinity,
-                        ease: "linear"
-                    }}
-                />
-            ))}
+            {/* Data flow particles - CSS animations */}
+            <div className="catalog-data-particle" style={{ left: '18%', animationDelay: '0s' }} />
+            <div className="catalog-data-particle" style={{ left: '34%', animationDelay: '0.8s' }} />
+            <div className="catalog-data-particle alt" style={{ left: '50%', animationDelay: '1.6s' }} />
+            <div className="catalog-data-particle" style={{ left: '66%', animationDelay: '2.4s' }} />
+            <div className="catalog-data-particle alt" style={{ left: '82%', animationDelay: '3.2s' }} />
 
-            {/* Corner accents */}
-            <motion.div
-                className="absolute top-4 left-4 w-12 h-12"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
+            {/* Corner accents - CSS animations */}
+            <div className="absolute top-4 left-4 w-12 h-12 corner-accent">
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-violet-500/60 to-transparent" />
                 <div className="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-violet-500/60 to-transparent" />
-            </motion.div>
-            <motion.div
-                className="absolute top-4 right-4 w-12 h-12"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            >
+            </div>
+            <div className="absolute top-4 right-4 w-12 h-12 corner-accent" style={{ animationDelay: '1s' }}>
                 <div className="absolute top-0 right-0 w-full h-[1px] bg-gradient-to-l from-blue-500/60 to-transparent" />
                 <div className="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-blue-500/60 to-transparent" />
-            </motion.div>
-            <motion.div
-                className="absolute bottom-4 left-4 w-12 h-12"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            >
+            </div>
+            <div className="absolute bottom-4 left-4 w-12 h-12 corner-accent" style={{ animationDelay: '0.5s' }}>
                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-violet-500/60 to-transparent" />
                 <div className="absolute bottom-0 left-0 w-[1px] h-full bg-gradient-to-t from-violet-500/60 to-transparent" />
-            </motion.div>
-            <motion.div
-                className="absolute bottom-4 right-4 w-12 h-12"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            >
+            </div>
+            <div className="absolute bottom-4 right-4 w-12 h-12 corner-accent" style={{ animationDelay: '1.5s' }}>
                 <div className="absolute bottom-0 right-0 w-full h-[1px] bg-gradient-to-l from-blue-500/60 to-transparent" />
                 <div className="absolute bottom-0 right-0 w-[1px] h-full bg-gradient-to-t from-blue-500/60 to-transparent" />
-            </motion.div>
+            </div>
+
+            <style jsx>{`
+                @keyframes dataFlow {
+                    0% { transform: translateY(-20%); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { transform: translateY(100vh); opacity: 0; }
+                }
+                @keyframes cornerPulse {
+                    0%, 100% { opacity: 0.3; }
+                    50% { opacity: 0.6; }
+                }
+                .catalog-data-particle {
+                    position: absolute;
+                    width: 4px;
+                    height: 16px;
+                    border-radius: 2px;
+                    background: linear-gradient(to bottom, transparent, rgba(139,92,246,0.8), transparent);
+                    animation: dataFlow 4s linear infinite;
+                    will-change: transform, opacity;
+                }
+                .catalog-data-particle.alt {
+                    background: linear-gradient(to bottom, transparent, rgba(59,130,246,0.8), transparent);
+                }
+                .corner-accent {
+                    animation: cornerPulse 3s ease-in-out infinite;
+                }
+            `}</style>
         </div>
     )
 }
 
-// Floating orbs for FAQ section
+// Floating orbs for FAQ section - Optimized with CSS/SMIL (no blur filters)
 export function MobileFAQBackground() {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none md:hidden">
-            {/* Large blurred orbs */}
-            <motion.div
-                className="absolute w-72 h-72 rounded-full opacity-20"
+            {/* Gradient orbs - CSS animation, no blur filter */}
+            <div
+                className="absolute w-72 h-72 rounded-full faq-orb-1"
                 style={{
-                    background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(139,92,246,0.05) 40%, transparent 70%)',
                     left: '-20%',
                     top: '10%',
-                    filter: 'blur(40px)',
-                }}
-                animate={{
-                    x: [0, 50, 0],
-                    y: [0, 30, 0],
-                    scale: [1, 1.2, 1],
-                }}
-                transition={{
-                    duration: 15,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                    willChange: 'transform',
                 }}
             />
-            <motion.div
-                className="absolute w-64 h-64 rounded-full opacity-15"
+            <div
+                className="absolute w-64 h-64 rounded-full faq-orb-2"
                 style={{
-                    background: 'radial-gradient(circle, rgba(59,130,246,0.4) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.04) 40%, transparent 70%)',
                     right: '-15%',
                     bottom: '20%',
-                    filter: 'blur(40px)',
-                }}
-                animate={{
-                    x: [0, -40, 0],
-                    y: [0, -20, 0],
-                    scale: [1, 1.3, 1],
-                }}
-                transition={{
-                    duration: 12,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 2
+                    willChange: 'transform',
                 }}
             />
 
-            {/* Question mark particles */}
+            {/* Question mark particles - SMIL animations */}
             <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <motion.text
-                        key={`q-${i}`}
-                        x={`${15 + i * 15}%`}
-                        y={`${20 + (i % 3) * 30}%`}
-                        fill={i % 2 === 0 ? "rgba(139,92,246,0.15)" : "rgba(59,130,246,0.15)"}
-                        fontSize="24"
-                        fontWeight="bold"
-                        animate={{
-                            y: [`${20 + (i % 3) * 30}%`, `${15 + (i % 3) * 30}%`, `${20 + (i % 3) * 30}%`],
-                            opacity: [0.1, 0.25, 0.1],
-                            rotate: [-10, 10, -10],
-                        }}
-                        transition={{
-                            duration: 5 + Math.random() * 3,
-                            delay: i * 0.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        style={{ transformOrigin: 'center', transformBox: 'fill-box' }}
-                    >
-                        ?
-                    </motion.text>
-                ))}
+                <text x="15%" y="20%" fill="rgba(139,92,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="20%;15%;20%" dur="5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="5s" repeatCount="indefinite"/>
+                </text>
+                <text x="30%" y="50%" fill="rgba(59,130,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="50%;45%;50%" dur="6s" repeatCount="indefinite" begin="0.5s"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="6s" repeatCount="indefinite" begin="0.5s"/>
+                </text>
+                <text x="45%" y="80%" fill="rgba(139,92,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="80%;75%;80%" dur="5.5s" repeatCount="indefinite" begin="1s"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="5.5s" repeatCount="indefinite" begin="1s"/>
+                </text>
+                <text x="60%" y="20%" fill="rgba(59,130,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="20%;15%;20%" dur="6.5s" repeatCount="indefinite" begin="1.5s"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="6.5s" repeatCount="indefinite" begin="1.5s"/>
+                </text>
+                <text x="75%" y="50%" fill="rgba(139,92,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="50%;45%;50%" dur="5s" repeatCount="indefinite" begin="2s"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="5s" repeatCount="indefinite" begin="2s"/>
+                </text>
+                <text x="90%" y="80%" fill="rgba(59,130,246,0.15)" fontSize="24" fontWeight="bold">
+                    ?
+                    <animate attributeName="y" values="80%;75%;80%" dur="5.5s" repeatCount="indefinite" begin="2.5s"/>
+                    <animate attributeName="opacity" values="0.1;0.25;0.1" dur="5.5s" repeatCount="indefinite" begin="2.5s"/>
+                </text>
 
-                {/* Floating dots */}
-                {Array.from({ length: 15 }).map((_, i) => (
-                    <motion.circle
-                        key={`dot-${i}`}
-                        cx={`${Math.random() * 100}%`}
-                        cy={`${Math.random() * 100}%`}
-                        r={1 + Math.random() * 2}
-                        fill={i % 3 === 0 ? "rgba(139,92,246,0.4)" : i % 3 === 1 ? "rgba(59,130,246,0.4)" : "rgba(16,185,129,0.4)"}
-                        animate={{
-                            opacity: [0, 0.6, 0],
-                            scale: [0.5, 1.5, 0.5],
-                            cy: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
-                        }}
-                        transition={{
-                            duration: 4 + Math.random() * 4,
-                            delay: Math.random() * 5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                    />
-                ))}
+                {/* Floating dots - SMIL */}
+                <circle cx="10%" cy="30%" r="1.5" fill="rgba(139,92,246,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="5s" repeatCount="indefinite"/>
+                    <animate attributeName="cy" values="30%;25%;30%" dur="5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="25%" cy="70%" r="2" fill="rgba(59,130,246,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="6s" repeatCount="indefinite" begin="1s"/>
+                    <animate attributeName="cy" values="70%;65%;70%" dur="6s" repeatCount="indefinite" begin="1s"/>
+                </circle>
+                <circle cx="40%" cy="40%" r="1.5" fill="rgba(16,185,129,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="5.5s" repeatCount="indefinite" begin="2s"/>
+                    <animate attributeName="cy" values="40%;35%;40%" dur="5.5s" repeatCount="indefinite" begin="2s"/>
+                </circle>
+                <circle cx="55%" cy="60%" r="2" fill="rgba(139,92,246,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="6s" repeatCount="indefinite" begin="0.5s"/>
+                    <animate attributeName="cy" values="60%;55%;60%" dur="6s" repeatCount="indefinite" begin="0.5s"/>
+                </circle>
+                <circle cx="70%" cy="25%" r="1.5" fill="rgba(59,130,246,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="5s" repeatCount="indefinite" begin="1.5s"/>
+                    <animate attributeName="cy" values="25%;20%;25%" dur="5s" repeatCount="indefinite" begin="1.5s"/>
+                </circle>
+                <circle cx="85%" cy="55%" r="2" fill="rgba(16,185,129,0.4)">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="5.5s" repeatCount="indefinite" begin="2.5s"/>
+                    <animate attributeName="cy" values="55%;50%;55%" dur="5.5s" repeatCount="indefinite" begin="2.5s"/>
+                </circle>
             </svg>
 
-            {/* Subtle wave effect at bottom */}
+            {/* Wave effect at bottom - SMIL path animation */}
             <svg className="absolute bottom-0 left-0 w-full h-24" preserveAspectRatio="none" viewBox="0 0 400 100">
-                <motion.path
-                    d="M0,50 Q100,20 200,50 T400,50 L400,100 L0,100 Z"
-                    fill="url(#faqWaveGrad)"
-                    animate={{
-                        d: [
-                            "M0,50 Q100,20 200,50 T400,50 L400,100 L0,100 Z",
-                            "M0,50 Q100,80 200,50 T400,50 L400,100 L0,100 Z",
-                            "M0,50 Q100,20 200,50 T400,50 L400,100 L0,100 Z",
-                        ],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                />
                 <defs>
                     <linearGradient id="faqWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="rgba(139,92,246,0.05)" />
@@ -482,7 +333,28 @@ export function MobileFAQBackground() {
                         <stop offset="100%" stopColor="rgba(139,92,246,0.05)" />
                     </linearGradient>
                 </defs>
+                <path fill="url(#faqWaveGrad)">
+                    <animate
+                        attributeName="d"
+                        values="M0,50 Q100,20 200,50 T400,50 L400,100 L0,100 Z;M0,50 Q100,80 200,50 T400,50 L400,100 L0,100 Z;M0,50 Q100,20 200,50 T400,50 L400,100 L0,100 Z"
+                        dur="8s"
+                        repeatCount="indefinite"
+                    />
+                </path>
             </svg>
+
+            <style jsx>{`
+                @keyframes faqOrbFloat1 {
+                    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+                    50% { transform: translate(50px, 30px) scale(1.15); opacity: 0.25; }
+                }
+                @keyframes faqOrbFloat2 {
+                    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+                    50% { transform: translate(-40px, -20px) scale(1.2); opacity: 0.2; }
+                }
+                .faq-orb-1 { animation: faqOrbFloat1 15s ease-in-out infinite; }
+                .faq-orb-2 { animation: faqOrbFloat2 12s ease-in-out infinite 2s; }
+            `}</style>
         </div>
     )
 }
