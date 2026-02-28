@@ -6,9 +6,11 @@ import { Spotlight } from '@/components/ui/spotlight'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null)
+    const isMobile = useIsMobile()
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ['start start', 'end start']
@@ -103,13 +105,13 @@ export function HeroSection() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Right Content - 3D Robot with parallax */}
+                    {/* Right Content - 3D Robot (static on mobile, parallax on desktop) */}
                     <motion.div
-                        style={{ y: robotY }}
+                        style={{ y: isMobile ? 0 : robotY }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, delay: 0.3 }}
-                        className="flex-1 relative h-[420px] sm:h-[520px] lg:h-[600px] w-full mt-2 sm:mt-10 lg:mt-0"
+                        className="flex-1 relative h-[500px] sm:h-[550px] lg:h-[600px] w-full mt-12 sm:mt-16 lg:mt-0"
                     >
                         {/* Glow effect - pointer-events-none to not block robot interaction */}
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
