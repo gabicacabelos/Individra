@@ -43,8 +43,8 @@ export function Navbar() {
     const navLinks = [
         { href: '#inicio', label: 'Inicio' },
         { href: '#servicios', label: 'Servicios' },
-        { href: '#soluciones', label: 'Soluciones' },
         { href: '#proceso', label: 'Proceso' },
+        { href: '#soluciones', label: 'Soluciones' },
         { href: '#faq', label: 'FAQ' },
         { href: '#contacto', label: 'Contacto' },
     ]

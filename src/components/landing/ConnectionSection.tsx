@@ -117,7 +117,7 @@ export function ConnectionSection() {
 
                 {/* Content */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="h-full flex flex-col justify-center lg:flex-row lg:items-center gap-2 sm:gap-4 lg:gap-16 pt-4 sm:pt-10 lg:pt-0">
+                    <div className="h-full flex flex-col justify-center lg:flex-row lg:items-center gap-2 sm:gap-4 lg:gap-16 pt-4 sm:pt-10 lg:pt-20">
 
                         {/* Mobile: 3D Model at top */}
                         <motion.div

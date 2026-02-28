@@ -132,13 +132,13 @@ export function Footer() {
                         <ul className="space-y-4">
                             <li>
                                 <a
-                                    href="mailto:hola@individra.com"
+                                    href="mailto:individratec@gmail.com"
                                     className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-sm group"
                                 >
                                     <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-violet-500/50 transition-colors">
                                         <Mail className="w-4 h-4" />
                                     </div>
-                                    hola@individra.com
+                                    individratec@gmail.com
                                 </a>
                             </li>
                             <li>
