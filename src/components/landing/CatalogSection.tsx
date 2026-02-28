@@ -92,7 +92,7 @@ const categories = [
 ]
 
 export function CatalogSection() {
-    const [expandedId, setExpandedId] = useState<string | null>('servicios')
+    const [expandedId, setExpandedId] = useState<string | null>(null)
     const sectionRef = useRef<HTMLElement>(null)
 
     const { scrollYProgress } = useScroll({
