@@ -6,11 +6,9 @@ import { Spotlight } from '@/components/ui/spotlight'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
-import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null)
-    const isMobile = useIsMobile()
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ['start start', 'end start']
@@ -117,16 +115,16 @@ export function HeroSection() {
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
 
                         {/* === MOBILE ONLY - Spectacular AI Network Animation === */}
-                        {isMobile && <MobileHeroAnimation />}
+                        <div className="lg:hidden absolute inset-0 z-10">
+                            <MobileHeroAnimation />
+                        </div>
 
-                        {/* Spline container with explicit z-index and pointer events */}
-                        <div className="relative z-20 w-full h-full">
-                            {!isMobile && (
-                                <SplineScene
-                                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                                    className="w-full h-full cursor-pointer"
-                                />
-                            )}
+                        {/* Spline container - Desktop only */}
+                        <div className="hidden lg:block relative z-20 w-full h-full">
+                            <SplineScene
+                                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                                className="w-full h-full cursor-pointer"
+                            />
                         </div>
                     </motion.div>
                 </div>
