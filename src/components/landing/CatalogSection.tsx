@@ -21,6 +21,8 @@ import {
     Stethoscope,
     Calculator,
     HardHat,
+    Hotel,
+    Star,
     Sparkles,
     ArrowRight,
     Lightbulb,
@@ -87,6 +89,18 @@ const categories = [
             { icon: ClipboardCheck, title: 'Updates de Avance', desc: 'Informes automáticos al cliente sobre la obra', benefit: 'Clientes informados' },
             { icon: Database, title: 'Conexión de Sistemas', desc: 'Sincronización entre planillas, CRM y gestión', benefit: 'Datos unificados' },
             { icon: Bell, title: 'Control de Materiales', desc: 'Alertas de stock bajo y pedidos pendientes', benefit: 'Sin faltantes' },
+        ]
+    },
+    {
+        id: 'hoteleria',
+        label: 'Hotelería & Turismo',
+        icon: Hotel,
+        color: 'from-sky-500 to-indigo-600',
+        items: [
+            { icon: MessageSquare, title: 'Concierge Virtual', desc: 'WhatsApp 24/7 para consultas y reservas', benefit: 'Atención inmediata' },
+            { icon: Calendar, title: 'Gestión de Reservas', desc: 'Confirmaciones y recordatorios automáticos', benefit: '-80% no-shows' },
+            { icon: Star, title: 'Gestión de Reseñas', desc: 'Solicitud automática y respuesta a reviews', benefit: '+Rating online' },
+            { icon: Bell, title: 'Check-in Express', desc: 'Pre check-in digital y notificaciones al huésped', benefit: 'Mejor experiencia' },
         ]
     },
 ]

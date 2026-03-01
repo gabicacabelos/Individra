@@ -20,7 +20,7 @@ const navigation = {
         { name: 'Consultoría Tech', href: '#contacto' },
     ],
     social: [
-        { name: 'LinkedIn', href: 'https://linkedin.com' },
+        { name: 'LinkedIn', href: 'https://www.linkedin.com/company/individra' },
         { name: 'Instagram', href: 'https://instagram.com' },
         { name: 'X', href: 'https://x.com' },
     ],
