@@ -1,0 +1,6 @@
+# Robots.txt for Individra
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://individratec.com/sitemap.xml

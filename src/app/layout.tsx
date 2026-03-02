@@ -13,29 +13,88 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: 'Individra | Agencia de IA & Desarrollo de Software',
+    title: 'Individra | Automatización con IA y Desarrollo de Software',
     description:
-        'Transformamos tu negocio con Inteligencia Artificial y tecnología a medida. Automatización inteligente, agentes IA y desarrollo fullstack.',
+        'Soluciones de inteligencia artificial y automatización para empresas. Chatbots WhatsApp, agentes IA, desarrollo web y apps a medida. Buenos Aires, Argentina.',
     keywords: [
-        'inteligencia artificial',
+        'automatización con IA',
+        'inteligencia artificial para empresas',
+        'chatbot whatsapp',
         'desarrollo de software',
-        'automatización',
-        'chatbots',
         'agentes IA',
-        'desarrollo web',
-        'aplicaciones móviles',
+        'automatización de procesos',
+        'desarrollo web argentina',
+        'n8n automatización',
     ],
     authors: [{ name: 'Individra' }],
+    creator: 'Individra',
+    publisher: 'Individra',
+    metadataBase: new URL('https://individratec.com'),
+    alternates: {
+        canonical: '/',
+    },
     icons: {
         icon: '/faviconIn.png',
         apple: '/faviconIn.png',
     },
     openGraph: {
-        title: 'Individra | Agencia de IA & Desarrollo de Software',
+        title: 'Individra | Automatización con IA y Desarrollo de Software',
         description:
-            'Transformamos tu negocio con Inteligencia Artificial y tecnología a medida.',
+            'Soluciones de inteligencia artificial y automatización para empresas. Chatbots, agentes IA y desarrollo a medida.',
+        url: 'https://individratec.com',
+        siteName: 'Individra',
+        locale: 'es_AR',
         type: 'website',
+        images: [
+            {
+                url: '/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'Individra - Automatización con IA',
+            },
+        ],
     },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Individra | Automatización con IA',
+        description: 'Soluciones de inteligencia artificial y automatización para empresas.',
+        images: ['/og-image.png'],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+}
+
+const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Individra',
+    description: 'Soluciones de inteligencia artificial y automatización para empresas',
+    url: 'https://individratec.com',
+    logo: 'https://individratec.com/soloLogo.png',
+    email: 'individratec@gmail.com',
+    address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Buenos Aires',
+        addressCountry: 'AR',
+    },
+    sameAs: [
+        'https://www.linkedin.com/company/individra',
+    ],
+    serviceType: [
+        'Automatización con IA',
+        'Desarrollo de Software',
+        'Chatbots WhatsApp',
+        'Agentes de Inteligencia Artificial',
+    ],
 }
 
 export default function RootLayout({
@@ -45,6 +104,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" className="dark">
+            <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+            </head>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
             >
