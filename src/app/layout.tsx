@@ -34,8 +34,12 @@ export const metadata: Metadata = {
         canonical: '/',
     },
     icons: {
-        icon: '/faviconIn.png',
+        icon: [
+            { url: '/favicon.ico', sizes: 'any' },
+            { url: '/faviconIn.png', type: 'image/png' },
+        ],
         apple: '/faviconIn.png',
+        shortcut: '/favicon.ico',
     },
     openGraph: {
         title: 'Individra | Automatización con IA y Desarrollo de Software',
