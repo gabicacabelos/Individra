@@ -3,11 +3,27 @@ import { NextResponse } from 'next/server'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+// Sanitiza strings para prevenir XSS en HTML
+function sanitizeHtml(str: string): string {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+}
+
+// Valida formato de email
+function isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+}
+
 export async function POST(request: Request) {
     try {
         const { nombre, empresa, email, mensaje } = await request.json()
 
-        // Validación básica
+        // Validación de campos requeridos
         if (!nombre || !email || !mensaje) {
             return NextResponse.json(
                 { error: 'Faltan campos requeridos' },
@@ -15,11 +31,33 @@ export async function POST(request: Request) {
             )
         }
 
+        // Validación de formato de email
+        if (!isValidEmail(email)) {
+            return NextResponse.json(
+                { error: 'El formato del email no es válido' },
+                { status: 400 }
+            )
+        }
+
+        // Validación de longitud máxima para prevenir ataques
+        if (nombre.length > 100 || (empresa && empresa.length > 100) || email.length > 254 || mensaje.length > 5000) {
+            return NextResponse.json(
+                { error: 'Uno o más campos exceden la longitud máxima permitida' },
+                { status: 400 }
+            )
+        }
+
+        // Sanitizar todos los inputs
+        const safeNombre = sanitizeHtml(nombre.trim())
+        const safeEmpresa = empresa ? sanitizeHtml(empresa.trim()) : ''
+        const safeEmail = sanitizeHtml(email.trim())
+        const safeMensaje = sanitizeHtml(mensaje.trim())
+
         // Enviar email
         const { data, error } = await resend.emails.send({
             from: 'Individra <contacto@individratec.com>',
             to: ['individratec@gmail.com'],
-            subject: `Nuevo contacto de ${nombre} - Individra`,
+            subject: `Nuevo contacto de ${safeNombre} - Individra`,
             html: `
                 <!DOCTYPE html>
                 <html>
@@ -41,19 +79,19 @@ export async function POST(request: Request) {
                             <div style="margin-bottom: 24px;">
                                 <div style="margin-bottom: 20px;">
                                     <p style="color: #8b5cf6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Nombre</p>
-                                    <p style="color: #ffffff; font-size: 16px; margin: 0;">${nombre}</p>
+                                    <p style="color: #ffffff; font-size: 16px; margin: 0;">${safeNombre}</p>
                                 </div>
 
-                                ${empresa ? `
+                                ${safeEmpresa ? `
                                 <div style="margin-bottom: 20px;">
                                     <p style="color: #8b5cf6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Empresa</p>
-                                    <p style="color: #ffffff; font-size: 16px; margin: 0;">${empresa}</p>
+                                    <p style="color: #ffffff; font-size: 16px; margin: 0;">${safeEmpresa}</p>
                                 </div>
                                 ` : ''}
 
                                 <div style="margin-bottom: 20px;">
                                     <p style="color: #8b5cf6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Email</p>
-                                    <a href="mailto:${email}" style="color: #60a5fa; font-size: 16px; text-decoration: none;">${email}</a>
+                                    <a href="mailto:${safeEmail}" style="color: #60a5fa; font-size: 16px; text-decoration: none;">${safeEmail}</a>
                                 </div>
                             </div>
 
@@ -63,7 +101,7 @@ export async function POST(request: Request) {
                             <!-- Message -->
                             <div>
                                 <p style="color: #8b5cf6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 12px 0;">Mensaje</p>
-                                <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${mensaje}</p>
+                                <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${safeMensaje}</p>
                             </div>
                         </div>
 
@@ -77,7 +115,7 @@ export async function POST(request: Request) {
                 </body>
                 </html>
             `,
-            replyTo: email,
+            replyTo: email.trim(),
         })
 
         if (error) {
