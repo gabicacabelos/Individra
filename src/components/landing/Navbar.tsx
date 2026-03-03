@@ -88,7 +88,7 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={(e) => handleNavClick(e, '#contacto')}
-                            className="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
+                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:opacity-90 transition-opacity whitespace-nowrap"
                         >
                             Empezar ahora
                         </a>

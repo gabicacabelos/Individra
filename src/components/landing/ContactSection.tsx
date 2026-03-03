@@ -336,7 +336,7 @@ export function ContactSection() {
                                             <button
                                                 type="submit"
                                                 disabled={isSubmitting}
-                                                className="w-full py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.99] transition-all duration-200 ease-out disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:hover:shadow-violet-500/25 flex items-center justify-center gap-3"
+                                                className="w-full py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.99] transition-all duration-200 ease-out disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:hover:shadow-violet-500/25 flex items-center justify-center gap-2 sm:gap-3"
                                             >
                                                 {isSubmitting ? (
                                                     <>

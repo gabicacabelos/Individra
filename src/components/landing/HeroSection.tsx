@@ -92,17 +92,17 @@ export function HeroSection() {
                             </p>
 
                             {/* CTA Buttons */}
-                            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
                                     href="#contacto"
-                                    className="group relative px-8 py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out"
+                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                                 >
                                     <span className="relative z-10">Automatizar mi negocio</span>
                                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                                 </a>
                                 <a
                                     href="#servicios"
-                                    className="px-8 py-4 border border-white/20 text-white font-semibold rounded-full hover:bg-white/10 hover:border-white/30 active:scale-[0.98] transition-all duration-200 ease-out"
+                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-white/20 text-white text-sm sm:text-base font-semibold rounded-full hover:bg-white/10 hover:border-white/30 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                                 >
                                     Ver servicios
                                 </a>

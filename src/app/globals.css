@@ -181,4 +181,33 @@
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
   }
+
+  /* Responsive button sizing for notebooks */
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    /* Ensure buttons don't overflow on smaller laptops */
+    .cta-button-primary,
+    .cta-button-secondary {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Ensure text doesn't overflow on smaller screens */
+  @media (max-width: 1440px) {
+    h1, h2, h3, h4 {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
+    }
+  }
+
+  /* Better touch targets for smaller laptops */
+  @media (min-width: 768px) and (max-width: 1280px) {
+    button, a[href] {
+      min-height: 44px;
+    }
+  }
 }

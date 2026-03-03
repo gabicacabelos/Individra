@@ -314,7 +314,7 @@ export function CatalogSection() {
 
                             <a
                                 href="#contacto"
-                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white font-medium rounded-full shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out"
+                                className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-medium rounded-full shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                             >
                                 Contanos
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />

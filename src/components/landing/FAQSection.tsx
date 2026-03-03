@@ -216,7 +216,7 @@ export function FAQSection() {
                     <p className="text-neutral-500 mb-4">¿No encontrás tu respuesta?</p>
                     <a
                         href="#contacto"
-                        className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out"
+                        className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                     >
                         Contactanos
                         <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-200" />
