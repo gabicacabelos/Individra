@@ -217,4 +217,23 @@
       min-height: 44px;
     }
   }
+
+  /* Hide scrollbar in Calendly container */
+  .calendly-container {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .calendly-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  .calendly-container iframe {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .calendly-container iframe::-webkit-scrollbar {
+    display: none;
+  }
 }

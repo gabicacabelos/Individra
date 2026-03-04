@@ -109,11 +109,11 @@ export function ContactSection() {
                             }}
                             className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-2xl sm:rounded-3xl blur-xl"
                         />
-                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex items-center justify-center">
+                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex items-center justify-center calendly-container">
                             {isMounted ? (
                                 <InlineWidget
                                     url="https://calendly.com/individratec/30min?locale=es"
-                                    styles={{ height: '750px', width: '100%' }}
+                                    styles={{ height: '700px', width: '100%', overflow: 'hidden' }}
                                     prefill={{
                                         customAnswers: undefined
                                     }}
