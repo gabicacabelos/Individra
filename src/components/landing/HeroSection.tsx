@@ -65,18 +65,21 @@ export function HeroSection() {
                             >
                                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                 <span className="text-violet-300 text-sm font-medium">
-                                    IA + Desarrollo de Software a medida
+                                    Ingeniería de Software & IA B2B
                                 </span>
                             </motion.div>
 
                             {/* Title */}
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
-                                    Potenciamos tu negocio
+                            <h1 className="text-[1.75rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400 block sm:inline">
+                                    Dejá de trabajar
+                                </span>{' '}
+                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400 block sm:inline">
+                                    para tu negocio.
                                 </span>
                                 <br />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-blue-400 to-violet-400">
-                                    con Inteligencia Artificial
+                                    Que tu negocio trabaje para vos.
                                 </span>
                             </h1>
 
@@ -86,19 +89,21 @@ export function HeroSection() {
                             </div>
 
                             {/* Subtitle */}
-                            <p className="-mt-6 sm:-mt-10 lg:mt-6 text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                                Chatbots que venden. Automatizaciones que ahorran horas. Software que escala.
-                                <span className="text-white font-medium"> Construimos la tecnología que tu negocio necesita para crecer.</span>
+                            <p className="-mt-6 sm:-mt-10 lg:mt-6 text-neutral-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                                Automatizamos las tareas que te roban tiempo:
+                                <span className="text-white font-medium"> atención en WhatsApp, presupuestos y gestión de datos.</span>
                             </p>
 
                             {/* CTA Buttons */}
                             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
-                                    href="#contacto"
-                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
+                                    href="https://wa.me/5491160152435?text=%C2%A1Hola%20Individra!%20Me%20interesa%20agendar%20una%20auditor%C3%ADa%20gratuita."
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/50 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-block"
                                 >
-                                    <span className="relative z-10">Automatizar mi negocio</span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                                    <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Agendar Auditoría Gratuita</span>
+                                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 </a>
                                 <a
                                     href="#servicios"

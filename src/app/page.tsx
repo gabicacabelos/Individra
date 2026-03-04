@@ -8,6 +8,8 @@ import {
     ContactSection,
     Footer,
     FloatingChatbot,
+    ComparativeSection,
+    InteractiveConsultorSection,
 } from '@/components/landing'
 
 export default function Home() {
@@ -15,9 +17,11 @@ export default function Home() {
         <main className="bg-black min-h-screen">
             <Navbar />
             <HeroSection />
+            <InteractiveConsultorSection />
             <ServicesSection />
             <ConnectionSection />
             <CatalogSection />
+            <ComparativeSection />
             <FAQSection />
             <ContactSection />
             <Footer />

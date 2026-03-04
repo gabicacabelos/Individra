@@ -42,11 +42,11 @@ export function Navbar() {
 
     const navLinks = [
         { href: '#inicio', label: 'Inicio' },
+        { href: '#diagnostico-ia', label: 'Diagnóstico IA' },
         { href: '#servicios', label: 'Servicios' },
         { href: '#proceso', label: 'Proceso' },
         { href: '#soluciones', label: 'Soluciones' },
         { href: '#faq', label: 'FAQ' },
-        { href: '#contacto', label: 'Contacto' },
     ]
 
     return (

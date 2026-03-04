@@ -11,6 +11,13 @@ export async function POST(request: Request) {
       )
     }
 
+    if (message.length > 1000) {
+      return NextResponse.json(
+        { error: 'Message is too long (maximum 1000 characters)' },
+        { status: 413 }
+      )
+    }
+
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
 
     if (!n8nWebhookUrl) {
@@ -34,7 +41,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({ message }),
       signal: controller.signal
     })
-    
+
     clearTimeout(timeoutId);
 
     if (!n8nResponse.ok) {
@@ -48,7 +55,7 @@ export async function POST(request: Request) {
     const n8nData = await n8nResponse.json()
 
     // Depending on what properties you mapped in n8n's Node output:
-    return NextResponse.json({ 
+    return NextResponse.json({
       response: n8nData.response || 'No response field configured in n8n.'
     })
 
