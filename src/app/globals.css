@@ -195,13 +195,20 @@
     }
   }
 
-  /* Ensure text doesn't overflow on smaller screens */
-  @media (max-width: 1440px) {
-    h1, h2, h3, h4 {
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      hyphens: auto;
-    }
+  /* Prevent hyphenation - words must break only at word boundaries */
+  * {
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+    -ms-hyphens: none !important;
+  }
+
+  /* Ensure text wraps at word boundaries, never mid-word */
+  h1, h2, h3, h4, h5, h6, p, span, a, button, label {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: normal;
+    hyphens: none !important;
   }
 
   /* Better touch targets for smaller laptops */

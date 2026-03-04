@@ -70,12 +70,9 @@ export function HeroSection() {
                             </motion.div>
 
                             {/* Title */}
-                            <h1 className="text-[1.75rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400 block sm:inline">
-                                    Dejá de trabajar
-                                </span>{' '}
-                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400 block sm:inline">
-                                    para tu negocio.
+                            <h1 className="text-[1.6rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}>
+                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
+                                    Dejá de trabajar para tu negocio.
                                 </span>
                                 <br />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-blue-400 to-violet-400">

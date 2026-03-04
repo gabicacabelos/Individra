@@ -51,6 +51,51 @@ function sanitizeInput(input: string): string {
     return sanitized.trim();
 }
 
+// Validar que el contenido sea apropiado y relacionado a negocios
+function validateContent(input: string): { valid: boolean; reason?: string } {
+    const lowerInput = input.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // Lista de palabras inapropiadas
+    const inappropriateWords = [
+        'pedo', 'culo', 'mierda', 'cagar', 'puto', 'puta', 'verga', 'chota', 'concha',
+        'boludo', 'pelotudo', 'forro', 'garcha', 'coger', 'cojeme', 'porn', 'sexo',
+        'drogas', 'cocaina', 'marihuana', 'matar', 'asesinar', 'robar', 'hackear',
+        'fuck', 'shit', 'ass', 'dick', 'pussy', 'cock', 'bitch', 'bastard'
+    ];
+
+    // Verificar palabras inapropiadas
+    for (const word of inappropriateWords) {
+        if (lowerInput.includes(word)) {
+            return { valid: false, reason: 'El contenido no es apropiado. Por favor, describí un problema real de tu negocio.' };
+        }
+    }
+
+    // Palabras clave que indican contexto de negocios
+    const businessKeywords = [
+        'tiempo', 'horas', 'trabajo', 'cliente', 'venta', 'factura', 'presupuesto',
+        'email', 'correo', 'whatsapp', 'mensaje', 'responder', 'atender', 'llamada',
+        'documento', 'excel', 'planilla', 'datos', 'sistema', 'proceso', 'manual',
+        'automatizar', 'repetitivo', 'empleado', 'equipo', 'empresa', 'negocio',
+        'pedido', 'inventario', 'stock', 'envio', 'entrega', 'pago', 'cobro',
+        'agenda', 'cita', 'turno', 'calendario', 'recordatorio', 'seguimiento',
+        'reporte', 'informe', 'analisis', 'crm', 'erp', 'gestion', 'administrar',
+        'cotizacion', 'proveedor', 'compra', 'orden', 'registro', 'base de datos',
+        'formulario', 'web', 'pagina', 'app', 'aplicacion', 'software', 'plataforma',
+        'lead', 'prospecto', 'contacto', 'marketing', 'campaña', 'publicidad',
+        'redes', 'social', 'instagram', 'facebook', 'contenido', 'publicar'
+    ];
+
+    // Verificar que tenga al menos una palabra relacionada a negocios
+    const hasBusinessContext = businessKeywords.some(keyword => lowerInput.includes(keyword));
+
+    // Si el mensaje es muy corto y no tiene contexto de negocios, rechazarlo
+    if (!hasBusinessContext && input.length < 50) {
+        return { valid: false, reason: 'Por favor, describí con más detalle un problema o proceso de tu empresa que te gustaría automatizar.' };
+    }
+
+    return { valid: true };
+}
+
 // Validar que el response tenga la estructura esperada
 function validateAIResponse(data: unknown): data is { diagnostico: string; solucion: string; tiempoAhorrado: string } {
     if (typeof data !== 'object' || data === null) return false;
@@ -105,6 +150,15 @@ export async function POST(req: Request) {
         if (sanitizedPrompt.length < 10) {
             return NextResponse.json(
                 { error: "Por favor, describí tu problema con más detalle." },
+                { status: 400 }
+            );
+        }
+
+        // Validar contenido antes de gastar tokens
+        const contentValidation = validateContent(sanitizedPrompt);
+        if (!contentValidation.valid) {
+            return NextResponse.json(
+                { error: contentValidation.reason },
                 { status: 400 }
             );
         }
