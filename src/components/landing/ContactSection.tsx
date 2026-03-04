@@ -47,14 +47,14 @@ export function ContactSection() {
                 className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"
             />
 
-            <div className="relative z-10 max-w-4xl mx-auto px-6">
+            <div className="relative z-10 max-w-4xl mx-auto px-1 sm:px-6">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="text-center mb-16"
+                    className="text-center mb-12 sm:mb-16"
                 >
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -107,13 +107,13 @@ export function ContactSection() {
                                 repeat: Infinity,
                                 ease: 'easeInOut'
                             }}
-                            className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-3xl blur-xl"
+                            className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-2xl sm:rounded-3xl blur-xl"
                         />
-                        <div className="relative p-2 sm:p-8 rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex items-center justify-center">
+                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex items-center justify-center">
                             {isMounted ? (
                                 <InlineWidget
                                     url="https://calendly.com/individratec/30min?locale=es"
-                                    styles={{ height: '750px', width: '100%', minWidth: '320px' }}
+                                    styles={{ height: '750px', width: '100%' }}
                                     prefill={{
                                         customAnswers: undefined
                                     }}

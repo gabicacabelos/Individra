@@ -520,10 +520,10 @@ export function InteractiveConsultorSection() {
                                                     href={`https://wa.me/5491160152435?text=${encodeURIComponent(`¡Hola Individra! Quiero solicitar un servicio basado en este diagnóstico:\n\n"${result.diagnostico}"`)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center justify-center gap-2 w-full py-3 bg-white text-black font-sans font-semibold rounded-lg hover:bg-neutral-200 transition-colors"
+                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 sm:py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-sans font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
                                                 >
-                                                    Quiero implementar este sistema
-                                                    <ArrowRight className="w-4 h-4" />
+                                                    <span>Implementar este sistema</span>
+                                                    <ArrowRight className="w-4 h-4 flex-shrink-0" />
                                                 </a>
                                             </motion.div>
                                         </motion.div>
