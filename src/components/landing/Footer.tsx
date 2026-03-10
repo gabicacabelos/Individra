@@ -166,13 +166,8 @@ export function Footer() {
             {/* Bottom Bar */}
             <div className="relative z-10 border-t border-white/10">
                 <div className="max-w-7xl mx-auto px-6 py-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        {/* Copyright */}
-                        <p className="text-neutral-500 text-sm">
-                            © {currentYear} Individra. Todos los derechos reservados.
-                        </p>
-
-                        {/* Logo icon */}
+                    <div className="flex flex-col items-center gap-6">
+                        {/* Logo icon - Centered */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
@@ -181,11 +176,16 @@ export function Footer() {
                             <Image
                                 src="/soloLogo.png"
                                 alt="INDIVIDRA Logo"
-                                width={70}
-                                height={70}
-                                className="h-20 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300"
+                                width={100}
+                                height={100}
+                                className="h-28 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300"
                             />
                         </motion.div>
+
+                        {/* Copyright */}
+                        <p className="text-neutral-500 text-sm">
+                            © {currentYear} Individra. Todos los derechos reservados.
+                        </p>
                     </div>
                 </div>
             </div>
