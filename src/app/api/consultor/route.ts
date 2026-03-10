@@ -70,6 +70,83 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         }
     }
 
+    // Palabras y frases que indican contextos personales NO empresariales
+    const personalContextKeywords = [
+        // Relaciones personales
+        'novia', 'novio', 'ex', 'pareja', 'esposa', 'esposo', 'marido', 'mujer',
+        'amor', 'enamorado', 'enamorada', 'relacion', 'romance', 'romantico',
+        'recuperar', 'recuperarla', 'recuperarlo', 'volver', 'perdonar', 'perdon',
+        'infidelidad', 'engano', 'celos', 'celoso', 'celosa', 'ruptura', 'separacion',
+        'casamiento', 'boda', 'divorcio', 'matrimonio',
+        // Familia personal
+        'mama', 'papa', 'padre', 'madre', 'hermano', 'hermana', 'hijo', 'hija',
+        'abuelo', 'abuela', 'tio', 'tia', 'primo', 'prima', 'suegra', 'suegro',
+        'cunado', 'cunada', 'familia',
+        // Salud personal
+        'enfermedad', 'enfermo', 'enferma', 'doctor', 'medico', 'hospital',
+        'depresion', 'ansiedad', 'estres personal', 'insomnio', 'terapia',
+        'psicologo', 'psiquiatra', 'medicamento', 'pastilla',
+        // Educación personal
+        'examen', 'parcial', 'final', 'tesis', 'facultad', 'universidad',
+        'colegio', 'escuela', 'profesor', 'estudiante', 'tarea', 'deberes',
+        'aprobar', 'reprobar', 'nota', 'calificacion',
+        // Finanzas personales
+        'deuda personal', 'prestamo personal', 'alquiler', 'expensas',
+        'sueldo', 'salario', 'aguinaldo',
+        // Emociones personales
+        'triste', 'tristeza', 'soledad', 'solo', 'sola', 'llorar', 'lloro',
+        'feliz', 'felicidad', 'miedo', 'asustado', 'asustada', 'angustia',
+        // Ocio y entretenimiento
+        'juego', 'videojuego', 'pelicula', 'serie', 'netflix', 'spotify',
+        'musica', 'cancion', 'fiesta', 'boliche', 'bar', 'cerveza', 'alcohol',
+        'vacaciones', 'viaje personal', 'hobby', 'deporte',
+        // Preguntas generales no empresariales
+        'que es', 'como funciona', 'quien es', 'donde esta', 'cuando fue',
+        'receta', 'cocinar', 'comida', 'dieta', 'gym', 'gimnasio',
+        'mascota', 'perro', 'gato', 'animal',
+        // Otros contextos no empresariales
+        'horoscopo', 'signo zodiacal', 'carta astral', 'tarot',
+        'loteria', 'quiniela', 'apuesta', 'casino', 'tragamonedas'
+    ];
+
+    // Patrones que indican consultas personales
+    const personalPatterns = [
+        /perdi (a )?mi (novia|novio|pareja|esposa|esposo)/i,
+        /recuperar (a )?mi (novia|novio|pareja|ex)/i,
+        /mi (novia|novio|pareja|ex) (me dejo|termino|se fue)/i,
+        /(quiero|necesito) (volver|recuperar) con/i,
+        /como (conquisto|enamoro|seduzco)/i,
+        /problema (personal|familiar|de pareja|de salud)/i,
+        /me siento (triste|solo|sola|mal|deprimido|deprimida)/i,
+        /(estudiar|aprobar|pasar) (el|la|un|una) (examen|parcial|materia)/i,
+        /bajar de peso/i,
+        /^(hola|buenas|buen dia|buenos dias)$/i,
+        /^quien (sos|eres)\??$/i,
+        /^que (sos|eres|haces)\??$/i,
+        /^(test|prueba|probando)$/i,
+        /^(asdf|qwerty|1234|aaaa|hhhh)/i,
+    ];
+
+    // Verificar patrones de contexto personal
+    for (const pattern of personalPatterns) {
+        if (pattern.test(lowerInput)) {
+            return {
+                valid: false,
+                reason: 'Esta herramienta está diseñada exclusivamente para diagnosticar cuellos de botella en empresas y negocios. Por favor, describí un proceso empresarial que te gustaría automatizar (ej: "Pierdo 3 horas diarias armando presupuestos en Excel").'
+            };
+        }
+    }
+
+    // Verificar palabras de contexto personal
+    for (const keyword of personalContextKeywords) {
+        if (lowerInput.includes(keyword)) {
+            return {
+                valid: false,
+                reason: 'Esta herramienta está diseñada exclusivamente para diagnosticar cuellos de botella en empresas y negocios. Por favor, describí un proceso empresarial que te gustaría automatizar (ej: "Pierdo 3 horas diarias armando presupuestos en Excel").'
+            };
+        }
+    }
+
     // Palabras clave que indican contexto de negocios
     const businessKeywords = [
         'tiempo', 'horas', 'trabajo', 'cliente', 'venta', 'factura', 'presupuesto',
@@ -82,15 +159,23 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'cotizacion', 'proveedor', 'compra', 'orden', 'registro', 'base de datos',
         'formulario', 'web', 'pagina', 'app', 'aplicacion', 'software', 'plataforma',
         'lead', 'prospecto', 'contacto', 'marketing', 'campaña', 'publicidad',
-        'redes', 'social', 'instagram', 'facebook', 'contenido', 'publicar'
+        'redes', 'social', 'instagram', 'facebook', 'contenido', 'publicar',
+        'tarea', 'proyecto', 'deadline', 'productividad', 'eficiencia', 'optimizar',
+        'servicio', 'producto', 'logistica', 'despacho', 'almacen', 'bodega',
+        'facturacion', 'contabilidad', 'finanzas', 'cobranza', 'mora', 'cuenta',
+        'ticket', 'soporte', 'atencion al cliente', 'reclamo', 'queja',
+        'propuesta', 'licitacion', 'contrato', 'comercial', 'ventas'
     ];
 
     // Verificar que tenga al menos una palabra relacionada a negocios
     const hasBusinessContext = businessKeywords.some(keyword => lowerInput.includes(keyword));
 
-    // Si el mensaje es muy corto y no tiene contexto de negocios, rechazarlo
-    if (!hasBusinessContext && input.length < 50) {
-        return { valid: false, reason: 'Por favor, describí con más detalle un problema o proceso de tu empresa que te gustaría automatizar.' };
+    // SIEMPRE requerir contexto empresarial
+    if (!hasBusinessContext) {
+        return {
+            valid: false,
+            reason: 'No detectamos un contexto empresarial en tu consulta. Por favor, describí un problema o proceso específico de tu negocio que te gustaría automatizar (ej: "Tardo mucho tiempo respondiendo consultas de clientes por WhatsApp").'
+        };
     }
 
     return { valid: true };

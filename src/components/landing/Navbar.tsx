@@ -80,7 +80,7 @@ export function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className="text-neutral-400 hover:text-white transition-colors duration-200 text-sm font-medium"
+                                className="text-neutral-400 hover:text-white transition-colors duration-200 text-sm font-medium flex items-center h-10"
                             >
                                 {link.label}
                             </a>
@@ -88,7 +88,7 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={(e) => handleNavClick(e, '#contacto')}
-                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:opacity-90 transition-opacity whitespace-nowrap"
+                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:opacity-90 transition-opacity whitespace-nowrap flex items-center h-10"
                         >
                             Empezar ahora
                         </a>

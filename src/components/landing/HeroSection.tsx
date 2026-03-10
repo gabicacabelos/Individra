@@ -92,19 +92,19 @@ export function HeroSection() {
                             </p>
 
                             {/* CTA Buttons */}
-                            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
+                            <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
                                     href="https://wa.me/5491160152435?text=%C2%A1Hola%20Individra!%20Me%20interesa%20agendar%20una%20auditor%C3%ADa%20gratuita."
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/50 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-block"
+                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full overflow-hidden shadow-lg shadow-violet-500/25 hover:shadow-violet-500/50 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center"
                                 >
                                     <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Agendar Auditoría Gratuita</span>
                                     <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 </a>
                                 <a
                                     href="#servicios"
-                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-white/20 text-white text-sm sm:text-base font-semibold rounded-full hover:bg-white/10 hover:border-white/30 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
+                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-white/20 text-white text-sm sm:text-base font-semibold rounded-full hover:bg-white/10 hover:border-white/30 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center"
                                 >
                                     Ver servicios
                                 </a>
