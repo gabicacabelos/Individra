@@ -172,16 +172,6 @@ export function Footer() {
                             © {currentYear} Individra. Todos los derechos reservados.
                         </p>
 
-                        {/* Legal Links */}
-                        <div className="flex items-center gap-6 text-sm">
-                            <a href="#" className="text-neutral-500 hover:text-white transition-colors">
-                                Política de privacidad
-                            </a>
-                            <a href="#" className="text-neutral-500 hover:text-white transition-colors">
-                                Términos de servicio
-                            </a>
-                        </div>
-
                         {/* Logo icon */}
                         <motion.div
                             initial={{ opacity: 0 }}
