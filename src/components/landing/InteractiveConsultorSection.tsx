@@ -517,7 +517,7 @@ export function InteractiveConsultorSection() {
                                                 className="pt-4"
                                             >
                                                 <a
-                                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(`¡Hola Individra! Quiero solicitar un servicio basado en este diagnóstico:\n\n📋 *Diagnóstico:*\n${result.diagnostico}\n\n💡 *Solución Propuesta:*\n${result.solucion}`)}`}
+                                                    href={`https://wa.me/5491160152435?text=¡Hola Individra! Quiero solicitar un servicio basado en este diagnóstico:%0A%0A🔍 *Diagnóstico:*%0A${encodeURIComponent(result.diagnostico)}%0A%0A💡 *Solución Propuesta:*%0A${encodeURIComponent(result.solucion)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 sm:py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-sans font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
