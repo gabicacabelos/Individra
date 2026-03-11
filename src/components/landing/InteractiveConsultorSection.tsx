@@ -517,7 +517,7 @@ export function InteractiveConsultorSection() {
                                                 className="pt-4"
                                             >
                                                 <a
-                                                    href={`https://wa.me/5491160152435?text=¡Hola Individra! Quiero solicitar un servicio basado en este diagnóstico:%0A%0A🔍 *Diagnóstico:*%0A${encodeURIComponent(result.diagnostico)}%0A%0A💡 *Solución Propuesta:*%0A${encodeURIComponent(result.solucion)}`}
+                                                    href={`https://wa.me/5491160152435?text=%C2%A1Hola%20Individra!%20Quiero%20solicitar%20un%20servicio%20basado%20en%20este%20diagn%C3%B3stico:%0A%0A%F0%9F%94%8D%20*Diagn%C3%B3stico:*%0A${encodeURIComponent(result.diagnostico)}%0A%0A%F0%9F%92%A1%20*Soluci%C3%B3n%20Propuesta:*%0A${encodeURIComponent(result.solucion)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 sm:py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-sans font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
