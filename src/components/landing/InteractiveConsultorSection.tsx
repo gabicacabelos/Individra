@@ -431,106 +431,110 @@ export function InteractiveConsultorSection() {
                                 </div>
 
                                 {/* Terminal Body */}
-                                <div className="p-6 flex-1 overflow-y-auto font-mono text-sm">
-                                    {!isLoading && !result && !error && (
-                                        <div className="h-full flex flex-col items-center justify-center text-neutral-600 space-y-4">
-                                            <Terminal className="w-12 h-12 opacity-50" />
-                                            <p className="text-center max-w-[250px]">
-                                                Esperando input para generar diagnóstico del sistema...
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    {isLoading && (
-                                        <div className="space-y-4 text-neutral-400">
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                                <span className="text-blue-400">&gt;</span> Inicializando motor de análisis...
-                                            </motion.div>
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                                                <span className="text-blue-400">&gt;</span> Procesando cuello de botella...
-                                            </motion.div>
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                                                <span className="text-blue-400">&gt;</span> Diseñando arquitectura de solución...
-                                            </motion.div>
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }} className="animate-pulse">
-                                                <span className="text-violet-400">&gt;</span> Compilando reporte final_
-                                            </motion.div>
-                                        </div>
-                                    )}
-
-                                    {error && (
-                                        <div className="text-red-400">
-                                            <span className="text-red-500 font-bold">[ERROR]</span> {error}
-                                        </div>
-                                    )}
-
-                                    {result && !isLoading && (
-                                        <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            className="space-y-6"
-                                        >
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-3">
-                                                    <div className="mt-1 bg-red-500/10 p-1.5 rounded-md">
-                                                        <span className="text-red-400">🔍</span>
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="text-white font-sans font-semibold mb-1">Diagnóstico Individra:</h4>
-                                                        <p className="text-neutral-400 font-sans leading-relaxed">{result.diagnostico}</p>
-                                                    </div>
-                                                </div>
+                                <div className="flex-1 flex flex-col relative overflow-hidden font-mono text-sm">
+                                    <div className={`p-6 flex-1 overflow-y-auto ${result && !isLoading ? 'pb-28' : ''}`}>
+                                        {!isLoading && !result && !error && (
+                                            <div className="h-full flex flex-col items-center justify-center text-neutral-600 space-y-4">
+                                                <Terminal className="w-12 h-12 opacity-50" />
+                                                <p className="text-center max-w-[250px]">
+                                                    Esperando input para generar diagnóstico del sistema...
+                                                </p>
                                             </div>
+                                        )}
 
-                                            <div className="w-full h-px bg-white/5" />
-
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-3">
-                                                    <div className="mt-1 bg-blue-500/10 p-1.5 rounded-md">
-                                                        <Settings className="w-4 h-4 text-blue-400" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="text-white font-sans font-semibold mb-1">Solución Propuesta:</h4>
-                                                        <p className="text-neutral-400 font-sans leading-relaxed">{result.solucion}</p>
-                                                    </div>
-                                                </div>
+                                        {isLoading && (
+                                            <div className="space-y-4 text-neutral-400">
+                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                                    <span className="text-blue-400">&gt;</span> Inicializando motor de análisis...
+                                                </motion.div>
+                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                                                    <span className="text-blue-400">&gt;</span> Procesando cuello de botella...
+                                                </motion.div>
+                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+                                                    <span className="text-blue-400">&gt;</span> Diseñando arquitectura de solución...
+                                                </motion.div>
+                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }} className="animate-pulse">
+                                                    <span className="text-violet-400">&gt;</span> Compilando reporte final_
+                                                </motion.div>
                                             </div>
+                                        )}
 
-                                            <div className="w-full h-px bg-white/5" />
-
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-3">
-                                                    <div className="mt-1 bg-emerald-500/10 p-1.5 rounded-md">
-                                                        <Clock className="w-4 h-4 text-emerald-400" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="text-white font-sans font-semibold mb-1">Tiempo Ahorrado:</h4>
-                                                        <p className="text-emerald-400 font-sans font-medium">{result.tiempoAhorrado}</p>
-                                                    </div>
-                                                </div>
+                                        {error && (
+                                            <div className="text-red-400">
+                                                <span className="text-red-500 font-bold">[ERROR]</span> {error}
                                             </div>
+                                        )}
 
+                                        {result && !isLoading && (
                                             <motion.div
-                                                initial={{ opacity: 0, y: 10 }}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                className="space-y-6"
+                                            >
+                                                <div className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1 bg-red-500/10 p-1.5 rounded-md">
+                                                            <span className="text-red-400">🔍</span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="text-white font-sans font-semibold mb-1">Diagnóstico Individra:</h4>
+                                                            <p className="text-neutral-400 font-sans leading-relaxed">{result.diagnostico}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full h-px bg-white/5" />
+
+                                                <div className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1 bg-blue-500/10 p-1.5 rounded-md">
+                                                            <Settings className="w-4 h-4 text-blue-400" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="text-white font-sans font-semibold mb-1">Solución Propuesta:</h4>
+                                                            <p className="text-neutral-400 font-sans leading-relaxed">{result.solucion}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full h-px bg-white/5" />
+
+                                                <div className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1 bg-emerald-500/10 p-1.5 rounded-md">
+                                                            <Clock className="w-4 h-4 text-emerald-400" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="text-white font-sans font-semibold mb-1">Tiempo Ahorrado:</h4>
+                                                            <p className="text-emerald-400 font-sans font-medium">{result.tiempoAhorrado}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+
+                                    {/* Sticky action section for result */}
+                                    {result && !isLoading && (
+                                        <div className="absolute bottom-0 left-0 right-0 p-6 pt-16 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pointer-events-none flex items-end">
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.5 }}
-                                                className="pt-4"
+                                                transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
+                                                className="w-full pointer-events-auto"
                                             >
                                                 <a
-                                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(`Hola Individra! Quiero solicitar un servicio basado en este diagnostico:
-
-*Diagnostico* → ${result.diagnostico}
-
-*Solucion Propuesta* → ${result.solucion}`)}`}
+                                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(`Hola Individra! Quiero solicitar un servicio basado en este diagnostico:\n\n*Diagnostico* → ${result.diagnostico}\n\n*Solucion Propuesta* → ${result.solucion}`)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 sm:py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-sans font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
+                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-base font-sans font-semibold rounded-xl shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_-5px_rgba(139,92,246,0.5)] hover:brightness-110 active:scale-[0.98] transition-all duration-200 ring-1 ring-white/10"
                                                 >
+                                                    <Sparkles className="w-4 h-4 text-blue-200" />
                                                     <span>Implementar este sistema</span>
                                                     <ArrowRight className="w-4 h-4 flex-shrink-0" />
                                                 </a>
                                             </motion.div>
-                                        </motion.div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
