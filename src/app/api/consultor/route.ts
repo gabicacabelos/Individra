@@ -101,7 +101,6 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'musica', 'cancion', 'fiesta', 'boliche', 'bar', 'cerveza', 'alcohol',
         'vacaciones', 'viaje personal', 'hobby', 'deporte',
         // Preguntas generales no empresariales
-        'que es', 'como funciona', 'quien es', 'donde esta', 'cuando fue',
         'receta', 'cocinar', 'comida', 'dieta', 'gym', 'gimnasio',
         'mascota', 'perro', 'gato', 'animal',
         // Otros contextos no empresariales
@@ -125,6 +124,12 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         /^que (sos|eres|haces)\??$/i,
         /^(test|prueba|probando)$/i,
         /^(asdf|qwerty|1234|aaaa|hhhh)/i,
+        // Preguntas genéricas (solo al inicio)
+        /^que es\s/i,
+        /^como funciona\s/i,
+        /^quien es\s/i,
+        /^donde esta\s/i,
+        /^cuando fue\s/i,
     ];
 
     // Verificar patrones de contexto personal
@@ -164,7 +169,9 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'servicio', 'producto', 'logistica', 'despacho', 'almacen', 'bodega',
         'facturacion', 'contabilidad', 'finanzas', 'cobranza', 'mora', 'cuenta',
         'ticket', 'soporte', 'atencion al cliente', 'reclamo', 'queja',
-        'propuesta', 'licitacion', 'contrato', 'comercial', 'ventas'
+        'propuesta', 'licitacion', 'contrato', 'comercial', 'ventas',
+        'diferenciar', 'segmentar', 'clasificar', 'filtrar', 'interesado', 'interesados',
+        'calificar', 'cualificar', 'priorizar', 'organizar', 'ordenar'
     ];
 
     // Verificar que tenga al menos una palabra relacionada a negocios
