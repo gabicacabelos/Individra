@@ -72,12 +72,14 @@ export function ConnectionSection() {
         offset: ['start start', 'end end']
     })
 
-    // Throttled scroll handler - only update state when step changes or significant progress
+    // Scroll handler - more responsive on mobile
     useMotionValueEvent(scrollYProgress, 'change', (latest) => {
         const newStepIndex = Math.min(Math.floor(latest * steps.length), steps.length - 1)
 
-        // Only update if step changed or progress changed by more than 2%
-        if (newStepIndex !== activeStep || Math.abs(latest - lastUpdateRef.current) > 0.02) {
+        // More responsive threshold on mobile (1% vs 2% on desktop)
+        const threshold = isMobile ? 0.01 : 0.02
+
+        if (newStepIndex !== activeStep || Math.abs(latest - lastUpdateRef.current) > threshold) {
             lastUpdateRef.current = latest
             setScrollProgress(latest)
             setActiveStep(newStepIndex)
@@ -101,11 +103,11 @@ export function ConnectionSection() {
         <section
             ref={containerRef}
             id="proceso"
-            className="relative bg-black"
-            style={{ height: isMobile ? '350vh' : '500vh' }}
+            className="relative bg-black touch-pan-y"
+            style={{ height: isMobile ? '200vh' : '500vh' }}
         >
             {/* Sticky container */}
-            <div className="sticky top-0 h-screen overflow-hidden">
+            <div className="sticky top-0 h-screen overflow-hidden touch-pan-y">
                 {/* Background effects - hidden on mobile for performance */}
                 <div className="absolute inset-0 hidden md:block">
                     <motion.div
@@ -125,10 +127,10 @@ export function ConnectionSection() {
                 </div>
 
                 {/* Mobile background - simpler */}
-                <div className="absolute inset-0 md:hidden bg-gradient-to-b from-violet-950/20 via-transparent to-blue-950/20" />
+                <div className="absolute inset-0 md:hidden bg-gradient-to-b from-violet-950/20 via-transparent to-blue-950/20 pointer-events-none" />
 
                 {/* Grid pattern - smaller on mobile */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px] md:bg-[size:80px_80px]" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px] md:bg-[size:80px_80px] pointer-events-none" />
 
                 {/* Content */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6">

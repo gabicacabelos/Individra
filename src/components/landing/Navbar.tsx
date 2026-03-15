@@ -51,36 +51,36 @@ export function Navbar() {
 
     return (
         <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5 }}
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled || isMobileMenuOpen
-                ? 'bg-black/95 backdrop-blur-xl border-b border-violet-500/10'
-                : 'bg-transparent'
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className={`fixed top-4 left-4 right-4 z-[100] transition-all duration-500 rounded-2xl ${isScrolled || isMobileMenuOpen
+                ? 'bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20'
+                : 'bg-black/20 backdrop-blur-sm border border-white/5'
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#inicio" onClick={(e) => handleNavClick(e, '#inicio')} className="flex items-center">
+                    <a href="#inicio" onClick={(e) => handleNavClick(e, '#inicio')} className="flex items-center cursor-pointer">
                         <Image
                             src="/logo-individra.png"
                             alt="INDIVIDRA"
-                            width={320}
-                            height={120}
-                            className="h-14 sm:h-20 lg:h-28 w-auto"
+                            width={280}
+                            height={100}
+                            className="h-12 sm:h-16 lg:h-20 w-auto"
                             priority
                         />
                     </a>
 
                     {/* Desktop Links */}
-                    <div className="hidden md:flex items-center gap-8">
+                    <div className="hidden md:flex items-center gap-6 lg:gap-8">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className="text-neutral-400 hover:text-white transition-colors duration-200 text-sm font-medium flex items-center h-10"
+                                className="text-neutral-400 hover:text-white transition-colors duration-200 text-sm font-medium flex items-center h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-violet-500 after:to-blue-500 after:transition-all after:duration-300 hover:after:w-full"
                             >
                                 {link.label}
                             </a>
@@ -88,7 +88,7 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={(e) => handleNavClick(e, '#contacto')}
-                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:opacity-90 transition-opacity whitespace-nowrap flex items-center h-10"
+                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:shadow-lg hover:shadow-violet-500/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
                         >
                             Empezar ahora
                         </a>
@@ -97,7 +97,8 @@ export function Navbar() {
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="md:hidden text-white p-2"
+                        className="md:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                        aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
@@ -110,7 +111,7 @@ export function Navbar() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="md:hidden mt-4 pb-6 border-t border-white/10 pt-6"
+                        className="md:hidden mt-2 pb-4 border-t border-white/10 pt-4"
                     >
                         <div className="flex flex-col gap-1">
                             {navLinks.map((link) => (
@@ -118,7 +119,7 @@ export function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
-                                    className="text-neutral-300 hover:text-white hover:bg-white/5 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl"
+                                    className="text-neutral-300 hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer"
                                 >
                                     {link.label}
                                 </a>
@@ -126,7 +127,7 @@ export function Navbar() {
                             <a
                                 href="#contacto"
                                 onClick={(e) => handleNavClick(e, '#contacto')}
-                                className="mt-4 px-5 py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-base font-medium rounded-xl hover:opacity-90 transition-opacity text-center"
+                                className="mt-3 px-5 py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-base font-medium rounded-xl hover:shadow-lg hover:shadow-violet-500/25 active:scale-[0.98] transition-all duration-200 text-center cursor-pointer"
                             >
                                 Empezar ahora
                             </a>

@@ -23,18 +23,23 @@ export function MobileProcessAnimation({
         }))
     , [totalSteps])
 
-    // Different shapes for each step
+    // Formas con significado para cada paso del proceso
     const shapes = [
-        "M200,60 L230,85 L230,115 L200,140 L170,115 L170,85 Z",
-        "M200,55 L215,90 L250,100 L220,120 L230,155 L200,135 L170,155 L180,120 L150,100 L185,90 Z",
-        "M200,50 Q250,75 250,100 Q250,125 200,150 Q150,125 150,100 Q150,75 200,50",
-        "M160,70 L240,70 L260,100 L240,130 L160,130 L140,100 Z",
-        "M200,50 L235,75 L250,115 L225,145 L175,145 L150,115 L165,75 Z",
+        // 01 Descubrimiento: Lupa/búsqueda - círculo con mango
+        "M200,55 A45,45 0 1 1 200,145 A45,45 0 1 1 200,55 M235,125 L260,150",
+        // 02 Estrategia: Bombilla/idea - forma de foco
+        "M200,50 Q230,70 230,100 Q230,125 215,135 L215,150 L185,150 L185,135 Q170,125 170,100 Q170,70 200,50",
+        // 03 Desarrollo: Engranaje/construcción - hexágono tech
+        "M200,50 L235,65 L250,100 L235,135 L200,150 L165,135 L150,100 L165,65 Z",
+        // 04 Implementación: Cohete/lanzamiento - flecha hacia arriba
+        "M200,45 L230,90 L220,90 L220,150 L180,150 L180,90 L170,90 Z",
+        // 05 Optimización: Gráfico/crecimiento - barras ascendentes
+        "M155,150 L155,110 L175,110 L175,150 M185,150 L185,85 L205,85 L205,150 M215,150 L215,60 L235,60 L235,150",
     ]
 
     return (
         <div
-            className="relative w-full h-full flex items-center justify-center overflow-hidden"
+            className="relative w-full h-full flex items-center justify-center overflow-hidden pointer-events-none"
             style={{ contain: 'layout style paint' }}
         >
             <svg
