@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import { Sparkles, Terminal, Clock, Settings, ArrowRight, Loader2 } from 'lucide-react'
+import { Sparkles, Terminal, Clock, Settings, Loader2, Mail, CheckCircle, MessageCircle } from 'lucide-react'
 
 type AIResponse = {
     diagnostico: string;
@@ -288,6 +288,32 @@ export function InteractiveConsultorSection() {
     const [isLoading, setIsLoading] = useState(false)
     const [result, setResult] = useState<AIResponse | null>(null)
     const [error, setError] = useState<string | null>(null)
+    const [email, setEmail] = useState('')
+    const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+    const handleEmailSubmit = async () => {
+        if (!email.trim() || !result) return;
+
+        setEmailStatus('sending');
+        try {
+            const res = await fetch('/api/lead-capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email,
+                    problema: input,
+                    diagnostico: result.diagnostico,
+                    solucion: result.solucion,
+                    tiempoAhorrado: result.tiempoAhorrado
+                })
+            });
+
+            if (!res.ok) throw new Error('Error al enviar');
+            setEmailStatus('sent');
+        } catch {
+            setEmailStatus('error');
+        }
+    };
 
     const handleGenerate = async () => {
         if (!input.trim()) return;
@@ -516,22 +542,60 @@ export function InteractiveConsultorSection() {
 
                                     {/* Sticky action section for result */}
                                     {result && !isLoading && (
-                                        <div className="absolute bottom-0 left-0 right-0 p-6 pt-16 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pointer-events-none flex items-end">
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 pt-12 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/95 to-transparent pointer-events-none">
                                             <motion.div
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-                                                className="w-full pointer-events-auto"
+                                                className="w-full pointer-events-auto space-y-3"
                                             >
+                                                {/* Email capture */}
+                                                {emailStatus !== 'sent' ? (
+                                                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                                                        <p className="text-xs text-neutral-400 mb-2 text-center">
+                                                            Recibí el análisis completo con timeline y costos estimados
+                                                        </p>
+                                                        <div className="flex gap-2">
+                                                            <input
+                                                                type="email"
+                                                                value={email}
+                                                                onChange={(e) => setEmail(e.target.value)}
+                                                                placeholder="tu@email.com"
+                                                                className="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500/50"
+                                                            />
+                                                            <button
+                                                                onClick={handleEmailSubmit}
+                                                                disabled={!email.trim() || emailStatus === 'sending'}
+                                                                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm font-semibold rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                                            >
+                                                                {emailStatus === 'sending' ? (
+                                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                                ) : (
+                                                                    <Mail className="w-4 h-4" />
+                                                                )}
+                                                                <span className="hidden sm:inline">Enviar</span>
+                                                            </button>
+                                                        </div>
+                                                        {emailStatus === 'error' && (
+                                                            <p className="text-red-400 text-xs mt-2 text-center">Error al enviar. Intentá de nuevo.</p>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-center gap-2">
+                                                        <CheckCircle className="w-4 h-4 text-emerald-400" />
+                                                        <span className="text-emerald-400 text-sm font-medium">Análisis enviado a tu email</span>
+                                                    </div>
+                                                )}
+
+                                                {/* WhatsApp CTA */}
                                                 <a
                                                     href={`https://wa.me/5491160152435?text=${encodeURIComponent(`Hola Individra! Quiero solicitar un servicio basado en este diagnostico:\n\n*Diagnostico* → ${result.diagnostico}\n\n*Solucion Propuesta* → ${result.solucion}`)}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-base font-sans font-semibold rounded-xl shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_-5px_rgba(139,92,246,0.5)] hover:brightness-110 active:scale-[0.98] transition-all duration-200 ring-1 ring-white/10"
+                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white text-sm font-sans font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
                                                 >
-                                                    <Sparkles className="w-4 h-4 text-blue-200" />
-                                                    <span>Implementar este sistema</span>
-                                                    <ArrowRight className="w-4 h-4 flex-shrink-0" />
+                                                    <MessageCircle className="w-4 h-4" />
+                                                    <span>Quiero implementar esto → WhatsApp</span>
                                                 </a>
                                             </motion.div>
                                         </div>

@@ -199,6 +199,33 @@ function validateAIResponse(data: unknown): data is { diagnostico: string; soluc
     );
 }
 
+// Enviar intento de diagnóstico a n8n para tracking
+async function trackDiagnosticAttempt(data: {
+    prompt: string;
+    status: 'success' | 'validation_error' | 'ai_error';
+    error?: string;
+    diagnostico?: string;
+    solucion?: string;
+    tiempoAhorrado?: string;
+}) {
+    const webhookUrl = process.env.N8N_DIAGNOSTIC_WEBHOOK_URL;
+    if (!webhookUrl) return;
+
+    try {
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ...data,
+                timestamp: new Date().toISOString(),
+                source: 'diagnostic-attempt'
+            })
+        });
+    } catch (error) {
+        console.error('Error enviando a n8n:', error);
+    }
+}
+
 export async function POST(req: Request) {
     try {
         // Obtener IP del cliente
@@ -249,6 +276,12 @@ export async function POST(req: Request) {
         // Validar contenido antes de gastar tokens
         const contentValidation = validateContent(sanitizedPrompt);
         if (!contentValidation.valid) {
+            // Trackear intento fallido por validación
+            trackDiagnosticAttempt({
+                prompt: sanitizedPrompt,
+                status: 'validation_error',
+                error: contentValidation.reason
+            });
             return NextResponse.json(
                 { error: contentValidation.reason },
                 { status: 400 }
@@ -324,6 +357,15 @@ Input: Pierdo horas mandando presupuestos pdf a mano.
                 console.error('Response inválido de la IA:', parsedData);
                 throw new Error('La IA no devolvió el formato esperado');
             }
+
+            // Trackear diagnóstico exitoso
+            trackDiagnosticAttempt({
+                prompt: sanitizedPrompt,
+                status: 'success',
+                diagnostico: parsedData.diagnostico,
+                solucion: parsedData.solucion,
+                tiempoAhorrado: parsedData.tiempoAhorrado
+            });
 
             return NextResponse.json(parsedData, {
                 headers: {
