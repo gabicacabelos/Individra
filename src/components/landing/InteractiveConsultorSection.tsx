@@ -355,6 +355,7 @@ export function InteractiveConsultorSection() {
     const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
     const [usageBlocked, setUsageBlocked] = useState<{ blocked: boolean; remainingTime?: string }>({ blocked: false })
     const [remainingUses, setRemainingUses] = useState<number>(MAX_DIAGNOSTICS_PER_DAY)
+    const [previousPrompt, setPreviousPrompt] = useState<string>('')
 
     // Check usage limit on mount
     useEffect(() => {
@@ -394,6 +395,14 @@ export function InteractiveConsultorSection() {
     const handleGenerate = async () => {
         if (!input.trim()) return;
 
+        // Check if input is the same as previous
+        const normalizedInput = input.trim().toLowerCase();
+        const normalizedPrevious = previousPrompt.trim().toLowerCase();
+        if (normalizedPrevious && normalizedInput === normalizedPrevious) {
+            setError('Ya analizamos este problema. Describí un proceso diferente para obtener un nuevo diagnóstico.');
+            return;
+        }
+
         // Check usage limit
         const usageCheck = canUseDiagnostic();
         if (!usageCheck.allowed) {
@@ -426,6 +435,10 @@ export function InteractiveConsultorSection() {
             // Expected data format from API
             if (data.diagnostico && data.solucion && data.tiempoAhorrado) {
                 setResult(data);
+                // Store current input as previous for duplicate check
+                setPreviousPrompt(input);
+                // Reset input field for new diagnostic
+                setInput('');
                 // Increment usage count on successful diagnostic
                 incrementDiagnosticUsage();
 

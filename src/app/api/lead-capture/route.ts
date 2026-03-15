@@ -18,7 +18,7 @@ function generatePremiumEmailHTML(data: LeadData): string {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Diagnóstico Completo - Individra</title>
+    <title>Tu Diagnóstico Premium - Individra</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a; padding: 40px 20px;">
@@ -30,7 +30,7 @@ function generatePremiumEmailHTML(data: LeadData): string {
                     <tr>
                         <td style="padding: 40px 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
                             <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">
-                                Tu Diagnóstico Completo
+                                ⭐ Tu Diagnóstico Premium
                             </h1>
                             <p style="color: #94a3b8; margin: 10px 0 0; font-size: 14px;">
                                 Análisis personalizado por Individra AI
@@ -233,7 +233,7 @@ export async function POST(req: Request) {
         const { error: emailError } = await resend.emails.send({
             from: 'Individra <noreply@individratec.com>',
             to: data.email,
-            subject: '🔍 Tu Diagnóstico Completo + Costos Estimados - Individra',
+            subject: '⭐ Tu Diagnóstico Premium + Costos Estimados - Individra',
             html: generatePremiumEmailHTML(data),
         });
 
