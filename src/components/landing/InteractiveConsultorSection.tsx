@@ -283,6 +283,69 @@ const InteractiveBackground = () => {
     );
 }
 
+const DIAGNOSTIC_STORAGE_KEY = 'individra_diagnostic_usage';
+const MAX_DIAGNOSTICS_PER_DAY = 2;
+const HOURS_24_MS = 24 * 60 * 60 * 1000;
+
+type DiagnosticUsage = {
+    count: number;
+    firstUseTimestamp: number;
+};
+
+function getDiagnosticUsage(): DiagnosticUsage {
+    if (typeof window === 'undefined') return { count: 0, firstUseTimestamp: 0 };
+
+    try {
+        const stored = localStorage.getItem(DIAGNOSTIC_STORAGE_KEY);
+        if (!stored) return { count: 0, firstUseTimestamp: 0 };
+
+        const usage: DiagnosticUsage = JSON.parse(stored);
+        const now = Date.now();
+
+        // Reset if 24 hours have passed since first use
+        if (usage.firstUseTimestamp && (now - usage.firstUseTimestamp) >= HOURS_24_MS) {
+            localStorage.removeItem(DIAGNOSTIC_STORAGE_KEY);
+            return { count: 0, firstUseTimestamp: 0 };
+        }
+
+        return usage;
+    } catch {
+        return { count: 0, firstUseTimestamp: 0 };
+    }
+}
+
+function incrementDiagnosticUsage(): void {
+    if (typeof window === 'undefined') return;
+
+    const usage = getDiagnosticUsage();
+    const now = Date.now();
+
+    const newUsage: DiagnosticUsage = {
+        count: usage.count + 1,
+        firstUseTimestamp: usage.firstUseTimestamp || now
+    };
+
+    localStorage.setItem(DIAGNOSTIC_STORAGE_KEY, JSON.stringify(newUsage));
+}
+
+function canUseDiagnostic(): { allowed: boolean; remainingTime?: string } {
+    const usage = getDiagnosticUsage();
+
+    if (usage.count >= MAX_DIAGNOSTICS_PER_DAY) {
+        const elapsed = Date.now() - usage.firstUseTimestamp;
+        const remaining = HOURS_24_MS - elapsed;
+        const hours = Math.floor(remaining / (60 * 60 * 1000));
+        const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+
+        return {
+            allowed: false,
+            remainingTime: hours > 0 ? `${hours}h ${minutes}m` : `${minutes} minutos`
+        };
+    }
+
+    return { allowed: true };
+}
+
 export function InteractiveConsultorSection() {
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -290,6 +353,19 @@ export function InteractiveConsultorSection() {
     const [error, setError] = useState<string | null>(null)
     const [email, setEmail] = useState('')
     const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+    const [usageBlocked, setUsageBlocked] = useState<{ blocked: boolean; remainingTime?: string }>({ blocked: false })
+    const [remainingUses, setRemainingUses] = useState<number>(MAX_DIAGNOSTICS_PER_DAY)
+
+    // Check usage limit on mount
+    useEffect(() => {
+        const check = canUseDiagnostic();
+        const usage = getDiagnosticUsage();
+        setRemainingUses(MAX_DIAGNOSTICS_PER_DAY - usage.count);
+
+        if (!check.allowed) {
+            setUsageBlocked({ blocked: true, remainingTime: check.remainingTime });
+        }
+    }, []);
 
     const handleEmailSubmit = async () => {
         if (!email.trim() || !result) return;
@@ -318,9 +394,20 @@ export function InteractiveConsultorSection() {
     const handleGenerate = async () => {
         if (!input.trim()) return;
 
+        // Check usage limit
+        const usageCheck = canUseDiagnostic();
+        if (!usageCheck.allowed) {
+            setUsageBlocked({ blocked: true, remainingTime: usageCheck.remainingTime });
+            setError(`Alcanzaste el límite de ${MAX_DIAGNOSTICS_PER_DAY} diagnósticos por día. Volvé en ${usageCheck.remainingTime} para intentar de nuevo.`);
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         setResult(null);
+        // Reset email field on new diagnostic
+        setEmail('');
+        setEmailStatus('idle');
 
         try {
             const res = await fetch('/api/consultor', {
@@ -339,6 +426,18 @@ export function InteractiveConsultorSection() {
             // Expected data format from API
             if (data.diagnostico && data.solucion && data.tiempoAhorrado) {
                 setResult(data);
+                // Increment usage count on successful diagnostic
+                incrementDiagnosticUsage();
+
+                // Update remaining uses
+                const newUsage = getDiagnosticUsage();
+                setRemainingUses(MAX_DIAGNOSTICS_PER_DAY - newUsage.count);
+
+                // Update blocked state if this was the last allowed use
+                const newCheck = canUseDiagnostic();
+                if (!newCheck.allowed) {
+                    setUsageBlocked({ blocked: true, remainingTime: newCheck.remainingTime });
+                }
             } else {
                 throw new Error('Formato de respuesta inválido');
             }
@@ -417,13 +516,18 @@ export function InteractiveConsultorSection() {
 
                                 <button
                                     onClick={handleGenerate}
-                                    disabled={isLoading || !input.trim()}
+                                    disabled={isLoading || !input.trim() || usageBlocked.blocked}
                                     className="w-full relative px-6 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group flex items-center justify-center gap-2"
                                 >
                                     {isLoading ? (
                                         <>
                                             <Loader2 className="w-5 h-5 animate-spin" />
                                             <span>Analizando proceso...</span>
+                                        </>
+                                    ) : usageBlocked.blocked ? (
+                                        <>
+                                            <Clock className="w-5 h-5" />
+                                            <span>Volvé en {usageBlocked.remainingTime}</span>
                                         </>
                                     ) : (
                                         <>
@@ -432,6 +536,11 @@ export function InteractiveConsultorSection() {
                                         </>
                                     )}
                                 </button>
+                                {!usageBlocked.blocked && (
+                                    <p className="text-xs text-neutral-500 text-center mt-2">
+                                        {remainingUses} diagnóstico{remainingUses !== 1 ? 's' : ''} gratuito{remainingUses !== 1 ? 's' : ''} restante{remainingUses !== 1 ? 's' : ''} hoy
+                                    </p>
+                                )}
                             </div>
                         </motion.div>
 

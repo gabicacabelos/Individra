@@ -72,6 +72,8 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
 
     // Palabras y frases que indican contextos personales NO empresariales
     const personalContextKeywords = [
+        // Vida personal y existencial
+        'la vida', 'mi vida', 'vida personal', 'vivir', 'existencia', 'existir',
         // Relaciones personales
         'novia', 'novio', 'ex', 'pareja', 'esposa', 'esposo', 'marido', 'mujer',
         'amor', 'enamorado', 'enamorada', 'relacion', 'romance', 'romantico',
@@ -110,6 +112,14 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
 
     // Patrones que indican consultas personales
     const personalPatterns = [
+        // Problemas existenciales/de vida
+        /la vida.*(me cuesta|es dificil|no puedo|me supera|me agobia)/i,
+        /no puedo (con|procesar|manejar|lidiar).*(todo|la vida|mis problemas)/i,
+        /(stock|cantidad|monton|acumulacion) de problemas/i,
+        /me (cuesta|es dificil|no puedo) (procesar|manejar|lidiar|sobrellevar)/i,
+        /(abrumado|agobiado|saturado|colapsado) (con|por|de)/i,
+        /mi (mente|cabeza|cerebro).*(no puede|colapsa|explota)/i,
+        // Relaciones personales
         /perdi (a )?mi (novia|novio|pareja|esposa|esposo)/i,
         /recuperar (a )?mi (novia|novio|pareja|ex)/i,
         /mi (novia|novio|pareja|ex) (me dejo|termino|se fue)/i,

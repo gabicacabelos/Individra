@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Mail, MapPin, ArrowUpRight } from 'lucide-react'
 
 const navigation = {
@@ -18,6 +19,10 @@ const navigation = {
         { name: 'Agentes Virtuales', href: '#servicios' },
         { name: 'Desarrollo Web', href: '#servicios' },
         { name: 'Consultoría Tech', href: '#contacto' },
+    ],
+    legal: [
+        { name: 'Política de Privacidad', href: '/legal#privacidad' },
+        { name: 'Términos y Condiciones', href: '/legal#terminos' },
     ],
     social: [
         { name: 'LinkedIn', href: 'https://www.linkedin.com/company/individra' },
@@ -121,6 +126,22 @@ export function Footer() {
                                         {item.name}
                                         <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" />
                                     </a>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* Legal Links */}
+                        <h4 className="text-white font-semibold mb-4 mt-8">Legal</h4>
+                        <ul className="space-y-3">
+                            {navigation.legal.map((item) => (
+                                <li key={item.name}>
+                                    <Link
+                                        href={item.href}
+                                        className="text-neutral-400 hover:text-white transition-colors text-sm inline-flex items-center gap-1 group"
+                                    >
+                                        {item.name}
+                                        <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" />
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
