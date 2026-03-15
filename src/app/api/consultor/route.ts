@@ -55,12 +55,17 @@ function sanitizeInput(input: string): string {
 function validateContent(input: string): { valid: boolean; reason?: string } {
     const lowerInput = input.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-    // Lista de palabras inapropiadas
+    // Lista de palabras inapropiadas (incluye variantes/leetspeak comunes)
     const inappropriateWords = [
-        'pedo', 'culo', 'mierda', 'cagar', 'puto', 'puta', 'verga', 'chota', 'concha',
-        'boludo', 'pelotudo', 'forro', 'garcha', 'coger', 'cojeme', 'porn', 'sexo',
-        'drogas', 'cocaina', 'marihuana', 'matar', 'asesinar', 'robar', 'hackear',
-        'fuck', 'shit', 'ass', 'dick', 'pussy', 'cock', 'bitch', 'bastard'
+        'pedo', 'ped0', 'poyo', 'poy0', 'culo', 'cul0', 'mierda', 'mierd4', 'cagar',
+        'puto', 'put0', 'puta', 'put4', 'verga', 'verg4', 'chota', 'chot4', 'concha', 'c0ncha',
+        'boludo', 'bolud0', 'pelotudo', 'pelotud0', 'forro', 'f0rro', 'garcha', 'garch4',
+        'coger', 'c0ger', 'cojeme', 'porn', 'p0rn', 'sexo', 'sex0',
+        'drogas', 'dr0gas', 'cocaina', 'c0caina', 'marihuana', 'matar', 'mat4r',
+        'asesinar', 'robar', 'r0bar', 'hackear', 'hacker',
+        'fuck', 'fvck', 'shit', 'sh1t', 'ass', 'dick', 'd1ck', 'pussy', 'cock', 'c0ck', 'bitch', 'b1tch', 'bastard',
+        // Palabras sin sentido / gibberish
+        'poyo', 'poya', 'caca', 'pipi', 'popo', 'teta', 'tet4', 'tetas'
     ];
 
     // Verificar palabras inapropiadas
@@ -110,8 +115,18 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'loteria', 'quiniela', 'apuesta', 'casino', 'tragamonedas'
     ];
 
-    // Patrones que indican consultas personales
+    // Patrones que indican consultas personales o intentos de burlar el filtro
     const personalPatterns = [
+        // Acciones personales / sin sentido empresarial
+        /me tire (un|una|el|la)/i,
+        /me tiro (un|una|el|la)/i,
+        /me eche (un|una|el|la)/i,
+        /me mande (un|una|el|la)/i,
+        /me comi (un|una|el|la)/i,
+        /me cago (en|de)/i,
+        /me meo/i,
+        // Frases que combinan accion personal + palabras de negocio (intento de bypass)
+        /me (tire|tiro|eche|mande|comi|cago|meo).*y.*(procesar|stock|cliente|venta|negocio)/i,
         // Problemas existenciales/de vida
         /la vida.*(me cuesta|es dificil|no puedo|me supera|me agobia)/i,
         /no puedo (con|procesar|manejar|lidiar).*(todo|la vida|mis problemas)/i,
@@ -129,11 +144,13 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         /me siento (triste|solo|sola|mal|deprimido|deprimida)/i,
         /(estudiar|aprobar|pasar) (el|la|un|una) (examen|parcial|materia)/i,
         /bajar de peso/i,
+        // Gibberish / tests
         /^(hola|buenas|buen dia|buenos dias)$/i,
         /^quien (sos|eres)\??$/i,
         /^que (sos|eres|haces)\??$/i,
         /^(test|prueba|probando)$/i,
         /^(asdf|qwerty|1234|aaaa|hhhh)/i,
+        /(.)\1{4,}/i, // Caracteres repetidos 5+ veces (aaaaa, jjjjj, etc)
         // Preguntas genéricas (solo al inicio)
         /^que es\s/i,
         /^como funciona\s/i,
@@ -219,10 +236,16 @@ async function trackDiagnosticAttempt(data: {
     tiempoAhorrado?: string;
 }) {
     const webhookUrl = process.env.N8N_DIAGNOSTIC_WEBHOOK_URL;
-    if (!webhookUrl) return;
+
+    if (!webhookUrl) {
+        console.log('[trackDiagnostic] N8N_DIAGNOSTIC_WEBHOOK_URL no configurada');
+        return;
+    }
+
+    console.log('[trackDiagnostic] Enviando a n8n:', { status: data.status, prompt: data.prompt.substring(0, 50) });
 
     try {
-        await fetch(webhookUrl, {
+        const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -231,8 +254,10 @@ async function trackDiagnosticAttempt(data: {
                 source: 'diagnostic-attempt'
             })
         });
+
+        console.log('[trackDiagnostic] Respuesta n8n:', response.status, response.statusText);
     } catch (error) {
-        console.error('Error enviando a n8n:', error);
+        console.error('[trackDiagnostic] Error enviando a n8n:', error);
     }
 }
 
@@ -286,8 +311,8 @@ export async function POST(req: Request) {
         // Validar contenido antes de gastar tokens
         const contentValidation = validateContent(sanitizedPrompt);
         if (!contentValidation.valid) {
-            // Trackear intento fallido por validación
-            trackDiagnosticAttempt({
+            // Trackear intento fallido por validación (await para asegurar que se envíe)
+            await trackDiagnosticAttempt({
                 prompt: sanitizedPrompt,
                 status: 'validation_error',
                 error: contentValidation.reason
@@ -368,8 +393,8 @@ Input: Pierdo horas mandando presupuestos pdf a mano.
                 throw new Error('La IA no devolvió el formato esperado');
             }
 
-            // Trackear diagnóstico exitoso
-            trackDiagnosticAttempt({
+            // Trackear diagnóstico exitoso (await para asegurar que se envíe)
+            await trackDiagnosticAttempt({
                 prompt: sanitizedPrompt,
                 status: 'success',
                 diagnostico: parsedData.diagnostico,
