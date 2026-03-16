@@ -8,6 +8,15 @@ type AIResponse = {
     diagnostico: string;
     solucion: string;
     tiempoAhorrado: string;
+    costoSetupMin: number;
+    costoSetupMax: number;
+    costoMensualMin: number;
+    costoMensualMax: number;
+    timeline: {
+        fase1: string;
+        fase2: string;
+        fase3: string;
+    };
 }
 
 const InteractiveBackground = () => {
@@ -378,10 +387,15 @@ export function InteractiveConsultorSection() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email,
-                    problema: input,
+                    problema: previousPrompt || input, // Use previousPrompt since input is cleared after success
                     diagnostico: result.diagnostico,
                     solucion: result.solucion,
-                    tiempoAhorrado: result.tiempoAhorrado
+                    tiempoAhorrado: result.tiempoAhorrado,
+                    costoSetupMin: result.costoSetupMin,
+                    costoSetupMax: result.costoSetupMax,
+                    costoMensualMin: result.costoMensualMin,
+                    costoMensualMax: result.costoMensualMax,
+                    timeline: result.timeline
                 })
             });
 
@@ -433,7 +447,7 @@ export function InteractiveConsultorSection() {
             const data = await res.json();
 
             // Expected data format from API
-            if (data.diagnostico && data.solucion && data.tiempoAhorrado) {
+            if (data.diagnostico && data.solucion && data.tiempoAhorrado && data.timeline) {
                 setResult(data);
                 // Store current input as previous for duplicate check
                 setPreviousPrompt(input);

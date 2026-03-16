@@ -215,15 +215,53 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
     return { valid: true };
 }
 
+// Tipo de respuesta de la IA
+type AIResponse = {
+    diagnostico: string;
+    solucion: string;
+    tiempoAhorrado: string;
+    costoSetupMin: number;
+    costoSetupMax: number;
+    costoMensualMin: number;
+    costoMensualMax: number;
+    timeline: {
+        fase1: string;
+        fase2: string;
+        fase3: string;
+    };
+};
+
 // Validar que el response tenga la estructura esperada
-function validateAIResponse(data: unknown): data is { diagnostico: string; solucion: string; tiempoAhorrado: string } {
+function validateAIResponse(data: unknown): data is AIResponse {
     if (typeof data !== 'object' || data === null) return false;
     const obj = data as Record<string, unknown>;
-    return (
+
+    // Campos básicos requeridos
+    const hasBasicFields = (
         typeof obj.diagnostico === 'string' && obj.diagnostico.length > 0 &&
         typeof obj.solucion === 'string' && obj.solucion.length > 0 &&
         typeof obj.tiempoAhorrado === 'string' && obj.tiempoAhorrado.length > 0
     );
+
+    // Campos de costos (números)
+    const hasCostFields = (
+        typeof obj.costoSetupMin === 'number' &&
+        typeof obj.costoSetupMax === 'number' &&
+        typeof obj.costoMensualMin === 'number' &&
+        typeof obj.costoMensualMax === 'number'
+    );
+
+    // Timeline (objeto con 3 fases)
+    const timeline = obj.timeline as Record<string, unknown> | undefined;
+    const hasTimeline = !!(
+        timeline &&
+        typeof timeline === 'object' &&
+        typeof timeline.fase1 === 'string' &&
+        typeof timeline.fase2 === 'string' &&
+        typeof timeline.fase3 === 'string'
+    );
+
+    return hasBasicFields && hasCostFields && hasTimeline;
 }
 
 // Enviar intento de diagnóstico a n8n para tracking
@@ -234,6 +272,10 @@ async function trackDiagnosticAttempt(data: {
     diagnostico?: string;
     solucion?: string;
     tiempoAhorrado?: string;
+    costoSetupMin?: number;
+    costoSetupMax?: number;
+    costoMensualMin?: number;
+    costoMensualMax?: number;
 }) {
     const webhookUrl = process.env.N8N_DIAGNOSTIC_WEBHOOK_URL;
 
@@ -334,27 +376,55 @@ export async function POST(req: Request) {
         }
 
         const systemPrompt = `
-        Sos un consultor experto en automatización e Inteligencia Artificial B2B llamado "Individra Diagnostic AI".
-        Tu trabajo es analizar el cuello de botella que describe el cliente y devolver una solución en formato JSON.
+Sos un consultor experto en automatización e Inteligencia Artificial B2B llamado "Individra Diagnostic AI".
+Tu trabajo es analizar el cuello de botella que describe el cliente y devolver una solución con ESTIMACIONES REALISTAS de costos y tiempos.
 
-    REGLAS:
+REGLAS CRÍTICAS:
 1. Tu respuesta DEBE ser un JSON válido.
-        2. No incluyas explicaciones adicionales, formato markdown para código o texto antes / después del JSON.
-        3. NUNCA menciones nombres de herramientas técnicas, plataformas o lenguajes(prohibido decir n8n, Make, Zapier, API, Python, Scraper, etc.).Las soluciones deben describirse conceptualmente o por su función(ej: "Agente IA", "Sistema automatizado").
-        4. El JSON debe tener exactamente esta estructura:
+2. No incluyas explicaciones adicionales, formato markdown o texto fuera del JSON.
+3. NUNCA menciones herramientas técnicas (prohibido: n8n, Make, Zapier, API, Python, etc.). Describí soluciones conceptualmente.
+4. Los COSTOS deben ser REALISTAS según la complejidad:
+   - Automatización simple (1 proceso, sin IA): Setup $300-$800, Mensual $30-$80
+   - Automatización media (2-3 procesos o con IA básica): Setup $800-$2000, Mensual $80-$150
+   - Automatización compleja (múltiples sistemas, IA avanzada): Setup $2000-$5000, Mensual $150-$300
+   - Desarrollo custom enterprise: Setup $5000-$15000, Mensual $300-$800
+5. El TIMELINE debe reflejar la complejidad real:
+   - Simple: Fase 1 (3-5 días), Fase 2 (1 semana), Fase 3 (2-3 días)
+   - Media: Fase 1 (1 semana), Fase 2 (2 semanas), Fase 3 (1 semana)
+   - Compleja: Fase 1 (2 semanas), Fase 2 (3-4 semanas), Fase 3 (1-2 semanas)
+
+ESTRUCTURA JSON REQUERIDA:
 {
-    "diagnostico": "Breve análisis de por qué esto es un problema",
-        "solucion": "De qué forma Individra lo automatizaría y qué beneficio trae",
-            "tiempoAhorrado": "Aprox X horas semanales"
+    "diagnostico": "Análisis breve del problema y su impacto",
+    "solucion": "Descripción de la solución automatizada y beneficios",
+    "tiempoAhorrado": "Aprox X horas semanales",
+    "costoSetupMin": 800,
+    "costoSetupMax": 2000,
+    "costoMensualMin": 80,
+    "costoMensualMax": 150,
+    "timeline": {
+        "fase1": "Análisis y diseño de arquitectura (1 semana)",
+        "fase2": "Desarrollo e integración del sistema (2 semanas)",
+        "fase3": "Testing y puesta en producción (1 semana)"
+    }
 }
 
 EJEMPLO:
-Input: Pierdo horas mandando presupuestos pdf a mano.
-    Output:
+Input: "Pierdo 3 horas al día respondiendo consultas de precios por WhatsApp"
+Output:
 {
-    "diagnostico": "Generación manual de documentos que bloquea el tiempo de ventas.",
-        "solucion": "Implementación de un sistema automatizado que genere el PDF y lo envíe por WhatsApp en segundos tras cargar los datos.",
-            "tiempoAhorrado": "Aprox 10 horas semanales"
+    "diagnostico": "Tiempo de respuesta manual que genera demoras y pérdida de oportunidades de venta.",
+    "solucion": "Implementación de un asistente automatizado que responda consultas de precios instantáneamente 24/7, derivando casos complejos a un humano.",
+    "tiempoAhorrado": "Aprox 15 horas semanales",
+    "costoSetupMin": 600,
+    "costoSetupMax": 1200,
+    "costoMensualMin": 50,
+    "costoMensualMax": 100,
+    "timeline": {
+        "fase1": "Relevamiento de productos y precios (3-5 días)",
+        "fase2": "Configuración del asistente y entrenamiento (1 semana)",
+        "fase3": "Testing y ajustes finales (3 días)"
+    }
 }
 `;
 
@@ -399,7 +469,11 @@ Input: Pierdo horas mandando presupuestos pdf a mano.
                 status: 'success',
                 diagnostico: parsedData.diagnostico,
                 solucion: parsedData.solucion,
-                tiempoAhorrado: parsedData.tiempoAhorrado
+                tiempoAhorrado: parsedData.tiempoAhorrado,
+                costoSetupMin: parsedData.costoSetupMin,
+                costoSetupMax: parsedData.costoSetupMax,
+                costoMensualMin: parsedData.costoMensualMin,
+                costoMensualMax: parsedData.costoMensualMax
             });
 
             return NextResponse.json(parsedData, {
