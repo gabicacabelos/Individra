@@ -34,23 +34,29 @@ export async function POST(req: Request) {
         // n8n webhook — NO crítico, con timeout de 4 segundos
         const n8nWebhookUrl = process.env.N8N_LEAD_WEBHOOK_URL;
         if (n8nWebhookUrl) {
-            fetch(n8nWebhookUrl, {  // ← SIN await, fire and forget
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: data.email,
-                    problema: data.problema || '',
-                    diagnostico: data.diagnostico || '',
-                    solucion: data.solucion || '',
-                    tiempoAhorrado: data.tiempoAhorrado || '',
-                    costoSetup,
-                    costoMensual,
-                    timeline,
-                    timestamp: new Date().toISOString(),
-                    source: 'diagnostic-premium'
-                }),
-                signal: AbortSignal.timeout(4000)  // ← máximo 4 segundos
-            }).catch(e => console.error('[lead-capture] n8n error (non-critical):', e));
+            try {
+                // En Vercel NECESITAMOS await, de lo contrario la función termina y mata el proceso antes de enviar el request
+                const n8nRes = await fetch(n8nWebhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: data.email,
+                        problema: data.problema || '',
+                        diagnostico: data.diagnostico || '',
+                        solucion: data.solucion || '',
+                        tiempoAhorrado: data.tiempoAhorrado || '',
+                        costoSetup,
+                        costoMensual,
+                        timeline,
+                        timestamp: new Date().toISOString(),
+                        source: 'diagnostic-premium'
+                    }),
+                    signal: AbortSignal.timeout(4000)
+                });
+                console.log(`[lead-capture] n8n response: ${n8nRes.status}`);
+            } catch (e) {
+                console.error('[lead-capture] n8n error (non-critical):', e);
+            }
         } else {
             console.warn('[lead-capture] N8N_LEAD_WEBHOOK_URL no configurada');
         }
