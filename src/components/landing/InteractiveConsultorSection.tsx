@@ -631,8 +631,9 @@ export function InteractiveConsultorSection() {
                                             <motion.div
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
-                                                className="space-y-6"
+                                                className="space-y-5"
                                             >
+                                                {/* Contenido visible */}
                                                 <div className="space-y-2">
                                                     <div className="flex items-start gap-3">
                                                         <div className="mt-1 bg-red-500/10 p-1.5 rounded-md">
@@ -672,6 +673,64 @@ export function InteractiveConsultorSection() {
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {/* Contenido bloqueado - Timeline y Costos */}
+                                                {emailStatus !== 'sent' && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        transition={{ delay: 0.3 }}
+                                                        className="relative mt-4"
+                                                    >
+                                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90 z-10 rounded-xl" />
+                                                        <div className="blur-[6px] select-none pointer-events-none space-y-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="mt-1 bg-violet-500/10 p-1.5 rounded-md">
+                                                                    <span className="text-violet-400">📅</span>
+                                                                </div>
+                                                                <div>
+                                                                    <h4 className="text-white font-sans font-semibold mb-1">Timeline de Implementación:</h4>
+                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 1: Análisis y diseño...</p>
+                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 2: Desarrollo e integración...</p>
+                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 3: Testing y lanzamiento...</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="mt-1 bg-amber-500/10 p-1.5 rounded-md">
+                                                                    <span className="text-amber-400">💰</span>
+                                                                </div>
+                                                                <div>
+                                                                    <h4 className="text-white font-sans font-semibold mb-1">Inversión Estimada:</h4>
+                                                                    <p className="text-neutral-400 font-sans text-sm">Setup: USD $XXX - $X,XXX</p>
+                                                                    <p className="text-neutral-400 font-sans text-sm">Mensual: USD $XX - $XXX</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="absolute inset-0 z-20 flex items-center justify-center">
+                                                            <div className="bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2">
+                                                                <span className="text-white/80 text-sm">🔒</span>
+                                                                <span className="text-white/90 text-sm font-medium">Contenido Premium</span>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+
+                                                {/* Mostrar contenido desbloqueado después de enviar email */}
+                                                {emailStatus === 'sent' && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl"
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <CheckCircle className="w-5 h-5 text-emerald-400" />
+                                                            <span className="text-emerald-400 font-semibold">Análisis Premium enviado</span>
+                                                        </div>
+                                                        <p className="text-neutral-400 text-sm">
+                                                            Revisá tu email en los próximos minutos. Incluye timeline detallado, costos estimados y roadmap de implementación.
+                                                        </p>
+                                                    </motion.div>
+                                                )}
                                             </motion.div>
                                         )}
                                     </div>
@@ -685,11 +744,17 @@ export function InteractiveConsultorSection() {
                                                 transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
                                                 className="w-full pointer-events-auto space-y-3"
                                             >
-                                                {/* Email capture */}
+                                                {/* Email capture - Desbloquear contenido premium */}
                                                 {emailStatus !== 'sent' ? (
-                                                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                                                        <p className="text-xs text-neutral-400 mb-2 text-center">
-                                                            Recibí el análisis completo con timeline y costos estimados
+                                                    <div className="bg-gradient-to-br from-violet-500/10 to-blue-500/10 border border-violet-500/30 rounded-xl p-4">
+                                                        <div className="flex items-center justify-center gap-2 mb-3">
+                                                            <span className="text-lg">🔓</span>
+                                                            <p className="text-white font-semibold text-sm">
+                                                                Desbloqueá el análisis Premium
+                                                            </p>
+                                                        </div>
+                                                        <p className="text-xs text-neutral-400 mb-3 text-center">
+                                                            Timeline detallado + Costos estimados + Roadmap de implementación
                                                         </p>
                                                         <div className="flex gap-2">
                                                             <input
@@ -697,31 +762,26 @@ export function InteractiveConsultorSection() {
                                                                 value={email}
                                                                 onChange={(e) => setEmail(e.target.value)}
                                                                 placeholder="tu@email.com"
-                                                                className="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500/50"
+                                                                className="flex-1 bg-black/50 border border-white/20 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/30"
                                                             />
                                                             <button
                                                                 onClick={handleEmailSubmit}
                                                                 disabled={!email.trim() || emailStatus === 'sending'}
-                                                                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm font-semibold rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                                                className="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-semibold rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-violet-500/25"
                                                             >
                                                                 {emailStatus === 'sending' ? (
                                                                     <Loader2 className="w-4 h-4 animate-spin" />
                                                                 ) : (
                                                                     <Mail className="w-4 h-4" />
                                                                 )}
-                                                                <span className="hidden sm:inline">Enviar</span>
+                                                                <span className="hidden sm:inline">Desbloquear</span>
                                                             </button>
                                                         </div>
                                                         {emailStatus === 'error' && (
                                                             <p className="text-red-400 text-xs mt-2 text-center">Error al enviar. Intentá de nuevo.</p>
                                                         )}
                                                     </div>
-                                                ) : (
-                                                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-center gap-2">
-                                                        <CheckCircle className="w-4 h-4 text-emerald-400" />
-                                                        <span className="text-emerald-400 text-sm font-medium">Análisis enviado a tu email</span>
-                                                    </div>
-                                                )}
+                                                ) : null}
 
                                                 {/* WhatsApp CTA */}
                                                 <a
