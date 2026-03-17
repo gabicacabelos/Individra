@@ -89,10 +89,10 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'mama', 'papa', 'padre', 'madre', 'hermano', 'hermana', 'hijo', 'hija',
         'abuelo', 'abuela', 'tio', 'tia', 'primo', 'prima', 'suegra', 'suegro',
         'cunado', 'cunada', 'familia',
-        // Salud personal
-        'enfermedad', 'enfermo', 'enferma', 'doctor', 'medico', 'hospital',
-        'depresion', 'ansiedad', 'estres personal', 'insomnio', 'terapia',
-        'psicologo', 'psiquiatra', 'medicamento', 'pastilla',
+        // Salud personal (NO incluir: doctor, medico, hospital, clinica - son negocios válidos)
+        'enfermedad', 'enfermo', 'enferma', 'me duele', 'me siento mal',
+        'depresion', 'ansiedad', 'estres personal', 'insomnio', 'terapia personal',
+        'mi psicologo', 'mi psiquiatra', 'mi medicamento', 'mis pastillas',
         // Educación personal
         'examen', 'parcial', 'final', 'tesis', 'facultad', 'universidad',
         'colegio', 'escuela', 'profesor', 'estudiante', 'tarea', 'deberes',
@@ -198,7 +198,18 @@ function validateContent(input: string): { valid: boolean; reason?: string } {
         'ticket', 'soporte', 'atencion al cliente', 'reclamo', 'queja',
         'propuesta', 'licitacion', 'contrato', 'comercial', 'ventas',
         'diferenciar', 'segmentar', 'clasificar', 'filtrar', 'interesado', 'interesados',
-        'calificar', 'cualificar', 'priorizar', 'organizar', 'ordenar'
+        'calificar', 'cualificar', 'priorizar', 'organizar', 'ordenar',
+        // Negocios de salud/médicos
+        'clinica', 'consultorio', 'paciente', 'pacientes', 'medico', 'medicos',
+        'hospital', 'doctor', 'consulta', 'consultas', 'historial', 'historial clinico',
+        'receta', 'recetas medicas', 'laboratorio', 'estudio', 'estudios',
+        'odontologia', 'veterinaria', 'farmacia', 'optica',
+        // Negocios de educación
+        'academia', 'instituto', 'curso', 'cursos', 'capacitacion', 'alumno', 'alumnos',
+        'inscripcion', 'matricula', 'clase', 'clases',
+        // Negocios de servicios
+        'reserva', 'reservas', 'booking', 'salon', 'peluqueria', 'spa', 'hotel',
+        'restaurante', 'delivery', 'inmobiliaria', 'propiedad', 'propiedades'
     ];
 
     // Verificar que tenga al menos una palabra relacionada a negocios
