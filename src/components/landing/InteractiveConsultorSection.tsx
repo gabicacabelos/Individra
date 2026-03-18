@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { Sparkles, Terminal, Clock, Settings, Loader2, Mail, CheckCircle, MessageCircle } from 'lucide-react'
 
@@ -365,6 +365,7 @@ export function InteractiveConsultorSection() {
     const [usageBlocked, setUsageBlocked] = useState<{ blocked: boolean; remainingTime?: string }>({ blocked: false })
     const [remainingUses, setRemainingUses] = useState<number>(MAX_DIAGNOSTICS_PER_DAY)
     const [previousPrompt, setPreviousPrompt] = useState<string>('')
+    const [view, setView] = useState<'input' | 'result'>('input')
 
     // Check usage limit on mount
     useEffect(() => {
@@ -449,6 +450,7 @@ export function InteractiveConsultorSection() {
             // Expected data format from API
             if (data.diagnostico && data.solucion && data.tiempoAhorrado && data.timeline) {
                 setResult(data);
+                setView('result');
                 // Store current input as previous for duplicate check
                 setPreviousPrompt(input);
                 // Reset input field for new diagnostic
@@ -518,290 +520,305 @@ export function InteractiveConsultorSection() {
                         </motion.p>
                     </div>
 
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                        {/* Input Area */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="relative group h-full"
-                        >
-                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-                            <div className="relative h-full bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col gap-6 justify-between min-h-[400px]">
-                                <div className="space-y-4 flex-1 flex flex-col">
-                                    <label htmlFor="problem-input" className="block text-sm font-medium text-neutral-300">
-                                        ¿Cuál es tu mayor cuello de botella actual?
-                                    </label>
-                                    <textarea
-                                        id="problem-input"
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Ej: Pierdo 3 horas al día respondiendo cuánto miden los muebles por WhatsApp y armando presupuestos en Excel..."
-                                        className="w-full flex-1 min-h-[150px] bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none"
-                                    />
-                                </div>
-
-                                <button
-                                    onClick={handleGenerate}
-                                    disabled={isLoading || !input.trim() || usageBlocked.blocked}
-                                    className="w-full relative px-6 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group flex items-center justify-center gap-2"
+                    <div className="max-w-2xl mx-auto">
+                        <AnimatePresence mode="wait">
+                            {view === 'input' ? (
+                                <motion.div
+                                    key="input"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="relative group"
                                 >
-                                    {isLoading ? (
-                                        <>
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                            <span>Analizando proceso...</span>
-                                        </>
-                                    ) : usageBlocked.blocked ? (
-                                        <>
-                                            <Clock className="w-5 h-5" />
-                                            <span>Volvé en {usageBlocked.remainingTime}</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Sparkles className="w-5 h-5" />
-                                            <span>Generar Solución con IA</span>
-                                        </>
-                                    )}
-                                </button>
-                                {!usageBlocked.blocked && (
-                                    <p className="text-xs text-neutral-500 text-center mt-2">
-                                        {remainingUses} diagnóstico{remainingUses !== 1 ? 's' : ''} gratuito{remainingUses !== 1 ? 's' : ''} restante{remainingUses !== 1 ? 's' : ''} hoy
-                                    </p>
-                                )}
-                            </div>
-                        </motion.div>
-
-                        {/* Result Area (Terminal style) */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="relative h-full min-h-[400px]"
-                        >
-                            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col">
-                                {/* Terminal Header */}
-                                <div className="bg-black/50 border-b border-white/10 px-4 py-3 flex items-center gap-2">
-                                    <div className="flex gap-1.5">
-                                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                                        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                                        <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                                    </div>
-                                    <span className="text-neutral-500 text-xs font-mono ml-2 flex items-center gap-2">
-                                        <Terminal className="w-3 h-3" />
-                                        individra-diagnostic.exe
-                                    </span>
-                                </div>
-
-                                {/* Terminal Body */}
-                                <div className="flex-1 flex flex-col relative overflow-hidden font-mono text-sm">
-                                    <div className={`p-6 flex-1 overflow-y-auto ${result && !isLoading ? 'pb-28' : ''}`}>
-                                        {!isLoading && !result && !error && (
-                                            <div className="h-full flex flex-col items-center justify-center text-neutral-600 space-y-4">
-                                                <Terminal className="w-12 h-12 opacity-50" />
-                                                <p className="text-center max-w-[250px]">
-                                                    Esperando input para generar diagnóstico del sistema...
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {isLoading && (
-                                            <div className="space-y-4 text-neutral-400">
-                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                                    <span className="text-blue-400">&gt;</span> Inicializando motor de análisis...
-                                                </motion.div>
-                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                                                    <span className="text-blue-400">&gt;</span> Procesando cuello de botella...
-                                                </motion.div>
-                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                                                    <span className="text-blue-400">&gt;</span> Diseñando arquitectura de solución...
-                                                </motion.div>
-                                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }} className="animate-pulse">
-                                                    <span className="text-violet-400">&gt;</span> Compilando reporte final_
-                                                </motion.div>
-                                            </div>
-                                        )}
+                                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                                    <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col gap-6 min-h-[400px]">
+                                        <div className="space-y-4 flex-1 flex flex-col">
+                                            <label htmlFor="problem-input" className="block text-sm font-medium text-neutral-300">
+                                                ¿Cuál es tu mayor cuello de botella actual?
+                                            </label>
+                                            <textarea
+                                                id="problem-input"
+                                                value={input}
+                                                onChange={(e) => setInput(e.target.value)}
+                                                placeholder="Ej: Pierdo 3 horas al día respondiendo cuánto miden los muebles por WhatsApp y armando presupuestos en Excel..."
+                                                className="w-full flex-1 min-h-[200px] bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none"
+                                            />
+                                        </div>
 
                                         {error && (
-                                            <div className="text-red-400">
-                                                <span className="text-red-500 font-bold">[ERROR]</span> {error}
-                                            </div>
+                                            <p className="text-red-400 text-sm font-sans">{error}</p>
                                         )}
 
-                                        {result && !isLoading && (
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                className="space-y-5"
+                                        <div>
+                                            <button
+                                                onClick={handleGenerate}
+                                                disabled={isLoading || !input.trim() || usageBlocked.blocked}
+                                                className="w-full relative px-6 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                             >
-                                                {/* Contenido visible */}
-                                                <div className="space-y-2">
-                                                    <div className="flex items-start gap-3">
-                                                        <div className="mt-1 bg-red-500/10 p-1.5 rounded-md">
-                                                            <span className="text-red-400">🔍</span>
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-sans font-semibold mb-1">Diagnóstico Individra:</h4>
-                                                            <p className="text-neutral-400 font-sans leading-relaxed">{result.diagnostico}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="w-full h-px bg-white/5" />
-
-                                                <div className="space-y-2">
-                                                    <div className="flex items-start gap-3">
-                                                        <div className="mt-1 bg-blue-500/10 p-1.5 rounded-md">
-                                                            <Settings className="w-4 h-4 text-blue-400" />
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-sans font-semibold mb-1">Solución Propuesta:</h4>
-                                                            <p className="text-neutral-400 font-sans leading-relaxed">{result.solucion}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="w-full h-px bg-white/5" />
-
-                                                <div className="space-y-2">
-                                                    <div className="flex items-start gap-3">
-                                                        <div className="mt-1 bg-emerald-500/10 p-1.5 rounded-md">
-                                                            <Clock className="w-4 h-4 text-emerald-400" />
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-sans font-semibold mb-1">Tiempo Ahorrado:</h4>
-                                                            <p className="text-emerald-400 font-sans font-medium">{result.tiempoAhorrado}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Contenido bloqueado - Timeline y Costos */}
-                                                {emailStatus !== 'sent' && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0 }}
-                                                        animate={{ opacity: 1 }}
-                                                        transition={{ delay: 0.3 }}
-                                                        className="relative mt-4"
-                                                    >
-                                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90 z-10 rounded-xl" />
-                                                        <div className="blur-[6px] select-none pointer-events-none space-y-4 p-4 bg-white/5 rounded-xl border border-white/10">
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="mt-1 bg-violet-500/10 p-1.5 rounded-md">
-                                                                    <span className="text-violet-400">📅</span>
-                                                                </div>
-                                                                <div>
-                                                                    <h4 className="text-white font-sans font-semibold mb-1">Timeline de Implementación:</h4>
-                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 1: Análisis y diseño...</p>
-                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 2: Desarrollo e integración...</p>
-                                                                    <p className="text-neutral-400 font-sans text-sm">Fase 3: Testing y lanzamiento...</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="mt-1 bg-amber-500/10 p-1.5 rounded-md">
-                                                                    <span className="text-amber-400">💰</span>
-                                                                </div>
-                                                                <div>
-                                                                    <h4 className="text-white font-sans font-semibold mb-1">Inversión Estimada:</h4>
-                                                                    <p className="text-neutral-400 font-sans text-sm">Setup: USD $XXX - $X,XXX</p>
-                                                                    <p className="text-neutral-400 font-sans text-sm">Mensual: USD $XX - $XXX</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="absolute inset-0 z-20 flex items-center justify-center">
-                                                            <div className="bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2">
-                                                                <span className="text-white/80 text-sm">🔒</span>
-                                                                <span className="text-white/90 text-sm font-medium">Contenido Premium</span>
-                                                            </div>
-                                                        </div>
-                                                    </motion.div>
+                                                {isLoading ? (
+                                                    <>
+                                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                                        <span>Analizando proceso...</span>
+                                                    </>
+                                                ) : usageBlocked.blocked ? (
+                                                    <>
+                                                        <Clock className="w-5 h-5" />
+                                                        <span>Volvé en {usageBlocked.remainingTime}</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Sparkles className="w-5 h-5" />
+                                                        <span>Generar Solución con IA</span>
+                                                    </>
                                                 )}
+                                            </button>
+                                            {!usageBlocked.blocked && (
+                                                <p className="text-xs text-neutral-500 text-center mt-2">
+                                                    {remainingUses} diagnóstico{remainingUses !== 1 ? 's' : ''} gratuito{remainingUses !== 1 ? 's' : ''} restante{remainingUses !== 1 ? 's' : ''} hoy
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="result"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <div className="bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+                                        {/* Terminal Header */}
+                                        <div className="bg-black/50 border-b border-white/10 px-4 py-3 flex items-center gap-2">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                                                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                                                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                                            </div>
+                                            <span className="text-neutral-500 text-xs font-mono ml-2 flex items-center gap-2">
+                                                <Terminal className="w-3 h-3" />
+                                                individra-diagnostic.exe
+                                            </span>
+                                        </div>
 
-                                                {/* Mostrar contenido desbloqueado después de enviar email */}
-                                                {emailStatus === 'sent' && (
+                                        {/* Terminal Body */}
+                                        <div className="p-5 sm:p-6 font-mono text-sm max-h-[500px] overflow-y-auto custom-scrollbar relative">
+                                            {result && !isLoading && (
+                                                <motion.div
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    className="space-y-4 pb-16"
+                                                >
+                                                    {/* Diagnóstico card */}
                                                     <motion.div
                                                         initial={{ opacity: 0, y: 10 }}
                                                         animate={{ opacity: 1, y: 0 }}
-                                                        className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl"
+                                                        transition={{ delay: 0.05 }}
+                                                        className="relative group p-4 rounded-xl bg-gradient-to-br from-rose-500/10 via-rose-500/[0.02] to-transparent border border-rose-500/20 backdrop-blur-sm"
                                                     >
-                                                        <div className="flex items-center gap-2 mb-2">
-                                                            <CheckCircle className="w-5 h-5 text-emerald-400" />
-                                                            <span className="text-emerald-400 font-semibold">Análisis Premium enviado</span>
+                                                        <div className="flex items-start gap-3.5">
+                                                            <div className="shrink-0 w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shadow-lg shadow-rose-500/10 group-hover:scale-110 transition-transform">
+                                                                <Sparkles className="w-4 h-4 text-rose-400" />
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <h4 className="text-rose-400 font-sans font-bold text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2">
+                                                                    Diagnóstico Individra
+                                                                    <div className="w-1 h-1 rounded-full bg-rose-500 animate-pulse" />
+                                                                </h4>
+                                                                <p className="text-neutral-200 font-sans text-[15px] leading-relaxed italic border-l-2 border-white/5 pl-3">
+                                                                    &ldquo;{result.diagnostico}&rdquo;
+                                                                </p>
+                                                            </div>
                                                         </div>
-                                                        <p className="text-neutral-400 text-sm">
-                                                            Revisá tu email en los próximos minutos. Incluye timeline detallado, costos estimados y roadmap de implementación.
-                                                        </p>
                                                     </motion.div>
-                                                )}
-                                            </motion.div>
+
+                                                    {/* Solución Propuesta card */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: 0.15 }}
+                                                        className="relative group p-4 rounded-xl bg-gradient-to-br from-blue-500/10 via-blue-500/[0.02] to-transparent border border-blue-500/20 backdrop-blur-sm"
+                                                    >
+                                                        <div className="flex items-start gap-3.5">
+                                                            <div className="shrink-0 w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center shadow-lg shadow-blue-500/10 group-hover:scale-110 transition-transform">
+                                                                <Settings className="w-4 h-4 text-blue-400" />
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <h4 className="text-blue-400 font-sans font-bold text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2">
+                                                                    Estrategia de Automatización
+                                                                    <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
+                                                                </h4>
+                                                                <p className="text-neutral-200 font-sans text-[15px] leading-relaxed">
+                                                                    {result.solucion}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+
+                                                    {/* Tiempo Ahorrado pill */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        transition={{ delay: 0.25 }}
+                                                        className="relative flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-transparent border border-emerald-500/30 overflow-hidden group"
+                                                    >
+                                                        <div className="shrink-0 w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:rotate-12 transition-transform">
+                                                            <Clock className="w-4 h-4 text-emerald-400" />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] text-emerald-400/80 font-sans uppercase tracking-[0.2em] font-bold">Potencial de Ahorro</span>
+                                                            <span className="text-xl text-emerald-100 font-sans font-black tracking-tight">{result.tiempoAhorrado}</span>
+                                                        </div>
+                                                        <div className="ml-auto px-2 py-1 bg-emerald-500/20 rounded-md border border-emerald-500/30 animate-pulse">
+                                                            <span className="text-[10px] text-emerald-400 font-bold">ROI POSITIVO</span>
+                                                        </div>
+                                                    </motion.div>
+
+                                                    {/* Premium Lockdown Section */}
+                                                    {emailStatus !== 'sent' && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 20 }}
+                                                            animate={{ opacity: 1, y: 0 }}
+                                                            transition={{ delay: 0.3 }}
+                                                            className="relative mt-2 rounded-xl border border-white/5 bg-white/[0.02] p-4 overflow-hidden group"
+                                                        >
+                                                            <div className="space-y-3 opacity-20 grayscale blur-[2px] pointer-events-none transition duration-500 group-hover:opacity-10 group-hover:blur-[4px]">
+                                                                {[
+                                                                    { title: 'Timeline Detallado', desc: 'Fases, hitos y fechas clave' },
+                                                                    { title: 'Costos Estimados', desc: 'Setup, licencias y mantenimiento' }
+                                                                ].map((item, i) => (
+                                                                    <div key={i} className="flex gap-3">
+                                                                        <div className="w-8 h-8 rounded bg-white/10 shrink-0" />
+                                                                        <div className="space-y-1.5 flex-1">
+                                                                            <div className="h-2 w-32 bg-white/20 rounded" />
+                                                                            <div className="h-2 w-full bg-white/10 rounded" />
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-10" />
+                                                            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4">
+                                                                <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/40 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                                                                    <span className="text-xl">💎</span>
+                                                                </div>
+                                                                <p className="text-white font-bold text-center text-sm mb-1 uppercase tracking-widest">
+                                                                    Análisis Premium Bloqueado
+                                                                </p>
+                                                                <p className="text-neutral-400 text-[11px] text-center max-w-[200px] font-sans">
+                                                                    Ingresá tu mail para recibir el roadmap técnico, costos y tiempos estimados.
+                                                                </p>
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+
+                                                    {/* Success message */}
+                                                    {emailStatus === 'sent' && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, scale: 0.95 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-center"
+                                                        >
+                                                            <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                                                            <p className="text-emerald-300 font-bold text-sm mb-1">¡Reporte enviado!</p>
+                                                            <p className="text-neutral-400 text-xs font-sans">
+                                                                Revisá tu bandeja de entrada (y spam por las dudas).
+                                                            </p>
+                                                        </motion.div>
+                                                    )}
+                                                </motion.div>
+                                            )}
+                                        </div>
+
+                                        {/* Sticky action section */}
+                                        {result && !isLoading && (
+                                            <div className="sticky bottom-0 left-0 right-0 p-4 pt-10 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent z-30">
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.5, type: "spring", stiffness: 220, damping: 25 }}
+                                                    className="w-full space-y-3"
+                                                >
+                                                    {/* Email capture */}
+                                                    {emailStatus !== 'sent' ? (
+                                                        <div className="relative group">
+                                                            <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600/50 to-blue-600/50 rounded-xl blur-sm opacity-20 group-hover:opacity-40 transition duration-500" />
+                                                            <div className="relative bg-[#0a0a0f]/90 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                                                                <div className="flex flex-col sm:flex-row gap-2.5">
+                                                                    <div className="flex-1 relative">
+                                                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+                                                                            <Mail className="w-4 h-4" />
+                                                                        </div>
+                                                                        <input
+                                                                            type="email"
+                                                                            value={email}
+                                                                            onChange={(e) => setEmail(e.target.value)}
+                                                                            onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                                                                            placeholder="tu@email.com"
+                                                                            className="w-full bg-black/60 border border-white/10 rounded-lg pl-10 pr-3 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-violet-500/50 transition-all font-sans"
+                                                                        />
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={handleEmailSubmit}
+                                                                        disabled={!email.trim() || emailStatus === 'sending'}
+                                                                        className="shrink-0 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-bold rounded-lg hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] active:scale-[0.97] transition-all disabled:opacity-40 flex items-center justify-center gap-2 group/btn"
+                                                                    >
+                                                                        {emailStatus === 'sending' ? (
+                                                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                                                        ) : (
+                                                                            <Sparkles className="w-4 h-4 group-hover/btn:rotate-12 transition-transform" />
+                                                                        )}
+                                                                        <span>Desbloquear Roadmap</span>
+                                                                    </button>
+                                                                </div>
+                                                                {emailStatus === 'error' && (
+                                                                    <p className="text-red-400 text-[10px] mt-2 flex items-center gap-1 font-sans font-medium">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                                                                        Error al enviar. Intentá de nuevo.
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ) : null}
+
+                                                    {/* Nuevo Diagnóstico - solo si quedan intentos */}
+                                                    {remainingUses > 0 && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setView('input');
+                                                                setInput('');
+                                                                setError(null);
+                                                            }}
+                                                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 text-neutral-300 text-sm font-semibold rounded-xl hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                                        >
+                                                            <Sparkles className="w-4 h-4" />
+                                                            Nuevo Diagnóstico ({remainingUses} restante{remainingUses !== 1 ? 's' : ''})
+                                                        </button>
+                                                    )}
+
+                                                    {/* WhatsApp CTA */}
+                                                    <a
+                                                        href={`https://wa.me/5491160152435?text=${encodeURIComponent(`Hola Individra! Quiero solicitar un servicio basado en este diagnostico:\n\n*Diagnostico* → ${result.diagnostico}\n\n*Solucion Propuesta* → ${result.solucion}`)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="group relative inline-flex items-center justify-center gap-3 w-full px-4 py-3.5 rounded-xl overflow-hidden font-sans font-black text-xs uppercase tracking-[0.15em] text-white transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                                                    >
+                                                        <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-500" />
+                                                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-emerald-500 to-green-400" />
+                                                        <MessageCircle className="relative w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                                                        <span className="relative">Hablar con un Humano → WhatsApp</span>
+                                                    </a>
+                                                </motion.div>
+                                            </div>
                                         )}
                                     </div>
-
-                                    {/* Sticky action section for result */}
-                                    {result && !isLoading && (
-                                        <div className="absolute bottom-0 left-0 right-0 p-4 pt-12 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/95 to-transparent pointer-events-none">
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-                                                className="w-full pointer-events-auto space-y-3"
-                                            >
-                                                {/* Email capture - Desbloquear contenido premium */}
-                                                {emailStatus !== 'sent' ? (
-                                                    <div className="bg-gradient-to-br from-violet-500/10 to-blue-500/10 border border-violet-500/30 rounded-xl p-4">
-                                                        <div className="flex items-center justify-center gap-2 mb-3">
-                                                            <span className="text-lg">🔓</span>
-                                                            <p className="text-white font-semibold text-sm">
-                                                                Desbloqueá el análisis Premium
-                                                            </p>
-                                                        </div>
-                                                        <p className="text-xs text-neutral-400 mb-3 text-center">
-                                                            Timeline detallado + Costos estimados + Roadmap de implementación
-                                                        </p>
-                                                        <div className="flex gap-2">
-                                                            <input
-                                                                type="email"
-                                                                value={email}
-                                                                onChange={(e) => setEmail(e.target.value)}
-                                                                placeholder="tu@email.com"
-                                                                className="flex-1 bg-black/50 border border-white/20 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/30"
-                                                            />
-                                                            <button
-                                                                onClick={handleEmailSubmit}
-                                                                disabled={!email.trim() || emailStatus === 'sending'}
-                                                                className="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-semibold rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-violet-500/25"
-                                                            >
-                                                                {emailStatus === 'sending' ? (
-                                                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                                                ) : (
-                                                                    <Mail className="w-4 h-4" />
-                                                                )}
-                                                                <span className="hidden sm:inline">Desbloquear</span>
-                                                            </button>
-                                                        </div>
-                                                        {emailStatus === 'error' && (
-                                                            <p className="text-red-400 text-xs mt-2 text-center">Error al enviar. Intentá de nuevo.</p>
-                                                        )}
-                                                    </div>
-                                                ) : null}
-
-                                                {/* WhatsApp CTA */}
-                                                <a
-                                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(`Hola Individra! Quiero solicitar un servicio basado en este diagnostico:\n\n*Diagnostico* → ${result.diagnostico}\n\n*Solucion Propuesta* → ${result.solucion}`)}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white text-sm font-sans font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
-                                                >
-                                                    <MessageCircle className="w-4 h-4" />
-                                                    <span>Quiero implementar esto → WhatsApp</span>
-                                                </a>
-                                            </motion.div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </motion.div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </div>
         </section>
-    )
-}
+        )
+    }
