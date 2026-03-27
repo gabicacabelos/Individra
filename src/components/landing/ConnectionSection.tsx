@@ -107,7 +107,7 @@ export function ConnectionSection() {
             style={{ height: isMobile ? '200vh' : '500vh' }}
         >
             {/* Sticky container */}
-            <div className="sticky top-0 h-screen overflow-hidden touch-pan-y">
+            <div className="sticky top-0 h-screen overflow-x-hidden touch-pan-y">
                 {/* Background effects - hidden on mobile for performance */}
                 <div className="absolute inset-0 hidden md:block">
                     <motion.div
@@ -134,7 +134,7 @@ export function ConnectionSection() {
 
                 {/* Content */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="h-full flex flex-col justify-center lg:flex-row lg:items-center gap-2 sm:gap-4 lg:gap-16 pt-4 sm:pt-10 lg:pt-20">
+                    <div className="h-full flex flex-col justify-center lg:flex-row lg:items-center gap-2 sm:gap-4 lg:gap-16 pt-4 sm:pt-6 lg:pt-20 pb-4 sm:pb-8 lg:pb-0">
 
                         {/* Mobile: 3D Model at top */}
                         <motion.div
