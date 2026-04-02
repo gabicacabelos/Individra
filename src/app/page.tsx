@@ -10,6 +10,7 @@ import {
     FloatingChatbot,
     ComparativeSection,
     InteractiveConsultorSection,
+    PromoVideoSection,
 } from '@/components/landing'
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
             <Navbar />
             <HeroSection />
             <InteractiveConsultorSection />
+            <PromoVideoSection />
             <ServicesSection />
             <ConnectionSection />
             <CatalogSection />

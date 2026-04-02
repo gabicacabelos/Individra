@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Bot, Zap, Code2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Bot, Zap, Network, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef, useState, useEffect } from 'react'
 import { MobileServicesBackground } from '@/components/ui/MobileBackgroundEffects'
 
@@ -23,9 +23,9 @@ const services = [
         electricColorRgb: '139, 92, 246',
     },
     {
-        icon: Code2,
-        title: 'Desarrollo de Software',
-        description: 'Diseñamos aplicaciones web y móviles desde cero. Plataformas, sistemas internos, e-commerce con tecnología moderna.',
+        icon: Network,
+        title: 'Orquestación de Agentes IA',
+        description: 'Coordinamos múltiples sistemas de Inteligencia Artificial que colaboran entre sí para automatizar flujos de trabajo en toda tu empresa.',
         gradient: 'from-blue-500 to-cyan-500',
         electricColor: '#3b82f6',
         electricColorRgb: '59, 130, 246',
@@ -402,8 +402,8 @@ export function ServicesSection() {
                         </span>
                     </h2>
                     <p className="mt-6 text-neutral-400 text-base lg:text-lg max-w-2xl mx-auto">
-                        Combinamos inteligencia artificial con desarrollo de software para crear
-                        soluciones personalizadas que transforman tu operación.
+                        Diseñamos ecosistemas avanzados de Inteligencia Artificial y automatización
+                        para crear soluciones personalizadas que escalan y transforman tu operación.
                     </p>
                 </div>
 
