@@ -295,6 +295,7 @@ const InteractiveBackground = () => {
 const DIAGNOSTIC_STORAGE_KEY = 'individra_diagnostic_usage';
 const MAX_DIAGNOSTICS_PER_DAY = 2;
 const HOURS_24_MS = 24 * 60 * 60 * 1000;
+const MAX_INPUT_CHARS = 600;
 
 type DiagnosticUsage = {
     count: number;
@@ -534,15 +535,33 @@ export function InteractiveConsultorSection() {
                                     <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                                     <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col gap-6 min-h-[400px]">
                                         <div className="space-y-4 flex-1 flex flex-col">
-                                            <label htmlFor="problem-input" className="block text-sm font-medium text-neutral-300">
-                                                ¿Cuál es tu mayor cuello de botella actual?
-                                            </label>
+                                            <div className="flex items-center justify-between">
+                                                <label htmlFor="problem-input" className="block text-sm font-medium text-neutral-300">
+                                                    ¿Cuál es tu mayor cuello de botella actual?
+                                                </label>
+                                                <span className={`text-xs font-mono tabular-nums transition-colors ${input.length >= MAX_INPUT_CHARS
+                                                        ? 'text-red-400'
+                                                        : input.length >= MAX_INPUT_CHARS * 0.85
+                                                            ? 'text-amber-400'
+                                                            : 'text-neutral-600'
+                                                    }`}>
+                                                    {input.length}/{MAX_INPUT_CHARS}
+                                                </span>
+                                            </div>
                                             <textarea
                                                 id="problem-input"
                                                 value={input}
-                                                onChange={(e) => setInput(e.target.value)}
+                                                onChange={(e) => {
+                                                    if (e.target.value.length <= MAX_INPUT_CHARS) {
+                                                        setInput(e.target.value);
+                                                    }
+                                                }}
+                                                maxLength={MAX_INPUT_CHARS}
                                                 placeholder="Ej: Pierdo 3 horas al día respondiendo cuánto miden los muebles por WhatsApp y armando presupuestos en Excel..."
-                                                className="w-full flex-1 min-h-[200px] bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder:text-neutral-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none"
+                                                className={`w-full flex-1 min-h-[200px] bg-black/50 border rounded-xl p-4 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-1 transition-all resize-none ${input.length >= MAX_INPUT_CHARS
+                                                        ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50'
+                                                        : 'border-white/10 focus:border-blue-500/50 focus:ring-blue-500/50'
+                                                    }`}
                                             />
                                         </div>
 
@@ -553,7 +572,7 @@ export function InteractiveConsultorSection() {
                                         <div>
                                             <button
                                                 onClick={handleGenerate}
-                                                disabled={isLoading || !input.trim() || usageBlocked.blocked}
+                                                disabled={isLoading || !input.trim() || usageBlocked.blocked || input.length >= MAX_INPUT_CHARS}
                                                 className="w-full relative px-6 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                             >
                                                 {isLoading ? (
@@ -820,5 +839,5 @@ export function InteractiveConsultorSection() {
                 </div>
             </div>
         </section>
-        )
-    }
+    )
+}
