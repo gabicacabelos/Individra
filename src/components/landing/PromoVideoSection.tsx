@@ -21,6 +21,7 @@ export function PromoVideoSection() {
                 className="absolute inset-0 w-full h-[120%] -top-[10%] pointer-events-none"
             >
                 <video
+                    suppressHydrationWarning
                     autoPlay
                     loop
                     muted

@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://assets.calendly.com https://us-assets.i.posthog.com;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://assets.calendly.com https://us-assets.i.posthog.com https://prod.spline.design https://unpkg.com;
   style-src 'self' 'unsafe-inline' https://assets.calendly.com https://fonts.googleapis.com;
   font-src 'self' data: https://fonts.gstatic.com;
   img-src 'self' data: blob: https:;
