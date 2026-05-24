@@ -26,8 +26,7 @@ const navigation = {
     ],
     social: [
         { name: 'LinkedIn', href: 'https://www.linkedin.com/company/individra' },
-        { name: 'Instagram', href: 'https://instagram.com' },
-        { name: 'X', href: 'https://x.com' },
+        { name: 'Instagram', href: 'https://www.instagram.com/gabrielcacabelos/' },
     ],
 }
 

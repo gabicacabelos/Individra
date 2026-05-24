@@ -228,6 +228,7 @@ function MobileCarousel() {
                         <div
                             key={index}
                             className="absolute w-[270px]"
+                            aria-hidden={!isActive}
                             style={{
                                 transform,
                                 zIndex,
@@ -244,19 +245,23 @@ function MobileCarousel() {
             </div>
 
             {/* Navigation */}
-            <div className="flex justify-center items-center gap-6 mt-2">
+            <div className="flex justify-center items-center gap-6 mt-2" role="group" aria-label="Controles del carrusel de servicios">
                 <button
                     onClick={goToPrev}
+                    aria-label="Servicio anterior"
                     className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
                     style={{ transition: 'transform 0.15s' }}
                 >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-5 h-5" aria-hidden="true" />
                 </button>
 
-                <div className="flex gap-2">
-                    {services.map((_, index) => (
+                <div className="flex gap-2" role="tablist" aria-label="Navegación de servicios">
+                    {services.map((service, index) => (
                         <button
                             key={index}
+                            role="tab"
+                            aria-selected={index === activeIndex}
+                            aria-label={`Ver ${service.title}`}
                             onClick={() => setActiveIndex(index)}
                             className="h-2 rounded-full"
                             style={{
@@ -270,10 +275,11 @@ function MobileCarousel() {
 
                 <button
                     onClick={goToNext}
+                    aria-label="Servicio siguiente"
                     className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
                     style={{ transition: 'transform 0.15s' }}
                 >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5" aria-hidden="true" />
                 </button>
             </div>
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { PostHogProvider } from '@/providers/PostHogProvider'
+import { CookieConsent } from '@/components/CookieConsent'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     authors: [{ name: 'Individra' }],
     creator: 'Individra',
     publisher: 'Individra',
-    metadataBase: new URL('https://individratec.com'),
+    metadataBase: new URL('https://www.individratec.com'),
     alternates: {
         canonical: '/',
     },
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
         title: 'Individra | Automatización con IA y Desarrollo de Software',
         description:
             'Soluciones de inteligencia artificial y automatización para empresas. Chatbots, agentes IA y desarrollo a medida.',
-        url: 'https://individratec.com',
+        url: 'https://www.individratec.com',
         siteName: 'Individra',
         locale: 'es_AR',
         type: 'website',
@@ -83,8 +84,8 @@ const jsonLd = {
     '@type': 'Organization',
     name: 'Individra',
     description: 'Soluciones de inteligencia artificial y automatización para empresas',
-    url: 'https://individratec.com',
-    logo: 'https://individratec.com/soloLogo.png',
+    url: 'https://www.individratec.com',
+    logo: 'https://www.individratec.com/soloLogo.png',
     email: 'individratec@gmail.com',
     address: {
         '@type': 'PostalAddress',
@@ -116,10 +117,18 @@ export default function RootLayout({
                 />
             </head>
             <body
+                suppressHydrationWarning
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
             >
+                <a
+                    href="#main-content"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none"
+                >
+                    Saltar al contenido principal
+                </a>
                 <PostHogProvider>
                     {children}
+                    <CookieConsent />
                 </PostHogProvider>
             </body>
         </html>

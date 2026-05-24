@@ -15,7 +15,7 @@ import {
 
 export default function Home() {
     return (
-        <main className="bg-black min-h-screen">
+        <main id="main-content" className="bg-black min-h-screen">
             <Navbar />
             <HeroSection />
             <InteractiveConsultorSection />

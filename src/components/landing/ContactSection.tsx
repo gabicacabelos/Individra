@@ -109,7 +109,7 @@ export function ContactSection() {
                             }}
                             className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-2xl sm:rounded-3xl blur-xl"
                         />
-                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex items-center justify-center calendly-container">
+                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex flex-col items-center justify-center calendly-container">
                             {isMounted ? (
                                 <InlineWidget
                                     url="https://calendly.com/individratec/30min?hide_gdpr_banner=1&locale=es-ES"
@@ -129,6 +129,26 @@ export function ContactSection() {
                             ) : (
                                 <div className="w-8 h-8 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
                             )}
+
+                            {/* Fallback visible si el calendario no carga */}
+                            <p className="mt-4 text-sm text-neutral-500 text-center px-6">
+                                ¿El calendario no carga?{' '}
+                                <a
+                                    href="https://wa.me/5491160152435"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors"
+                                >
+                                    Escribinos por WhatsApp
+                                </a>
+                                {' '}o a{' '}
+                                <a
+                                    href="mailto:individratec@gmail.com"
+                                    className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors"
+                                >
+                                    individratec@gmail.com
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </motion.div>
