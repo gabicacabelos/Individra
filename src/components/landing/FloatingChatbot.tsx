@@ -1,11 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MessageCircle } from 'lucide-react'
+import { useConsent } from '@/providers/PostHogProvider'
 
 export function FloatingChatbot() {
-    // Replaced the chatbot with a direct WhatsApp link as requested
-    const phoneNumber = "5491160152435" // Placeholder, it should be changed.
+    const { consent } = useConsent()
+    const cookieBannerVisible = consent === null
+
+    const phoneNumber = "5491160152435"
     const message = encodeURIComponent("¡Hola Individra! Quiero saber más sobre cómo automatizar mi negocio.")
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
 
@@ -14,7 +16,7 @@ export function FloatingChatbot() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 group"
+            className={`fixed right-6 z-[201] flex items-center gap-3 group transition-all duration-300 ${cookieBannerVisible ? 'bottom-24' : 'bottom-6'}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
