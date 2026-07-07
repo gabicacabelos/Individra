@@ -623,12 +623,12 @@ export function InteractiveConsultorSection() {
                                         </div>
 
                                         {/* Terminal Body */}
-                                        <div className="p-5 sm:p-6 font-mono text-sm max-h-[500px] overflow-y-auto custom-scrollbar relative">
+                                        <div className="p-5 sm:p-6 font-mono text-sm relative">
                                             {result && !isLoading && (
                                                 <motion.div
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
-                                                    className="space-y-4 pb-16"
+                                                    className="space-y-4"
                                                 >
                                                     {/* Diagnóstico card */}
                                                     <motion.div
@@ -681,17 +681,17 @@ export function InteractiveConsultorSection() {
                                                         initial={{ opacity: 0, scale: 0.95 }}
                                                         animate={{ opacity: 1, scale: 1 }}
                                                         transition={{ delay: 0.25 }}
-                                                        className="relative flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-transparent border border-emerald-500/30 overflow-hidden group"
+                                                        className="relative flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-transparent border border-emerald-500/30 overflow-hidden group"
                                                     >
                                                         <div className="shrink-0 w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:rotate-12 transition-transform">
                                                             <Clock className="w-4 h-4 text-emerald-400" />
                                                         </div>
-                                                        <div className="flex flex-col">
+                                                        <div className="flex flex-col min-w-0">
                                                             <span className="text-[10px] text-emerald-400/80 font-sans uppercase tracking-[0.2em] font-bold">Potencial de Ahorro</span>
-                                                            <span className="text-xl text-emerald-100 font-sans font-black tracking-tight">{result.tiempoAhorrado}</span>
+                                                            <span className="text-lg sm:text-xl text-emerald-100 font-sans font-black tracking-tight truncate">{result.tiempoAhorrado}</span>
                                                         </div>
-                                                        <div className="ml-auto px-2 py-1 bg-emerald-500/20 rounded-md border border-emerald-500/30 animate-pulse">
-                                                            <span className="text-[10px] text-emerald-400 font-bold">ROI POSITIVO</span>
+                                                        <div className="ml-auto shrink-0 px-2 py-1 bg-emerald-500/20 rounded-md border border-emerald-500/30 animate-pulse">
+                                                            <span className="text-[10px] text-emerald-400 font-bold whitespace-nowrap">ROI POSITIVO</span>
                                                         </div>
                                                     </motion.div>
 
@@ -750,9 +750,9 @@ export function InteractiveConsultorSection() {
                                             )}
                                         </div>
 
-                                        {/* Sticky action section */}
+                                        {/* Action section */}
                                         {result && !isLoading && (
-                                            <div className="sticky bottom-0 left-0 right-0 p-4 pt-10 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent z-30">
+                                            <div className="relative border-t border-white/10 bg-black/40 p-4 sm:p-5">
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
