@@ -7,22 +7,16 @@ import {
     MessageSquare,
     Calendar,
     FileText,
-    Users,
     Mail,
-    Phone,
-    ClipboardCheck,
     BarChart3,
     Receipt,
     Bell,
-    Database,
     Send,
-    Building2,
-    ShoppingCart,
-    Stethoscope,
     Calculator,
-    HardHat,
-    Hotel,
-    Star,
+    Truck,
+    Home,
+    ScanLine,
+    AlertTriangle,
     Sparkles,
     ArrowRight,
     Lightbulb,
@@ -32,81 +26,48 @@ import {
 
 const categories = [
     {
-        id: 'servicios',
-        label: 'Empresas de Servicios',
-        icon: Building2,
-        color: 'from-violet-500 to-purple-600',
-        items: [
-            { icon: MessageSquare, title: 'WhatsApp 24/7', desc: 'Respuestas instantáneas que califican y agendan', benefit: '500+ consultas/día' },
-            { icon: Calendar, title: 'Agenda Inteligente', desc: 'Reservas online con recordatorios automáticos', benefit: '-70% ausencias' },
-            { icon: FileText, title: 'Cotizador Express', desc: 'Presupuestos personalizados en segundos', benefit: 'Disponible 24/7' },
-            { icon: Send, title: 'Nurturing de Leads', desc: 'Secuencias que convierten prospectos en clientes', benefit: '+25% cierre' },
-        ]
-    },
-    {
-        id: 'ecommerce',
-        label: 'E-commerce & Retail',
-        icon: ShoppingCart,
-        color: 'from-emerald-500 to-teal-600',
-        items: [
-            { icon: ShoppingCart, title: 'Recuperación de Carritos', desc: 'WhatsApp con oferta al que abandonó la compra', benefit: '+15% ventas' },
-            { icon: MessageSquare, title: 'Asistente de Compras', desc: 'Recomendaciones y stock en tiempo real', benefit: '+30% ticket' },
-            { icon: Users, title: 'Clasificador de Leads', desc: 'Prioriza prospectos según intención de compra', benefit: '+40% conversión' },
-            { icon: Bell, title: 'Alertas de Stock', desc: 'Notificaciones cuando hay reposición o promociones', benefit: 'Más recompra' },
-        ]
-    },
-    {
-        id: 'salud',
-        label: 'Salud & Clínicas',
-        icon: Stethoscope,
+        id: 'logistica',
+        label: 'Logística & Distribución',
+        tier: 'principal' as const,
+        icon: Truck,
         color: 'from-blue-500 to-cyan-600',
         items: [
-            { icon: Phone, title: 'Recepción Virtual', desc: 'Agente de voz que atiende y agenda turnos', benefit: 'Atención 24/7' },
-            { icon: Calendar, title: 'Gestión de Turnos', desc: 'Confirmación y recordatorios por WhatsApp', benefit: '-60% ausencias' },
-            { icon: MessageSquare, title: 'Triage Inicial', desc: 'Preguntas previas para optimizar la consulta', benefit: 'Más eficiencia' },
-            { icon: ClipboardCheck, title: 'Seguimiento Post-Consulta', desc: 'Control automático de evolución del paciente', benefit: 'Mejor atención' },
+            { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp, web o voz, consultando tu sistema', benefit: '-80% consultas' },
+            { icon: ScanLine, title: 'Carga de Remitos', desc: 'Extrae los datos de remitos y comprobantes desde una foto o PDF, listos para revisar', benefit: '-95% tipeo' },
+            { icon: Bell, title: 'Avisos de Entrega', desc: 'Notifica salida, llegada o demora según tus reglas, sin depender de que alguien se acuerde', benefit: 'Cero olvidos' },
+            { icon: AlertTriangle, title: 'Semáforo de Riesgo', desc: 'Marca pedidos demorados o sin confirmar según reglas de negocio simples', benefit: 'Prioridad clara' },
         ]
     },
     {
         id: 'contable',
         label: 'Estudios Contables',
+        tier: 'secundario' as const,
         icon: Calculator,
         color: 'from-amber-500 to-orange-600',
         items: [
-            { icon: Receipt, title: 'Procesador de Facturas', desc: 'Extracción de datos de PDFs directo al sistema', benefit: '-95% carga manual' },
+            { icon: Receipt, title: 'Procesador de Facturas', desc: 'Extracción de datos de PDFs directo al sistema, con validación humana', benefit: '-95% carga manual' },
             { icon: Bell, title: 'Alertas de Vencimientos', desc: 'Avisos automáticos a clientes sobre fechas límite', benefit: '100% a tiempo' },
             { icon: BarChart3, title: 'Reportes Periódicos', desc: 'Informes de gestión generados y enviados solos', benefit: 'Sin intervención' },
-            { icon: Mail, title: 'Respuestas de Consultas', desc: 'IA que responde dudas frecuentes de clientes', benefit: '-80% emails' },
+            { icon: Mail, title: 'Respuestas de Consultas', desc: 'Asistente que responde dudas frecuentes de clientes', benefit: '-80% emails' },
         ]
     },
     {
-        id: 'construccion',
-        label: 'Construcción & Obras',
-        icon: HardHat,
-        color: 'from-rose-500 to-pink-600',
+        id: 'inmobiliaria',
+        label: 'Inmobiliarias',
+        tier: 'secundario' as const,
+        icon: Home,
+        color: 'from-violet-500 to-purple-600',
         items: [
-            { icon: FileText, title: 'Presupuestador de Obras', desc: 'Cotizaciones detalladas desde formulario web', benefit: 'Respuesta inmediata' },
-            { icon: ClipboardCheck, title: 'Updates de Avance', desc: 'Informes automáticos al cliente sobre la obra', benefit: 'Clientes informados' },
-            { icon: Database, title: 'Conexión de Sistemas', desc: 'Sincronización entre planillas, CRM y gestión', benefit: 'Datos unificados' },
-            { icon: Bell, title: 'Control de Materiales', desc: 'Alertas de stock bajo y pedidos pendientes', benefit: 'Sin faltantes' },
-        ]
-    },
-    {
-        id: 'hoteleria',
-        label: 'Hotelería & Turismo',
-        icon: Hotel,
-        color: 'from-sky-500 to-indigo-600',
-        items: [
-            { icon: MessageSquare, title: 'Concierge Virtual', desc: 'WhatsApp 24/7 para consultas y reservas', benefit: 'Atención inmediata' },
-            { icon: Calendar, title: 'Gestión de Reservas', desc: 'Confirmaciones y recordatorios automáticos', benefit: '-80% no-shows' },
-            { icon: Star, title: 'Gestión de Reseñas', desc: 'Solicitud automática y respuesta a reviews', benefit: '+Rating online' },
-            { icon: Bell, title: 'Check-in Express', desc: 'Pre check-in digital y notificaciones al huésped', benefit: 'Mejor experiencia' },
+            { icon: MessageSquare, title: 'Consultas de Propiedades', desc: 'Responde disponibilidad, precio y requisitos desde tu base, 24/7', benefit: 'Atención inmediata' },
+            { icon: Calendar, title: 'Coordinación de Visitas', desc: 'Agenda y recuerda visitas automáticamente', benefit: '-60% ausencias' },
+            { icon: Send, title: 'Seguimiento de Interesados', desc: 'Secuencias de contacto para que ningún interesado se enfríe', benefit: '+ cierres' },
+            { icon: FileText, title: 'Carga de Fichas', desc: 'Extrae datos de documentos y fichas sin tipear a mano', benefit: 'Sin carga manual' },
         ]
     },
 ]
 
 export function CatalogSection() {
-    const [expandedId, setExpandedId] = useState<string | null>(null)
+    const [expandedId, setExpandedId] = useState<string | null>('logistica')
     const sectionRef = useRef<HTMLElement>(null)
 
     const { scrollYProgress } = useScroll({
@@ -165,7 +126,7 @@ export function CatalogSection() {
                         transition={{ delay: 0.4 }}
                         className="mt-6 text-neutral-400 text-lg max-w-2xl mx-auto"
                     >
-                        Seleccioná tu industria y descubrí qué podemos automatizar.
+                        Nuestro foco es la logística y la distribución. Abrí el rubro y descubrí qué podemos automatizar.
                     </motion.p>
                 </motion.div >
 
@@ -181,16 +142,27 @@ export function CatalogSection() {
                         categories.map((category, categoryIndex) => {
                             const CategoryIcon = category.icon
                             const isExpanded = expandedId === category.id
+                            const isPrincipal = category.tier === 'principal'
+                            const showSecondaryDivider = category.tier === 'secundario' && categories[categoryIndex - 1]?.tier === 'principal'
 
                             return (
-                                <motion.div
-                                    key={category.id}
-                                    initial={{ opacity: 0, x: -30 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: categoryIndex * 0.1 }}
-                                    className="rounded-2xl border border-white/10 bg-neutral-900/50 backdrop-blur-sm overflow-hidden"
-                                >
+                                <div key={category.id}>
+                                    {showSecondaryDivider && (
+                                        <div className="flex items-center gap-3 pt-6 pb-2">
+                                            <div className="h-px flex-1 bg-white/10" />
+                                            <span className="text-neutral-500 text-xs uppercase tracking-widest whitespace-nowrap">
+                                                También trabajamos en
+                                            </span>
+                                            <div className="h-px flex-1 bg-white/10" />
+                                        </div>
+                                    )}
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -30 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: categoryIndex * 0.1 }}
+                                        className={`rounded-2xl border bg-neutral-900/50 backdrop-blur-sm overflow-hidden ${isPrincipal ? 'border-blue-500/40 shadow-lg shadow-blue-900/20' : 'border-white/10'}`}
+                                    >
                                     {/* Header */}
                                     <motion.button
                                         onClick={() => toggleCategory(category.id)}
@@ -209,7 +181,14 @@ export function CatalogSection() {
                                                 <CategoryIcon className="w-6 h-6 text-white" />
                                             </motion.div>
                                             <div className="text-left">
-                                                <h3 className="text-lg font-semibold text-white">{category.label}</h3>
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <h3 className="text-lg font-semibold text-white">{category.label}</h3>
+                                                    {isPrincipal && (
+                                                        <span className="px-2 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-[10px] font-bold uppercase tracking-wider">
+                                                            Especialidad
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <p className="text-neutral-500 text-sm">{category.items.length} automatizaciones</p>
                                             </div>
                                         </div>
@@ -273,7 +252,8 @@ export function CatalogSection() {
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
-                                </motion.div>
+                                    </motion.div>
+                                </div>
                             )
                         })
                     }

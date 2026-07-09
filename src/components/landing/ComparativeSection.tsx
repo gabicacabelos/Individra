@@ -17,8 +17,8 @@ const features = [
     },
     {
         name: 'Dueño de los Datos',
-        saas: 'Ellos. Si dejás de pagar, perdés toda tu información.',
-        individra: 'Vos. Instalamos todo en tu infraestructura. Sos dueño del código y los datos.',
+        saas: 'Ellos. Tus datos viven en su nube, mezclados con los de todos, y pueden entrenar sus modelos.',
+        individra: 'Vos. Corre en infraestructura propia y aislada en Alemania (GDPR): tus datos no se mezclan con los de nadie ni entrenan nada. Portabilidad garantizada: si te vas, te los llevás.',
     },
     {
         name: 'Lógica de Negocio',

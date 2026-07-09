@@ -688,12 +688,17 @@ export function InteractiveConsultorSection() {
                                                         </div>
                                                         <div className="flex flex-col min-w-0">
                                                             <span className="text-[10px] text-emerald-400/80 font-sans uppercase tracking-[0.2em] font-bold">Potencial de Ahorro</span>
-                                                            <span className="text-lg sm:text-xl text-emerald-100 font-sans font-black tracking-tight truncate">{result.tiempoAhorrado}</span>
+                                                            <span className="text-lg sm:text-xl text-emerald-100 font-sans font-black tracking-tight leading-tight">{result.tiempoAhorrado}</span>
                                                         </div>
                                                         <div className="ml-auto shrink-0 px-2 py-1 bg-emerald-500/20 rounded-md border border-emerald-500/30 animate-pulse">
                                                             <span className="text-[10px] text-emerald-400 font-bold whitespace-nowrap">ROI POSITIVO</span>
                                                         </div>
                                                     </motion.div>
+
+                                                    {/* Disclaimer de estimaciones */}
+                                                    <p className="text-[11px] text-neutral-500 font-sans leading-relaxed text-center px-2">
+                                                        Estimación preliminar generada por IA. Los tiempos y costos exactos se confirman en el diagnóstico real (Fase 1), sin compromiso.
+                                                    </p>
 
                                                     {/* Premium Lockdown Section */}
                                                     {emailStatus !== 'sent' && (

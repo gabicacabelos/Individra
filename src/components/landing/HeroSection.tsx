@@ -70,13 +70,13 @@ export function HeroSection() {
                             </motion.div>
 
                             {/* Title */}
-                            <h1 className="text-[1.6rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}>
+                            <h1 className="text-[1.7rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}>
                                 <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
-                                    Dejá de trabajar para tu negocio.
+                                    Tu operación
                                 </span>
                                 <br />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-blue-400 to-violet-400">
-                                    Que tu negocio trabaje para vos.
+                                    no puede tomarse vacaciones.
                                 </span>
                             </h1>
 
@@ -87,8 +87,14 @@ export function HeroSection() {
 
                             {/* Subtitle */}
                             <p className="-mt-6 sm:-mt-10 lg:mt-6 text-neutral-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                                Automatizamos las tareas que te roban tiempo:
-                                <span className="text-white font-medium"> atención en WhatsApp, presupuestos y gestión de datos.</span>
+                                Si tu PyME se frena cuando la persona que sabe todo se toma una semana, tenés un
+                                <span className="text-white font-medium"> problema de ingeniería, no de personal.</span>{' '}
+                                Construimos los sistemas que hoy viven en la cabeza de tu equipo.
+                            </p>
+
+                            {/* Rhythm line */}
+                            <p className="mt-4 text-sm sm:text-base font-medium text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-blue-300 max-w-2xl mx-auto lg:mx-0">
+                                Menos carga manual. Menos teléfonos sonando. Menos depender de que alguien se acuerde.
                             </p>
 
                             {/* CTA Buttons */}

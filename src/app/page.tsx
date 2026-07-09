@@ -11,6 +11,8 @@ import {
     ComparativeSection,
     InteractiveConsultorSection,
     PromoVideoSection,
+    PainSolutionSection,
+    DifferentiatorsSection,
 } from '@/components/landing'
 
 export default function Home() {
@@ -20,9 +22,11 @@ export default function Home() {
             <HeroSection />
             <InteractiveConsultorSection />
             <PromoVideoSection />
+            <PainSolutionSection />
             <ServicesSection />
             <ConnectionSection />
             <CatalogSection />
+            <DifferentiatorsSection />
             <ComparativeSection />
             <FAQSection />
             <ContactSection />
