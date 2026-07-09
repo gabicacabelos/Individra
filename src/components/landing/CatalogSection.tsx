@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { MobileCatalogBackground } from '@/components/ui/MobileBackgroundEffects'
+import { LogisticsIllustration } from './illustrations'
 import {
     MessageSquare,
     Calendar,
@@ -128,6 +129,16 @@ export function CatalogSection() {
                     >
                         Nuestro foco es la logística y la distribución. Abrí el rubro y descubrí qué podemos automatizar.
                     </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-8 flex justify-center"
+                    >
+                        <LogisticsIllustration className="w-full max-w-md h-auto" />
+                    </motion.div>
                 </motion.div >
 
                 {/* Accordion */}

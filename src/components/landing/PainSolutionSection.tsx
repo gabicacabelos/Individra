@@ -15,6 +15,7 @@ import {
     ArrowDown,
 } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { PainIllustration, SolutionIllustration } from './illustrations'
 
 const pains = [
     {
@@ -111,6 +112,16 @@ export function PainSolutionSection() {
                     </h2>
                 </motion.div>
 
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 0.5 }}
+                    className="flex justify-center mb-8 lg:mb-10"
+                >
+                    <PainIllustration className="w-64 sm:w-72 h-auto" />
+                </motion.div>
+
                 <div className="space-y-3">
                     {pains.map((pain, i) => {
                         const Icon = pain.icon
@@ -194,6 +205,16 @@ export function PainSolutionSection() {
                             trabaja 24/7.
                         </span>
                     </h2>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 0.5 }}
+                    className="flex justify-center mb-8 lg:mb-10"
+                >
+                    <SolutionIllustration className="w-64 sm:w-72 h-auto" />
                 </motion.div>
 
                 <div className="grid sm:grid-cols-2 gap-3">

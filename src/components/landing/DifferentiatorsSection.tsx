@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } fr
 import { Factory, ShieldCheck, Cpu } from 'lucide-react'
 import { useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { AutomotiveIllustration } from './illustrations'
 
 const differentiators = [
     {
@@ -98,6 +99,11 @@ function TiltCard({ item, index, isMobile }: { item: typeof differentiators[0]; 
                     className="pointer-events-none absolute -top-16 -right-16 w-44 h-44 rounded-full blur-[60px] opacity-25 group-hover:opacity-50 transition-opacity duration-500"
                     style={{ background: `rgb(${item.accentRgb})` }}
                 />
+
+                {/* Watermark ilustrativo (solo tarjeta automotriz) */}
+                {index === 0 && (
+                    <AutomotiveIllustration className="pointer-events-none absolute bottom-2 right-2 w-36 opacity-[0.14] group-hover:opacity-[0.22] transition-opacity duration-500" />
+                )}
 
                 {/* Top accent hairline */}
                 <div
