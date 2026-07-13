@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 1,
         },
         {
+            url: 'https://individratec.com/logistica',
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.9,
+        },
+        {
             url: 'https://individratec.com/#servicios',
             lastModified: new Date(),
             changeFrequency: 'monthly',

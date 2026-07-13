@@ -45,6 +45,7 @@ export function Navbar() {
         { href: '#diagnostico-ia', label: 'Diagnóstico IA' },
         { href: '#servicios', label: 'Servicios' },
         { href: '#proceso', label: 'Proceso' },
+        { href: '/logistica', label: 'Logística' },
         { href: '#soluciones', label: 'Soluciones' },
         { href: '#faq', label: 'FAQ' },
     ]
