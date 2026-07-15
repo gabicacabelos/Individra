@@ -10,6 +10,7 @@
  */
 
 import { motion, useReducedMotion, type Transition } from 'framer-motion'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 type Props = { className?: string }
 
@@ -431,7 +432,9 @@ export function AnomalyLogIcon() {
    ===================================================================== */
 export function AmbientOrbs({ className }: Props) {
     const reduce = useReducedMotion()
-    if (reduce) return null
+    const isMobile = useIsMobile()
+    // Dos blurs de 130px animados son de lo más caro que hay para la GPU mobile.
+    if (reduce || isMobile) return null
     return (
         <div className={className} aria-hidden>
             <motion.div

@@ -1,8 +1,14 @@
 'use client'
 
 import { useRef, useState, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
-import { ScrollModel3D } from '@/components/ui/ScrollModel3D'
+// Carga diferida: mantiene three.js/drei y el preload de robot-hands.glb (11 MB)
+// fuera del bundle de mobile, donde el modelo nunca se muestra.
+const ScrollModel3D = dynamic(
+    () => import('@/components/ui/ScrollModel3D').then((m) => m.ScrollModel3D),
+    { ssr: false }
+)
 import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
 import { Search, Lightbulb, Cpu, Rocket, BarChart, ArrowRight } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -302,11 +308,14 @@ export function ConnectionSection() {
                                 transition={{ duration: 0.8 }}
                             />
 
-                            {/* Model */}
-                            <ScrollModel3D
-                                scrollProgress={scrollProgress}
-                                className="relative z-10"
-                            />
+                            {/* Model — solo se monta en desktop: `hidden lg:block` es CSS y
+                                montaba un canvas WebGL invisible en mobile. */}
+                            {!isMobile && (
+                                <ScrollModel3D
+                                    scrollProgress={scrollProgress}
+                                    className="relative z-10"
+                                />
+                            )}
 
                             {/* Step number display */}
                             <motion.div

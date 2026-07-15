@@ -212,8 +212,9 @@ export function LogisticaLanding() {
                                 whileHover={{ y: -4 }}
                                 className="group relative flex flex-col p-6 lg:p-7 rounded-2xl border border-white/10 bg-[#1a1a2e]/60 overflow-hidden transition-colors duration-300 hover:border-violet-500/40"
                             >
-                                {/* hover glow */}
-                                <div aria-hidden className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full blur-[60px] bg-violet-500/0 group-hover:bg-violet-500/15 transition-colors duration-500" />
+                                {/* hover glow — solo desktop: en mobile no hay hover y el blur
+                                    igual crea una capa de composición por card. */}
+                                <div aria-hidden className="hidden lg:block pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full blur-[60px] bg-violet-500/0 group-hover:bg-violet-500/15 transition-colors duration-500" />
 
                                 {/* Quote */}
                                 <div className="relative border-l-2 border-violet-500 pl-4">
