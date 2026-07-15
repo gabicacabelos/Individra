@@ -4,6 +4,14 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
+import { MorphingText } from '@/components/ui/morphing-text'
+
+// A nivel de módulo: identidad estable entre renders.
+const RHYTHM_PHRASES = [
+    'Menos carga manual.',
+    'Menos teléfonos sonando.',
+    'Menos depender de que alguien se acuerde.',
+]
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -92,10 +100,13 @@ export function HeroSection() {
                                 Construimos los sistemas que hoy viven en la cabeza de tu equipo.
                             </p>
 
-                            {/* Rhythm line */}
-                            <p className="mt-4 text-sm sm:text-base font-medium text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-blue-300 max-w-2xl mx-auto lg:mx-0">
-                                Menos carga manual. Menos teléfonos sonando. Menos depender de que alguien se acuerde.
-                            </p>
+                            {/* Rhythm line — transiciona entre las tres frases */}
+                            <MorphingText
+                                texts={RHYTHM_PHRASES}
+                                srText={RHYTHM_PHRASES.join(' ')}
+                                className="mt-4 h-12 sm:h-10 max-w-2xl mx-auto lg:mx-0"
+                                textClassName="justify-center lg:justify-start text-base sm:text-lg lg:text-xl font-semibold text-violet-300"
+                            />
 
                             {/* CTA Buttons */}
                             <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
@@ -129,13 +140,17 @@ export function HeroSection() {
                         {/* Glow effect - pointer-events-none to not block robot interaction */}
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
 
-                        {/* Spline container - Desktop only */}
-                        <div className="relative z-20 w-full h-full">
-                            <SplineScene
-                                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                                className="w-full h-full cursor-pointer"
-                            />
-                        </div>
+                        {/* Spline container - Desktop only.
+                            `hidden lg:block` es solo CSS: sin este gate, mobile montaba la
+                            escena y descargaba el runtime de Spline + WebGL sin verla nunca. */}
+                        {!isMobile && (
+                            <div className="relative z-20 w-full h-full">
+                                <SplineScene
+                                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                                    className="w-full h-full cursor-pointer"
+                                />
+                            </div>
+                        )}
                     </motion.div>
                 </div>
             </div>
