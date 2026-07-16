@@ -237,3 +237,53 @@
     display: none;
   }
 }
+/* ============================================================
+   Micro-demos de tarjetas
+   Solo transform/opacity (nada que dispare reflow).
+   El estado base de cada elemento es el ESTADO FINAL: si las
+   animaciones se apagan (reduced motion), la demo queda legible.
+   Todas comparten periodo (6s), asi que los delays mantienen
+   una relacion de fase constante y el loop no se desincroniza.
+   ============================================================ */
+
+@keyframes md-rise {
+    0%, 4%    { opacity: 0; transform: translateY(8px); }
+    12%, 86%  { opacity: 1; transform: translateY(0); }
+    96%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+
+@keyframes md-fill {
+    0%, 8%    { transform: scaleX(0); }
+    28%, 86%  { transform: scaleX(1); }
+    96%, 100% { transform: scaleX(0); }
+}
+
+@keyframes md-pop {
+    0%, 8%    { opacity: 0; transform: scale(0.82); }
+    20%, 86%  { opacity: 1; transform: scale(1); }
+    96%, 100% { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes md-draw {
+    0%, 14%   { stroke-dashoffset: 22; }
+    30%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes md-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+.md-anim {
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-microdemo] .md-anim,
+    [data-microdemo] .md-anim * {
+        animation: none !important;
+    }
+}

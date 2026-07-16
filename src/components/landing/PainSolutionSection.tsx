@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { PainIllustration, SolutionIllustration } from './illustrations'
+import { ChatStatusDemo, OcrDemo, NotifyDemo, MemoryContextDemo, HandoffDemo } from '@/components/ui/micro-demos'
 
 const pains = [
     {
@@ -44,22 +45,27 @@ const solutions = [
     {
         icon: MessageSquare,
         text: 'Responde el estado de cada pedido en segundos, por WhatsApp, web o teléfono, consultando tu sistema o tu planilla.',
+        Demo: ChatStatusDemo,
     },
     {
         icon: ScanLine,
         text: 'Carga remitos y comprobantes desde una foto o PDF, listos para revisar, sin tipear a mano.',
+        Demo: OcrDemo,
     },
     {
         icon: BellRing,
         text: 'Avisa automáticamente cuando un pedido sale, llega o se demora, según las reglas que definas.',
+        Demo: NotifyDemo,
     },
     {
         icon: Brain,
         text: 'Recuerda el contexto de cada conversación y responde con la información de tu empresa, no con datos genéricos.',
+        Demo: MemoryContextDemo,
     },
     {
         icon: UserCheck,
         text: 'Deriva a una persona con todo el contexto cuando el caso lo requiere.',
+        Demo: HandoffDemo,
     },
 ]
 
@@ -220,6 +226,7 @@ export function PainSolutionSection() {
                 <div className="grid sm:grid-cols-2 gap-3">
                     {solutions.map((sol, i) => {
                         const Icon = sol.icon
+                        const Demo = sol.Demo
                         return (
                             <motion.div
                                 key={i}
@@ -228,17 +235,34 @@ export function PainSolutionSection() {
                                 viewport={{ once: true, margin: '-40px' }}
                                 transition={{ delay: i * 0.07, type: 'spring', stiffness: 120, damping: 18 }}
                                 whileHover={isMobile ? undefined : { y: -4 }}
-                                className={`group relative flex items-start gap-4 p-4 sm:p-5 rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/[0.06] to-transparent overflow-hidden transition-colors duration-300 hover:border-emerald-500/35 ${i === solutions.length - 1 ? 'sm:col-span-2' : ''}`}
+                                className={`group relative flex flex-col p-4 sm:p-5 rounded-2xl border border-white/[0.08] bg-[#16162a] overflow-hidden transition-colors duration-300 hover:border-violet-500/40 ${
+                                    // La última queda sola en su fila: se centra manteniendo el
+                                    // ancho de las demás. Si se estira a 2 columnas, su micro-demo
+                                    // queda desierta y rompe con el resto.
+                                    i === solutions.length - 1
+                                        ? 'sm:col-span-2 sm:w-[calc(50%-0.375rem)] sm:mx-auto'
+                                        : ''
+                                }`}
                             >
                                 {/* sheen sweep on hover */}
                                 <div aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[900ms] ease-out bg-gradient-to-r from-transparent via-white/[0.07] to-transparent -skew-x-12" />
-                                <div className="relative shrink-0 w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center group-hover:scale-110 group-hover:border-emerald-500/50 transition-all duration-300">
-                                    <span aria-hidden className="absolute inset-0 rounded-xl bg-emerald-500/0 group-hover:bg-emerald-500/20 blur-md transition-colors duration-300" />
-                                    <Icon className="relative w-5 h-5 text-emerald-400" />
+
+                                {/* Micro-demo del concepto que describe la tarjeta */}
+                                {Demo && (
+                                    <div className="relative mb-4">
+                                        <Demo />
+                                    </div>
+                                )}
+
+                                <div className="relative flex items-start gap-4">
+                                    <div className="relative shrink-0 w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center group-hover:scale-110 group-hover:border-emerald-500/50 transition-all duration-300">
+                                        <span aria-hidden className="absolute inset-0 rounded-xl bg-emerald-500/0 group-hover:bg-emerald-500/20 blur-md transition-colors duration-300" />
+                                        <Icon className="relative w-5 h-5 text-emerald-400" />
+                                    </div>
+                                    <p className="text-neutral-300 text-sm sm:text-base leading-relaxed pt-1.5">
+                                        {sol.text}
+                                    </p>
                                 </div>
-                                <p className="relative text-neutral-300 text-sm sm:text-base leading-relaxed pt-1.5">
-                                    {sol.text}
-                                </p>
                             </motion.div>
                         )
                     })}
