@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Quote } from 'lucide-react'
 import {
-    HeroLogisticsScene,
     SaturatedOpsScene,
     AmbientOrbs,
     RouteDivider,
@@ -15,6 +14,7 @@ import {
     AnomalyLogIcon,
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
+import { PhoneChatHero } from './PhoneChatHero'
 import { RouteConfirmDemo, SchedulingDemo, ProactiveStatusDemo, AnomalyLogDemo } from '@/components/ui/micro-demos'
 
 const WHATSAPP_HREF =
@@ -141,14 +141,14 @@ export function LogisticaLanding() {
                             </motion.div>
                         </div>
 
-                        {/* Escena animada de tracking: visible tambien en mobile */}
+                        {/* El producto es la conversacion: telefono con el chat en loop */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.94 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                            className="relative"
+                            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+                            className="relative py-4"
                         >
-                            <HeroLogisticsScene className="w-full h-auto max-w-[420px] lg:max-w-[520px] mx-auto drop-shadow-[0_0_40px_rgba(139,92,246,0.15)]" />
+                            <PhoneChatHero />
                         </motion.div>
 
                     </div>

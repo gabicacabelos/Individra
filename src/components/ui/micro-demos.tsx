@@ -271,10 +271,10 @@ export function AnomalyLogDemo() {
                 {rows.map(([time, label], i) => (
                     <div
                         key={label}
-                        className="md-anim flex items-center gap-2 rounded-md border border-amber-400/20 bg-amber-500/[0.08] px-2 py-1.5"
+                        className="md-anim flex items-center gap-2 rounded-md border border-violet-400/20 bg-violet-500/[0.08] px-2 py-1.5"
                         style={{ animationName: 'md-rise', animationDelay: `${i * 0.35}s` }}
                     >
-                        <span className="font-mono text-[9px] text-amber-300/80 shrink-0">{time}</span>
+                        <span className="font-mono text-[9px] text-violet-300/80 shrink-0">{time}</span>
                         <span className="text-[9px] text-neutral-300">{label}</span>
                     </div>
                 ))}

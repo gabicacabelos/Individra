@@ -194,7 +194,7 @@ export function HeroLogisticsScene({ className }: Props) {
 /* =====================================================================
    2) DOLOR — Operación saturada
    Teléfono con burbujas desbordando, badge de notificaciones pulsante,
-   reloj con manecilla girando. Rojo/naranja (código de dolor de la casa).
+   reloj con manecilla girando. Violeta/cyan, unificado con el resto de la landing.
    ===================================================================== */
 export function SaturatedOpsScene({ className }: Props) {
     const reduce = useReducedMotion()
@@ -204,11 +204,11 @@ export function SaturatedOpsScene({ className }: Props) {
         <svg viewBox="0 0 320 240" className={className} role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="ops-grad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#fb7185" />
-                    <stop offset="100%" stopColor="#fb923c" />
+                    <stop offset="0%" stopColor="#a78bfa" />
+                    <stop offset="100%" stopColor="#22d3ee" />
                 </linearGradient>
                 <radialGradient id="ops-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(244,63,94,0.26)" />
+                    <stop offset="0%" stopColor="rgba(139,92,246,0.26)" />
                     <stop offset="100%" stopColor="rgba(244,63,94,0)" />
                 </radialGradient>
             </defs>
@@ -216,7 +216,7 @@ export function SaturatedOpsScene({ className }: Props) {
             <ellipse cx="160" cy="128" rx="140" ry="94" fill="url(#ops-glow)" />
 
             {/* Teléfono */}
-            <rect x="116" y="60" width="88" height="156" rx="14" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} fill="rgba(251,113,133,0.04)" />
+            <rect x="116" y="60" width="88" height="156" rx="14" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.05)" />
             <line x1="150" y1="74" x2="170" y2="74" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} />
 
             {/* Burbujas desbordando: aparecen una tras otra (backlog) */}
@@ -233,7 +233,7 @@ export function SaturatedOpsScene({ className }: Props) {
                 >
                     <path
                         d={`M130 ${b.y} h${b.w} a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-${b.w - 14} l-9 9 v-9 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 z`}
-                        stroke="#fda4af" strokeWidth="2" {...stroke} fill="rgba(251,113,133,0.06)"
+                        stroke="#c4b5fd" strokeWidth="2" {...stroke} fill="rgba(139,92,246,0.08)"
                     />
                 </motion.g>
             ))}
@@ -255,26 +255,26 @@ export function SaturatedOpsScene({ className }: Props) {
                 transition={loop({ duration: 1.6, repeat: Infinity, ease: 'easeInOut' })}
                 style={{ transformOrigin: '200px 66px' }}
             >
-                <circle cx="200" cy="66" r="14" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} fill="rgba(244,63,94,0.16)" />
-                <text x="200" y="71" textAnchor="middle" fontSize="13" fill="#fb7185" fontFamily="ui-monospace, monospace" fontWeight="bold">+9</text>
+                <circle cx="200" cy="66" r="14" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} fill="rgba(139,92,246,0.16)" />
+                <text x="200" y="71" textAnchor="middle" fontSize="13" fill="#a78bfa" fontFamily="ui-monospace, monospace" fontWeight="bold">+9</text>
             </motion.g>
 
             {/* Reloj con manecilla girando (tiempo perdido) */}
             <g>
                 <circle cx="74" cy="80" r="22" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} />
-                <line x1="74" y1="80" x2="74" y2="66" stroke="#fb7185" strokeWidth="2" {...stroke} />
+                <line x1="74" y1="80" x2="74" y2="66" stroke="#a78bfa" strokeWidth="2" {...stroke} />
                 <motion.line
                     x1="74" y1="80" x2="74" y2="70"
-                    stroke="#fb923c" strokeWidth="2.5" {...stroke}
+                    stroke="#22d3ee" strokeWidth="2.5" {...stroke}
                     animate={reduce ? undefined : { rotate: 360 }}
                     transition={loop({ duration: 4, repeat: Infinity, ease: 'linear' })}
                     style={{ transformOrigin: '74px 80px' }}
                 />
-                <circle cx="74" cy="80" r="2.5" fill="#fb923c" />
+                <circle cx="74" cy="80" r="2.5" fill="#22d3ee" />
             </g>
 
             {/* Papeles sueltos */}
-            <rect x="238" y="152" width="36" height="26" rx="3" stroke="#fda4af" strokeWidth="2" opacity="0.7" transform="rotate(12 256 165)" {...stroke} />
+            <rect x="238" y="152" width="36" height="26" rx="3" stroke="#c4b5fd" strokeWidth="2" opacity="0.7" transform="rotate(12 256 165)" {...stroke} />
         </svg>
     )
 }

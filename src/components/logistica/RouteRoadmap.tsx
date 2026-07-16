@@ -108,17 +108,19 @@ export function RouteRoadmap() {
                 ))}
             </div>
 
-            {/* ===== Mobile: columna única, misma secuencia ===== */}
-            <div className="lg:hidden max-w-md mx-auto">
+            {/* ===== Mobile: columna única, misma secuencia =====
+                Los nombres van en píldoras (mismo lenguaje que los hitos de
+                desktop): sobre la imagen de fondo, el texto suelto se perdía. */}
+            <div className="lg:hidden max-w-sm mx-auto px-2 py-4">
                 {WAYPOINTS.map((w, i) => (
-                    <div key={w.name} className="flex items-start gap-3">
-                        <div className="flex flex-col items-center self-stretch">
+                    <div key={w.name} className="flex gap-3.5">
+                        <div className="flex flex-col items-center">
                             <motion.span
                                 initial={{ scale: 0, opacity: 0 }}
                                 whileInView={{ scale: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: '-40px' }}
                                 transition={{ delay: i * 0.12, type: 'spring', stiffness: 240, damping: 15 }}
-                                className="shrink-0 w-3 h-3 rounded-full border-2 border-violet-400 bg-[#0f0f1a]"
+                                className="mt-2.5 shrink-0 w-3.5 h-3.5 rounded-full border-2 border-violet-400 bg-[#0f0f1a] shadow-[0_0_12px_rgba(139,92,246,0.7)]"
                             />
                             {i < WAYPOINTS.length - 1 && (
                                 <motion.span
@@ -128,19 +130,19 @@ export function RouteRoadmap() {
                                     viewport={{ once: true, margin: '-40px' }}
                                     transition={{ delay: i * 0.12 + 0.1, duration: 0.4 }}
                                     style={{ transformOrigin: 'top' }}
-                                    className="flex-1 w-px my-1 bg-gradient-to-b from-violet-500/60 to-cyan-500/40"
+                                    className="flex-1 w-0.5 my-1.5 rounded-full bg-gradient-to-b from-violet-500/80 to-cyan-400/50"
                                 />
                             )}
                         </div>
-                        <motion.p
+                        <motion.span
                             initial={{ opacity: 0, x: -8 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: '-40px' }}
                             transition={{ delay: i * 0.12 + 0.05 }}
-                            className="pb-6 text-sm font-medium text-neutral-300"
+                            className="mb-6 inline-flex items-center rounded-full border border-violet-500/30 bg-[#16162a]/90 px-4 py-2 text-[13px] font-medium text-neutral-200 backdrop-blur-sm"
                         >
                             {w.name}
-                        </motion.p>
+                        </motion.span>
                     </div>
                 ))}
             </div>
