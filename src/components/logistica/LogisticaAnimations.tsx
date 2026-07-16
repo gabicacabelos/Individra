@@ -478,3 +478,80 @@ export function RouteDivider({ className }: Props) {
         </svg>
     )
 }
+
+/* =====================================================================
+   5) CIERRE — Sello de entrega que se ensambla al llegar al final
+   La ruta se dibuja, el pin aterriza y el check se sella. Se dispara una
+   sola vez al entrar en viewport (whileInView), no en loop: es un remate,
+   no un adorno permanente.
+   ===================================================================== */
+export function DeliveredSealScene({ className }: Props) {
+    const reduce = useReducedMotion()
+
+    // Con reduced motion se muestra el estado final, sin trazado ni rebote.
+    const draw = reduce
+        ? { initial: { pathLength: 1, opacity: 1 }, whileInView: { pathLength: 1, opacity: 1 } }
+        : { initial: { pathLength: 0, opacity: 0 }, whileInView: { pathLength: 1, opacity: 1 } }
+
+    const pop = reduce
+        ? { initial: { scale: 1, opacity: 1 }, whileInView: { scale: 1, opacity: 1 } }
+        : { initial: { scale: 0, opacity: 0 }, whileInView: { scale: 1, opacity: 1 } }
+
+    return (
+        <svg viewBox="0 0 240 120" className={className} role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="seal-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#a78bfa" />
+                    <stop offset="100%" stopColor="#22d3ee" />
+                </linearGradient>
+            </defs>
+
+            {/* Ruta que se dibuja de origen a destino */}
+            <motion.path
+                d="M18 92 C 60 92, 70 60, 104 56 C 132 52, 140 46, 168 42"
+                stroke="url(#seal-grad)" strokeWidth="2.5" strokeDasharray="2 7" {...stroke}
+                {...draw}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: reduce ? 0 : 1.1, ease: 'easeInOut' }}
+            />
+            <circle cx="18" cy="92" r="4" fill="#a78bfa" />
+
+            {/* Pin de destino que aterriza */}
+            <motion.g
+                {...pop}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: reduce ? 0 : 0.9, type: 'spring', stiffness: 200, damping: 14 }}
+                style={{ transformOrigin: '186px 40px' }}
+            >
+                <path
+                    d="M186 22 c 10 0 17 7 17 17 c 0 11 -17 27 -17 27 c 0 0 -17 -16 -17 -27 c 0 -10 7 -17 17 -17 z"
+                    stroke="url(#seal-grad)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.12)"
+                />
+                <circle cx="186" cy="39" r="5.5" fill="none" stroke="#22d3ee" strokeWidth="2" />
+            </motion.g>
+
+            {/* Sello: check que remata la secuencia */}
+            <motion.g
+                {...pop}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: reduce ? 0 : 1.35, type: 'spring', stiffness: 240, damping: 13 }}
+                style={{ transformOrigin: '120px 86px' }}
+            >
+                <circle cx="120" cy="86" r="20" stroke="#34d399" strokeWidth="2.5" {...stroke} fill="rgba(16,185,129,0.12)" />
+                <path d="M111 86 l6 6 12 -13" stroke="#34d399" strokeWidth="3" {...stroke} />
+            </motion.g>
+
+            {/* Onda de confirmación, una sola vez */}
+            {!reduce && (
+                <motion.circle
+                    cx="120" cy="86" r="20" fill="none" stroke="#34d399" strokeWidth="2"
+                    initial={{ scale: 1, opacity: 0.7 }}
+                    whileInView={{ scale: 2.2, opacity: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ delay: 1.5, duration: 1.1, ease: 'easeOut' }}
+                    style={{ transformOrigin: '120px 86px' }}
+                />
+            )}
+        </svg>
+    )
+}

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Quote } from 'lucide-react'
 import {
-    HeroLogisticsScene,
     SaturatedOpsScene,
     AmbientOrbs,
     RouteDivider,
@@ -14,6 +13,8 @@ import {
     ProactiveStatusIcon,
     AnomalyLogIcon,
 } from './LogisticaAnimations'
+import { RouteRoadmap } from './RouteRoadmap'
+import { RouteConfirmDemo, SchedulingDemo, ProactiveStatusDemo, AnomalyLogDemo } from '@/components/ui/micro-demos'
 
 const WHATSAPP_HREF =
     'https://wa.me/5491160152435?text=' +
@@ -38,24 +39,32 @@ const modules = [
         name: 'Pre-confirmación de ruta',
         desc: 'Antes de que el camión salga, cada destinatario del día recibe un WhatsApp para confirmar si va a estar, reprogramar o autorizar la entrega a un tercero. El que no está, sale de la hoja de ruta antes de cargar el paquete. Menos viajes perdidos, menos combustible quemado, menos reseñas de una estrella.',
         Icon: RouteConfirmIcon,
+        descShort: 'Antes de que salga el camión, cada destinatario confirma por WhatsApp si va a estar, reprograma o autoriza a un tercero. El que no está, sale de la hoja de ruta.',
+        Demo: RouteConfirmDemo,
     },
     {
         quote: 'Me imponen el día y el horario que ellos pueden. Nunca preguntan cuándo puedo yo.',
         name: 'Agenda de autoservicio',
         desc: 'El cliente elige su ventana de entrega entre las disponibles, desde un link, sin llamar a nadie. Su elección entra directo a tu planificación, dentro de las reglas de zona y capacidad que definas.',
         Icon: SelfSchedulingIcon,
+        descShort: 'El cliente elige su ventana de entrega desde un link, sin llamar a nadie. Su elección entra directo a tu planificación.',
+        Demo: SchedulingDemo,
     },
     {
         quote: 'Pagué el anticipo hace 90 días. Llamo una vez por semana y nadie me responde.',
         name: 'Estado proactivo',
         desc: 'Tu cliente recibe cada semana, solo y sin pedirlo, en qué etapa está su pedido. Un cliente informado no llama, no reclama y no escribe la reseña que después hay que remar.',
         Icon: ProactiveStatusIcon,
+        descShort: 'Tu cliente recibe cada semana, sin pedirlo, en qué etapa está su pedido. Un cliente informado no llama ni reclama.',
+        Demo: ProactiveStatusDemo,
     },
     {
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías de entrega',
         desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
         Icon: AnomalyLogIcon,
+        descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada con fecha, hora y ubicación. A fin de mes tenés el reporte.',
+        Demo: AnomalyLogDemo,
     },
 ]
 
@@ -87,12 +96,43 @@ export function LogisticaLanding() {
 
             {/* ===== 1) HERO ===== */}
             <section className="relative overflow-hidden">
+                {/* Fondo: mapa de logística detrás del texto.
+                    `priority` porque es above-the-fold: con lazy-load el LCP se penaliza.
+                    Anclado abajo para que la grilla quede en la base y el titular limpio;
+                    la máscara desvanece el borde superior contra el fondo. */}
+                <div
+                    aria-hidden
+                    className="absolute inset-0 pointer-events-none overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.4)_35%,black_72%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.4)_35%,black_72%)]"
+                >
+                    {/* `object-cover` para que llegue a los costados: con `contain` la
+                        imagen (2.25) queda más angosta que el hero en pantallas anchas
+                        (~2.43) y deja huecos. Cover es viable acá porque las proporciones
+                        casi coinciden: recorta poco. Con la imagen cuadrada anterior había
+                        que ampliar 1.86x y por eso se veía con zoom.
+                        La animación no toca `scale`, solo deriva. */}
+                    <motion.div
+                        className="absolute inset-0"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 40, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                        <Image
+                            src="/logistica3.png"
+                            alt=""
+                            fill
+                            priority
+                            sizes="100vw"
+                            className="object-cover object-bottom opacity-70"
+                        />
+                    </motion.div>
+                </div>
+
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/25 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
-                    <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
-                        {/* Copy */}
+                    {/* La grilla de 2 columnas existía para la escena SVG; sin ella el
+                        texto va a ancho contenido sobre el mapa. */}
+                    <div className="max-w-3xl">
                         <div>
                             <motion.p {...reveal} className="text-violet-400 text-sm font-medium uppercase tracking-widest">
                                 Logística y distribución
@@ -132,15 +172,6 @@ export function LogisticaLanding() {
                             </motion.div>
                         </div>
 
-                        {/* Escena animada de tracking */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.94 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                            className="relative"
-                        >
-                            <HeroLogisticsScene className="w-full h-auto max-w-[520px] mx-auto drop-shadow-[0_0_40px_rgba(139,92,246,0.15)]" />
-                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -204,6 +235,7 @@ export function LogisticaLanding() {
                     <div className="mt-12 grid md:grid-cols-2 gap-5 lg:gap-6">
                         {modules.map((m, i) => {
                             const Icon = m.Icon
+                            const Demo = m.Demo
                             return (
                             <motion.div
                                 key={i}
@@ -234,7 +266,15 @@ export function LogisticaLanding() {
                                         </div>
                                         <h3 className="text-lg font-bold text-violet-400">{m.name}</h3>
                                     </div>
-                                    <p className="mt-3 text-neutral-300 text-sm leading-relaxed">{m.desc}</p>
+                                    <p className="mt-3 text-neutral-300 text-sm leading-relaxed lg:hidden">{m.descShort}</p>
+                                    <p className="mt-3 text-neutral-300 text-sm leading-relaxed hidden lg:block">{m.desc}</p>
+
+                                    {/* Micro-demo del módulo */}
+                                    {Demo && (
+                                        <div className="mt-4">
+                                            <Demo />
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                             )
@@ -242,9 +282,15 @@ export function LogisticaLanding() {
                     </div>
 
                     {/* Cierre de conversión */}
+                    {/* Remate: la ruta se dibuja con el scroll y enciende los módulos.
+                        Cierra la metáfora que abre el hero. */}
+                    <div className="mt-16">
+                        <RouteRoadmap />
+                    </div>
+
                     <motion.div
                         {...reveal}
-                        className="mt-14 flex flex-col items-start gap-3 p-6 sm:p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/20 to-blue-900/10"
+                        className="mt-10 flex flex-col items-start gap-3 p-6 sm:p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/20 to-blue-900/10"
                     >
                         <a
                             href={WHATSAPP_HREF}
