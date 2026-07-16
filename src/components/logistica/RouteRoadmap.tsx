@@ -55,7 +55,7 @@ export function RouteRoadmap() {
                 Bordes difuminados con máscara para que se funda con el fondo. */}
             <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)]"
+                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)]"
             >
                 <Image
                     src="/logistica-mapa.png"
@@ -108,44 +108,25 @@ export function RouteRoadmap() {
                 ))}
             </div>
 
-            {/* ===== Mobile: columna única, misma secuencia =====
-                Los nombres van en píldoras (mismo lenguaje que los hitos de
-                desktop): sobre la imagen de fondo, el texto suelto se perdía. */}
-            <div className="lg:hidden max-w-sm mx-auto px-2 py-4">
-                {WAYPOINTS.map((w, i) => (
-                    <div key={w.name} className="flex gap-3.5">
-                        <div className="flex flex-col items-center">
-                            <motion.span
-                                initial={{ scale: 0, opacity: 0 }}
-                                whileInView={{ scale: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: '-40px' }}
-                                transition={{ delay: i * 0.12, type: 'spring', stiffness: 240, damping: 15 }}
-                                className="mt-2.5 shrink-0 w-3.5 h-3.5 rounded-full border-2 border-violet-400 bg-[#0f0f1a] shadow-[0_0_12px_rgba(139,92,246,0.7)]"
-                            />
-                            {i < WAYPOINTS.length - 1 && (
-                                <motion.span
-                                    aria-hidden
-                                    initial={{ scaleY: 0 }}
-                                    whileInView={{ scaleY: 1 }}
-                                    viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ delay: i * 0.12 + 0.1, duration: 0.4 }}
-                                    style={{ transformOrigin: 'top' }}
-                                    className="flex-1 w-0.5 my-1.5 rounded-full bg-gradient-to-b from-violet-500/80 to-cyan-400/50"
-                                />
-                            )}
-                        </div>
-                        <motion.span
-                            initial={{ opacity: 0, x: -8 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: '-40px' }}
-                            transition={{ delay: i * 0.12 + 0.05 }}
-                            className="mb-6 inline-flex items-center rounded-full border border-violet-500/30 bg-[#16162a]/90 px-4 py-2 text-[13px] font-medium text-neutral-200 backdrop-blur-sm"
-                        >
-                            {w.name}
-                        </motion.span>
-                    </div>
-                ))}
+            {/* ===== Mobile: la imagen como figura simple =====
+                Sin mask-image, sin backdrop-blur, sin z negativo: esa
+                combinacion sobre la imagen corrompia el paint en Android
+                (smearing al scrollear). Las pildoras de hitos se quitan
+                a pedido: parecian botones. */}
+            <div aria-hidden className="lg:hidden mx-auto max-w-sm px-2">
+                <div className="relative overflow-hidden rounded-2xl border border-white/[0.08]">
+                    <Image
+                        src="/logistica-mapa.png"
+                        alt=""
+                        width={2564}
+                        height={1632}
+                        sizes="100vw"
+                        className="w-full h-auto opacity-90"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f1a]/70 via-transparent to-[#0f0f1a]/30" />
+                </div>
             </div>
+
         </div>
     )
 }
