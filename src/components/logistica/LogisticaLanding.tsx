@@ -156,7 +156,7 @@ export function LogisticaLanding() {
             </section>
 
             {/* ===== 2) DOLOR ===== */}
-            <section className="relative bg-[#1a1a2e] border-y border-white/5 overflow-hidden">
+            <section className="relative border-y border-white/5 overflow-hidden">
                 <AmbientOrbs className="absolute inset-0 pointer-events-none opacity-60" />
                 <div className="relative max-w-4xl mx-auto px-6 py-20 sm:py-24">
                     <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-center">
