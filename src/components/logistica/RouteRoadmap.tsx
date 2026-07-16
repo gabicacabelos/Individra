@@ -55,7 +55,7 @@ export function RouteRoadmap() {
                 Bordes difuminados con máscara para que se funda con el fondo. */}
             <div
                 aria-hidden
-                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)] [-webkit-mask-image:radial-gradient(ellipse_68%_62%_at_50%_50%,black_20%,rgba(0,0,0,0.5)_55%,transparent_88%)]"
+                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_62%_58%_at_50%_50%,black_10%,rgba(0,0,0,0.45)_42%,transparent_74%)] [-webkit-mask-image:radial-gradient(ellipse_62%_58%_at_50%_50%,black_10%,rgba(0,0,0,0.45)_42%,transparent_74%)]"
             >
                 <Image
                     src="/logistica-mapa.png"
@@ -114,16 +114,20 @@ export function RouteRoadmap() {
                 (smearing al scrollear). Las pildoras de hitos se quitan
                 a pedido: parecian botones. */}
             <div aria-hidden className="lg:hidden mx-auto max-w-sm px-2">
-                <div className="relative overflow-hidden rounded-2xl border border-white/[0.08]">
+                <div className="relative overflow-hidden rounded-2xl">
                     <Image
                         src="/logistica-mapa.png"
                         alt=""
                         width={2564}
                         height={1632}
                         sizes="100vw"
-                        className="w-full h-auto opacity-90"
+                        className="w-full h-auto opacity-85"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f1a]/70 via-transparent to-[#0f0f1a]/30" />
+                    {/* Difuminado por overlays (sin mask-image: corrompia el paint
+                        en Android). Arriba/abajo + ambos costados. */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f1a] via-transparent to-[#0f0f1a]/70" />
+                    <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0f0f1a] to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0f0f1a] to-transparent" />
                 </div>
             </div>
 
