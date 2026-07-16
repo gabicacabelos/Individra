@@ -281,9 +281,7 @@
     animation-fill-mode: both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    [data-microdemo] .md-anim,
-    [data-microdemo] .md-anim * {
-        animation: none !important;
-    }
-}
+/* Nota: las micro-demos NO se apagan con prefers-reduced-motion a pedido del
+   dueño del sitio: en muchos telefonos ese ajuste viene activo (accesibilidad
+   o ahorro de bateria) y las demos quedaban estaticas. Son loops suaves de
+   transform/opacity, sin destellos. */

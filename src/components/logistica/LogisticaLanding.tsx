@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Quote } from 'lucide-react'
 import {
+    HeroLogisticsScene,
     SaturatedOpsScene,
     AmbientOrbs,
     RouteDivider,
@@ -96,43 +97,11 @@ export function LogisticaLanding() {
 
             {/* ===== 1) HERO ===== */}
             <section className="relative overflow-hidden">
-                {/* Fondo: mapa de logística detrás del texto.
-                    `priority` porque es above-the-fold: con lazy-load el LCP se penaliza.
-                    Anclado abajo para que la grilla quede en la base y el titular limpio;
-                    la máscara desvanece el borde superior contra el fondo. */}
-                <div
-                    aria-hidden
-                    className="absolute inset-0 pointer-events-none overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.4)_35%,black_72%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.4)_35%,black_72%)]"
-                >
-                    {/* `object-cover` para que llegue a los costados: con `contain` la
-                        imagen (2.25) queda más angosta que el hero en pantallas anchas
-                        (~2.43) y deja huecos. Cover es viable acá porque las proporciones
-                        casi coinciden: recorta poco. Con la imagen cuadrada anterior había
-                        que ampliar 1.86x y por eso se veía con zoom.
-                        La animación no toca `scale`, solo deriva. */}
-                    <motion.div
-                        className="absolute inset-0"
-                        animate={{ y: [0, -8, 0] }}
-                        transition={{ duration: 40, repeat: Infinity, ease: 'easeInOut' }}
-                    >
-                        <Image
-                            src="/logistica3.png"
-                            alt=""
-                            fill
-                            priority
-                            sizes="100vw"
-                            className="object-cover object-bottom opacity-70"
-                        />
-                    </motion.div>
-                </div>
-
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/25 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
-                    {/* La grilla de 2 columnas existía para la escena SVG; sin ella el
-                        texto va a ancho contenido sobre el mapa. */}
-                    <div className="max-w-3xl">
+                    <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
                         <div>
                             <motion.p {...reveal} className="text-violet-400 text-sm font-medium uppercase tracking-widest">
                                 Logística y distribución
@@ -171,6 +140,16 @@ export function LogisticaLanding() {
                                 </p>
                             </motion.div>
                         </div>
+
+                        {/* Escena animada de tracking: visible tambien en mobile */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+                            className="relative"
+                        >
+                            <HeroLogisticsScene className="w-full h-auto max-w-[420px] lg:max-w-[520px] mx-auto drop-shadow-[0_0_40px_rgba(139,92,246,0.15)]" />
+                        </motion.div>
 
                     </div>
                 </div>

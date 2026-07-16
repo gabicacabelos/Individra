@@ -26,9 +26,8 @@ const stroke = {
    burbujas de WhatsApp que ciclan, paquetes y nodos de señal.
    ===================================================================== */
 export function HeroLogisticsScene({ className }: Props) {
-    const reduce = useReducedMotion()
-
-    const loop = (t: Transition): Transition => (reduce ? { duration: 0 } : t)
+    // Sin gating por reduced-motion: loops decorativos suaves, a pedido del dueño.
+    const loop = (t: Transition): Transition => t
 
     return (
         <svg
@@ -71,7 +70,7 @@ export function HeroLogisticsScene({ className }: Props) {
                     attributeName="stroke-dashoffset"
                     from="0"
                     to="-24"
-                    dur={reduce ? '0s' : '1.1s'}
+                    dur="1.1s"
                     repeatCount="indefinite"
                 />
             </path>
@@ -98,7 +97,7 @@ export function HeroLogisticsScene({ className }: Props) {
                         stroke="#22d3ee"
                         strokeWidth="1.5"
                         initial={{ scale: 0.6, opacity: 0.7 }}
-                        animate={reduce ? { opacity: 0.5 } : { scale: [0.6, 2.2], opacity: [0.7, 0] }}
+                        animate={{ scale: [0.6, 2.2], opacity: [0.7, 0] }}
                         transition={loop({ duration: 2, repeat: Infinity, ease: 'easeOut', delay: n.d })}
                         style={{ transformOrigin: `${n.cx}px ${n.cy}px` }}
                     />
@@ -112,7 +111,7 @@ export function HeroLogisticsScene({ className }: Props) {
                     cx="410" cy="92" r="10"
                     fill="none" stroke="#a78bfa" strokeWidth="2"
                     initial={{ scale: 1, opacity: 0.8 }}
-                    animate={reduce ? { opacity: 0.6 } : { scale: [1, 2.6], opacity: [0.8, 0] }}
+                    animate={{ scale: [1, 2.6], opacity: [0.8, 0] }}
                     transition={loop({ duration: 2.4, repeat: Infinity, ease: 'easeOut' })}
                     style={{ transformOrigin: '410px 92px' }}
                 />
@@ -125,7 +124,7 @@ export function HeroLogisticsScene({ className }: Props) {
 
             {/* ---- Camión (bob sutil + ruedas girando) ---- */}
             <motion.g
-                animate={reduce ? undefined : { y: [0, -3, 0] }}
+                animate={{ y: [0, -3, 0] }}
                 transition={loop({ duration: 2.6, repeat: Infinity, ease: 'easeInOut' })}
             >
                 {/* Trailer */}
@@ -142,7 +141,7 @@ export function HeroLogisticsScene({ className }: Props) {
                     <g key={cx}>
                         <circle cx={cx} cy="300" r="13" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} />
                         <motion.g
-                            animate={reduce ? undefined : { rotate: 360 }}
+                            animate={{ rotate: 360 }}
                             transition={loop({ duration: 1.4, repeat: Infinity, ease: 'linear' })}
                             style={{ transformOrigin: `${cx}px 300px` }}
                         >
@@ -166,7 +165,7 @@ export function HeroLogisticsScene({ className }: Props) {
             {/* Entrante (pregunta) */}
             <motion.g
                 initial={{ opacity: 0, y: 8 }}
-                animate={reduce ? { opacity: 1 } : { opacity: [0, 1, 1, 0], y: [8, 0, 0, -6] }}
+                animate={{ opacity: [0, 1, 1, 0], y: [8, 0, 0, -6] }}
                 transition={loop({ duration: 5, repeat: Infinity, times: [0, 0.12, 0.5, 0.62], ease: 'easeOut' })}
             >
                 <path d="M60 44 h150 a12 12 0 0 1 12 12 v24 a12 12 0 0 1 -12 12 h-128 l-16 14 v-14 a12 12 0 0 1 -6 -12 v-24 a12 12 0 0 1 12 -12 z"
@@ -178,7 +177,7 @@ export function HeroLogisticsScene({ className }: Props) {
             {/* Saliente (respuesta con check) */}
             <motion.g
                 initial={{ opacity: 0, y: 8 }}
-                animate={reduce ? { opacity: 1 } : { opacity: [0, 0, 1, 1, 0], y: [8, 8, 0, 0, -6] }}
+                animate={{ opacity: [0, 0, 1, 1, 0], y: [8, 8, 0, 0, -6] }}
                 transition={loop({ duration: 5, repeat: Infinity, times: [0, 0.5, 0.6, 0.9, 1], ease: 'easeOut' })}
             >
                 <path d="M250 96 h150 a12 12 0 0 1 12 12 v24 a12 12 0 0 1 -12 12 h-16 l-16 14 v-14 h-102 a12 12 0 0 1 -12 -12 v-24 a12 12 0 0 1 12 -12 z"

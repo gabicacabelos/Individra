@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
 import { useRef } from 'react'
 
@@ -40,12 +40,10 @@ const pct = (v: number, total: number) => `${(v / total) * 100}%`
 
 export function RouteRoadmap() {
     const ref = useRef<HTMLDivElement>(null)
-    const reduce = useReducedMotion()
     const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.55'] })
 
-    // Con reduced motion la ruta ya está dibujada: no depende del scroll.
     const drawn = useTransform(scrollYProgress, [0.05, 0.75], [0, 1])
-    const pathLength = reduce ? 1 : drawn
+    const pathLength = drawn
 
     // `isolate` crea el contexto de apilamiento: sin él, el fondo con -z-10 se va
     // detrás del bg opaco del <main> y no se ve.
@@ -105,7 +103,6 @@ export function RouteRoadmap() {
                         index={i}
                         total={WAYPOINTS.length}
                         scrollYProgress={scrollYProgress}
-                        reduce={!!reduce}
                         style={{ left: pct(w.x, VB.w), top: pct(w.y, VB.h) }}
                     />
                 ))}
@@ -117,7 +114,7 @@ export function RouteRoadmap() {
                     <div key={w.name} className="flex items-start gap-3">
                         <div className="flex flex-col items-center self-stretch">
                             <motion.span
-                                initial={reduce ? false : { scale: 0, opacity: 0 }}
+                                initial={{ scale: 0, opacity: 0 }}
                                 whileInView={{ scale: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: '-40px' }}
                                 transition={{ delay: i * 0.12, type: 'spring', stiffness: 240, damping: 15 }}
@@ -126,7 +123,7 @@ export function RouteRoadmap() {
                             {i < WAYPOINTS.length - 1 && (
                                 <motion.span
                                     aria-hidden
-                                    initial={reduce ? false : { scaleY: 0 }}
+                                    initial={{ scaleY: 0 }}
                                     whileInView={{ scaleY: 1 }}
                                     viewport={{ once: true, margin: '-40px' }}
                                     transition={{ delay: i * 0.12 + 0.1, duration: 0.4 }}
@@ -136,7 +133,7 @@ export function RouteRoadmap() {
                             )}
                         </div>
                         <motion.p
-                            initial={reduce ? false : { opacity: 0, x: -8 }}
+                            initial={{ opacity: 0, x: -8 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: '-40px' }}
                             transition={{ delay: i * 0.12 + 0.05 }}
@@ -156,24 +153,20 @@ function Milestone({
     index,
     total,
     scrollYProgress,
-    reduce,
     style,
 }: {
     name: string
     index: number
     total: number
     scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
-    reduce: boolean
     style: React.CSSProperties
 }) {
     // El hito se enciende cuando la ruta dibujada lo alcanza.
     const at = 0.05 + (index / (total - 1)) * 0.7
-    // Los hooks van siempre, sin condicionar: con reduced motion se descarta el
-    // valor animado en el render, no la llamada.
     const lit = useTransform(scrollYProgress, [at - 0.06, at], [0, 1])
     const litScale = useTransform(lit, [0, 1], [0.6, 1])
-    const opacity = reduce ? 1 : lit
-    const scale = reduce ? 1 : litScale
+    const opacity = lit
+    const scale = litScale
 
     return (
         <div className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2" style={style}>
