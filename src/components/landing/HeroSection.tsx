@@ -144,9 +144,11 @@ export function HeroSection() {
                             `hidden lg:block` es solo CSS: sin este gate, mobile montaba la
                             escena y descargaba el runtime de Spline + WebGL sin verla nunca. */}
                         {!isMobile && (
-                            <div className="relative z-20 w-full h-full">
+                            <div
+                                className="relative z-20 w-full h-full [mask-image:radial-gradient(circle_at_50%_44%,black_34%,rgba(0,0,0,0.55)_50%,transparent_66%)] [-webkit-mask-image:radial-gradient(circle_at_50%_44%,black_34%,rgba(0,0,0,0.55)_50%,transparent_66%)]"
+                            >
                                 <SplineScene
-                                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                                    scene="https://prod.spline.design/tTmtqClKG2jWAaHH/scene.splinecode"
                                     className="w-full h-full cursor-pointer"
                                 />
                             </div>
