@@ -1,365 +1,111 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Bot, Zap, Network, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useRef, useState, useEffect } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { Bot, Zap, Network } from 'lucide-react'
+import { useRef } from 'react'
 import { MobileServicesBackground } from '@/components/ui/MobileBackgroundEffects'
+
+/**
+ * Servicios presentados como un canvas de nodos (lenguaje n8n): cada servicio es
+ * un nodo de borde punteado con puertos, y las aristas los conectan con flujo
+ * animado.
+ *
+ * Reemplaza el borde "eléctrico" anterior, que usaba 4 feTurbulence
+ * (numOctaves=10) + feDisplacementMap por tarjeta: ruido Perlin calculado por
+ * píxel y por frame, lo más caro de la página después del 3D — tanto que
+ * necesitaba una versión mobile aparte para ser viable. Acá no hay filtros:
+ * borde, punteado y transform/opacity.
+ */
 
 const services = [
     {
         icon: Zap,
         title: 'Automatización Inteligente',
         description: 'Eliminamos tareas repetitivas de tu día a día. Desde responder consultas en WhatsApp hasta procesar documentos automáticamente.',
-        gradient: 'from-yellow-500 to-orange-500',
-        electricColor: '#eab308',
-        electricColorRgb: '234, 179, 8',
     },
     {
         icon: Bot,
         title: 'Agentes y Asistentes IA',
         description: 'Creamos asistentes virtuales personalizados. Chatbots que entienden tu negocio, califican leads y agendan citas.',
-        gradient: 'from-violet-500 to-purple-500',
-        electricColor: '#8b5cf6',
-        electricColorRgb: '139, 92, 246',
     },
     {
         icon: Network,
         title: 'Orquestación de Agentes IA',
         description: 'Coordinamos múltiples sistemas de Inteligencia Artificial que colaboran entre sí para automatizar flujos de trabajo en toda tu empresa.',
-        gradient: 'from-blue-500 to-cyan-500',
-        electricColor: '#3b82f6',
-        electricColorRgb: '59, 130, 246',
     },
 ]
 
-// SVG Filter for electric effect - ONLY FOR DESKTOP
-function ElectricFilters() {
+/* Puerto de conexión del nodo, como los de n8n */
+function Port({ className }: { className?: string }) {
     return (
-        <svg className="absolute w-0 h-0 hidden lg:block" aria-hidden="true">
-            <defs>
-                {services.map((_, index) => (
-                    <filter
-                        key={index}
-                        id={`electric-filter-${index}`}
-                        colorInterpolationFilters="sRGB"
-                        x="-20%"
-                        y="-20%"
-                        width="140%"
-                        height="140%"
-                    >
-                        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed={index + 1} />
-                        <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
-                            <animate attributeName="dy" values="500; 0" dur="5s" repeatCount="indefinite" calcMode="linear" />
-                        </feOffset>
+        <span
+            aria-hidden
+            className={`absolute z-10 w-2.5 h-2.5 rounded-full border border-violet-400/60 bg-[#0d0d18] transition-colors duration-300 group-hover:bg-violet-500/60 ${className}`}
+        />
+    )
+}
 
-                        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed={index + 1} />
-                        <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
-                            <animate attributeName="dy" values="0; -500" dur="5s" repeatCount="indefinite" calcMode="linear" />
-                        </feOffset>
-
-                        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise3" seed={index + 2} />
-                        <feOffset in="noise3" dx="0" dy="0" result="offsetNoise3">
-                            <animate attributeName="dx" values="350; 0" dur="5s" repeatCount="indefinite" calcMode="linear" />
-                        </feOffset>
-
-                        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise4" seed={index + 2} />
-                        <feOffset in="noise4" dx="0" dy="0" result="offsetNoise4">
-                            <animate attributeName="dx" values="0; -350" dur="5s" repeatCount="indefinite" calcMode="linear" />
-                        </feOffset>
-
-                        <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
-                        <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
-                        <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
-
-                        <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="25" xChannelSelector="R" yChannelSelector="B" />
-                    </filter>
-                ))}
-            </defs>
+/* Arista entre nodos, con flujo animado */
+function Edge({ vertical = false }: { vertical?: boolean }) {
+    const reduce = useReducedMotion()
+    return (
+        <svg
+            aria-hidden
+            viewBox={vertical ? '0 0 24 48' : '0 0 48 24'}
+            className={vertical ? 'w-6 h-12 shrink-0' : 'w-12 h-6 shrink-0'}
+        >
+            <path
+                d={vertical ? 'M12 0 L12 48' : 'M0 12 L48 12'}
+                stroke="rgba(139,92,246,0.35)"
+                strokeWidth="1.5"
+                fill="none"
+                strokeDasharray="3 5"
+                strokeLinecap="round"
+            >
+                {!reduce && (
+                    <animate attributeName="stroke-dashoffset" from="16" to="0" dur="1.4s" repeatCount="indefinite" />
+                )}
+            </path>
         </svg>
     )
 }
 
-// Desktop Card with dramatic electric border (heavy effect - OK for desktop)
-function DesktopCard({ service, index }: { service: typeof services[0], index: number }) {
-    const [isHovered, setIsHovered] = useState(false)
-    const [showShine, setShowShine] = useState(false)
+function ServiceNode({ service, index }: { service: (typeof services)[number]; index: number }) {
     const Icon = service.icon
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setShowShine(true)
-            setTimeout(() => setShowShine(false), 800)
-        }, 4000 + index * 500)
-        return () => clearInterval(interval)
-    }, [index])
-
     return (
         <motion.div
-            initial={{ opacity: 0, y: 80 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, delay: index * 0.2, ease: 'easeOut' }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="relative cursor-pointer group"
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
+            className="group relative flex-1 min-w-0 rounded-xl border border-dashed border-white/[0.14] bg-[#0d0d18] p-6 lg:p-7 transition-colors duration-300 hover:border-violet-500/50"
         >
+            {/* Textura de canvas */}
             <div
-                style={{
-                    padding: '2px',
-                    borderRadius: '24px',
-                    position: 'relative',
-                    background: `linear-gradient(-30deg, rgba(${service.electricColorRgb}, 0.3), transparent, rgba(${service.electricColorRgb}, 0.3)), linear-gradient(to bottom, rgb(23, 23, 23), rgb(23, 23, 23))`,
-                }}
-            >
-                <div className="relative">
-                    <div
-                        style={{
-                            border: `2px solid rgba(${service.electricColorRgb}, 0.5)`,
-                            borderRadius: '24px',
-                            paddingRight: '4px',
-                            paddingBottom: '4px',
-                        }}
-                    >
-                        <div
-                            style={{
-                                width: '100%',
-                                height: '340px',
-                                borderRadius: '24px',
-                                border: `2px solid ${service.electricColor}`,
-                                marginTop: '-4px',
-                                marginLeft: '-4px',
-                                filter: `url(#electric-filter-${index})`,
-                            }}
-                        />
-                    </div>
+                aria-hidden
+                className="absolute inset-0 rounded-xl bg-[radial-gradient(rgba(139,92,246,0.07)_1px,transparent_1px)] bg-[size:14px_14px]"
+            />
+            {/* Glow contenido, solo al hover */}
+            <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: 'radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 70%)' }}
+            />
 
-                    <div
-                        style={{
-                            border: `2px solid rgba(${service.electricColorRgb}, 0.6)`,
-                            borderRadius: '24px',
-                            position: 'absolute',
-                            inset: 0,
-                            filter: 'blur(1px)',
-                            pointerEvents: 'none',
-                        }}
-                    />
-                    <div
-                        style={{
-                            border: `2px solid ${service.electricColor}`,
-                            borderRadius: '24px',
-                            position: 'absolute',
-                            inset: 0,
-                            filter: 'blur(4px)',
-                            pointerEvents: 'none',
-                        }}
-                    />
+            {/* Puertos: entrada/salida a los lados en desktop, arriba/abajo en mobile */}
+            <Port className="hidden lg:block -left-[5px] top-1/2 -translate-y-1/2" />
+            <Port className="hidden lg:block -right-[5px] top-1/2 -translate-y-1/2" />
+            <Port className="lg:hidden -top-[5px] left-1/2 -translate-x-1/2" />
+            <Port className="lg:hidden -bottom-[5px] left-1/2 -translate-x-1/2" />
+
+            <div className="relative">
+                <div className="w-10 h-10 rounded-lg border border-violet-500/25 bg-violet-500/10 flex items-center justify-center transition-colors duration-300 group-hover:border-violet-500/50">
+                    <Icon className="w-5 h-5 text-violet-300" />
                 </div>
-
-                <div className="absolute inset-0 p-8 flex flex-col">
-                    <div className={`absolute inset-0 pointer-events-none overflow-hidden rounded-3xl transition-opacity duration-300 ${showShine ? 'opacity-100' : 'opacity-0'}`}>
-                        <div
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
-                            style={{ animation: showShine ? 'shinePass 0.8s ease-out' : 'none' }}
-                        />
-                    </div>
-
-                    <motion.div
-                        animate={{ scale: isHovered ? 1.1 : 1, rotate: isHovered ? 5 : 0 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
-                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-6 shadow-lg`}
-                    >
-                        <Icon className="w-7 h-7 text-white" />
-                    </motion.div>
-
-                    <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
-                    <p className={`leading-relaxed transition-colors duration-300 ${isHovered ? 'text-neutral-300' : 'text-neutral-400'}`}>
-                        {service.description}
-                    </p>
-                </div>
+                <h3 className="mt-5 text-lg lg:text-xl font-bold text-white">{service.title}</h3>
+                <p className="mt-2.5 text-neutral-400 text-sm leading-relaxed">{service.description}</p>
             </div>
-
-            <style jsx>{`
-                @keyframes shinePass {
-                    from { transform: translateX(-100%) skewX(-12deg); }
-                    to { transform: translateX(200%) skewX(-12deg); }
-                }
-            `}</style>
         </motion.div>
-    )
-}
-
-// Mobile Carousel - Optimized for performance
-function MobileCarousel() {
-    const [activeIndex, setActiveIndex] = useState(1)
-
-    const goToPrev = () => setActiveIndex((prev) => (prev === 0 ? services.length - 1 : prev - 1))
-    const goToNext = () => setActiveIndex((prev) => (prev === services.length - 1 ? 0 : prev + 1))
-
-    return (
-        <div className="relative px-4" style={{ contain: 'layout style' }}>
-            <div
-                className="relative h-[360px] flex items-center justify-center"
-                style={{ perspective: '800px' }}
-            >
-                {services.map((service, index) => {
-                    const isActive = index === activeIndex
-                    const isPrev = index === (activeIndex === 0 ? services.length - 1 : activeIndex - 1)
-                    const isNext = index === (activeIndex === services.length - 1 ? 0 : activeIndex + 1)
-
-                    let transform = 'translateX(0) scale(0.6)'
-                    let zIndex = 0
-                    let opacity = 0
-
-                    if (isActive) {
-                        transform = 'translateX(0) scale(1)'
-                        zIndex = 30
-                        opacity = 1
-                    } else if (isPrev) {
-                        transform = 'translateX(-55%) scale(0.75)'
-                        zIndex = 10
-                        opacity = 0.5
-                    } else if (isNext) {
-                        transform = 'translateX(55%) scale(0.75)'
-                        zIndex = 10
-                        opacity = 0.5
-                    }
-
-                    return (
-                        <div
-                            key={index}
-                            className="absolute w-[270px]"
-                            aria-hidden={!isActive}
-                            style={{
-                                transform,
-                                zIndex,
-                                opacity,
-                                transition: 'transform 0.4s ease-out, opacity 0.4s ease-out',
-                                willChange: 'transform, opacity',
-                            }}
-                            onClick={() => setActiveIndex(index)}
-                        >
-                            <MobileCard service={service} isActive={isActive} />
-                        </div>
-                    )
-                })}
-            </div>
-
-            {/* Navigation */}
-            <div className="flex justify-center items-center gap-6 mt-2" role="group" aria-label="Controles del carrusel de servicios">
-                <button
-                    onClick={goToPrev}
-                    aria-label="Servicio anterior"
-                    className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
-                    style={{ transition: 'transform 0.15s' }}
-                >
-                    <ChevronLeft className="w-5 h-5" aria-hidden="true" />
-                </button>
-
-                <div className="flex gap-2" role="tablist" aria-label="Navegación de servicios">
-                    {services.map((service, index) => (
-                        <button
-                            key={index}
-                            role="tab"
-                            aria-selected={index === activeIndex}
-                            aria-label={`Ver ${service.title}`}
-                            onClick={() => setActiveIndex(index)}
-                            className="h-2 rounded-full"
-                            style={{
-                                width: index === activeIndex ? '24px' : '8px',
-                                backgroundColor: index === activeIndex ? '#8b5cf6' : 'rgba(255,255,255,0.3)',
-                                transition: 'width 0.3s, background-color 0.3s',
-                            }}
-                        />
-                    ))}
-                </div>
-
-                <button
-                    onClick={goToNext}
-                    aria-label="Servicio siguiente"
-                    className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white active:scale-95"
-                    style={{ transition: 'transform 0.15s' }}
-                >
-                    <ChevronRight className="w-5 h-5" aria-hidden="true" />
-                </button>
-            </div>
-        </div>
-    )
-}
-
-// Mobile Card - CSS electric border (NO SVG filter - much lighter)
-function MobileCard({ service, isActive }: { service: typeof services[0], isActive: boolean }) {
-    const Icon = service.icon
-
-    return (
-        <div
-            className="relative h-[300px]"
-            style={{ contain: 'layout style paint' }}
-        >
-            {/* CSS Electric Border - GPU accelerated */}
-            <div
-                className="absolute inset-0 rounded-[18px] overflow-hidden"
-                style={{ padding: '2px' }}
-            >
-                <div
-                    className="electric-border-mobile"
-                    style={{
-                        '--electric-color': service.electricColor,
-                    } as React.CSSProperties}
-                />
-            </div>
-
-            {/* Card background */}
-            <div
-                className="relative h-full rounded-[18px] bg-neutral-900/95 border border-white/5 overflow-hidden"
-                style={{ margin: '2px' }}
-            >
-                {/* Content */}
-                <div className="p-5 flex flex-col h-full">
-                    <div
-                        className={`w-11 h-11 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4`}
-                        style={{ boxShadow: `0 4px 20px rgba(${service.electricColorRgb}, 0.3)` }}
-                    >
-                        <Icon className="w-5 h-5 text-white" />
-                    </div>
-
-                    <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
-                    <p className="text-neutral-400 text-sm leading-relaxed">{service.description}</p>
-                </div>
-
-                {/* Subtle glow line at top */}
-                <div
-                    className="absolute top-0 left-4 right-4 h-px"
-                    style={{
-                        background: `linear-gradient(90deg, transparent, ${service.electricColor}, transparent)`,
-                        opacity: isActive ? 0.6 : 0.3,
-                        transition: 'opacity 0.3s',
-                    }}
-                />
-            </div>
-
-            <style jsx>{`
-                .electric-border-mobile {
-                    position: absolute;
-                    inset: -50%;
-                    background: conic-gradient(
-                        from 0deg,
-                        transparent 0deg,
-                        var(--electric-color) 20deg,
-                        transparent 60deg,
-                        transparent 170deg,
-                        var(--electric-color) 190deg,
-                        transparent 230deg,
-                        transparent 360deg
-                    );
-                    animation: electricSpinMobile 3s linear infinite;
-                    will-change: transform;
-                }
-                @keyframes electricSpinMobile {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-            `}</style>
-        </div>
     )
 }
 
@@ -367,7 +113,7 @@ export function ServicesSection() {
     const sectionRef = useRef<HTMLElement>(null)
     const { scrollYProgress } = useScroll({
         target: sectionRef,
-        offset: ['start end', 'end start']
+        offset: ['start end', 'end start'],
     })
 
     const backgroundY = useTransform(scrollYProgress, [0, 1], [100, -100])
@@ -375,9 +121,6 @@ export function ServicesSection() {
 
     return (
         <section ref={sectionRef} id="servicios" className="relative py-24 lg:py-32 bg-black overflow-hidden">
-            {/* SVG Filters - DESKTOP ONLY */}
-            <ElectricFilters />
-
             {/* Mobile animated background */}
             <MobileServicesBackground />
 
@@ -413,18 +156,35 @@ export function ServicesSection() {
                     </p>
                 </div>
 
-                {/* Desktop Grid */}
-                <div className="hidden lg:block max-w-7xl mx-auto px-6">
-                    <div className="grid lg:grid-cols-3 gap-8">
+                {/* Canvas de nodos */}
+                <div className="max-w-7xl mx-auto px-6">
+                    {/* Desktop: nodos en fila, conectados */}
+                    <div className="hidden lg:flex items-stretch justify-center">
                         {services.map((service, index) => (
-                            <DesktopCard key={index} service={service} index={index} />
+                            <div key={index} className="contents">
+                                {index > 0 && (
+                                    <div className="flex items-center shrink-0">
+                                        <Edge />
+                                    </div>
+                                )}
+                                <ServiceNode service={service} index={index} />
+                            </div>
                         ))}
                     </div>
-                </div>
 
-                {/* Mobile Carousel */}
-                <div className="lg:hidden">
-                    <MobileCarousel />
+                    {/* Mobile: columna única, conectada en vertical */}
+                    <div className="lg:hidden flex flex-col items-stretch max-w-md mx-auto">
+                        {services.map((service, index) => (
+                            <div key={index} className="contents">
+                                {index > 0 && (
+                                    <div className="flex justify-center shrink-0">
+                                        <Edge vertical />
+                                    </div>
+                                )}
+                                <ServiceNode service={service} index={index} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
