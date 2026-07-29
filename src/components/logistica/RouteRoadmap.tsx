@@ -24,10 +24,10 @@ import { useRef } from 'react'
 // se construye con estos mismos puntos como extremos de cada segmento.
 const VB = { w: 900, h: 380 }
 const WAYPOINTS = [
-    { x: 70, y: 300, name: 'Pre-confirmación de ruta' },
-    { x: 320, y: 232, name: 'Agenda de autoservicio' },
-    { x: 580, y: 174, name: 'Estado proactivo' },
-    { x: 830, y: 78, name: 'Registro de anomalías de entrega' },
+    { x: 70, y: 300, step: 1, name: 'Agenda de autoservicio' },
+    { x: 320, y: 232, step: 2, name: 'Pre-confirmación de ruta' },
+    { x: 580, y: 174, step: 3, name: 'Estado proactivo' },
+    { x: 830, y: 78, step: 4, name: 'Registro de anomalías de entrega' },
 ]
 
 const PATH_D =
@@ -100,6 +100,7 @@ export function RouteRoadmap() {
                     <Milestone
                         key={w.name}
                         name={w.name}
+                        step={w.step}
                         index={i}
                         total={WAYPOINTS.length}
                         scrollYProgress={scrollYProgress}
@@ -137,12 +138,14 @@ export function RouteRoadmap() {
 
 function Milestone({
     name,
+    step,
     index,
     total,
     scrollYProgress,
     style,
 }: {
     name: string
+    step: number
     index: number
     total: number
     scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
@@ -163,8 +166,9 @@ function Milestone({
             />
             <motion.span
                 style={{ opacity }}
-                className="whitespace-nowrap rounded-full border border-violet-500/25 bg-[#16162a]/90 px-3 py-1.5 text-xs font-medium text-neutral-200 backdrop-blur-sm"
+                className="whitespace-nowrap rounded-full border border-violet-500/25 bg-[#16162a]/90 px-3 py-1.5 text-xs font-medium text-neutral-200 backdrop-blur-sm flex items-center gap-1.5"
             >
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-violet-500/25 text-[10px] font-bold text-violet-300">{step}</span>
                 {name}
             </motion.span>
         </div>

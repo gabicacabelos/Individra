@@ -36,14 +36,8 @@ const PAIN_CLOSE =
 
 const modules = [
     {
-        quote: 'Me tuvieron esperando de 8 a 20 y al final no vinieron. Perdí el día entero.',
-        name: 'Pre-confirmación de ruta',
-        desc: 'Antes de que el camión salga, cada destinatario del día recibe un WhatsApp para confirmar si va a estar, reprogramar o autorizar la entrega a un tercero. El que no está, sale de la hoja de ruta antes de cargar el paquete. Menos viajes perdidos, menos combustible quemado, menos reseñas de una estrella.',
-        Icon: RouteConfirmIcon,
-        descShort: 'Antes de que salga el camión, cada destinatario confirma por WhatsApp si va a estar, reprograma o autoriza a un tercero. El que no está, sale de la hoja de ruta.',
-        Demo: RouteConfirmDemo,
-    },
-    {
+        step: 1,
+        context: 'Al coordinar la entrega',
         quote: 'Me imponen el día y el horario que ellos pueden. Nunca preguntan cuándo puedo yo.',
         name: 'Agenda de autoservicio',
         desc: 'El cliente elige su ventana de entrega entre las disponibles, desde un link, sin llamar a nadie. Su elección entra directo a tu planificación, dentro de las reglas de zona y capacidad que definas.',
@@ -52,6 +46,18 @@ const modules = [
         Demo: SchedulingDemo,
     },
     {
+        step: 2,
+        context: 'El día del reparto',
+        quote: 'Me tuvieron esperando de 8 a 20 y al final no vinieron. Perdí el día entero.',
+        name: 'Pre-confirmación de ruta',
+        desc: 'Antes de que el camión salga, cada destinatario del día recibe un WhatsApp para confirmar si va a estar, reprogramar o autorizar la entrega a un tercero. El que no está, sale de la hoja de ruta antes de cargar el paquete. Menos viajes perdidos, menos combustible quemado, menos reseñas de una estrella.',
+        Icon: RouteConfirmIcon,
+        descShort: 'Antes de que salga el camión, cada destinatario confirma por WhatsApp si va a estar, reprograma o autoriza a un tercero. El que no está, sale de la hoja de ruta.',
+        Demo: RouteConfirmDemo,
+    },
+    {
+        step: 3,
+        context: 'Durante la entrega',
         quote: 'Pagué el anticipo hace 90 días. Llamo una vez por semana y nadie me responde.',
         name: 'Estado proactivo',
         desc: 'Tu cliente recibe cada semana, solo y sin pedirlo, en qué etapa está su pedido. Un cliente informado no llama, no reclama y no escribe la reseña que después hay que remar.',
@@ -60,6 +66,8 @@ const modules = [
         Demo: ProactiveStatusDemo,
     },
     {
+        step: 4,
+        context: 'Después de la entrega',
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías de entrega',
         desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
@@ -81,9 +89,14 @@ export function LogisticaLanding() {
             {/* ===== Top bar ===== */}
             <header className="sticky top-0 z-50 border-b border-white/10 bg-black/90 backdrop-blur-md">
                 <div className="max-w-6xl mx-auto px-6 py-2 sm:py-3 flex items-center justify-between">
-                    <Link href="/" className="flex items-center" aria-label="Volver al inicio">
-                        <Image src="/logo-individra.png" alt="INDIVIDRA" width={280} height={100} className="h-12 sm:h-16 lg:h-20 w-auto" priority />
-                    </Link>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <Link href="/" className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors" aria-label="Volver al inicio">
+                            <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
+                        </Link>
+                        <Link href="/" className="flex items-center" aria-label="Volver al inicio">
+                            <Image src="/logo-individra.png" alt="INDIVIDRA" width={280} height={100} className="h-12 sm:h-16 lg:h-20 w-auto" priority />
+                        </Link>
+                    </div>
                     <a
                         href={WHATSAPP_HREF}
                         target="_blank"
@@ -236,7 +249,8 @@ export function LogisticaLanding() {
                                 {/* Module */}
                                 <div className="mt-6">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium">Módulo</span>
+                                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-violet-500/40 bg-violet-500/15 text-[11px] font-bold text-violet-300">{m.step}</span>
+                                        <span className="text-[11px] uppercase tracking-widest text-violet-400/70 font-medium">{m.context}</span>
                                         <span className="h-px flex-1 bg-white/10" />
                                     </div>
                                     <div className="mt-2 flex items-center gap-3">
