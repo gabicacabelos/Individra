@@ -303,40 +303,88 @@ function IconWrap({ children, gradId }: { children: React.ReactNode; gradId: str
     )
 }
 
-/* Pre-confirmación de ruta: pin de ruta + check confirmado */
-export function RouteConfirmIcon() {
-    const reduce = useReducedMotion()
+/* Ficha del domicilio: casa + nota con datos de acceso */
+export function HomeAccessIcon() {
     return (
-        <IconWrap gradId="mod-route">
+        <IconWrap gradId="mod-home">
             <motion.path
-                d="M12 50 C 26 50, 26 26, 40 26 C 50 26, 54 34, 60 34"
-                stroke="url(#mod-route)" strokeWidth="2.5" strokeDasharray="2 6" {...stroke}
+                d="M14 34 L36 16 L58 34 V56 A2 2 0 0 1 56 58 H18 A2 2 0 0 1 16 56 V34"
+                stroke="url(#mod-home)" strokeWidth="2.5" {...stroke}
                 {...drawIn} transition={{ duration: 1 }}
             />
-            <circle cx="12" cy="50" r="3.5" fill="#a78bfa" />
+            <line x1="36" y1="16" x2="36" y2="8" stroke="#a78bfa" strokeWidth="2.5" {...stroke} />
             <motion.g
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 14 }}
-                style={{ transformOrigin: '54px 24px' }}
+                style={{ transformOrigin: '46px 47px' }}
             >
-                <circle cx="54" cy="24" r="12" stroke="url(#mod-route)" strokeWidth="2.5" {...stroke} fill="rgba(34,211,238,0.10)" />
-                <path d="M48 24 l4 4 8 -9" stroke="#22d3ee" strokeWidth="2.5" {...stroke} />
+                <rect x="34" y="38" width="24" height="18" rx="3" stroke="url(#mod-home)" strokeWidth="2.2" {...stroke} fill="rgba(34,211,238,0.10)" />
+                <line x1="39" y1="44" x2="53" y2="44" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
+                <line x1="39" y1="50" x2="49" y2="50" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
+            </motion.g>
+        </IconWrap>
+    )
+}
+
+/* Aviso por posición: ruta con badge de paradas restantes */
+export function PositionAlertIcon() {
+    const reduce = useReducedMotion()
+    return (
+        <IconWrap gradId="mod-position">
+            <motion.path
+                d="M10 52 C 24 52, 26 30, 40 26 C 48 24, 52 20, 56 16"
+                stroke="url(#mod-position)" strokeWidth="2.5" strokeDasharray="2 6" {...stroke}
+                {...drawIn} transition={{ duration: 1 }}
+            />
+            <circle cx="10" cy="52" r="3.5" fill="#a78bfa" />
+            <motion.g
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 14 }}
+                style={{ transformOrigin: '56px 16px' }}
+            >
+                <circle cx="56" cy="16" r="12" stroke="url(#mod-position)" strokeWidth="2.5" {...stroke} fill="rgba(34,211,238,0.10)" />
+                <text x="56" y="21" textAnchor="middle" fontSize="13" fill="#22d3ee" fontFamily="ui-monospace, monospace" fontWeight="bold">2</text>
             </motion.g>
             {!reduce && (
                 <motion.circle
-                    cx="12" cy="50" r="3.5" fill="none" stroke="#a78bfa" strokeWidth="1.5"
+                    cx="10" cy="52" r="3.5" fill="none" stroke="#a78bfa" strokeWidth="1.5"
                     animate={{ scale: [1, 2.4], opacity: [0.7, 0] }}
                     transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-                    style={{ transformOrigin: '12px 50px' }}
+                    style={{ transformOrigin: '10px 52px' }}
                 />
             )}
         </IconWrap>
     )
 }
 
-/* Agenda de autoservicio: calendario con slot que se llena */
+/* Reloj de vencimiento: cuenta regresiva que degrada de verde a rojo */
+export function ExpirationClockIcon() {
+    const reduce = useReducedMotion()
+    return (
+        <IconWrap gradId="mod-clock">
+            <motion.circle
+                cx="36" cy="36" r="22"
+                stroke="url(#mod-clock)" strokeWidth="2.5" {...stroke}
+                {...drawIn} transition={{ duration: 1 }}
+            />
+            <line x1="36" y1="36" x2="36" y2="20" stroke="#a78bfa" strokeWidth="2" {...stroke} />
+            <motion.line
+                x1="36" y1="36" x2="48" y2="36"
+                strokeWidth="2.5" {...stroke}
+                animate={reduce ? { stroke: '#f87171' } : { stroke: ['#34d399', '#fbbf24', '#f87171', '#34d399'] }}
+                transition={reduce ? undefined : { duration: 4, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: '36px 36px' }}
+            />
+            <circle cx="36" cy="36" r="2.5" fill="#22d3ee" />
+        </IconWrap>
+    )
+}
+
+/* Coordinación previa: calendario con slot que se llena */
 export function SelfSchedulingIcon() {
     return (
         <IconWrap gradId="mod-cal">
@@ -373,30 +421,6 @@ export function SelfSchedulingIcon() {
                 transition={{ delay: 0.8, type: 'spring', stiffness: 200, damping: 13 }}
                 style={{ transformOrigin: '36px 51px' }}
             />
-        </IconWrap>
-    )
-}
-
-/* Estado proactivo: paquete avanzando por etapas del pipeline */
-export function ProactiveStatusIcon() {
-    const reduce = useReducedMotion()
-    return (
-        <IconWrap gradId="mod-pipe">
-            <line x1="10" y1="40" x2="62" y2="40" stroke="url(#mod-pipe)" strokeWidth="2.5" strokeDasharray="2 5" {...stroke} />
-            {[16, 36, 56].map((cx, i) => (
-                <circle key={i} cx={cx} cy="40" r="4.5" fill="none" stroke="url(#mod-pipe)" strokeWidth="2" />
-            ))}
-            <circle cx="16" cy="40" r="2" fill="#a78bfa" />
-            {/* paquete que viaja por las etapas */}
-            <motion.g
-                initial={{ x: 0 }}
-                animate={reduce ? { x: 40 } : { x: [0, 20, 40, 40] }}
-                transition={reduce ? { duration: 0 } : { duration: 3.4, repeat: Infinity, times: [0, 0.4, 0.8, 1], ease: 'easeInOut' }}
-            >
-                <rect x="9" y="20" width="16" height="15" rx="2.5" stroke="#22d3ee" strokeWidth="2.5" {...stroke} fill="rgba(34,211,238,0.12)" />
-                <line x1="9" y1="27.5" x2="25" y2="27.5" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
-                <line x1="17" y1="20" x2="17" y2="27.5" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
-            </motion.g>
         </IconWrap>
     )
 }

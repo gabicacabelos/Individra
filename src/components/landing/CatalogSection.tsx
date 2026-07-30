@@ -18,6 +18,7 @@ import {
     Home,
     ScanLine,
     AlertTriangle,
+    ClipboardList,
     Sparkles,
     ArrowRight,
     Lightbulb,
@@ -36,7 +37,8 @@ const categories = [
             { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp, web o voz, consultando tu sistema', benefit: '-80% consultas' },
             { icon: ScanLine, title: 'Carga de Remitos', desc: 'Extrae los datos de remitos y comprobantes desde una foto o PDF, listos para revisar', benefit: '-95% tipeo' },
             { icon: Bell, title: 'Avisos de Entrega', desc: 'Notifica salida, llegada o demora según tus reglas, sin depender de que alguien se acuerde', benefit: 'Cero olvidos' },
-            { icon: AlertTriangle, title: 'Semáforo de Riesgo', desc: 'Marca pedidos demorados o sin confirmar según reglas de negocio simples', benefit: 'Prioridad clara' },
+            { icon: AlertTriangle, title: 'Detección de anomalías', desc: 'Cruza ubicación del chofer con respuesta del destinatario según reglas simples', benefit: 'Evidencia real' },
+            { icon: ClipboardList, title: 'Ficha de acceso', desc: 'Guarda cómo se accede a cada domicilio y lo comparte con el chofer automáticamente', benefit: 'Memoria acumulativa' },
         ]
     },
     {

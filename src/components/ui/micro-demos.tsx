@@ -114,35 +114,80 @@ export function NotifyDemo() {
     )
 }
 
-/* ---- Pre-confirmación de ruta: opciones y elección ---- */
-export function RouteConfirmDemo() {
-    const options = ['Sí', 'Reprogramar', 'Dejar a vecino']
+/* ---- Ficha del domicilio: datos de acceso guardados ---- */
+export function HomeAccessDemo() {
+    const rows: [string, string][] = [
+        ['Portería', 'Sí, 24hs'],
+        ['Timbre', 'No funciona'],
+        ['Acceso', 'Dejar con vecino'],
+    ]
     return (
         <Stage>
-            <div className="h-full flex flex-col items-center justify-center gap-2 px-3">
-                <div className="flex flex-wrap items-center justify-center gap-1.5">
-                    {options.map((opt, i) => {
-                        const picked = i === 0
-                        return (
-                            <span
-                                key={opt}
-                                className={`md-anim inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-medium ${
-                                    picked
-                                        ? 'border-violet-400/60 bg-violet-500/25 text-violet-100'
-                                        : 'border-white/10 bg-white/[0.04] text-neutral-400'
-                                }`}
-                                style={{ animationName: 'md-pop', animationDelay: `${i * 0.25}s` }}
-                            >
-                                {picked && (
-                                    <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M20 6 L9 17 l-5 -5" />
-                                    </svg>
-                                )}
-                                {opt}
-                            </span>
-                        )
-                    })}
+            <div className="h-full flex flex-col justify-center gap-1.5 px-4">
+                {rows.map(([label, value], i) => (
+                    <div
+                        key={label}
+                        className="md-anim flex items-center justify-between gap-2 rounded-md border border-violet-400/20 bg-violet-500/[0.08] px-2.5 py-1.5"
+                        style={{ animationName: 'md-rise', animationDelay: `${i * 0.3}s` }}
+                    >
+                        <span className="text-[9px] text-neutral-400 shrink-0">{label}</span>
+                        <span className="text-[9px] font-medium text-violet-200 text-right">{value}</span>
+                    </div>
+                ))}
+            </div>
+        </Stage>
+    )
+}
+
+/* ---- Aviso por posición: notificación de paradas restantes ---- */
+export function PositionAlertDemo() {
+    return (
+        <Stage>
+            <div className="h-full flex flex-col justify-center gap-1.5 px-3">
+                <div
+                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-violet-500/20 border border-violet-400/30 px-2.5 py-1.5"
+                    style={{ animationName: 'md-rise' }}
+                >
+                    <p className="text-[10px] leading-snug text-violet-100">Tu pedido está a 2 paradas</p>
                 </div>
+                <div
+                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-violet-500/25 border border-violet-400/40 px-2.5 py-1.5"
+                    style={{ animationName: 'md-rise', animationDelay: '1.1s' }}
+                >
+                    <p className="text-[10px] leading-snug text-violet-50 font-medium">Sos la próxima parada</p>
+                </div>
+            </div>
+        </Stage>
+    )
+}
+
+/* ---- Reloj de vencimiento: cuenta regresiva que degrada a rojo ---- */
+export function ExpirationClockDemo() {
+    const stages = [
+        { label: 'Día 5', color: 'bg-emerald-400' },
+        { label: 'Día 2', color: 'bg-amber-400' },
+        { label: 'Último día', color: 'bg-rose-400' },
+    ]
+    return (
+        <Stage>
+            <div className="h-full flex items-center justify-center gap-1.5 px-3">
+                {stages.map((s, i) => (
+                    <div key={s.label} className="flex items-center gap-1.5">
+                        <span
+                            className="md-anim inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[9px] font-medium text-neutral-300"
+                            style={{ animationName: 'md-pop', animationDelay: `${i * 0.3}s` }}
+                        >
+                            <span className={`w-1.5 h-1.5 rounded-full ${s.color}`} />
+                            {s.label}
+                        </span>
+                        {i < stages.length - 1 && (
+                            <svg viewBox="0 0 16 8" className="w-3 h-2 shrink-0" fill="none" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="1" y1="4" x2="12" y2="4" strokeDasharray="2 2" />
+                                <path d="M9 1 l3 3 -3 3" />
+                            </svg>
+                        )}
+                    </div>
+                ))}
             </div>
         </Stage>
     )
@@ -201,59 +246,31 @@ export function HandoffDemo() {
     )
 }
 
-/* ---- Agenda de autoservicio: el cliente elige su ventana ---- */
-export function SchedulingDemo() {
-    const slots = ['9–12', '12–15', '15–18']
+/* ---- Coordinación previa: aviso de "¿vas a estar?" con Sí/Reprogramar ---- */
+export function PriorNoticeDemo() {
     return (
         <Stage>
-            <div className="h-full flex items-center justify-center gap-1.5 px-3">
-                {slots.map((s, i) => {
-                    const picked = i === 1
-                    return (
-                        <span
-                            key={s}
-                            className={`md-anim inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] font-medium ${
-                                picked
-                                    ? 'border-violet-400/60 bg-violet-500/25 text-violet-100'
-                                    : 'border-white/10 bg-white/[0.04] text-neutral-400'
-                            }`}
-                            style={{ animationName: 'md-pop', animationDelay: `${i * 0.25}s` }}
-                        >
-                            {picked && (
-                                <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M20 6 L9 17 l-5 -5" />
-                                </svg>
-                            )}
-                            {s}
-                        </span>
-                    )
-                })}
-            </div>
-        </Stage>
-    )
-}
-
-/* ---- Estado proactivo: el pedido avanza de etapa ---- */
-export function ProactiveStatusDemo() {
-    const stages = ['Preparación', 'En camino', 'Entregado']
-    return (
-        <Stage>
-            <div className="h-full flex flex-col justify-center gap-2 px-4">
-                {stages.map((s, i) => (
-                    <div key={s} className="flex items-center gap-2">
-                        <span
-                            className="md-anim shrink-0 w-2 h-2 rounded-full bg-violet-400"
-                            style={{ animationName: 'md-pop', animationDelay: `${i * 0.4}s` }}
-                        />
-                        <span className="text-[9px] text-neutral-400 w-16 shrink-0">{s}</span>
-                        <span className="flex-1 h-1 rounded-full bg-white/[0.06] overflow-hidden">
-                            <span
-                                className="md-anim block h-full rounded-full bg-gradient-to-r from-violet-400 to-blue-400 origin-left"
-                                style={{ animationName: 'md-fill', animationDelay: `${i * 0.4}s` }}
-                            />
-                        </span>
-                    </div>
-                ))}
+            <div className="h-full flex flex-col justify-center gap-1.5 px-3">
+                <div
+                    className="md-anim self-start max-w-[88%] rounded-lg rounded-bl-sm bg-white/[0.07] border border-white/10 px-2.5 py-1.5"
+                    style={{ animationName: 'md-rise' }}
+                >
+                    <p className="text-[10px] leading-snug text-neutral-300">Mañana te llega el pedido #4820. ¿Vas a estar?</p>
+                </div>
+                <div className="flex items-center gap-1.5 pl-1">
+                    <span
+                        className="md-anim inline-flex items-center gap-1 rounded-full border border-violet-400/60 bg-violet-500/25 px-2.5 py-1 text-[9px] font-medium text-violet-100"
+                        style={{ animationName: 'md-pop', animationDelay: '0.9s' }}
+                    >
+                        Sí, espero
+                    </span>
+                    <span
+                        className="md-anim inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-medium text-neutral-400"
+                        style={{ animationName: 'md-pop', animationDelay: '1.1s' }}
+                    >
+                        Reprogramar
+                    </span>
+                </div>
             </div>
         </Stage>
     )

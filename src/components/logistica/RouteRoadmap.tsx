@@ -7,7 +7,7 @@ import { useRef } from 'react'
 /**
  * Cierre de /logistica: la ruta se dibuja con el scroll y va encendiendo los
  * módulos, uno por hito. Cierra la narrativa que abre el hero (misma metáfora
- * de ruta) y no inventa copy: los hitos son los 4 módulos que ya están en la
+ * de ruta) y no inventa copy: los hitos son los 5 módulos que ya están en la
  * página.
  *
  * Sobre el AnimatedRoadmap de referencia, acá se corrigen cuatro cosas:
@@ -24,17 +24,31 @@ import { useRef } from 'react'
 // se construye con estos mismos puntos como extremos de cada segmento.
 const VB = { w: 900, h: 380 }
 const WAYPOINTS = [
-    { x: 70, y: 300, step: 1, name: 'Agenda de autoservicio' },
-    { x: 320, y: 232, step: 2, name: 'Pre-confirmación de ruta' },
-    { x: 580, y: 174, step: 3, name: 'Estado proactivo' },
-    { x: 830, y: 78, step: 4, name: 'Registro de anomalías de entrega' },
+    { x: 70, y: 300, step: 1, name: 'Coordinación previa' },
+    { x: 260, y: 246, step: 2, name: 'Ficha del domicilio' },
+    { x: 450, y: 195, step: 3, name: 'Aviso por posición' },
+    { x: 640, y: 140, step: 4, name: 'Reloj de vencimiento' },
+    { x: 830, y: 78, step: 5, name: 'Registro de anomalías de entrega' },
 ]
 
-const PATH_D =
-    `M${WAYPOINTS[0].x} ${WAYPOINTS[0].y} ` +
-    `C 160 300, 220 246, ${WAYPOINTS[1].x} ${WAYPOINTS[1].y} ` +
-    `S 480 190, ${WAYPOINTS[2].x} ${WAYPOINTS[2].y} ` +
-    `S 760 120, ${WAYPOINTS[3].x} ${WAYPOINTS[3].y}`
+// Curva suave por todos los waypoints: el primer tramo fija los controles a
+// mano (como antes), los siguientes usan "S" que refleja el control previo,
+// así el trazo queda continuo sin volver a calcular cada segmento a mano.
+function buildPathD(points: typeof WAYPOINTS): string {
+    const [p0, p1, ...rest] = points
+    const c1x = p0.x + (p1.x - p0.x) * 0.4
+    const c2x = p0.x + (p1.x - p0.x) * 0.75
+    let d = `M${p0.x} ${p0.y} C ${c1x} ${p0.y}, ${c2x} ${p1.y}, ${p1.x} ${p1.y}`
+    let prev = p1
+    for (const cur of rest) {
+        const cx = prev.x + (cur.x - prev.x) * 0.6
+        d += ` S ${cx} ${cur.y}, ${cur.x} ${cur.y}`
+        prev = cur
+    }
+    return d
+}
+
+const PATH_D = buildPathD(WAYPOINTS)
 
 const pct = (v: number, total: number) => `${(v / total) * 100}%`
 

@@ -8,14 +8,21 @@ import {
     SaturatedOpsScene,
     AmbientOrbs,
     RouteDivider,
-    RouteConfirmIcon,
     SelfSchedulingIcon,
-    ProactiveStatusIcon,
+    HomeAccessIcon,
+    PositionAlertIcon,
+    ExpirationClockIcon,
     AnomalyLogIcon,
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
-import { RouteConfirmDemo, SchedulingDemo, ProactiveStatusDemo, AnomalyLogDemo } from '@/components/ui/micro-demos'
+import {
+    PriorNoticeDemo,
+    HomeAccessDemo,
+    PositionAlertDemo,
+    ExpirationClockDemo,
+    AnomalyLogDemo,
+} from '@/components/ui/micro-demos'
 
 const WHATSAPP_HREF =
     'https://wa.me/5491160152435?text=' +
@@ -29,6 +36,8 @@ const pains = [
     'El seguimiento de entregas vive en planillas sueltas y en la cabeza de dos personas.',
     'Los avisos de "salió tu pedido" o "hay una demora" dependen de que alguien se acuerde de mandarlos.',
     'Fuera de horario, nadie contesta. La consulta espera al día siguiente o se va con otro.',
+    'Las entregas fallan porque el chofer no sabe cómo acceder al domicilio. Nadie guarda esa información para la próxima vez.',
+    'Los paquetes se devuelven al remitente sin que nadie avise a tiempo. El costo del viaje de ida ya se pagó y no se cobró.',
 ]
 
 const PAIN_CLOSE =
@@ -38,41 +47,51 @@ const modules = [
     {
         step: 1,
         context: 'Al coordinar la entrega',
-        quote: 'Me imponen el día y el horario que ellos pueden. Nunca preguntan cuándo puedo yo.',
-        name: 'Agenda de autoservicio',
-        desc: 'El cliente elige su ventana de entrega entre las disponibles, desde un link, sin llamar a nadie. Su elección entra directo a tu planificación, dentro de las reglas de zona y capacidad que definas.',
+        quote: 'Me imponen el día y nunca preguntan si voy a estar.',
+        name: 'Coordinación previa',
+        desc: 'La noche anterior, cada destinatario recibe un mensaje: ¿vas a estar mañana? El que no puede, se saca de la carga antes de cargar el camión. Sin cambiar cómo armás tu ruta. Si después querés ofrecer franjas horarias, se activa sin tocar nada.',
         Icon: SelfSchedulingIcon,
-        descShort: 'El cliente elige su ventana de entrega desde un link, sin llamar a nadie. Su elección entra directo a tu planificación.',
-        Demo: SchedulingDemo,
+        descShort: 'La noche anterior, cada destinatario confirma si va a estar mañana. El que no puede, se saca de la carga antes de cargar el camión.',
+        Demo: PriorNoticeDemo,
     },
     {
         step: 2,
-        context: 'El día del reparto',
-        quote: 'Me tuvieron esperando de 8 a 20 y al final no vinieron. Perdí el día entero.',
-        name: 'Pre-confirmación de ruta',
-        desc: 'Antes de que el camión salga, cada destinatario del día recibe un WhatsApp para confirmar si va a estar, reprogramar o autorizar la entrega a un tercero. El que no está, sale de la hoja de ruta antes de cargar el paquete. Menos viajes perdidos, menos combustible quemado, menos reseñas de una estrella.',
-        Icon: RouteConfirmIcon,
-        descShort: 'Antes de que salga el camión, cada destinatario confirma por WhatsApp si va a estar, reprograma o autoriza a un tercero. El que no está, sale de la hoja de ruta.',
-        Demo: RouteConfirmDemo,
+        context: 'Antes de cargar el camión',
+        quote: 'Es un barrio cerrado con guardia 24 horas y ponen que no había nadie.',
+        name: 'Ficha del domicilio',
+        desc: 'Después de la primera entrega a una dirección, el sistema guarda cómo se accede: portería, timbre, entre calles, si acepta dejar con vecino. La próxima vez, el dato viaja con la hoja de ruta sin que nadie lo busque.',
+        Icon: HomeAccessIcon,
+        descShort: 'Después de la primera entrega, el sistema guarda cómo se accede: portería, timbre, entre calles. La próxima vez, viaja con la hoja de ruta.',
+        Demo: HomeAccessDemo,
     },
     {
         step: 3,
         context: 'Durante la entrega',
-        quote: 'Pagué el anticipo hace 90 días. Llamo una vez por semana y nadie me responde.',
-        name: 'Estado proactivo',
-        desc: 'Tu cliente recibe cada semana, solo y sin pedirlo, en qué etapa está su pedido. Un cliente informado no llama, no reclama y no escribe la reseña que después hay que remar.',
-        Icon: ProactiveStatusIcon,
-        descShort: 'Tu cliente recibe cada semana, sin pedirlo, en qué etapa está su pedido. Un cliente informado no llama ni reclama.',
-        Demo: ProactiveStatusDemo,
+        quote: 'Estuve de 9 a 18 esperando y nunca vinieron. Perdí el día entero.',
+        name: 'Aviso por posición',
+        desc: 'A medida que el chofer avanza en su ruta, el destinatario recibe cuántas paradas faltan. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas. Se activa por caso. No se cobra en las entregas donde no se usa.',
+        Icon: PositionAlertIcon,
+        descShort: 'El destinatario recibe cuántas paradas faltan, sin horarios inventados. Se activa por caso, no se cobra si no se usa.',
+        Demo: PositionAlertDemo,
     },
     {
         step: 4,
+        context: 'Si algo falla',
+        quote: 'Hoy era el último día de plazo. Nadie me avisó y lo devolvieron al remitente.',
+        name: 'Reloj de vencimiento',
+        desc: 'Cuenta los días que un paquete lleva sin entregarse. Avisa al destinatario a los 5, 2 y 1 día antes de que se devuelva. Y le manda al dueño la lista de paquetes en riesgo cada mañana.',
+        Icon: ExpirationClockIcon,
+        descShort: 'Cuenta los días sin entrega y avisa al destinatario antes de la devolución. Al dueño le manda la lista de riesgo cada mañana.',
+        Demo: ExpirationClockDemo,
+    },
+    {
+        step: 5,
         context: 'Después de la entrega',
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías de entrega',
-        desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
+        desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
         Icon: AnomalyLogIcon,
-        descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada con fecha, hora y ubicación. A fin de mes tenés el reporte.',
+        descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada y cruzada con la confirmación del destinatario. A fin de mes tenés el reporte.',
         Demo: AnomalyLogDemo,
     },
 ]
