@@ -450,6 +450,44 @@ export function AnomalyLogIcon() {
     )
 }
 
+/* Escudo de reputación: estrella + escudo protector */
+export function ReputationShieldIcon() {
+    const reduce = useReducedMotion()
+    return (
+        <IconWrap gradId="mod-rep">
+            {/* Escudo base */}
+            <motion.path
+                d="M36 12 L56 20 V40 C56 50 48 56 36 62 C24 56 16 50 16 40 V20 Z"
+                stroke="url(#mod-rep)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                {...drawIn} transition={{ duration: 1 }}
+            />
+            {/* Estrella de reseña */}
+            <motion.g
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, type: 'spring', stiffness: 220, damping: 14 }}
+                style={{ transformOrigin: '36px 36px' }}
+            >
+                <path
+                    d="M36 24 l3.5 7 7.5 1.1 -5.5 5.3 1.3 7.6 -6.8 -3.6 -6.8 3.6 1.3 -7.6 -5.5 -5.3 7.5 -1.1 z"
+                    stroke="#22d3ee" strokeWidth="2" {...stroke} fill="rgba(34,211,238,0.15)"
+                />
+            </motion.g>
+            {/* Pulso de protección */}
+            {!reduce && (
+                <motion.path
+                    d="M36 12 L56 20 V40 C56 50 48 56 36 62 C24 56 16 50 16 40 V20 Z"
+                    stroke="#a78bfa" strokeWidth="1.5" {...stroke} fill="none"
+                    animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0, 0.5] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{ transformOrigin: '36px 37px' }}
+                />
+            )}
+        </IconWrap>
+    )
+}
+
 /* =====================================================================
    4) FONDO — Orbs blur ambientales + divisor de ruta animado
    ===================================================================== */

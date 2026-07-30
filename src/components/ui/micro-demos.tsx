@@ -299,3 +299,35 @@ export function AnomalyLogDemo() {
         </Stage>
     )
 }
+
+/* ---- Escudo de reputación: flujo satisfacción → reseña / captura reclamo ---- */
+export function ReputationShieldDemo() {
+    return (
+        <Stage>
+            <div className="h-full flex flex-col justify-center gap-1.5 px-3">
+                {/* Pregunta de satisfacción */}
+                <div
+                    className="md-anim self-end max-w-[88%] rounded-lg rounded-br-sm bg-violet-500/20 border border-violet-400/30 px-2.5 py-1.5"
+                    style={{ animationName: 'md-rise' }}
+                >
+                    <p className="text-[10px] leading-snug text-violet-100">¿Cómo fue tu experiencia con la entrega?</p>
+                </div>
+                {/* Opciones */}
+                <div className="flex items-center gap-1.5 pl-1">
+                    <span
+                        className="md-anim inline-flex items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2 py-1 text-[9px] font-medium text-emerald-100"
+                        style={{ animationName: 'md-pop', animationDelay: '0.8s' }}
+                    >
+                        ⭐ Excelente → Google
+                    </span>
+                    <span
+                        className="md-anim inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[9px] font-medium text-neutral-400"
+                        style={{ animationName: 'md-pop', animationDelay: '1s' }}
+                    >
+                        😕 Tengo un reclamo
+                    </span>
+                </div>
+            </div>
+        </Stage>
+    )
+}

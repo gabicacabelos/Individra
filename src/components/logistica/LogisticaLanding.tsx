@@ -12,6 +12,7 @@ import {
     HomeAccessIcon,
     PositionAlertIcon,
     ExpirationClockIcon,
+    ReputationShieldIcon,
     AnomalyLogIcon,
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
@@ -21,6 +22,7 @@ import {
     HomeAccessDemo,
     PositionAlertDemo,
     ExpirationClockDemo,
+    ReputationShieldDemo,
     AnomalyLogDemo,
 } from '@/components/ui/micro-demos'
 
@@ -87,8 +89,18 @@ const modules = [
     {
         step: 5,
         context: 'Después de la entrega',
+        quote: 'Una empresa espectacular pero nadie te pide que dejes reseña. Los únicos que escriben son los enojados.',
+        name: 'Escudo de reputación',
+        desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo. ~USD 10/mes de WhatsApp.',
+        Icon: ReputationShieldIcon,
+        descShort: 'Si el destinatario está contento, un tap lo lleva a Google. Si tiene un reclamo, se captura privado. Cero fricción para el chofer.',
+        Demo: ReputationShieldDemo,
+    },
+    {
+        step: 6,
+        context: 'Control de operación',
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
-        name: 'Registro de anomalías de entrega',
+        name: 'Registro de anomalías',
         desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
         Icon: AnomalyLogIcon,
         descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada y cruzada con la confirmación del destinatario. A fin de mes tenés el reporte.',
