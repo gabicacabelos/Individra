@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -115,11 +116,28 @@ const reveal = {
 }
 
 export function LogisticaLanding() {
+    const [isScrolled, setIsScrolled] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 50)
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
     return (
         <main className="min-h-screen bg-[#0f0f1a] text-white antialiased">
-            {/* ===== Top bar ===== */}
-            <header className="sticky top-0 z-50 border-b border-white/10 bg-black/90 backdrop-blur-md">
-                <div className="max-w-6xl mx-auto px-6 py-2 sm:py-3 flex items-center justify-between">
+            {/* ===== Top bar: mismo estilo flotante que el Navbar del home ===== */}
+            <motion.header
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className={`fixed top-4 left-4 right-4 z-[100] transition-all duration-500 rounded-2xl ${
+                    isScrolled
+                        ? 'bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20'
+                        : 'bg-black/20 backdrop-blur-sm border border-white/5'
+                }`}
+            >
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between">
                     <div className="flex items-center gap-2 sm:gap-3">
                         <Link href="/" className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors" aria-label="Volver al inicio">
                             <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
@@ -132,19 +150,19 @@ export function LogisticaLanding() {
                         href={WHATSAPP_HREF}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 rounded-full bg-gradient-to-r from-violet-500 to-blue-500 text-white text-xs sm:text-sm font-medium hover:brightness-110 active:scale-[0.98] transition-all duration-200 whitespace-nowrap"
+                        className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs sm:text-sm font-medium rounded-full hover:shadow-lg hover:shadow-violet-500/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
                     >
                         Diagnóstico gratuito
                     </a>
                 </div>
-            </header>
+            </motion.header>
 
             {/* ===== 1) HERO ===== */}
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/25 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
 
-                <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
+                <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-24 sm:pt-36 sm:pb-32">
                     <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
                         <div>
                             <motion.p {...reveal} className="text-violet-400 text-sm font-medium uppercase tracking-widest">
