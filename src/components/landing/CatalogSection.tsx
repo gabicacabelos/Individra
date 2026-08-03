@@ -6,16 +6,8 @@ import { MobileCatalogBackground } from '@/components/ui/MobileBackgroundEffects
 import { LogisticsIllustration } from './illustrations'
 import {
     MessageSquare,
-    Calendar,
-    FileText,
-    Mail,
-    BarChart3,
-    Receipt,
     Bell,
-    Send,
-    Calculator,
     Truck,
-    Home,
     ScanLine,
     AlertTriangle,
     ClipboardList,
@@ -39,32 +31,6 @@ const categories = [
             { icon: Bell, title: 'Avisos de Entrega', desc: 'Notifica salida, llegada o demora según tus reglas, sin depender de que alguien se acuerde', benefit: 'Cero olvidos' },
             { icon: AlertTriangle, title: 'Detección de anomalías', desc: 'Cruza ubicación del chofer con respuesta del destinatario según reglas simples', benefit: 'Evidencia real' },
             { icon: ClipboardList, title: 'Ficha de acceso', desc: 'Guarda cómo se accede a cada domicilio y lo comparte con el chofer automáticamente', benefit: 'Memoria acumulativa' },
-        ]
-    },
-    {
-        id: 'contable',
-        label: 'Estudios Contables',
-        tier: 'secundario' as const,
-        icon: Calculator,
-        color: 'from-amber-500 to-orange-600',
-        items: [
-            { icon: Receipt, title: 'Procesador de Facturas', desc: 'Extracción de datos de PDFs directo al sistema, con validación humana', benefit: '-95% carga manual' },
-            { icon: Bell, title: 'Alertas de Vencimientos', desc: 'Avisos automáticos a clientes sobre fechas límite', benefit: '100% a tiempo' },
-            { icon: BarChart3, title: 'Reportes Periódicos', desc: 'Informes de gestión generados y enviados solos', benefit: 'Sin intervención' },
-            { icon: Mail, title: 'Respuestas de Consultas', desc: 'Asistente que responde dudas frecuentes de clientes', benefit: '-80% emails' },
-        ]
-    },
-    {
-        id: 'inmobiliaria',
-        label: 'Inmobiliarias',
-        tier: 'secundario' as const,
-        icon: Home,
-        color: 'from-violet-500 to-purple-600',
-        items: [
-            { icon: MessageSquare, title: 'Consultas de Propiedades', desc: 'Responde disponibilidad, precio y requisitos desde tu base, 24/7', benefit: 'Atención inmediata' },
-            { icon: Calendar, title: 'Coordinación de Visitas', desc: 'Agenda y recuerda visitas automáticamente', benefit: '-60% ausencias' },
-            { icon: Send, title: 'Seguimiento de Interesados', desc: 'Secuencias de contacto para que ningún interesado se enfríe', benefit: '+ cierres' },
-            { icon: FileText, title: 'Carga de Fichas', desc: 'Extrae datos de documentos y fichas sin tipear a mano', benefit: 'Sin carga manual' },
         ]
     },
 ]
@@ -156,19 +122,9 @@ export function CatalogSection() {
                             const CategoryIcon = category.icon
                             const isExpanded = expandedId === category.id
                             const isPrincipal = category.tier === 'principal'
-                            const showSecondaryDivider = category.tier === 'secundario' && categories[categoryIndex - 1]?.tier === 'principal'
 
                             return (
                                 <div key={category.id}>
-                                    {showSecondaryDivider && (
-                                        <div className="flex items-center gap-3 pt-6 pb-2">
-                                            <div className="h-px flex-1 bg-white/10" />
-                                            <span className="text-neutral-500 text-xs uppercase tracking-widest whitespace-nowrap">
-                                                También trabajamos en
-                                            </span>
-                                            <div className="h-px flex-1 bg-white/10" />
-                                        </div>
-                                    )}
                                     <motion.div
                                         initial={{ opacity: 0, x: -30 }}
                                         whileInView={{ opacity: 1, x: 0 }}
