@@ -7,93 +7,95 @@ type Props = {
     pains: string[]
 }
 
-/* Portada: la operación saturada como un montón de alertas cayendo a la vez,
-   de todos los canales (llamada, planilla, WhatsApp). Deliberadamente
-   caótico y multi-canal para diferenciarse del teléfono prolijo del hero. */
-function ChannelIcon({ kind, className }: { kind: 'call' | 'doc' | 'chat'; className?: string }) {
-    const common = { className, fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
-    if (kind === 'call')
-        return (
-            <svg viewBox="0 0 24 24" {...common}>
-                <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
-            </svg>
-        )
-    if (kind === 'doc')
-        return (
-            <svg viewBox="0 0 24 24" {...common}>
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <path d="M14 2v6h6M8 13h8M8 17h5" />
-            </svg>
-        )
-    return (
-        <svg viewBox="0 0 24 24" {...common}>
-            <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z" />
-        </svg>
-    )
-}
-
-const alertCards = [
-    { kind: 'call' as const, tag: 'Llamada perdida', text: '"¿Dónde está mi envío?"', accent: 'violet', rot: -9, x: -36, y: -30, delay: 0 },
-    { kind: 'doc' as const, tag: 'Remito', text: 'Error de carga manual', accent: 'blue', rot: 7, x: 34, y: 24, delay: 0.4 },
-    { kind: 'chat' as const, tag: 'WhatsApp · 12', text: 'Mensajes sin responder', accent: 'cyan', rot: -2, x: 0, y: 0, delay: 0.8 },
-]
-
-const accentMap: Record<string, string> = {
-    violet: 'border-violet-400/30 text-violet-300',
-    blue: 'border-blue-400/30 text-blue-300',
-    cyan: 'border-cyan-400/30 text-cyan-300',
-}
-
-function OverwhelmStack() {
+/* Portada: metáfora del cuello de botella. Muchas tareas entrando de arriba
+   (consultas, remitos, avisos) que se atascan en un embudo angosto operado a
+   mano por "2 personas", y apenas un hilo sale por abajo. Diagramática y
+   abstracta a propósito: nada que ver con un chat/teléfono. */
+function Bottleneck() {
     const reduce = useReducedMotion()
-    return (
-        <div aria-hidden className="relative h-[210px] w-full">
-            {/* Contador de alertas, flotando arriba */}
-            <motion.div
-                className="absolute left-1/2 -top-1 z-40 -translate-x-1/2 flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-[#16162a] px-3 py-1 shadow-[0_8px_30px_rgba(139,92,246,0.35)]"
-                animate={reduce ? undefined : { scale: [1, 1.06, 1] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-400" />
-                </span>
-                <span className="text-[11px] font-bold text-white">Todo, a la vez</span>
-            </motion.div>
 
-            {/* Pila de tarjetas de alerta, cada una de un canal distinto */}
-            {alertCards.map((c, i) => (
-                <div
+    // Tareas que caen desde arriba hacia el embudo
+    const fallers = [
+        { x: 40, delay: 0, dur: 2.6, color: '#a78bfa' },
+        { x: 96, delay: 0.9, dur: 2.9, color: '#60a5fa' },
+        { x: 150, delay: 1.7, dur: 2.4, color: '#22d3ee' },
+        { x: 196, delay: 0.4, dur: 3.1, color: '#a78bfa' },
+    ]
+
+    return (
+        <svg viewBox="0 0 240 210" className="w-full max-w-[250px]" role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="bn-wall" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#a78bfa" />
+                    <stop offset="100%" stopColor="#22d3ee" />
+                </linearGradient>
+                <linearGradient id="bn-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(139,92,246,0.14)" />
+                    <stop offset="100%" stopColor="rgba(34,211,238,0.04)" />
+                </linearGradient>
+            </defs>
+
+            {/* Cuerpo del embudo (relleno) */}
+            <path d="M22 40 L104 126 L104 158 L136 158 L136 126 L218 40 Z" fill="url(#bn-fill)" />
+            {/* Paredes del embudo */}
+            <path d="M22 40 L104 126 L104 160" fill="none" stroke="url(#bn-wall)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M218 40 L136 126 L136 160" fill="none" stroke="url(#bn-wall)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+            {/* Tareas cayendo hacia el embudo (loop) */}
+            {fallers.map((f, i) => (
+                <motion.rect
                     key={i}
-                    className="absolute left-1/2 top-1/2"
-                    style={{ transform: `translate(-50%,-50%) translate(${c.x}px, ${c.y}px) rotate(${c.rot}deg)`, zIndex: 10 + i * 10 }}
-                >
-                    <motion.div
-                        className="w-[210px] rounded-2xl border border-white/10 bg-[#14142a] p-3 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.7)]"
-                        animate={reduce ? undefined : { y: [0, -5, 0] }}
-                        transition={{ duration: 3 + i * 0.6, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-                    >
-                        <div className="flex items-center gap-2.5">
-                            <span className={`shrink-0 flex h-9 w-9 items-center justify-center rounded-xl border bg-white/[0.03] ${accentMap[c.accent]}`}>
-                                <ChannelIcon kind={c.kind} className="h-4 w-4" />
-                            </span>
-                            <div className="min-w-0">
-                                <p className={`text-[10px] font-semibold uppercase tracking-wider ${accentMap[c.accent].split(' ')[1]}`}>{c.tag}</p>
-                                <p className="truncate text-[12px] text-neutral-200">{c.text}</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
+                    x={f.x - 8}
+                    width="16"
+                    height="16"
+                    rx="4"
+                    fill="rgba(255,255,255,0.02)"
+                    stroke={f.color}
+                    strokeWidth="1.6"
+                    initial={{ y: 4, opacity: 0 }}
+                    animate={reduce ? { y: 70, opacity: 0.7 } : { y: [4, 96], opacity: [0, 1, 1, 0] }}
+                    transition={reduce ? { duration: 0 } : { duration: f.dur, delay: f.delay, repeat: Infinity, ease: 'easeIn', times: [0, 0.15, 0.8, 1] }}
+                />
             ))}
-        </div>
+
+            {/* Atasco: tareas amontonadas justo arriba del cuello */}
+            {[
+                { x: 104, y: 100, r: -8 },
+                { x: 122, y: 106, r: 6 },
+                { x: 113, y: 114, r: -3 },
+            ].map((t, i) => (
+                <rect key={i} x={t.x - 8} y={t.y - 8} width="16" height="16" rx="4" fill="rgba(139,92,246,0.1)" stroke="#c4b5fd" strokeWidth="1.6" transform={`rotate(${t.r} ${t.x} ${t.y})`} />
+            ))}
+
+            {/* Etiqueta del cuello: hecho a mano por 2 personas */}
+            <g>
+                <rect x="86" y="150" width="68" height="22" rx="11" fill="#16162a" stroke="url(#bn-wall)" strokeWidth="1.5" />
+                <circle cx="100" cy="161" r="3.2" fill="none" stroke="#a78bfa" strokeWidth="1.6" />
+                <path d="M95 168 a5 5 0 0 1 10 0" fill="none" stroke="#a78bfa" strokeWidth="1.6" />
+                <text x="118" y="165" textAnchor="middle" fontSize="10" fontWeight="700" fill="#e9d5ff" fontFamily="ui-sans-serif, system-ui">2 personas</text>
+            </g>
+
+            {/* El hilo que sí sale: una sola tarea, lento y espaciado */}
+            <motion.rect
+                x="112"
+                width="16"
+                height="16"
+                rx="4"
+                fill="rgba(34,211,238,0.08)"
+                stroke="#22d3ee"
+                strokeWidth="1.6"
+                initial={{ y: 176, opacity: 0 }}
+                animate={reduce ? { y: 190, opacity: 0.6 } : { y: [176, 200], opacity: [0, 0.9, 0] }}
+                transition={reduce ? { duration: 0 } : { duration: 3.4, repeat: Infinity, ease: 'linear', repeatDelay: 1.2 }}
+            />
+        </svg>
     )
 }
 
 /* =====================================================================
    Carrusel de dolores — solo mobile/tablet (< lg).
-   Reemplaza el stack vertical de 7 tarjetas por un scroll-snap horizontal:
-   swipe manual (sin autoplay), con la próxima tarjeta asomando en el borde
-   como pista de que hay más, y una barra de progreso segmentada.
+   Scroll-snap horizontal: swipe manual (sin autoplay), con la próxima
+   tarjeta asomando en el borde y una barra de progreso segmentada.
    Las tarjetas toman su altura natural (items-start): no se estiran a la
    altura de la portada, así el texto no queda con aire muerto arriba/abajo.
    ===================================================================== */
@@ -133,18 +135,19 @@ export function PainCarousel({ pains }: Props) {
                 className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-6 px-6 items-start [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none' }}
             >
-                {/* Portada: pila de alertas multi-canal */}
+                {/* Portada: cuello de botella */}
                 <div
                     ref={(el) => {
                         slideRefs.current[0] = el
                     }}
                     data-index={0}
-                    className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col items-center gap-3 px-5 pt-8 pb-6 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-950/50 via-[#15152a] to-blue-950/30"
+                    className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col items-center gap-3 px-5 pt-7 pb-6 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-950/50 via-[#15152a] to-blue-950/30"
                 >
-                    <div aria-hidden className="absolute w-56 h-56 -top-10 rounded-full bg-violet-500/20 blur-[70px]" />
-                    <OverwhelmStack />
+                    <div aria-hidden className="absolute w-56 h-56 -top-12 rounded-full bg-violet-500/20 blur-[70px]" />
+                    <span className="relative text-[11px] uppercase tracking-widest text-violet-400/80 font-medium">Todo pasa por acá</span>
+                    <Bottleneck />
                     <p className="relative text-center text-neutral-300 text-sm leading-relaxed">
-                        Cae por <span className="text-white font-medium">todos lados</span>, al mismo tiempo.
+                        Un solo <span className="text-white font-medium">cuello de botella</span> para toda la operación.
                     </p>
                 </div>
 
