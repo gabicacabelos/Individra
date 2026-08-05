@@ -18,6 +18,7 @@ import {
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
+import { PainCarousel } from './PainCarousel'
 import {
     PriorNoticeDemo,
     HomeAccessDemo,
@@ -236,14 +237,20 @@ export function LogisticaLanding() {
                         </motion.div>
                     </div>
 
-                    <div className="mt-10 grid sm:grid-cols-2 gap-4">
+                    {/* Mobile/tablet (< lg): carrusel horizontal con swipe, sin autoplay */}
+                    <div className="mt-10">
+                        <PainCarousel pains={pains} />
+                    </div>
+
+                    {/* Desktop (lg+): grid de 2 columnas, como antes */}
+                    <div className="hidden lg:grid lg:grid-cols-2 gap-4 mt-6">
                         {pains.map((pain, i) => (
                             <motion.div
                                 key={i}
                                 {...reveal}
                                 transition={{ delay: i * 0.06 }}
                                 className={`flex gap-4 p-5 rounded-xl border border-white/10 bg-white/[0.02] ${
-                                    i === pains.length - 1 ? 'sm:col-span-2' : ''
+                                    i === pains.length - 1 ? 'lg:col-span-2' : ''
                                 }`}
                             >
                                 <span className="shrink-0 mt-1.5 w-2 h-2 rounded-full bg-violet-500" aria-hidden />
