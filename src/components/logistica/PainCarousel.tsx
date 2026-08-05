@@ -58,10 +58,20 @@ export function PainCarousel({ pains }: Props) {
                         slideRefs.current[0] = el
                     }}
                     data-index={0}
-                    className="snap-center shrink-0 w-[82%] sm:w-[60%] flex flex-col items-center justify-center text-center gap-3 p-6 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/20 to-blue-900/10"
+                    className="relative snap-center shrink-0 w-[82%] sm:w-[60%] overflow-hidden flex flex-col items-center justify-center text-center gap-4 px-6 py-9 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-950/50 via-[#15152a] to-blue-950/30"
                 >
-                    <SaturatedOpsScene className="w-40 h-auto" />
-                    <p className="text-neutral-300 text-sm leading-relaxed">
+                    {/* Textura y glow decorativos: dan profundidad sin costo de GPU (sin blur animado) */}
+                    <div
+                        aria-hidden
+                        className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.06)_1px,transparent_1px)] bg-[size:26px_26px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]"
+                    />
+                    <div aria-hidden className="absolute w-52 h-52 rounded-full bg-violet-500/25 blur-[64px]" />
+
+                    <span className="relative text-[11px] uppercase tracking-widest text-violet-400/80 font-medium">
+                        Operación saturada
+                    </span>
+                    <SaturatedOpsScene className="relative w-52 sm:w-60 h-auto drop-shadow-[0_0_24px_rgba(139,92,246,0.25)]" />
+                    <p className="relative text-neutral-200 text-base font-medium leading-relaxed max-w-[230px]">
                         Así se ve tu operación un martes cualquiera.
                     </p>
                 </div>
