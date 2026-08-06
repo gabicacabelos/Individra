@@ -17,6 +17,7 @@ import {
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
+import { PainCarousel } from './PainCarousel'
 import {
     PriorNoticeDemo,
     HomeAccessDemo,
@@ -227,21 +228,10 @@ export function LogisticaLanding() {
                         Si esto pasa en tu operación, se puede automatizar.
                     </motion.h2>
 
-                    {/* ========== MOBILE (< lg): cards planas simples ========== */}
-                    <div className="lg:hidden mt-10 grid sm:grid-cols-2 gap-4">
-                        {pains.map((pain, i) => (
-                            <motion.div
-                                key={i}
-                                {...reveal}
-                                transition={{ delay: i * 0.06 }}
-                                className={`flex gap-4 p-5 rounded-xl border border-white/10 bg-white/[0.02] ${
-                                    i === pains.length - 1 ? 'sm:col-span-2' : ''
-                                }`}
-                            >
-                                <span className="shrink-0 mt-1.5 w-2 h-2 rounded-full bg-violet-500" aria-hidden />
-                                <p className="text-neutral-300 text-sm sm:text-base leading-relaxed">{pain}</p>
-                            </motion.div>
-                        ))}
+                    {/* Mobile/tablet (< lg): carrusel horizontal con swipe, sin autoplay.
+                        Componente aprobado por el usuario (PainCarousel.tsx). */}
+                    <div className="lg:hidden mt-10">
+                        <PainCarousel pains={pains} />
                     </div>
 
                     {/* ========== DESKTOP (lg+): carousel de papeles saliendo de la persona ==========
@@ -249,7 +239,7 @@ export function LogisticaLanding() {
                         el problema actual. Autoplay cada 6s (se pausa al hover),
                         navegación manual con flechas y dots. */}
                     <div className="hidden lg:block mt-14">
-                        <PainCarousel pains={pains} />
+                        <DesktopPainCarousel pains={pains} />
                     </div>
 
                     <motion.p
@@ -372,16 +362,15 @@ export function LogisticaLanding() {
 }
 
 /**
- * Carousel de dolor (desktop).
- * Ilustración de persona agobiada a la izquierda + slide destacado a la
- * derecha mostrando el pain actual. Autoplay cada 6s (se pausa al hover
- * o al interactuar), navegación manual con flechas y dots.
- * La animación de entrada del papel sugiere que sale de la carpeta
- * que la persona sostiene.
+ * Carousel de dolor (desktop). Distinto del `PainCarousel` de mobile
+ * (componente separado, PainCarousel.tsx, con swipe y sin autoplay).
+ * Ilustración a la izquierda + slide destacado a la derecha mostrando
+ * el pain actual. Autoplay cada 6s (se pausa al hover o al interactuar),
+ * navegación manual con flechas y dots.
  */
 const AUTOPLAY_MS = 6000
 
-function PainCarousel({ pains }: { pains: string[] }) {
+function DesktopPainCarousel({ pains }: { pains: string[] }) {
     const [current, setCurrent] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
     const [progress, setProgress] = useState(0) // 0..1, alimenta la barra
