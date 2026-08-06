@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Quote } from 'lucide-react'
 import {
-    SaturatedOpsScene,
     AmbientOrbs,
     RouteDivider,
     SelfSchedulingIcon,
@@ -217,26 +216,19 @@ export function LogisticaLanding() {
                 </div>
             </section>
 
-            {/* ===== 2) DOLOR ===== */}
+            {/* ===== 2) DOLOR =====
+                Desktop: bento grid con visual interno por card + fondo compartido
+                abstracto (glows/líneas) que atraviesa el conjunto.
+                Mobile: cards planas apiladas (versión anterior que funcionaba). */}
             <section className="relative border-y border-white/5 overflow-hidden">
                 <AmbientOrbs className="absolute inset-0 pointer-events-none opacity-60" />
-                <div className="relative max-w-4xl mx-auto px-6 py-20 sm:py-24">
-                    <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-center">
-                        <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-                            Si esto pasa en tu operación, se puede automatizar.
-                        </motion.h2>
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true, margin: '-60px' }}
-                            transition={{ duration: 0.6 }}
-                            className="hidden lg:block shrink-0"
-                        >
-                            <SaturatedOpsScene className="w-56 h-auto" />
-                        </motion.div>
-                    </div>
+                <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-24">
+                    <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center max-w-3xl mx-auto">
+                        Si esto pasa en tu operación, se puede automatizar.
+                    </motion.h2>
 
-                    <div className="mt-10 grid sm:grid-cols-2 gap-4">
+                    {/* ========== MOBILE (< lg): cards planas simples ========== */}
+                    <div className="lg:hidden mt-10 grid sm:grid-cols-2 gap-4">
                         {pains.map((pain, i) => (
                             <motion.div
                                 key={i}
@@ -252,9 +244,17 @@ export function LogisticaLanding() {
                         ))}
                     </div>
 
+                    {/* ========== DESKTOP (lg+): carousel de papeles saliendo de la persona ==========
+                        Ilustración a la izquierda + slide destacado a la derecha con
+                        el problema actual. Autoplay cada 6s (se pausa al hover),
+                        navegación manual con flechas y dots. */}
+                    <div className="hidden lg:block mt-14">
+                        <PainCarousel pains={pains} />
+                    </div>
+
                     <motion.p
                         {...reveal}
-                        className="mt-8 border-l-2 border-violet-500 pl-5 text-lg sm:text-xl text-white font-medium leading-relaxed"
+                        className="mt-8 lg:mt-12 border-l-2 border-violet-500 pl-5 text-lg sm:text-xl text-white font-medium leading-relaxed max-w-3xl mx-auto"
                     >
                         {PAIN_CLOSE}
                     </motion.p>
@@ -368,5 +368,146 @@ export function LogisticaLanding() {
                 </div>
             </footer>
         </main>
+    )
+}
+
+/**
+ * Carousel de dolor (desktop).
+ * Ilustración de persona agobiada a la izquierda + slide destacado a la
+ * derecha mostrando el pain actual. Autoplay cada 6s (se pausa al hover
+ * o al interactuar), navegación manual con flechas y dots.
+ * La animación de entrada del papel sugiere que sale de la carpeta
+ * que la persona sostiene.
+ */
+const AUTOPLAY_MS = 6000
+
+function PainCarousel({ pains }: { pains: string[] }) {
+    const [current, setCurrent] = useState(0)
+    const [isPaused, setIsPaused] = useState(false)
+    const [progress, setProgress] = useState(0) // 0..1, alimenta la barra
+
+    // Un solo reloj gobierna la barra Y el avance, así nunca se desincronizan.
+    // Depende de `current`, con lo que cualquier navegación manual reinicia el
+    // conteo desde cero. Al pausar se limpia el intervalo y la barra queda
+    // congelada donde estaba.
+    useEffect(() => {
+        if (isPaused) return
+        setProgress(0)
+        const startedAt = Date.now()
+        const id = setInterval(() => {
+            const pct = Math.min((Date.now() - startedAt) / AUTOPLAY_MS, 1)
+            setProgress(pct)
+            if (pct >= 1) setCurrent((prev) => (prev + 1) % pains.length)
+        }, 40)
+        return () => clearInterval(id)
+    }, [current, isPaused, pains.length])
+
+    const goPrev = () => setCurrent((prev) => (prev - 1 + pains.length) % pains.length)
+    const goNext = () => setCurrent((prev) => (prev + 1) % pains.length)
+
+    return (
+        <div
+            className="relative"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
+            <div className="grid grid-cols-[auto_1fr] gap-8 xl:gap-14 items-center">
+                {/* Ilustración estática a la izquierda.
+                    Asset de unDraw (licencia abierta, uso comercial sin atribución),
+                    recoloreado al violeta de marca. Va con <img> y no next/image
+                    porque es un SVG: optimizarlo no aporta y evita tener que
+                    habilitar dangerouslyAllowSVG en la config. */}
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.6 }}
+                    className="relative shrink-0"
+                >
+                    {/* Glow detrás para asentar la ilustración sobre el fondo oscuro */}
+                    <div aria-hidden className="absolute inset-0 -m-10 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.18),transparent_70%)] blur-2xl" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src="/dolor-operacion.svg"
+                        alt=""
+                        aria-hidden
+                        className="relative w-[440px] xl:w-[500px] h-auto"
+                    />
+                </motion.div>
+
+                {/* Slide destacado a la derecha — cambia con AnimatePresence */}
+                <div className="relative min-h-[280px] flex items-center">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={current}
+                            initial={{ opacity: 0, x: -40, rotate: -4 }}
+                            animate={{ opacity: 1, x: 0, rotate: 0 }}
+                            exit={{ opacity: 0, x: 40, rotate: 4 }}
+                            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative w-full max-w-lg p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-[#16162a] to-[#0a0a14] shadow-[0_20px_60px_-15px_rgba(139,92,246,0.35)]"
+                        >
+                            {/* Esquina doblada como si fuera un papel real */}
+                            <div aria-hidden className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-violet-500/20 to-transparent [clip-path:polygon(100%_0,0_0,100%_100%)] rounded-tr-2xl" />
+
+                            <div className="flex items-center gap-3 mb-5">
+                                <span className="flex items-center justify-center w-9 h-9 rounded-full border border-violet-500/40 bg-violet-500/15 text-violet-300 font-bold text-sm font-mono">
+                                    {String(current + 1).padStart(2, '0')}
+                                </span>
+                                <span className="text-[11px] uppercase tracking-widest text-violet-400/70 font-medium">
+                                    Problema {current + 1} de {pains.length}
+                                </span>
+                            </div>
+
+                            <p className="text-neutral-100 text-base xl:text-lg leading-relaxed">
+                                {pains[current]}
+                            </p>
+
+                            {/* Barra de progreso: div plano manejado por el mismo
+                                reloj que avanza el slide, no una animación aparte. */}
+                            <div className="mt-6 h-1 rounded-full bg-white/[0.05] overflow-hidden">
+                                <div
+                                    style={{ transform: `scaleX(${progress})`, transformOrigin: 'left' }}
+                                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500"
+                                />
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
+
+            {/* Controles: flechas + dots debajo, centrados */}
+            <div className="mt-8 flex items-center justify-center gap-6">
+                <button
+                    onClick={goPrev}
+                    aria-label="Problema anterior"
+                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-violet-500/15 hover:border-violet-500/40 hover:text-white transition-all active:scale-95"
+                >
+                    <ArrowRight className="w-4 h-4 rotate-180" />
+                </button>
+
+                <div className="flex items-center gap-2">
+                    {pains.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrent(i)}
+                            aria-label={`Ir al problema ${i + 1}`}
+                            className={`transition-all rounded-full ${
+                                i === current
+                                    ? 'w-8 h-2 bg-gradient-to-r from-violet-500 to-blue-500'
+                                    : 'w-2 h-2 bg-white/20 hover:bg-white/40'
+                            }`}
+                        />
+                    ))}
+                </div>
+
+                <button
+                    onClick={goNext}
+                    aria-label="Problema siguiente"
+                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-violet-500/15 hover:border-violet-500/40 hover:text-white transition-all active:scale-95"
+                >
+                    <ArrowRight className="w-4 h-4" />
+                </button>
+            </div>
+        </div>
     )
 }
