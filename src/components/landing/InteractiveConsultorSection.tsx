@@ -282,7 +282,7 @@ export function InteractiveConsultorSection() {
                                                     }
                                                 }}
                                                 maxLength={MAX_INPUT_CHARS}
-                                                placeholder="Ej: Pierdo 3 horas al día respondiendo cuánto miden los muebles por WhatsApp y armando presupuestos en Excel..."
+                                                placeholder="Ej: Pierdo entregas porque el cliente no está y nadie avisó que íbamos. Los remitos los cargamos a mano uno por uno..."
                                                 className={`w-full flex-1 min-h-[200px] bg-black/50 border rounded-xl p-4 text-white placeholder:text-neutral-600 focus:outline-none focus:ring-1 transition-all resize-none ${input.length >= MAX_INPUT_CHARS
                                                     ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50'
                                                     : 'border-white/10 focus:border-blue-500/50 focus:ring-blue-500/50'

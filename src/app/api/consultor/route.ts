@@ -433,7 +433,7 @@ ESTRUCTURA JSON REQUERIDA:
 {
     "diagnostico": "Análisis breve del problema y su impacto",
     "solucion": "Solución acotada a las capacidades permitidas y sus beneficios",
-    "tiempoAhorrado": "Aprox X-Y horas semanales",
+    "tiempoAhorrado": "Varias horas semanales de trabajo manual (se cuantifica en el diagnóstico real)",
     "costoSetupMin": 800,
     "costoSetupMax": 2000,
     "costoMensualMin": 80,
@@ -451,7 +451,7 @@ Output:
 {
     "diagnostico": "La administración pierde horas respondiendo la misma consulta de estado de entrega una y otra vez, y fuera de horario nadie contesta.",
     "solucion": "Un asistente que responde el estado de cada pedido en segundos por WhatsApp, web o voz consultando tu sistema, avisa automáticamente salidas y demoras según tus reglas, y deriva a una persona con todo el contexto cuando hace falta.",
-    "tiempoAhorrado": "Aprox 12-18 horas semanales",
+    "tiempoAhorrado": "Varias horas semanales de llamados y tipeo repetitivo",
     "costoSetupMin": 800,
     "costoSetupMax": 2000,
     "costoMensualMin": 80,
@@ -469,7 +469,7 @@ Output:
 {
     "diagnostico": "Planificar rutas a mano consume horas cada día y depende del criterio de una sola persona.",
     "solucion": "Seamos honestos: INDIVIDRA no construye motores de optimización de rutas con IA, así que no te lo vamos a prometer. Lo que SÍ automatizamos alrededor del reparto es la consulta de estado de cada entrega por WhatsApp, los avisos automáticos de salida, llegada o demora, y la carga de remitos desde una foto, para sacarle horas de tipeo y llamados al despacho.",
-    "tiempoAhorrado": "Aprox 8-12 horas semanales",
+    "tiempoAhorrado": "Varias horas semanales de tipeo y llamados al despacho",
     "costoSetupMin": 800,
     "costoSetupMax": 2000,
     "costoMensualMin": 80,
