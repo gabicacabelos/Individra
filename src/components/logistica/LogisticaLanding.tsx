@@ -14,6 +14,7 @@ import {
     ExpirationClockIcon,
     ReputationShieldIcon,
     AnomalyLogIcon,
+    DriverAdmissionIcon,
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
@@ -25,6 +26,7 @@ import {
     ExpirationClockDemo,
     ReputationShieldDemo,
     AnomalyLogDemo,
+    DriverAdmissionDemo,
 } from '@/components/ui/micro-demos'
 
 const WHATSAPP_HREF =
@@ -312,6 +314,70 @@ export function LogisticaLanding() {
                             )
                         })}
                     </div>
+
+                    {/* Módulo Especial: Admisión y Onboarding de Choferes / Flota */}
+                    <motion.div
+                        {...reveal}
+                        className="mt-8 rounded-2xl border border-violet-500/30 bg-gradient-to-br from-[#121124] via-[#0d0d1a] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
+                    >
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+                        
+                        <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
+                            <div className="lg:col-span-7 space-y-4">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300 uppercase tracking-wider">
+                                    Módulo de Flota & Operación Interna
+                                </div>
+                                
+                                <div className="flex items-center gap-3.5">
+                                    <div className="shrink-0 w-12 h-12 rounded-xl border border-violet-500/30 bg-violet-500/10 p-1.5 flex items-center justify-center">
+                                        <DriverAdmissionIcon />
+                                    </div>
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                        Admisión Inteligente de Choferes
+                                    </h3>
+                                </div>
+
+                                <div className="border-l-2 border-violet-500/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                    &ldquo;Perdemos días pidiendo fotos de cédulas, seguros y VTVs por WhatsApp mientras los camiones quedan parados o salen con papeles vencidos.&rdquo;
+                                </div>
+
+                                <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+                                    Screening documental en <strong>2 capas</strong> para incorporar transportistas calificados en minutos, sin carga administrativa ni riesgos legales:
+                                </p>
+
+                                <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                                    <div className="p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                                        <div className="text-xs font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                            Capa 1: Validación Inmediata
+                                        </div>
+                                        <p className="text-xs text-neutral-400 leading-relaxed">
+                                            El chofer carga 4 documentos (Licencia, Cédula, VTV, Seguro) vía web. El OCR extrae vencimientos en segundos y valida al instante.
+                                        </p>
+                                    </div>
+                                    <div className="p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                                        <div className="text-xs font-bold text-violet-400 mb-1 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                                            Capa 2: Digest para Tráfico
+                                        </div>
+                                        <p className="text-xs text-neutral-400 leading-relaxed">
+                                            Tráfico/RRHH recibe un resumen agrupado por zona y tipo de vehículo, listo para contactar y coordinar turnos sin leer papeles a mano.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-5 flex flex-col justify-center">
+                                <div className="rounded-xl border border-white/10 bg-[#0d0d1a]/80 p-4 shadow-inner">
+                                    <div className="text-[11px] font-mono text-neutral-400 mb-2 flex items-center justify-between">
+                                        <span>screening_transportistas.run</span>
+                                        <span className="text-emerald-400 font-semibold">100% Automatizado</span>
+                                    </div>
+                                    <DriverAdmissionDemo />
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
 
                     {/* Cierre de conversión */}
                     {/* Remate: la ruta se dibuja con el scroll y enciende los módulos.

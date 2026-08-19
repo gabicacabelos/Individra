@@ -331,3 +331,35 @@ export function ReputationShieldDemo() {
         </Stage>
     )
 }
+
+/* ---- Admisión de choferes: 4 documentos OCR + validación automática a pool ---- */
+export function DriverAdmissionDemo() {
+    const docs = ['Licencia', 'Cédula', 'VTV', 'Seguro']
+    return (
+        <Stage>
+            <div className="h-full flex flex-col justify-center gap-2 px-3">
+                {/* 4 Documentos verificados */}
+                <div className="grid grid-cols-4 gap-1">
+                    {docs.map((doc, i) => (
+                        <div
+                            key={doc}
+                            className="md-anim flex flex-col items-center justify-center py-1 rounded bg-white/[0.04] border border-emerald-400/30"
+                            style={{ animationName: 'md-pop', animationDelay: `${i * 0.15}s` }}
+                        >
+                            <span className="text-[8px] text-neutral-400">{doc}</span>
+                            <span className="text-[9px] font-bold text-emerald-400">✓ Al día</span>
+                        </div>
+                    ))}
+                </div>
+                {/* Resultado inmediato */}
+                <div
+                    className="md-anim flex items-center justify-between px-2.5 py-1 rounded-md bg-emerald-500/15 border border-emerald-400/30"
+                    style={{ animationName: 'md-rise', animationDelay: '0.7s' }}
+                >
+                    <span className="text-[9px] text-emerald-200 font-medium">Capa 1: Screening OK</span>
+                    <span className="text-[9px] font-bold text-emerald-300">→ Pool Activo</span>
+                </div>
+            </div>
+        </Stage>
+    )
+}

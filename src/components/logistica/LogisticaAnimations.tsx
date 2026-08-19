@@ -488,6 +488,38 @@ export function ReputationShieldIcon() {
     )
 }
 
+/* Admisión de choferes: credencial/documentos + validación OCR */
+export function DriverAdmissionIcon() {
+    const reduce = useReducedMotion()
+    return (
+        <IconWrap gradId="mod-driver">
+            {/* Tarjeta de credencial / chofer */}
+            <motion.rect
+                x="14" y="16" width="44" height="40" rx="6"
+                stroke="url(#mod-driver)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                {...drawIn} transition={{ duration: 1 }}
+            />
+            {/* Avatar chofer */}
+            <circle cx="28" cy="30" r="5" stroke="#22d3ee" strokeWidth="2" fill="none" />
+            <path d="M20 44 c 0 -4.5 3.5 -7 8 -7 s 8 2.5 8 7" stroke="#22d3ee" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Líneas de datos / validación */}
+            <line x1="40" y1="28" x2="50" y2="28" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
+            <line x1="40" y1="34" x2="48" y2="34" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
+            {/* Check badge */}
+            <motion.g
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 260, damping: 15 }}
+                style={{ transformOrigin: '48px 46px' }}
+            >
+                <circle cx="48" cy="46" r="8" fill="#10b981" stroke="#047857" strokeWidth="1.5" />
+                <path d="M44.5 46 l2.5 2.5 l5 -5" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </motion.g>
+        </IconWrap>
+    )
+}
+
 /* =====================================================================
    4) FONDO — Orbs blur ambientales + divisor de ruta animado
    ===================================================================== */
