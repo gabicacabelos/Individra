@@ -368,13 +368,7 @@ export function LogisticaLanding() {
                             </div>
 
                             <div className="lg:col-span-5 flex flex-col justify-center">
-                                <div className="rounded-xl border border-white/10 bg-[#0d0d1a]/80 p-4 shadow-inner">
-                                    <div className="text-[11px] font-mono text-neutral-400 mb-2 flex items-center justify-between">
-                                        <span>screening_transportistas.run</span>
-                                        <span className="text-emerald-400 font-semibold">100% Automatizado</span>
-                                    </div>
-                                    <DriverAdmissionDemo />
-                                </div>
+                                <DriverAdmissionDemo />
                             </div>
                         </div>
                     </motion.div>
