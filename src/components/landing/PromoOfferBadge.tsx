@@ -25,7 +25,7 @@ export function PromoOfferBadge() {
                 {/* Floating motion loop */}
                 <motion.div
                     animate={{
-                        y: [-5, 5, -5],
+                        y: [-4, 4, -4],
                         rotate: [1.5, -2, 1.5],
                     }}
                     transition={{
@@ -43,9 +43,9 @@ export function PromoOfferBadge() {
                             setIsVisible(false)
                         }}
                         aria-label="Cerrar anuncio"
-                        className="absolute -top-2 -right-2 z-40 w-7 h-7 rounded-full bg-neutral-900 text-white hover:bg-red-600 border-2 border-white flex items-center justify-center text-xs shadow-2xl transition-all hover:scale-110 active:scale-95"
+                        className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 z-40 w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-neutral-900 text-white hover:bg-red-600 border sm:border-2 border-white flex items-center justify-center text-xs shadow-2xl transition-all hover:scale-110 active:scale-95"
                     >
-                        <X className="w-4 h-4 stroke-[3]" />
+                        <X className="w-3 h-3 sm:w-4 sm:h-4 stroke-[3]" />
                     </button>
 
                     {/* Enlace al clickear la estrella */}
@@ -55,8 +55,8 @@ export function PromoOfferBadge() {
                         rel="noopener noreferrer"
                         className="block focus:outline-none"
                     >
-                        {/* Contenedor con efecto hover sutil (scale suave, micro-elevación y sombra refinada) */}
-                        <div className="relative w-[235px] sm:w-[265px] h-[225px] sm:h-[255px] flex items-center justify-center drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_12px_24px_rgba(220,38,38,0.35)] group-hover:-translate-y-1 group-hover:scale-[1.04] transition-all duration-300 ease-out">
+                        {/* Contenedor con efecto hover sutil (compacto en mobile, completo en desktop) */}
+                        <div className="relative w-[170px] sm:w-[265px] h-[160px] sm:h-[255px] flex items-center justify-center drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_12px_24px_rgba(220,38,38,0.35)] group-hover:-translate-y-1 group-hover:scale-[1.04] transition-all duration-300 ease-out">
                             {/* SVG de la explosión con borde estrellado rojo ancho estilo flyer de oferta */}
                             <svg
                                 viewBox="0 0 290 280"
@@ -89,30 +89,30 @@ export function PromoOfferBadge() {
                             </svg>
 
                             {/* Contenido tipográfico de oferta */}
-                            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-1 max-w-[170px] sm:max-w-[190px]">
+                            <div className="relative z-10 flex flex-col items-center justify-center text-center px-2 sm:px-4 pt-1 max-w-[125px] sm:max-w-[190px]">
                                 {/* Cinta / Ribbon superior */}
-                                <div className="bg-red-600 text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full border border-white shadow mb-0.5 flex items-center gap-1">
-                                    <Sparkles className="w-2.5 h-2.5 text-yellow-300 fill-yellow-300" />
+                                <div className="bg-red-600 text-white font-black text-[7px] sm:text-[10px] tracking-wider uppercase px-1.5 sm:px-2 py-0.5 rounded-full border border-white shadow mb-0.5 flex items-center gap-0.5 sm:gap-1">
+                                    <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-yellow-300 fill-yellow-300" />
                                     <span>¡OFERTA EXCLUSIVA!</span>
                                 </div>
 
                                 {/* Texto principal grande estilo cartel */}
                                 <div className="font-black leading-none py-0.5">
-                                    <span className="block text-[14px] sm:text-[16px] tracking-tight font-extrabold text-neutral-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
+                                    <span className="block text-[11px] sm:text-[16px] tracking-tight font-extrabold text-neutral-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
                                         PRECIO
                                     </span>
-                                    <span className="block text-[24px] sm:text-[28px] tracking-tighter text-red-600 font-black drop-shadow-[0_1.5px_0_rgba(255,255,255,1)]">
+                                    <span className="block text-[18px] sm:text-[28px] tracking-tighter text-red-600 font-black drop-shadow-[0_1.5px_0_rgba(255,255,255,1)]">
                                         ESPECIAL
                                     </span>
                                 </div>
 
                                 {/* Badge inferior: primeros 5 clientes */}
-                                <div className="mt-0.5 bg-neutral-950 text-yellow-300 font-black text-[9px] sm:text-[10px] uppercase px-2 py-0.5 rounded border border-yellow-400 shadow flex items-center gap-1">
+                                <div className="mt-0.5 bg-neutral-950 text-yellow-300 font-black text-[7.5px] sm:text-[10px] uppercase px-1.5 sm:px-2 py-0.5 rounded border border-yellow-400 shadow flex items-center gap-0.5 sm:gap-1">
                                     <span>🔥 Primeros 5 clientes</span>
                                 </div>
 
                                 {/* Botón / Link con hover interactivo */}
-                                <div className="mt-1.5 bg-red-700 group-hover:bg-red-600 text-white font-bold text-[9px] sm:text-[10px] px-3 py-1 rounded-full shadow transition-all duration-200 flex items-center gap-1 group-hover:scale-105">
+                                <div className="mt-1 sm:mt-1.5 bg-red-700 group-hover:bg-red-600 text-white font-bold text-[7.5px] sm:text-[10px] px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow transition-all duration-200 flex items-center gap-1 group-hover:scale-105">
                                     <span>¡Consultar cupo! →</span>
                                 </div>
                             </div>
