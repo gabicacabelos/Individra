@@ -117,9 +117,8 @@ export function PropuestaComercialSection() {
                     className="mt-12 mx-auto max-w-3xl p-6 sm:p-7 rounded-2xl border border-white/10 bg-white/[0.02] text-center"
                 >
                     <p className="text-neutral-300 text-sm sm:text-base leading-relaxed">
-                        <strong className="text-white">No prometo un número de mejora ni un ahorro específico.</strong>{' '}
-                        Recién arranco, no tengo mediciones propias todavía. Lo que sí prometo:
-                        honestidad de etapa, transparencia total, y que si algo no funciona,
+                        <strong className="text-white">No prometo la solución a todos tus problemas operativos.</strong>{' '}
+                        Pero sí honestidad de etapa, transparencia total, y que si algo no funciona,
                         te vas sin fricción y con tus datos en la mano.
                     </p>
                 </motion.div>
