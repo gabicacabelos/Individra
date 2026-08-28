@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Graphify: todo el output es local, se regenera con el hook post-commit.
+# No se committea para no ensuciar diffs — cada dev genera el suyo con: graphify extract . --code-only
+graphify-out/

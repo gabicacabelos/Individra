@@ -13,6 +13,7 @@ import {
     PromoVideoSection,
     PainSolutionSection,
     DifferentiatorsSection,
+    PropuestaComercialSection,
 } from '@/components/landing'
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
             <CatalogSection />
             <DifferentiatorsSection />
             <ComparativeSection />
+            <PropuestaComercialSection />
             <FAQSection />
             <ContactSection />
             <Footer />

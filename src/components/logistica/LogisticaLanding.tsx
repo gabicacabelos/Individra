@@ -342,7 +342,7 @@ export function LogisticaLanding() {
                                 </div>
 
                                 <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
-                                    Screening documental en <strong>2 capas</strong> para incorporar transportistas calificados en minutos, sin carga administrativa ni riesgos legales:
+                                    Screening documental en <strong>2 capas</strong>: la validación es instantánea, para que tráfico solo tenga que llamar a los que ya calificaron. Cada decisión queda con motivo documentado. Al que no califica se le avisa con el motivo específico y una vía para reclamar.
                                 </p>
 
                                 <div className="grid sm:grid-cols-2 gap-3 pt-1">
@@ -369,6 +369,119 @@ export function LogisticaLanding() {
 
                             <div className="lg:col-span-5 flex flex-col justify-center">
                                 <DriverAdmissionDemo />
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Módulo en construcción: Parte del dador (relación logística ↔ vendedor Flex) */}
+                    <motion.div
+                        {...reveal}
+                        className="mt-6 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-[#0d1420] via-[#0a1018] to-[#08101a] p-6 sm:p-8 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-600/[0.06] rounded-full blur-3xl pointer-events-none" />
+
+                        <div className="relative z-10 grid lg:grid-cols-12 gap-6 items-start">
+                            <div className="lg:col-span-8 space-y-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-500/10 text-xs font-semibold text-cyan-300 uppercase tracking-wider">
+                                        Módulo para logísticas de e-commerce
+                                    </div>
+                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                        Próximamente
+                                    </div>
+                                </div>
+
+                                <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                    Parte del dador
+                                </h3>
+
+                                <div className="border-l-2 border-cyan-500/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                    &ldquo;Uno vende bien, la logística entrega mal, y el cliente le pega mala reseña al vendedor. Perdés cuentas por lo que hizo o dejó de hacer otro.&rdquo;
+                                </div>
+
+                                <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+                                    Cuando entregás para vendedores de Mercado Libre Flex u otro e-commerce, cada entrega queda con evidencia de dos fuentes: registro del chofer + confirmación del destinatario. Al vendedor le llega un parte periódico mostrando qué pasó realmente con sus paquetes, para que puedas demostrarle que hiciste bien tu trabajo y no perder la cuenta.
+                                </p>
+                                <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed pt-1">
+                                    Distinto de <strong className="text-neutral-300">Escudo de reputación</strong>, que mira al comprador final. Este mira al vendedor que te contrató.
+                                </p>
+                            </div>
+
+                            <div className="lg:col-span-4 flex items-center justify-center">
+                                <div className="w-full max-w-xs p-5 rounded-xl border border-cyan-500/20 bg-[#0a0f18]/60">
+                                    <div className="text-[10px] uppercase tracking-widest text-cyan-400/70 font-semibold mb-3">Parte semanal — Vendedor Flex #274</div>
+                                    <div className="space-y-2.5">
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-neutral-400">Entregas confirmadas</span>
+                                            <span className="text-emerald-400 font-mono font-semibold">142 / 148</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-neutral-400">Con evidencia doble</span>
+                                            <span className="text-cyan-300 font-mono font-semibold">140</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-neutral-400">Visitas fallidas justificadas</span>
+                                            <span className="text-violet-300 font-mono font-semibold">4</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-neutral-400">Reclamos sin sustento</span>
+                                            <span className="text-rose-300 font-mono font-semibold">2</span>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 pt-3 border-t border-white/[0.06] text-[10px] text-neutral-500 italic">
+                                        Datos ilustrativos, no de un cliente real.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Complemento en construcción: Parte mensual de operación (dashboard analítico) */}
+                    <motion.div
+                        {...reveal}
+                        className="mt-6 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#12102a] via-[#0d0c1e] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 left-0 w-72 h-72 bg-violet-600/[0.07] rounded-full blur-3xl pointer-events-none" />
+
+                        <div className="relative z-10 space-y-4">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300 uppercase tracking-wider">
+                                    Complemento — se activa con 2+ módulos, sin costo adicional
+                                </div>
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                    Próximamente
+                                </div>
+                            </div>
+
+                            <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                Parte mensual de operación
+                            </h3>
+
+                            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-3xl">
+                                Un dashboard que agrega en un solo lugar todo lo que producen tus módulos activos. La IA analiza los datos en tiempo real, detecta patrones que a simple vista se te escapan y proyecta tendencias antes de que se conviertan en pérdidas.
+                            </p>
+
+                            <div className="grid sm:grid-cols-3 gap-3 pt-2">
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                                    <div className="text-xs font-bold text-cyan-300 mb-1.5">Visualizás</div>
+                                    <p className="text-xs text-neutral-400 leading-relaxed">
+                                        Reprogramaciones evitadas, paquetes salvados de devolución, visitas fallidas con evidencia, reseñas capturadas, reclamos interceptados. Todo agregado, no disperso en planillas.
+                                    </p>
+                                </div>
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                                    <div className="text-xs font-bold text-violet-300 mb-1.5">Deducís patrones</div>
+                                    <p className="text-xs text-neutral-400 leading-relaxed">
+                                        Qué zonas concentran las fallas, qué franjas horarias generan más reclamos, qué destinatarios recurrentes siempre reprograman. La IA marca lo relevante, vos decidís.
+                                    </p>
+                                </div>
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                                    <div className="text-xs font-bold text-emerald-300 mb-1.5">Proyectás</div>
+                                    <p className="text-xs text-neutral-400 leading-relaxed">
+                                        Alertas tempranas de tendencias — un pico de reclamos en una zona, un vencimiento en cascada, un cliente que empieza a irse. Actuás antes, no después de la pérdida.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
