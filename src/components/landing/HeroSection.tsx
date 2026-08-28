@@ -143,8 +143,8 @@ export function HeroSection() {
                         transition={{ duration: 1, delay: 0.3 }}
                         className="hidden lg:block flex-1 relative h-[600px] w-full"
                     >
-                        {/* Desktop Promo Offer Badge floating next to 3D Robot */}
-                        <div className="absolute top-12 -left-6 z-30 pointer-events-auto">
+                        {/* Desktop Promo Offer Badge floating to the right of 3D Robot */}
+                        <div className="absolute top-8 -right-4 xl:-right-10 z-30 pointer-events-auto">
                             <PromoOfferBadge />
                         </div>
 
