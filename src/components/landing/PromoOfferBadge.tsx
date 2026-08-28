@@ -25,13 +25,12 @@ export function PromoOfferBadge() {
                 {/* Floating motion loop */}
                 <motion.div
                     animate={{
-                        y: [-6, 6, -6],
-                        rotate: [2, -3, 2],
-                        scale: [1, 1.03, 1],
+                        y: [-5, 5, -5],
+                        rotate: [1.5, -2, 1.5],
                     }}
                     transition={{
                         repeat: Infinity,
-                        duration: 3.8,
+                        duration: 4,
                         ease: 'easeInOut',
                     }}
                     className="relative group cursor-pointer"
@@ -56,9 +55,9 @@ export function PromoOfferBadge() {
                         rel="noopener noreferrer"
                         className="block focus:outline-none"
                     >
-                        {/* Sombra mínima y limpia (sin glow invasivo) */}
-                        <div className="relative w-[230px] sm:w-[260px] h-[220px] sm:h-[250px] flex items-center justify-center drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)] transition-all">
-                            {/* SVG de la explosión con doble capa (rojo exterior 4px más ancho + amarillo interior sólido) */}
+                        {/* Contenedor con efecto hover sutil (scale suave, micro-elevación y sombra refinada) */}
+                        <div className="relative w-[235px] sm:w-[265px] h-[225px] sm:h-[255px] flex items-center justify-center drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_12px_24px_rgba(220,38,38,0.35)] group-hover:-translate-y-1 group-hover:scale-[1.04] transition-all duration-300 ease-out">
+                            {/* SVG de la explosión con borde estrellado rojo ancho estilo flyer de oferta */}
                             <svg
                                 viewBox="0 0 290 280"
                                 className="absolute inset-0 w-full h-full"
@@ -69,19 +68,19 @@ export function PromoOfferBadge() {
                                     </filter>
                                 </defs>
 
-                                {/* Capa 1: Explosión Roja Exterior (+4px más ancha) */}
+                                {/* Capa 1: Explosión Roja Exterior Grande (borde estrellado prominente) */}
                                 <polygon
                                     points="145,2 176,34 216,12 226,52 268,44 256,88 288,106 268,146 290,178 258,202 268,240 226,236 212,268 176,248 145,272 118,248 82,268 68,236 26,240 36,202 4,178 26,146 6,106 40,88 28,44 70,52 80,12 120,34"
                                     fill="#dc2626"
-                                    stroke="#991b1b"
-                                    strokeWidth="8"
+                                    stroke="#7f1d1d"
+                                    strokeWidth="4"
                                     strokeLinejoin="round"
                                     filter="url(#badge-shadow)"
                                 />
 
-                                {/* Capa 2: Explosión Amarilla Interior */}
+                                {/* Capa 2: Explosión Amarilla Interior (escalada para dejar visible el borde estrellado rojo) */}
                                 <polygon
-                                    points="145,26 168,52 196,36 204,66 234,62 228,94 254,108 240,138 256,162 232,182 238,210 208,208 198,232 172,218 145,234 126,218 100,232 92,208 62,210 68,182 44,162 60,138 46,108 72,94 66,62 96,66 104,36 132,52"
+                                    points="145,29 170,54 202,37 210,69 243,62 234,97 259,112 243,144 261,169 235,189 243,219 210,216 199,241 170,225 145,245 123,225 95,241 83,216 50,219 58,189 32,169 50,144 34,112 61,97 51,62 85,69 93,37 125,54"
                                     fill="#facc15"
                                     stroke="#b45309"
                                     strokeWidth="2.5"
@@ -90,30 +89,30 @@ export function PromoOfferBadge() {
                             </svg>
 
                             {/* Contenido tipográfico de oferta */}
-                            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-1 max-w-[190px] sm:max-w-[210px]">
+                            <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-1 max-w-[170px] sm:max-w-[190px]">
                                 {/* Cinta / Ribbon superior */}
-                                <div className="bg-red-600 text-white font-black text-[10px] sm:text-[11px] tracking-wider uppercase px-2.5 py-0.5 rounded-full border-2 border-white shadow-md mb-1 animate-pulse flex items-center gap-1">
-                                    <Sparkles className="w-3 h-3 text-yellow-300 fill-yellow-300" />
+                                <div className="bg-red-600 text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-full border border-white shadow mb-0.5 flex items-center gap-1">
+                                    <Sparkles className="w-2.5 h-2.5 text-yellow-300 fill-yellow-300" />
                                     <span>¡OFERTA EXCLUSIVA!</span>
                                 </div>
 
                                 {/* Texto principal grande estilo cartel */}
-                                <div className="font-black leading-none py-1">
-                                    <span className="block text-[15px] sm:text-[18px] tracking-tight font-extrabold text-neutral-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
+                                <div className="font-black leading-none py-0.5">
+                                    <span className="block text-[14px] sm:text-[16px] tracking-tight font-extrabold text-neutral-900 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
                                         PRECIO
                                     </span>
-                                    <span className="block text-[26px] sm:text-[30px] tracking-tighter text-red-600 font-black drop-shadow-[0_2px_0_rgba(255,255,255,1)]">
+                                    <span className="block text-[24px] sm:text-[28px] tracking-tighter text-red-600 font-black drop-shadow-[0_1.5px_0_rgba(255,255,255,1)]">
                                         ESPECIAL
                                     </span>
                                 </div>
 
                                 {/* Badge inferior: primeros 5 clientes */}
-                                <div className="mt-1 bg-neutral-950 text-yellow-300 font-black text-[10px] sm:text-[11px] uppercase px-2.5 py-1 rounded-md border border-yellow-400 shadow-md flex items-center gap-1">
+                                <div className="mt-0.5 bg-neutral-950 text-yellow-300 font-black text-[9px] sm:text-[10px] uppercase px-2 py-0.5 rounded border border-yellow-400 shadow flex items-center gap-1">
                                     <span>🔥 Primeros 5 clientes</span>
                                 </div>
 
-                                {/* Botón / Link */}
-                                <div className="mt-2 bg-red-700 hover:bg-red-800 text-white font-bold text-[9px] sm:text-[10px] px-3 py-1 rounded-full shadow transition-colors flex items-center gap-1">
+                                {/* Botón / Link con hover interactivo */}
+                                <div className="mt-1.5 bg-red-700 group-hover:bg-red-600 text-white font-bold text-[9px] sm:text-[10px] px-3 py-1 rounded-full shadow transition-all duration-200 flex items-center gap-1 group-hover:scale-105">
                                     <span>¡Consultar cupo! →</span>
                                 </div>
                             </div>
