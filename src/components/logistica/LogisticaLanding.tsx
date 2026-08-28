@@ -15,6 +15,7 @@ import {
     ReputationShieldIcon,
     AnomalyLogIcon,
     DriverAdmissionIcon,
+    MonthlyOperationsIcon,
 } from './LogisticaAnimations'
 import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
@@ -27,6 +28,7 @@ import {
     ReputationShieldDemo,
     AnomalyLogDemo,
     DriverAdmissionDemo,
+    MonthlyOperationsDemo,
 } from '@/components/ui/micro-demos'
 
 const WHATSAPP_HREF =
@@ -437,14 +439,14 @@ export function LogisticaLanding() {
                         </div>
                     </motion.div>
 
-                    {/* Complemento en construcción: Parte mensual de operación (dashboard analítico) */}
+                    {/* Complemento: Parte mensual de operación (dashboard analítico animado) */}
                     <motion.div
                         {...reveal}
-                        className="mt-6 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#12102a] via-[#0d0c1e] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden"
+                        className="mt-6 rounded-2xl border border-violet-500/30 bg-gradient-to-br from-[#12102a] via-[#0d0c1e] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden shadow-2xl group"
                     >
-                        <div className="absolute top-0 left-0 w-72 h-72 bg-violet-600/[0.07] rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-80 h-80 bg-violet-600/[0.12] rounded-full blur-3xl pointer-events-none" />
 
-                        <div className="relative z-10 space-y-4">
+                        <div className="relative z-10 space-y-6">
                             <div className="flex flex-wrap items-center gap-2">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300 uppercase tracking-wider">
                                     Complemento — se activa con 2+ módulos, sin costo adicional
@@ -455,29 +457,51 @@ export function LogisticaLanding() {
                                 </div>
                             </div>
 
-                            <h3 className="text-xl sm:text-2xl font-bold text-white">
-                                Parte mensual de operación
-                            </h3>
+                            <div className="grid lg:grid-cols-12 gap-6 items-center">
+                                <div className="lg:col-span-7 space-y-3">
+                                    <div className="flex items-center gap-3.5">
+                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-violet-500/30 bg-violet-500/10 p-1.5 flex items-center justify-center group-hover:scale-105 group-hover:border-violet-500/50 transition-all duration-300">
+                                            <MonthlyOperationsIcon />
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                            Parte mensual de operación
+                                        </h3>
+                                    </div>
 
-                            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-3xl">
-                                Un dashboard que agrega en un solo lugar todo lo que producen tus módulos activos. La IA analiza los datos en tiempo real, detecta patrones que a simple vista se te escapan y proyecta tendencias antes de que se conviertan en pérdidas.
-                            </p>
+                                    <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+                                        Un dashboard que agrega en un solo lugar todo lo que producen tus módulos activos. La IA analiza los datos en tiempo real, detecta patrones que a simple vista se te escapan y proyecta tendencias antes de que se conviertan en pérdidas.
+                                    </p>
+                                </div>
+
+                                <div className="lg:col-span-5 flex flex-col justify-center">
+                                    <MonthlyOperationsDemo />
+                                </div>
+                            </div>
 
                             <div className="grid sm:grid-cols-3 gap-3 pt-2">
-                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                    <div className="text-xs font-bold text-cyan-300 mb-1.5">Visualizás</div>
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-cyan-400/40 hover:bg-cyan-500/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
+                                    <div className="text-xs font-bold text-cyan-300 mb-1.5 flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover/item:scale-125 transition-transform" />
+                                        Visualizás
+                                    </div>
                                     <p className="text-xs text-neutral-400 leading-relaxed">
                                         Reprogramaciones evitadas, paquetes salvados de devolución, visitas fallidas con evidencia, reseñas capturadas, reclamos interceptados. Todo agregado, no disperso en planillas.
                                     </p>
                                 </div>
-                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                    <div className="text-xs font-bold text-violet-300 mb-1.5">Deducís patrones</div>
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-violet-400/40 hover:bg-violet-500/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
+                                    <div className="text-xs font-bold text-violet-300 mb-1.5 flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 group-hover/item:scale-125 transition-transform" />
+                                        Deducís patrones
+                                    </div>
                                     <p className="text-xs text-neutral-400 leading-relaxed">
                                         Qué zonas concentran las fallas, qué franjas horarias generan más reclamos, qué destinatarios recurrentes siempre reprograman. La IA marca lo relevante, vos decidís.
                                     </p>
                                 </div>
-                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                    <div className="text-xs font-bold text-emerald-300 mb-1.5">Proyectás</div>
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-emerald-400/40 hover:bg-emerald-500/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
+                                    <div className="text-xs font-bold text-emerald-300 mb-1.5 flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 group-hover/item:scale-125 transition-transform" />
+                                        Proyectás
+                                    </div>
                                     <p className="text-xs text-neutral-400 leading-relaxed">
                                         Alertas tempranas de tendencias — un pico de reclamos en una zona, un vencimiento en cascada, un cliente que empieza a irse. Actuás antes, no después de la pérdida.
                                     </p>

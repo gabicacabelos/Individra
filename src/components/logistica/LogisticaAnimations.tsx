@@ -520,6 +520,62 @@ export function DriverAdmissionIcon() {
     )
 }
 
+/* Parte mensual de operación: dashboard analítico con barras y tendencia */
+export function MonthlyOperationsIcon() {
+    const reduce = useReducedMotion()
+    return (
+        <IconWrap gradId="mod-analytics">
+            {/* Marco de dashboard */}
+            <motion.rect
+                x="12" y="14" width="48" height="44" rx="6"
+                stroke="url(#mod-analytics)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                {...drawIn} transition={{ duration: 1 }}
+            />
+            {/* Barras animadas de métricas */}
+            <motion.rect
+                x="20" y="34" width="6" height="16" rx="2" fill="#a78bfa"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.6, ease: 'easeOut' }}
+                style={{ transformOrigin: '23px 50px' }}
+            />
+            <motion.rect
+                x="30" y="26" width="6" height="24" rx="2" fill="#60a5fa"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.6, ease: 'easeOut' }}
+                style={{ transformOrigin: '33px 50px' }}
+            />
+            <motion.rect
+                x="40" y="20" width="6" height="30" rx="2" fill="#22d3ee"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.7, duration: 0.6, ease: 'easeOut' }}
+                style={{ transformOrigin: '43px 50px' }}
+            />
+            {/* Línea de tendencia proyectada */}
+            <motion.path
+                d="M18 42 L28 32 L38 24 L52 18"
+                stroke="#34d399" strokeWidth="2" strokeDasharray="3 3" {...stroke}
+                {...drawIn} transition={{ delay: 0.8, duration: 0.8 }}
+            />
+            {/* Nodo de proyección con pulso */}
+            <circle cx="52" cy="18" r="3" fill="#34d399" />
+            {!reduce && (
+                <motion.circle
+                    cx="52" cy="18" r="3" fill="none" stroke="#34d399" strokeWidth="1.5"
+                    animate={{ scale: [1, 2.2], opacity: [0.8, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+                    style={{ transformOrigin: '52px 18px' }}
+                />
+            )}
+        </IconWrap>
+    )
+}
+
 /* =====================================================================
    4) FONDO — Orbs blur ambientales + divisor de ruta animado
    ===================================================================== */

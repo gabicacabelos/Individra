@@ -363,3 +363,49 @@ export function DriverAdmissionDemo() {
         </Stage>
     )
 }
+
+/* ---- Parte mensual de operación: dashboard analítico con KPIs e IA ---- */
+export function MonthlyOperationsDemo() {
+    return (
+        <Stage>
+            <div className="h-full flex flex-col justify-center gap-2 px-3">
+                {/* 3 KPIs animados */}
+                <div className="grid grid-cols-3 gap-1.5">
+                    <div
+                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-cyan-500/10 border border-cyan-400/25"
+                        style={{ animationName: 'md-pop' }}
+                    >
+                        <span className="text-[8px] text-cyan-300/80">Salvadas</span>
+                        <span className="text-[10px] font-mono font-bold text-cyan-200">88%</span>
+                    </div>
+                    <div
+                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-violet-500/10 border border-violet-400/25"
+                        style={{ animationName: 'md-pop', animationDelay: '0.2s' }}
+                    >
+                        <span className="text-[8px] text-violet-300/80">Evidencias</span>
+                        <span className="text-[10px] font-mono font-bold text-violet-200">142</span>
+                    </div>
+                    <div
+                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-emerald-500/10 border border-emerald-400/25"
+                        style={{ animationName: 'md-pop', animationDelay: '0.4s' }}
+                    >
+                        <span className="text-[8px] text-emerald-300/80">Reclamos</span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-200">-70%</span>
+                    </div>
+                </div>
+
+                {/* Insight IA proyectado */}
+                <div
+                    className="md-anim flex items-center justify-between px-2.5 py-1 rounded-md bg-violet-500/15 border border-violet-400/30"
+                    style={{ animationName: 'md-rise', animationDelay: '0.8s' }}
+                >
+                    <span className="text-[9px] text-violet-200 font-medium flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                        IA: Detección de patrones
+                    </span>
+                    <span className="text-[9px] font-bold text-violet-300">Zona Norte OK</span>
+                </div>
+            </div>
+        </Stage>
+    )
+}
