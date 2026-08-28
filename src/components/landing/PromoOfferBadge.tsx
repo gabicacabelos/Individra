@@ -56,38 +56,35 @@ export function PromoOfferBadge() {
                         rel="noopener noreferrer"
                         className="block focus:outline-none"
                     >
-                        {/* Glow de fondo */}
-                        <div className="absolute inset-0 bg-red-600/40 rounded-full blur-2xl group-hover:bg-amber-400/50 transition-colors" />
-
-                        {/* Cartel Starburst / Explosión estilo flyer */}
-                        <div className="relative w-[230px] sm:w-[260px] h-[220px] sm:h-[250px] flex items-center justify-center drop-shadow-[0_16px_28px_rgba(220,38,38,0.6)] group-hover:drop-shadow-[0_20px_36px_rgba(234,179,8,0.7)] transition-all">
-                            {/* SVG de la explosión con doble capa (rojo exterior + amarillo interior sólido) */}
+                        {/* Sombra mínima y limpia (sin glow invasivo) */}
+                        <div className="relative w-[230px] sm:w-[260px] h-[220px] sm:h-[250px] flex items-center justify-center drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)] transition-all">
+                            {/* SVG de la explosión con doble capa (rojo exterior 4px más ancho + amarillo interior sólido) */}
                             <svg
-                                viewBox="0 0 280 270"
+                                viewBox="0 0 290 280"
                                 className="absolute inset-0 w-full h-full"
                             >
                                 <defs>
                                     <filter id="badge-shadow" x="-10%" y="-10%" width="120%" height="120%">
-                                        <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000" floodOpacity="0.5" />
+                                        <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#000" floodOpacity="0.4" />
                                     </filter>
                                 </defs>
 
-                                {/* Capa 1: Explosión Roja Exterior */}
+                                {/* Capa 1: Explosión Roja Exterior (+4px más ancha) */}
                                 <polygon
-                                    points="140,6 168,36 204,18 214,54 252,48 244,88 276,104 258,140 278,170 248,192 258,228 218,226 206,254 172,238 144,258 120,238 88,254 76,226 36,228 46,192 16,170 36,140 18,104 50,88 42,48 80,54 90,18 126,36"
+                                    points="145,2 176,34 216,12 226,52 268,44 256,88 288,106 268,146 290,178 258,202 268,240 226,236 212,268 176,248 145,272 118,248 82,268 68,236 26,240 36,202 4,178 26,146 6,106 40,88 28,44 70,52 80,12 120,34"
                                     fill="#dc2626"
-                                    stroke="#7f1d1d"
-                                    strokeWidth="4"
+                                    stroke="#991b1b"
+                                    strokeWidth="8"
                                     strokeLinejoin="round"
                                     filter="url(#badge-shadow)"
                                 />
 
-                                {/* Capa 2: Explosión Amarilla Interior Sólida */}
+                                {/* Capa 2: Explosión Amarilla Interior */}
                                 <polygon
-                                    points="140,20 164,46 194,30 202,60 234,56 228,88 256,102 240,132 258,156 232,176 240,206 206,204 196,230 168,216 144,234 124,216 96,230 88,204 54,206 62,176 36,156 54,132 38,102 66,88 60,56 92,60 100,30 130,46"
+                                    points="145,26 168,52 196,36 204,66 234,62 228,94 254,108 240,138 256,162 232,182 238,210 208,208 198,232 172,218 145,234 126,218 100,232 92,208 62,210 68,182 44,162 60,138 46,108 72,94 66,62 96,66 104,36 132,52"
                                     fill="#facc15"
                                     stroke="#b45309"
-                                    strokeWidth="3"
+                                    strokeWidth="2.5"
                                     strokeLinejoin="round"
                                 />
                             </svg>
