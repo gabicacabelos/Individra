@@ -267,22 +267,6 @@ export function PainSolutionSection() {
                         )
                     })}
                 </div>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 }}
-                    className="mt-10 flex justify-center"
-                >
-                    <a
-                        href="#diagnostico-ia"
-                        className="group relative inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 overflow-hidden"
-                    >
-                        <span aria-hidden className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12" />
-                        <span className="relative">Probá el diagnóstico gratis</span>
-                    </a>
-                </motion.div>
             </div>
         </section>
     )

@@ -15,7 +15,6 @@ const RHYTHM_PHRASES = [
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { PromoOfferBadge } from './PromoOfferBadge'
 
 export function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null)
@@ -109,11 +108,6 @@ export function HeroSection() {
                                 textClassName="justify-center lg:justify-start text-base sm:text-lg lg:text-xl font-semibold text-violet-300"
                             />
 
-                            {/* Mobile Promo Offer Badge */}
-                            <div className="lg:hidden mt-6 mb-2 flex justify-center">
-                                <PromoOfferBadge />
-                            </div>
-
                             {/* CTA Buttons */}
                             <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
@@ -143,11 +137,6 @@ export function HeroSection() {
                         transition={{ duration: 1, delay: 0.3 }}
                         className="hidden lg:block flex-1 relative h-[600px] w-full"
                     >
-                        {/* Desktop Promo Offer Badge floating to the right of 3D Robot */}
-                        <div className="absolute top-8 -right-4 xl:-right-10 z-30 pointer-events-auto">
-                            <PromoOfferBadge />
-                        </div>
-
                         {/* Glow effect - pointer-events-none to not block robot interaction */}
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-full blur-[100px] opacity-50 pointer-events-none" />
 

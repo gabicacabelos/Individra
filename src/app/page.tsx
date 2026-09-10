@@ -9,7 +9,6 @@ import {
     Footer,
     FloatingChatbot,
     ComparativeSection,
-    InteractiveConsultorSection,
     PromoVideoSection,
     PainSolutionSection,
     DifferentiatorsSection,
@@ -21,7 +20,6 @@ export default function Home() {
         <main id="main-content" className="bg-black min-h-screen">
             <Navbar />
             <HeroSection />
-            <InteractiveConsultorSection />
             <PromoVideoSection />
             <PainSolutionSection />
             <ServicesSection />
