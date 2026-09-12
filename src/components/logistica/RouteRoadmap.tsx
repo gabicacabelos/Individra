@@ -89,13 +89,13 @@ export function RouteRoadmap() {
                 >
                     <defs>
                         <linearGradient id="rr-grad" x1="0" y1="1" x2="1" y2="0">
-                            <stop offset="0%" stopColor="#8b5cf6" />
-                            <stop offset="100%" stopColor="#22d3ee" />
+                            <stop offset="0%" stopColor="#C84214" />
+                            <stop offset="100%" stopColor="#B7B3B0" />
                         </linearGradient>
                     </defs>
 
                     {/* Ruta tenue de fondo: se ve el recorrido completo desde el inicio */}
-                    <path d={PATH_D} stroke="rgba(139,92,246,0.12)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                    <path d={PATH_D} stroke="rgba(200,66,20,0.15)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
 
                     {/* Ruta que se dibuja con el scroll */}
                     <motion.path
@@ -140,9 +140,9 @@ export function RouteRoadmap() {
                     />
                     {/* Difuminado por overlays (sin mask-image: corrompia el paint
                         en Android). Arriba/abajo + ambos costados. */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f1a] via-transparent to-[#0f0f1a]/70" />
-                    <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0f0f1a] to-transparent" />
-                    <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0f0f1a] to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D0E] via-transparent to-[#0B0D0E]/70" />
+                    <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0B0D0E] to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0B0D0E] to-transparent" />
                 </div>
             </div>
 
@@ -176,13 +176,13 @@ function Milestone({
         <div className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2" style={style}>
             <motion.span
                 style={{ opacity, scale }}
-                className="w-3.5 h-3.5 rounded-full border-2 border-violet-400 bg-[#0f0f1a] shadow-[0_0_12px_rgba(139,92,246,0.6)]"
+                className="w-3.5 h-3.5 rounded-full border-2 border-[#C84214] bg-[#0B0D0E] shadow-[0_0_12px_rgba(200,66,20,0.4)]"
             />
             <motion.span
                 style={{ opacity }}
-                className="whitespace-nowrap rounded-full border border-violet-500/25 bg-[#16162a]/90 px-3 py-1.5 text-xs font-medium text-neutral-200 backdrop-blur-sm flex items-center gap-1.5"
+                className="whitespace-nowrap rounded-full border border-[#3E3D3A] bg-[#1E1D1C]/90 px-3 py-1.5 text-xs font-medium text-neutral-200 backdrop-blur-sm flex items-center gap-1.5"
             >
-                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-violet-500/25 text-[10px] font-bold text-violet-300">{step}</span>
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#C84214]/20 text-[10px] font-bold text-[#C84214]">{step}</span>
                 {name}
             </motion.span>
         </div>

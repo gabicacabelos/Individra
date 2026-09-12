@@ -62,13 +62,13 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#inicio" onClick={(e) => handleNavClick(e, '#inicio')} className="flex items-center cursor-pointer">
+                    <a href="#inicio" onClick={(e) => handleNavClick(e, '#inicio')} className="flex items-center cursor-pointer py-1">
                         <Image
-                            src="/logo-individra.png"
-                            alt="INDIVIDRA"
-                            width={280}
-                            height={100}
-                            className="h-12 sm:h-16 lg:h-20 w-auto"
+                            src="/logo-individra-rebrand.png"
+                            alt="INDIVIDRA - Inteligencia Operativa"
+                            width={246}
+                            height={48}
+                            className="h-9 sm:h-11 lg:h-12 w-auto object-contain"
                             priority
                         />
                     </a>
@@ -80,7 +80,7 @@ export function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className="text-neutral-400 hover:text-white transition-colors duration-200 text-sm font-medium flex items-center h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-violet-500 after:to-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+                                className="text-neutral-400 hover:text-[#E8E5DE] transition-colors duration-200 text-sm font-medium flex items-center h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full"
                             >
                                 {link.label}
                             </a>
@@ -88,7 +88,7 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={(e) => handleNavClick(e, '#contacto')}
-                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs lg:text-sm font-medium rounded-full hover:shadow-lg hover:shadow-violet-500/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
+                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs lg:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-md hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
                         >
                             Empezar ahora
                         </a>
@@ -125,12 +125,12 @@ export function Navbar() {
                                 </a>
                             ))}
                             <a
-                                href="#contacto"
-                                onClick={(e) => handleNavClick(e, '#contacto')}
-                                className="mt-3 px-5 py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-base font-medium rounded-xl hover:shadow-lg hover:shadow-violet-500/25 active:scale-[0.98] transition-all duration-200 text-center cursor-pointer"
-                            >
-                                Empezar ahora
-                            </a>
+                                 href="#contacto"
+                                 onClick={(e) => handleNavClick(e, '#contacto')}
+                                 className="mt-3 px-5 py-3 bg-[#C84214] text-white text-base font-bold rounded-xl hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 text-center cursor-pointer shadow-md shadow-[#C84214]/25"
+                             >
+                                 Empezar ahora
+                             </a>
                         </div>
                     </motion.div>
                 )}

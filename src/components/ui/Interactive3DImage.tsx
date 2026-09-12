@@ -60,17 +60,17 @@ export function Interactive3DImage({
             whileHover={{ scale: 1.02 }}
         >
             {/* Glow */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-pink-500/20 via-violet-500/20 to-orange-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -inset-2 bg-gradient-to-r from-[#C84214]/20 via-[#3E3D3A]/20 to-[#B7B3B0]/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             {/* Card */}
             <motion.div
-                className="relative p-5 rounded-2xl bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 backdrop-blur-md overflow-hidden"
+                className="relative p-5 rounded-2xl bg-[#222120]/90 border border-[#3E3D3A] backdrop-blur-md overflow-hidden"
                 style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
             >
                 {/* Label badge */}
                 <div className="flex items-center gap-1.5 mb-3">
-                    <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-violet-400">
+                    <Sparkles className="w-3.5 h-3.5 text-[#C84214]" />
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C84214]">
                         {label}
                     </span>
                 </div>

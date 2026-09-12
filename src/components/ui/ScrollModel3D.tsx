@@ -72,7 +72,7 @@ function LoadingFallback() {
     return (
         <mesh ref={meshRef}>
             <octahedronGeometry args={[1, 0]} />
-            <meshStandardMaterial color="#8b5cf6" wireframe />
+            <meshStandardMaterial color="#C84214" wireframe />
         </mesh>
     )
 }
@@ -99,7 +99,7 @@ export function ScrollModel3D({ scrollProgress, className = '' }: ScrollModel3DP
                     angle={0.3}
                     penumbra={1}
                     intensity={2}
-                    color="#8b5cf6"
+                    color="#C84214"
                     castShadow
                 />
                 <spotLight
@@ -107,9 +107,9 @@ export function ScrollModel3D({ scrollProgress, className = '' }: ScrollModel3DP
                     angle={0.3}
                     penumbra={1}
                     intensity={1.5}
-                    color="#3b82f6"
+                    color="#B7B3B0"
                 />
-                <pointLight position={[0, -5, 5]} intensity={0.5} color="#06b6d4" />
+                <pointLight position={[0, -5, 5]} intensity={0.5} color="#3E3D3A" />
 
                 <Suspense fallback={<LoadingFallback />}>
                     <Model scrollProgress={scrollProgress} />

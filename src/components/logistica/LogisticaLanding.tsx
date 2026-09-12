@@ -129,7 +129,7 @@ export function LogisticaLanding() {
     }, [])
 
     return (
-        <main className="min-h-screen bg-[#0f0f1a] text-white antialiased">
+        <main className="min-h-screen bg-[#0B0D0E] text-white antialiased">
             {/* ===== Top bar: mismo estilo flotante que el Navbar del home ===== */}
             <motion.header
                 initial={{ y: -100, opacity: 0 }}
@@ -146,15 +146,15 @@ export function LogisticaLanding() {
                         <Link href="/" className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors" aria-label="Volver al inicio">
                             <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
                         </Link>
-                        <Link href="/" className="flex items-center" aria-label="Volver al inicio">
-                            <Image src="/logo-individra.png" alt="INDIVIDRA" width={280} height={100} className="h-12 sm:h-16 lg:h-20 w-auto" priority />
+                        <Link href="/" className="flex items-center py-1" aria-label="Volver al inicio">
+                            <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={246} height={48} className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
                         </Link>
                     </div>
                     <a
                         href={WHATSAPP_HREF}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 lg:px-5 lg:py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs sm:text-sm font-medium rounded-full hover:shadow-lg hover:shadow-violet-500/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                        className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs sm:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-lg hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
                     >
                         Diagnóstico gratuito
                     </a>
@@ -163,13 +163,13 @@ export function LogisticaLanding() {
 
             {/* ===== 1) HERO ===== */}
             <section className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/25 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(200,66,20,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(200,66,20,0.03)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-24 sm:pt-36 sm:pb-32">
                     <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
                         <div>
-                            <motion.p {...reveal} className="text-violet-400 text-sm font-medium uppercase tracking-widest">
+                            <motion.p {...reveal} className="text-[#C84214] text-sm font-medium uppercase tracking-widest">
                                 Logística y distribución
                             </motion.p>
 
@@ -196,7 +196,7 @@ export function LogisticaLanding() {
                                     href={WHATSAPP_HREF}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 text-white font-semibold shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+                                    className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#C84214] text-white font-semibold shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
                                 >
                                     Pedí un diagnóstico gratuito de 30 minutos
                                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -248,7 +248,7 @@ export function LogisticaLanding() {
 
                     <motion.p
                         {...reveal}
-                        className="mt-8 lg:mt-12 border-l-2 border-violet-500 pl-5 text-lg sm:text-xl text-white font-medium leading-relaxed max-w-3xl mx-auto"
+                        className="mt-8 lg:mt-12 border-l-2 border-[#C84214] pl-5 text-lg sm:text-xl text-white font-medium leading-relaxed max-w-3xl mx-auto"
                     >
                         {PAIN_CLOSE}
                     </motion.p>
@@ -277,30 +277,30 @@ export function LogisticaLanding() {
                                 {...reveal}
                                 transition={{ delay: i * 0.08 }}
                                 whileHover={{ y: -4 }}
-                                className="group relative flex flex-col p-6 lg:p-7 rounded-2xl border border-white/10 bg-[#1a1a2e]/60 overflow-hidden transition-colors duration-300 hover:border-violet-500/40"
+                                className="group relative flex flex-col p-6 lg:p-7 rounded-2xl border border-[#3E3D3A] bg-[#222120] overflow-hidden transition-colors duration-300 hover:border-[#C84214]/50"
                             >
                                 {/* hover glow — solo desktop: en mobile no hay hover y el blur
                                     igual crea una capa de composición por card. */}
-                                <div aria-hidden className="hidden lg:block pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full blur-[60px] bg-violet-500/0 group-hover:bg-violet-500/15 transition-colors duration-500" />
+                                <div aria-hidden className="hidden lg:block pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full blur-[60px] bg-[#C84214]/0 group-hover:bg-[#C84214]/10 transition-colors duration-500" />
 
                                 {/* Quote */}
-                                <div className="relative border-l-2 border-violet-500 pl-4">
-                                    <Quote className="absolute -left-1 -top-1 w-5 h-5 text-violet-500/40" aria-hidden />
+                                <div className="relative border-l-2 border-[#C84214] pl-4">
+                                    <Quote className="absolute -left-1 -top-1 w-5 h-5 text-[#C84214]/40" aria-hidden />
                                     <p className="pl-4 text-neutral-400 italic leading-relaxed">{m.quote}</p>
                                 </div>
 
                                 {/* Module */}
                                 <div className="mt-6">
                                     <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-violet-500/40 bg-violet-500/15 text-[11px] font-bold text-violet-300">{m.step}</span>
-                                        <span className="text-[11px] uppercase tracking-widest text-violet-400/70 font-medium">{m.context}</span>
+                                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-[#C84214]/40 bg-[#C84214]/15 text-[11px] font-bold text-[#B7B3B0]">{m.step}</span>
+                                        <span className="text-[11px] uppercase tracking-widest text-[#C84214] font-medium">{m.context}</span>
                                         <span className="h-px flex-1 bg-white/10" />
                                     </div>
                                     <div className="mt-2 flex items-center gap-3">
-                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-violet-500/25 bg-violet-500/[0.07] p-1.5 group-hover:border-violet-500/50 group-hover:scale-105 transition-all duration-300">
+                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/25 bg-[#C84214]/[0.07] p-1.5 group-hover:border-[#C84214]/50 group-hover:scale-105 transition-all duration-300">
                                             <Icon />
                                         </div>
-                                        <h3 className="text-lg font-bold text-violet-400">{m.name}</h3>
+                                        <h3 className="text-lg font-bold text-white">{m.name}</h3>
                                     </div>
                                     <p className="mt-3 text-neutral-300 text-sm leading-relaxed lg:hidden">{m.descShort}</p>
                                     <p className="mt-3 text-neutral-300 text-sm leading-relaxed hidden lg:block">{m.desc}</p>
@@ -320,18 +320,18 @@ export function LogisticaLanding() {
                     {/* Módulo Especial: Admisión y Onboarding de Choferes / Flota */}
                     <motion.div
                         {...reveal}
-                        className="mt-8 rounded-2xl border border-violet-500/30 bg-gradient-to-br from-[#121124] via-[#0d0d1a] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
+                        className="mt-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
                     >
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#C84214]/10 rounded-full blur-3xl pointer-events-none" />
                         
                         <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
                             <div className="lg:col-span-7 space-y-4">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300 uppercase tracking-wider">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#C84214]/30 bg-[#C84214]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
                                     Módulo de Flota & Operación Interna
                                 </div>
                                 
                                 <div className="flex items-center gap-3.5">
-                                    <div className="shrink-0 w-12 h-12 rounded-xl border border-violet-500/30 bg-violet-500/10 p-1.5 flex items-center justify-center">
+                                    <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/30 bg-[#C84214]/10 p-1.5 flex items-center justify-center">
                                         <DriverAdmissionIcon />
                                     </div>
                                     <h3 className="text-xl sm:text-2xl font-bold text-white">
@@ -339,7 +339,7 @@ export function LogisticaLanding() {
                                     </h3>
                                 </div>
 
-                                <div className="border-l-2 border-violet-500/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                <div className="border-l-2 border-[#C84214]/50 pl-4 py-1 text-sm text-neutral-400 italic">
                                     &ldquo;Perdemos días pidiendo fotos de cédulas, seguros y VTVs por WhatsApp mientras los camiones quedan parados o salen con papeles vencidos.&rdquo;
                                 </div>
 
@@ -358,8 +358,8 @@ export function LogisticaLanding() {
                                         </p>
                                     </div>
                                     <div className="p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                        <div className="text-xs font-bold text-violet-400 mb-1 flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                                        <div className="text-xs font-bold text-[#B7B3B0] mb-1 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[#C84214]" />
                                             Capa 2: Digest para Tráfico
                                         </div>
                                         <p className="text-xs text-neutral-400 leading-relaxed">
@@ -378,18 +378,17 @@ export function LogisticaLanding() {
                     {/* Módulo en construcción: Parte del dador (relación logística ↔ vendedor Flex) */}
                     <motion.div
                         {...reveal}
-                        className="mt-6 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-[#0d1420] via-[#0a1018] to-[#08101a] p-6 sm:p-8 relative overflow-hidden"
+                        className="mt-6 rounded-2xl border border-[#B7B3B0]/20 bg-gradient-to-br from-[#161514] via-[#0F1315] to-[#0B0D0E] p-6 sm:p-8 relative overflow-hidden"
                     >
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-600/[0.06] rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#B7B3B0]/[0.06] rounded-full blur-3xl pointer-events-none" />
 
                         <div className="relative z-10 grid lg:grid-cols-12 gap-6 items-start">
                             <div className="lg:col-span-8 space-y-4">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-500/10 text-xs font-semibold text-cyan-300 uppercase tracking-wider">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#B7B3B0]/30 bg-[#B7B3B0]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
                                         Módulo para logísticas de e-commerce
                                     </div>
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                    <div className="inline-flex items-center px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
                                         Próximamente
                                     </div>
                                 </div>
@@ -398,7 +397,7 @@ export function LogisticaLanding() {
                                     Parte del dador
                                 </h3>
 
-                                <div className="border-l-2 border-cyan-500/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                <div className="border-l-2 border-[#B7B3B0]/50 pl-4 py-1 text-sm text-neutral-400 italic">
                                     &ldquo;Uno vende bien, la logística entrega mal, y el cliente le pega mala reseña al vendedor. Perdés cuentas por lo que hizo o dejó de hacer otro.&rdquo;
                                 </div>
 
@@ -411,8 +410,8 @@ export function LogisticaLanding() {
                             </div>
 
                             <div className="lg:col-span-4 flex items-center justify-center">
-                                <div className="w-full max-w-xs p-5 rounded-xl border border-cyan-500/20 bg-[#0a0f18]/60">
-                                    <div className="text-[10px] uppercase tracking-widest text-cyan-400/70 font-semibold mb-3">Parte semanal — Vendedor Flex #274</div>
+                                <div className="w-full max-w-xs p-5 rounded-xl border border-[#3E3D3A] bg-[#222120]">
+                                    <div className="text-[10px] uppercase tracking-widest text-[#B7B3B0] font-semibold mb-3">Parte semanal — Vendedor Flex #274</div>
                                     <div className="space-y-2.5">
                                         <div className="flex items-center justify-between text-xs">
                                             <span className="text-neutral-400">Entregas confirmadas</span>
@@ -420,11 +419,11 @@ export function LogisticaLanding() {
                                         </div>
                                         <div className="flex items-center justify-between text-xs">
                                             <span className="text-neutral-400">Con evidencia doble</span>
-                                            <span className="text-cyan-300 font-mono font-semibold">140</span>
+                                            <span className="text-[#E8E5DE] font-mono font-semibold">140</span>
                                         </div>
                                         <div className="flex items-center justify-between text-xs">
                                             <span className="text-neutral-400">Visitas fallidas justificadas</span>
-                                            <span className="text-violet-300 font-mono font-semibold">4</span>
+                                            <span className="text-[#B7B3B0] font-mono font-semibold">4</span>
                                         </div>
                                         <div className="flex items-center justify-between text-xs">
                                             <span className="text-neutral-400">Reclamos sin sustento</span>
@@ -442,17 +441,16 @@ export function LogisticaLanding() {
                     {/* Complemento: Parte mensual de operación (dashboard analítico animado) */}
                     <motion.div
                         {...reveal}
-                        className="mt-6 rounded-2xl border border-violet-500/30 bg-gradient-to-br from-[#12102a] via-[#0d0c1e] to-[#0a0a14] p-6 sm:p-8 relative overflow-hidden shadow-2xl group"
+                        className="mt-6 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] p-6 sm:p-8 relative overflow-hidden shadow-2xl group"
                     >
-                        <div className="absolute top-0 left-0 w-80 h-80 bg-violet-600/[0.12] rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-80 h-80 bg-[#C84214]/10 rounded-full blur-3xl pointer-events-none" />
 
                         <div className="relative z-10 space-y-6">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300 uppercase tracking-wider">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#C84214]/30 bg-[#C84214]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
                                     Complemento — se activa con 2+ módulos, sin costo adicional
                                 </div>
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                <div className="inline-flex items-center px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
                                     Próximamente
                                 </div>
                             </div>
@@ -460,7 +458,7 @@ export function LogisticaLanding() {
                             <div className="grid lg:grid-cols-12 gap-6 items-center">
                                 <div className="lg:col-span-7 space-y-3">
                                     <div className="flex items-center gap-3.5">
-                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-violet-500/30 bg-violet-500/10 p-1.5 flex items-center justify-center group-hover:scale-105 group-hover:border-violet-500/50 transition-all duration-300">
+                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/30 bg-[#C84214]/10 p-1.5 flex items-center justify-center group-hover:scale-105 group-hover:border-[#C84214]/50 transition-all duration-300">
                                             <MonthlyOperationsIcon />
                                         </div>
                                         <h3 className="text-xl sm:text-2xl font-bold text-white">
@@ -479,18 +477,18 @@ export function LogisticaLanding() {
                             </div>
 
                             <div className="grid sm:grid-cols-3 gap-3 pt-2">
-                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-cyan-400/40 hover:bg-cyan-500/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
-                                    <div className="text-xs font-bold text-cyan-300 mb-1.5 flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 group-hover/item:scale-125 transition-transform" />
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-[#B7B3B0]/40 hover:bg-[#B7B3B0]/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
+                                    <div className="text-xs font-bold text-[#B7B3B0] mb-1.5 flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#B7B3B0] group-hover/item:scale-125 transition-transform" />
                                         Visualizás
                                     </div>
                                     <p className="text-xs text-neutral-400 leading-relaxed">
                                         Reprogramaciones evitadas, paquetes salvados de devolución, visitas fallidas con evidencia, reseñas capturadas, reclamos interceptados. Todo agregado, no disperso en planillas.
                                     </p>
                                 </div>
-                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-violet-400/40 hover:bg-violet-500/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
-                                    <div className="text-xs font-bold text-violet-300 mb-1.5 flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 group-hover/item:scale-125 transition-transform" />
+                                <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:border-[#C84214]/40 hover:bg-[#C84214]/[0.03] transition-all duration-300 hover:-translate-y-0.5 group/item">
+                                    <div className="text-xs font-bold text-[#B7B3B0] mb-1.5 flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#C84214] group-hover/item:scale-125 transition-transform" />
                                         Deducís patrones
                                     </div>
                                     <p className="text-xs text-neutral-400 leading-relaxed">
@@ -519,13 +517,13 @@ export function LogisticaLanding() {
 
                     <motion.div
                         {...reveal}
-                        className="mt-10 flex flex-col items-start gap-3 p-6 sm:p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-900/20 to-blue-900/10"
+                        className="mt-10 flex flex-col items-start gap-3 p-6 sm:p-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514]"
                     >
                         <a
                             href={WHATSAPP_HREF}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 text-white font-semibold shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+                            className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#C84214] text-white font-semibold shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
                         >
                             Pedí un diagnóstico gratuito de 30 minutos
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -538,7 +536,7 @@ export function LogisticaLanding() {
             </section>
 
             {/* ===== Footer mínimo ===== */}
-            <footer className="border-t border-white/10 bg-[#0f0f1a]">
+            <footer className="border-t border-white/10 bg-[#0B0D0E]">
                 <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-colors">
                         Volver al inicio
@@ -611,7 +609,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                     className="relative shrink-0"
                 >
                     {/* Glow detrás para asentar la ilustración sobre el fondo oscuro */}
-                    <div aria-hidden className="absolute inset-0 -m-10 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.18),transparent_70%)] blur-2xl" />
+                    <div aria-hidden className="absolute inset-0 -m-10 bg-[radial-gradient(circle_at_50%_50%,rgba(200,66,20,0.15),transparent_70%)] blur-2xl" />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/dolor-operacion.svg"
@@ -630,16 +628,16 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                             animate={{ opacity: 1, x: 0, rotate: 0 }}
                             exit={{ opacity: 0, x: 40, rotate: 4 }}
                             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative w-full max-w-lg p-8 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-[#16162a] to-[#0a0a14] shadow-[0_20px_60px_-15px_rgba(139,92,246,0.35)]"
+                            className="relative w-full max-w-lg p-8 rounded-2xl border border-[#3E3D3A] bg-[#222120] shadow-xl"
                         >
                             {/* Esquina doblada como si fuera un papel real */}
-                            <div aria-hidden className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-violet-500/20 to-transparent [clip-path:polygon(100%_0,0_0,100%_100%)] rounded-tr-2xl" />
+                            <div aria-hidden className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-[#C84214]/20 to-transparent [clip-path:polygon(100%_0,0_0,100%_100%)] rounded-tr-2xl" />
 
                             <div className="flex items-center gap-3 mb-5">
-                                <span className="flex items-center justify-center w-9 h-9 rounded-full border border-violet-500/40 bg-violet-500/15 text-violet-300 font-bold text-sm font-mono">
+                                <span className="flex items-center justify-center w-9 h-9 rounded-full border border-[#C84214]/40 bg-[#C84214]/15 text-[#B7B3B0] font-bold text-sm font-mono">
                                     {String(current + 1).padStart(2, '0')}
                                 </span>
-                                <span className="text-[11px] uppercase tracking-widest text-violet-400/70 font-medium">
+                                <span className="text-[11px] uppercase tracking-widest text-[#C84214] font-medium">
                                     Problema {current + 1} de {pains.length}
                                 </span>
                             </div>
@@ -653,7 +651,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                             <div className="mt-6 h-1 rounded-full bg-white/[0.05] overflow-hidden">
                                 <div
                                     style={{ transform: `scaleX(${progress})`, transformOrigin: 'left' }}
-                                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500"
+                                    className="h-full rounded-full bg-gradient-to-r from-[#C84214] to-[#B7B3B0]"
                                 />
                             </div>
                         </motion.div>
@@ -666,7 +664,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                 <button
                     onClick={goPrev}
                     aria-label="Problema anterior"
-                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-violet-500/15 hover:border-violet-500/40 hover:text-white transition-all active:scale-95"
+                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-[#C84214]/15 hover:border-[#C84214]/40 hover:text-white transition-all active:scale-95"
                 >
                     <ArrowRight className="w-4 h-4 rotate-180" />
                 </button>
@@ -679,7 +677,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                             aria-label={`Ir al problema ${i + 1}`}
                             className={`transition-all rounded-full ${
                                 i === current
-                                    ? 'w-8 h-2 bg-gradient-to-r from-violet-500 to-blue-500'
+                                    ? 'w-8 h-2 bg-gradient-to-r from-[#C84214] to-[#B7B3B0]'
                                     : 'w-2 h-2 bg-white/20 hover:bg-white/40'
                             }`}
                         />
@@ -689,7 +687,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                 <button
                     onClick={goNext}
                     aria-label="Problema siguiente"
-                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-violet-500/15 hover:border-violet-500/40 hover:text-white transition-all active:scale-95"
+                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-neutral-300 hover:bg-[#C84214]/15 hover:border-[#C84214]/40 hover:text-white transition-all active:scale-95"
                 >
                     <ArrowRight className="w-4 h-4" />
                 </button>

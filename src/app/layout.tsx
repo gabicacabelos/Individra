@@ -85,7 +85,7 @@ const jsonLd = {
     name: 'Individra',
     description: 'Soluciones de inteligencia artificial y automatización para empresas',
     url: 'https://www.individratec.com',
-    logo: 'https://www.individratec.com/soloLogo.png',
+    logo: 'https://www.individratec.com/logo-individra-rebrand.png',
     email: 'individratec@gmail.com',
     address: {
         '@type': 'PostalAddress',
@@ -122,7 +122,7 @@ export default function RootLayout({
             >
                 <a
                     href="#main-content"
-                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:px-4 focus:py-2 focus:bg-[#C84214] focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none"
                 >
                     Saltar al contenido principal
                 </a>

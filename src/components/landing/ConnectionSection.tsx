@@ -21,8 +21,8 @@ const steps = [
         label: 'Descubrimiento',
         title: 'Entendemos tu negocio',
         description: 'Auditoría de procesos e identificación de oportunidades.',
-        color: 'from-blue-500 to-cyan-500',
-        glowColor: 'rgba(59,130,246,0.3)',
+        color: 'from-[#C84214] to-[#B7B3B0]',
+        glowColor: 'rgba(200,66,20,0.25)',
     },
     {
         id: 2,
@@ -31,8 +31,8 @@ const steps = [
         label: 'Estrategia',
         title: 'Diseñamos la solución',
         description: 'Arquitectura personalizada y selección de herramientas IA.',
-        color: 'from-indigo-500 to-violet-500',
-        glowColor: 'rgba(139,92,246,0.3)',
+        color: 'from-[#B7B3B0] to-[#E8E5DE]',
+        glowColor: 'rgba(183,179,176,0.25)',
     },
     {
         id: 3,
@@ -41,8 +41,8 @@ const steps = [
         label: 'Desarrollo',
         title: 'Construimos tu sistema',
         description: 'Desarrollo, entrenamiento de modelos y prompts a medida.',
-        color: 'from-violet-500 to-purple-500',
-        glowColor: 'rgba(168,85,247,0.3)',
+        color: 'from-[#3E3D3A] to-[#B7B3B0]',
+        glowColor: 'rgba(62,61,58,0.3)',
     },
     {
         id: 4,
@@ -51,8 +51,8 @@ const steps = [
         label: 'Implementación',
         title: 'Lanzamos y conectamos',
         description: 'Despliegue, integración y capacitación de tu equipo.',
-        color: 'from-pink-500 to-rose-500',
-        glowColor: 'rgba(236,72,153,0.3)',
+        color: 'from-[#C84214] to-[#B7B3B0]',
+        glowColor: 'rgba(200,66,20,0.25)',
     },
     {
         id: 5,
@@ -61,8 +61,8 @@ const steps = [
         label: 'Optimización',
         title: 'Mejoramos continuamente',
         description: 'Monitoreo, análisis y optimización constante.',
-        color: 'from-emerald-500 to-teal-500',
-        glowColor: 'rgba(16,185,129,0.3)',
+        color: 'from-[#3E3D3A] to-[#E8E5DE]',
+        glowColor: 'rgba(62,61,58,0.3)',
     },
 ]
 
@@ -133,10 +133,10 @@ export function ConnectionSection() {
                 </div>
 
                 {/* Mobile background - simpler */}
-                <div className="absolute inset-0 md:hidden bg-gradient-to-b from-violet-950/20 via-transparent to-blue-950/20 pointer-events-none" />
+                <div className="absolute inset-0 md:hidden bg-gradient-to-b from-[#C84214]/5 via-transparent to-[#3E3D3A]/10 pointer-events-none" />
 
                 {/* Grid pattern - smaller on mobile */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px] md:bg-[size:80px_80px] pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(200,66,20,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(200,66,20,0.02)_1px,transparent_1px)] bg-[size:40px_40px] md:bg-[size:80px_80px] pointer-events-none" />
 
                 {/* Content */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6">
@@ -170,7 +170,7 @@ export function ConnectionSection() {
                             )}
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                                     {currentStep.number}
                                 </span>
                                 <span className="text-white/80 text-sm font-medium">{currentStep.label}</span>
@@ -181,12 +181,12 @@ export function ConnectionSection() {
                         <motion.div className="flex-none lg:flex-1 space-y-2 lg:space-y-6 pb-2 sm:pb-0">
                             {/* Section header */}
                             <motion.div style={{ y: titleY, opacity: titleOpacity }}>
-                                <span className="text-violet-400 text-xs sm:text-sm font-semibold uppercase tracking-widest">
+                                <span className="text-[#B7B3B0] text-xs sm:text-sm font-semibold uppercase tracking-widest">
                                     Nuestro Proceso
                                 </span>
                                 <h2 className="mt-2 lg:mt-3 text-2xl sm:text-3xl lg:text-5xl font-bold text-white leading-tight">
                                     De la idea al{' '}
-                                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                                         resultado
                                     </span>
                                 </h2>
@@ -200,7 +200,7 @@ export function ConnectionSection() {
                                 {/* Vertical progress line */}
                                 <div className="absolute left-[18px] sm:left-[23px] top-3 bottom-3 w-[2px] bg-neutral-800">
                                     <motion.div
-                                        className="w-full bg-gradient-to-b from-violet-500 via-blue-500 to-emerald-500"
+                                        className="w-full bg-gradient-to-b from-[#C84214] via-[#D44A17] to-[#B7B3B0]"
                                         style={{
                                             height: `${((activeStep + 1) / steps.length) * 100}%`,
                                         }}
@@ -248,7 +248,7 @@ export function ConnectionSection() {
                                             {/* Content */}
                                             <div className="flex-1 min-w-0 pt-0.5 sm:pt-1">
                                                 <div className="flex items-center gap-2 mb-0.5">
-                                                    <span className={`text-[10px] sm:text-xs font-mono transition-colors duration-300 ${isActive ? 'text-violet-400' : 'text-neutral-600'}`}>
+                                                    <span className={`text-[10px] sm:text-xs font-mono transition-colors duration-300 ${isActive ? 'text-[#C84214]' : 'text-neutral-600'}`}>
                                                         {step.number}
                                                     </span>
                                                     <span className={`text-[10px] sm:text-xs uppercase tracking-wider transition-colors duration-300 ${isActive ? 'text-white/80' : 'text-neutral-500'}`}>
@@ -268,7 +268,7 @@ export function ConnectionSection() {
                                             {/* Arrow for active - hidden on mobile */}
                                             {isActive && (
                                                 <div className="flex-shrink-0 pt-1 sm:pt-2 hidden sm:block">
-                                                    <ArrowRight className="w-4 h-4 text-violet-400" />
+                                                    <ArrowRight className="w-4 h-4 text-[#C84214]" />
                                                 </div>
                                             )}
                                         </div>
@@ -286,7 +286,7 @@ export function ConnectionSection() {
                             >
                                 <a
                                     href="#contacto"
-                                    className="group inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-full hover:shadow-lg hover:shadow-violet-500/25 transition-all duration-300"
+                                    className="group inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-[#C84214] hover:bg-[#B3390F] text-white text-sm sm:text-base font-semibold rounded-full hover:shadow-lg hover:shadow-[#C84214]/25 transition-all duration-300"
                                 >
                                     Comenzar ahora
                                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -325,26 +325,13 @@ export function ConnectionSection() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <span className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                                <span className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                                     {steps[activeStep].number}
                                 </span>
                                 <p className="mt-1 text-white font-medium text-lg">{steps[activeStep].label}</p>
                             </motion.div>
 
-                            {/* Floating indicators */}
-                            <motion.div
-                                className="absolute top-10 right-10 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 backdrop-blur-sm"
-                                animate={{
-                                    y: [0, -5, 0],
-                                    opacity: [0.8, 1, 0.8],
-                                }}
-                                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                            >
-                                <span className="text-emerald-400 text-xs font-medium flex items-center gap-1.5">
-                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    Activo
-                                </span>
-                            </motion.div>
+
 
                             {/* Orbiting rings */}
                             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
@@ -374,12 +361,12 @@ export function ConnectionSection() {
                                 />
                                 <defs>
                                     <linearGradient id="processGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="rgba(139,92,246,0.3)" />
-                                        <stop offset="100%" stopColor="rgba(59,130,246,0.3)" />
+                                        <stop offset="0%" stopColor="rgba(200,66,20,0.3)" />
+                                        <stop offset="100%" stopColor="rgba(183,179,176,0.3)" />
                                     </linearGradient>
                                     <linearGradient id="processGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="rgba(59,130,246,0.2)" />
-                                        <stop offset="100%" stopColor="rgba(16,185,129,0.2)" />
+                                        <stop offset="0%" stopColor="rgba(183,179,176,0.2)" />
+                                        <stop offset="100%" stopColor="rgba(62,61,58,0.3)" />
                                     </linearGradient>
                                 </defs>
                             </svg>

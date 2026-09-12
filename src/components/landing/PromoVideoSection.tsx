@@ -34,7 +34,7 @@ export function PromoVideoSection() {
 
             {/* Glassmorphism gradient overlays to integrate it smoothly */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black pointer-events-none" />
-            <div className="absolute inset-0 bg-violet-900/20 mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 bg-[#3E3D3A]/25 mix-blend-overlay pointer-events-none" />
 
             {/* Glowing inner shadow top and bottom to blend with other sections */}
             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent pointer-events-none" />
@@ -49,8 +49,8 @@ export function PromoVideoSection() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="mb-8"
                 >
-                    <div className="px-6 py-2 rounded-full border border-violet-500/30 bg-violet-500/10 backdrop-blur-sm">
-                        <span className="text-violet-300 text-sm font-semibold uppercase tracking-wider">
+                    <div className="px-6 py-2 rounded-full border border-[#C84214]/35 bg-[#C84214]/10 backdrop-blur-sm">
+                        <span className="text-[#B7B3B0] text-sm font-semibold uppercase tracking-wider">
                             La nueva era de la automatización
                         </span>
                     </div>
@@ -64,7 +64,7 @@ export function PromoVideoSection() {
                     className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tight leading-tight"
                 >
                     Visualiza el <br className="hidden sm:block" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-blue-400">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C84214] to-[#E8E5DE]">
                         futuro de tu empresa
                     </span>
                 </motion.h2>

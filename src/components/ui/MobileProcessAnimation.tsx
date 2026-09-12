@@ -51,16 +51,16 @@ export function MobileProcessAnimation({
                 <defs>
                     {/* Shape gradient */}
                     <linearGradient id="shapeGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="rgba(139,92,246,0.4)" />
-                        <stop offset="50%" stopColor="rgba(59,130,246,0.3)" />
-                        <stop offset="100%" stopColor="rgba(16,185,129,0.4)" />
+                        <stop offset="0%" stopColor="rgba(200,66,20,0.4)" />
+                        <stop offset="50%" stopColor="rgba(183,179,176,0.3)" />
+                        <stop offset="100%" stopColor="rgba(200,66,20,0.2)" />
                     </linearGradient>
 
                     {/* Progress gradient */}
                     <linearGradient id="progressGradientMobile" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="rgba(139,92,246,0.8)" />
-                        <stop offset="50%" stopColor="rgba(59,130,246,0.8)" />
-                        <stop offset="100%" stopColor="rgba(16,185,129,0.8)" />
+                        <stop offset="0%" stopColor="#C84214" />
+                        <stop offset="50%" stopColor="#D44A17" />
+                        <stop offset="100%" stopColor="#B7B3B0" />
                     </linearGradient>
 
                     {/* Glow gradient */}
@@ -134,7 +134,7 @@ export function MobileProcessAnimation({
                 </path>
 
                 {/* 3 orbiting particles - using SMIL */}
-                <circle r="3" fill="rgba(139,92,246,0.8)">
+                <circle r="3" fill="rgba(200,66,20,0.85)">
                     <animateMotion
                         dur="8s"
                         repeatCount="indefinite"
@@ -142,7 +142,7 @@ export function MobileProcessAnimation({
                     />
                     <set attributeName="transform" to="translate(200,100)" />
                 </circle>
-                <circle r="2.5" fill="rgba(59,130,246,0.7)">
+                <circle r="2.5" fill="rgba(183,179,176,0.8)">
                     <animateMotion
                         dur="8s"
                         repeatCount="indefinite"
@@ -151,7 +151,7 @@ export function MobileProcessAnimation({
                     />
                     <set attributeName="transform" to="translate(200,100)" />
                 </circle>
-                <circle r="2" fill="rgba(16,185,129,0.7)">
+                <circle r="2" fill="rgba(255,255,255,0.85)">
                     <animateMotion
                         dur="8s"
                         repeatCount="indefinite"

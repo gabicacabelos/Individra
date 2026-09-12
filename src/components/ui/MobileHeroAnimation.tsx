@@ -1,87 +1,64 @@
 'use client'
 
-// Living Core Animation - Optimized for Mobile Performance
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+
 export function MobileHeroAnimation() {
     return (
-        <div
-            className="relative w-full h-[280px] sm:h-[320px] flex items-center justify-center"
-            style={{ contain: 'layout style paint' }}
-        >
-            {/* Ambient Glow - Sin blur filter, gradiente suave */}
-            <div
-                className="absolute top-1/2 left-1/2 w-[280px] h-[280px] glow-pulse"
-                style={{
-                    transform: 'translate(-50%, -50%) translateZ(0)',
-                    background: 'radial-gradient(circle, rgba(167,139,250,0.4) 0%, rgba(139,92,246,0.2) 30%, rgba(139,92,246,0.05) 60%, transparent 80%)',
-                    willChange: 'transform, opacity',
+        <div className="relative w-full max-w-[280px] sm:max-w-[320px] mx-auto py-4 flex flex-col items-center justify-center">
+            {/* Ambient Breathing Glow */}
+            <motion.div
+                animate={{
+                    scale: [1, 1.15, 1],
+                    opacity: [0.2, 0.4, 0.2],
                 }}
+                transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                }}
+                className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(200,66,20,0.18)_0%,_rgba(54,53,51,0.25)_40%,_transparent_70%)] blur-2xl pointer-events-none"
             />
 
-            {/* Main SVG - Sin filtros costosos */}
-            <svg
-                viewBox="0 0 400 400"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-full max-w-[340px] max-h-[340px]"
-                style={{ transform: 'translateZ(0)' }}
+            {/* Free-Floating 3D Core in space (Sin recuadro) */}
+            <motion.div
+                animate={{
+                    y: [0, -10, 0],
+                    rotateZ: [0, 0.5, 0, -0.5, 0],
+                }}
+                transition={{
+                    y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' },
+                    rotateZ: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+                }}
+                className="relative z-10 w-[240px] sm:w-[270px] h-[240px] sm:h-[270px] flex items-center justify-center pointer-events-none"
             >
-                <defs>
-                    <radialGradient id="coreGradient">
-                        <stop offset="0%" stopColor="#ffffff"/>
-                        <stop offset="40%" stopColor="#ddd6fe"/>
-                        <stop offset="100%" stopColor="#8b5cf6"/>
-                    </radialGradient>
-                    <radialGradient id="haloGradient">
-                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3"/>
-                        <stop offset="70%" stopColor="#8b5cf6" stopOpacity="0.1"/>
-                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0"/>
-                    </radialGradient>
-                    <radialGradient id="coreGlow">
-                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9"/>
-                        <stop offset="50%" stopColor="#ddd6fe" stopOpacity="0.5"/>
-                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0"/>
-                    </radialGradient>
-                </defs>
+                {/* Looping Orbital Ring 1 */}
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-0 rounded-full border border-dashed border-[#B7B3B0]/30"
+                />
 
-                {/* Halo exterior suave */}
-                <circle cx="200" cy="200" r="90" fill="url(#haloGradient)">
-                    <animate attributeName="r" values="85;100;85" dur="3s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.8;1;0.8" dur="3s" repeatCount="indefinite"/>
-                </circle>
+                {/* Looping Orbital Ring 2 */}
+                <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-3 rounded-full border border-[#B7B3B0]/20"
+                    style={{ strokeDasharray: '4 10' }}
+                />
 
-                {/* Glow del núcleo */}
-                <circle cx="200" cy="200" r="50" fill="url(#coreGlow)">
-                    <animate attributeName="r" values="45;55;45" dur="2s" repeatCount="indefinite"/>
-                </circle>
-
-                {/* Núcleo principal */}
-                <circle cx="200" cy="200" r="28" fill="url(#coreGradient)">
-                    <animate attributeName="r" values="28;32;28" dur="1.6s" repeatCount="indefinite"/>
-                </circle>
-
-                {/* Partículas flotando - optimizadas */}
-                <circle r="2.5" fill="#ffffff" opacity="0.85">
-                    <animateMotion dur="10s" repeatCount="indefinite" calcMode="linear"
-                        path="M100,200 C150,100 250,100 300,200 C250,300 150,300 100,200 Z"/>
-                </circle>
-
-                <circle r="2" fill="#c084fc" opacity="0.75">
-                    <animateMotion dur="12s" repeatCount="indefinite" calcMode="linear"
-                        path="M200,90 C280,130 280,270 200,310 C120,270 120,130 200,90 Z"/>
-                </circle>
-
-                <circle r="2" fill="#a78bfa" opacity="0.8">
-                    <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear"
-                        path="M130,160 C200,80 300,160 260,250 C200,320 100,250 130,160 Z"/>
-                </circle>
-            </svg>
-
-            <style jsx>{`
-                @keyframes pulseGlow {
-                    0%, 100% { transform: translate(-50%, -50%) translateZ(0) scale(1); opacity: 0.7; }
-                    50% { transform: translate(-50%, -50%) translateZ(0) scale(1.1); opacity: 0.9; }
-                }
-                .glow-pulse { animation: pulseGlow 4s ease-in-out infinite; }
-            `}</style>
+                {/* 3D Core with radial blend */}
+                <div className="relative w-[190px] sm:w-[220px] h-[190px] sm:h-[220px] [mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)] [-webkit-mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)]">
+                    <Image
+                        src="/individra-3d-floating.png"
+                        alt="INDIVIDRA 3D Core"
+                        width={440}
+                        height={440}
+                        className="w-full h-full object-contain filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+                        priority
+                    />
+                </div>
+            </motion.div>
         </div>
     )
 }

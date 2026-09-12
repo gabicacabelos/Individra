@@ -43,9 +43,9 @@ export function ComparativeSection() {
     const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
 
     return (
-        <section ref={sectionRef} className="relative py-24 lg:py-32 bg-black overflow-hidden" id="comparativa">
+        <section ref={sectionRef} className="relative py-24 lg:py-32 bg-[#0B0D0E] overflow-hidden" id="comparativa">
             {/* Background elements */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/10 via-black to-black pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#C84214]/5 via-[#0B0D0E] to-[#0B0D0E] pointer-events-none" />
 
             <motion.div
                 style={{ y, opacity }}
@@ -57,37 +57,37 @@ export function ComparativeSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="text-3xl sm:text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-200 to-neutral-400"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E8E5DE]"
                     >
                         Por qué las empresas serias eligen <br className="hidden sm:block" />
-                        <span className="text-violet-400">Arquitectura a Medida</span>
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">Arquitectura a Medida</span>
                     </motion.h2>
                 </div>
 
                 <div className="pb-8">
-                    <div className="w-full bg-neutral-900/40 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden shadow-2xl shadow-violet-900/20">
+                    <div className="w-full bg-[#222120]/90 backdrop-blur-sm border border-[#3E3D3A] rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
                         {/* Headers Group */}
-                        <div className="flex flex-col md:grid md:grid-cols-12 bg-neutral-900/80 border-b border-white/10">
+                        <div className="flex flex-col md:grid md:grid-cols-12 bg-[#1E1D1C] border-b border-[#3E3D3A]">
                             {/* Empty space for trait name on desktop, hidden on mobile for headers */}
                             <div className="hidden md:flex md:col-span-3 lg:col-span-4 p-4 lg:p-6 items-center">
-                                <span className="text-lg font-semibold text-neutral-400">Característica</span>
+                                <span className="text-lg font-semibold text-[#B7B3B0]">Característica</span>
                             </div>
 
-                            <div className="flex md:contents border-b md:border-b-0 border-white/10">
-                                <div className="flex-1 md:col-span-4 p-4 lg:p-6 md:border-l border-white/10 flex flex-col items-center justify-center text-center bg-red-950/10">
+                            <div className="flex md:contents border-b md:border-b-0 border-[#3E3D3A]">
+                                <div className="flex-1 md:col-span-4 p-4 lg:p-6 md:border-l border-[#3E3D3A] flex flex-col items-center justify-center text-center bg-red-950/10">
                                     <XCircle className="w-6 h-6 lg:w-8 lg:h-8 text-neutral-500 mb-2" />
                                     <span className="text-sm lg:text-lg font-medium text-neutral-400">SaaS Genéricos</span>
                                 </div>
-                                <div className="flex-1 md:col-span-5 lg:col-span-4 p-4 lg:p-6 border-l border-white/10 flex flex-col items-center justify-center text-center bg-violet-900/20 relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-blue-500" />
-                                    <Rocket className="w-6 h-6 lg:w-8 lg:h-8 text-violet-400 mb-2" />
-                                    <span className="text-sm lg:text-lg font-bold text-white tracking-wide">INDIVIDRA</span>
+                                <div className="flex-1 md:col-span-5 lg:col-span-4 p-4 lg:p-6 border-l border-[#3E3D3A] flex flex-col items-center justify-center text-center bg-[#C84214]/10 relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-[#C84214]" />
+                                    <Rocket className="w-6 h-6 lg:w-8 lg:h-8 text-[#C84214] mb-2" />
+                                    <span className="text-sm lg:text-lg font-bold text-[#E8E5DE] tracking-wide">INDIVIDRA</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Table Body */}
-                        <div className="divide-y divide-white/5">
+                        <div className="divide-y divide-[#3E3D3A]">
                             {features.map((feature, index) => (
                                 <motion.div
                                     key={feature.name}
@@ -101,12 +101,12 @@ export function ComparativeSection() {
                                         <span className="text-sm lg:text-base font-semibold text-neutral-200 text-center md:text-left">{feature.name}</span>
                                     </div>
                                     <div className="flex md:contents">
-                                        <div className="flex-1 md:col-span-4 p-4 lg:p-6 md:border-l border-white/10 flex items-center bg-red-950/5">
+                                        <div className="flex-1 md:col-span-4 p-4 lg:p-6 md:border-l border-[#3E3D3A] flex items-center bg-red-950/5">
                                             <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed text-center w-full md:text-left">{feature.saas}</p>
                                         </div>
-                                        <div className="flex-1 md:col-span-5 lg:col-span-4 p-4 lg:p-6 border-l border-white/10 flex flex-col md:flex-row items-center bg-violet-900/10 relative">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mb-2 md:mb-0 md:mr-3 md:absolute md:top-6 md:left-6 opacity-50" />
-                                            <p className="text-violet-100/90 text-xs sm:text-sm md:pl-8 leading-relaxed font-medium text-center md:text-left">{feature.individra}</p>
+                                        <div className="flex-1 md:col-span-5 lg:col-span-4 p-4 lg:p-6 border-l border-[#3E3D3A] flex flex-col md:flex-row items-center bg-[#C84214]/5 relative">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mb-2 md:mb-0 md:mr-3 md:absolute md:top-6 md:left-6 opacity-60" />
+                                            <p className="text-[#E8E5DE] text-xs sm:text-sm md:pl-8 leading-relaxed font-medium text-center md:text-left">{feature.individra}</p>
                                         </div>
                                     </div>
                                 </motion.div>

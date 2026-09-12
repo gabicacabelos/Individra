@@ -24,9 +24,9 @@ export function ContactSection() {
     }, [])
 
     return (
-        <section ref={sectionRef} id="contacto" className="relative py-32 bg-black overflow-hidden">
+        <section ref={sectionRef} id="contacto" className="relative py-32 bg-[#0B0D0E] overflow-hidden">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-violet-900/20 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#C84214]/10 via-transparent to-transparent" />
 
             {/* Animated line */}
             <motion.div
@@ -34,17 +34,17 @@ export function ContactSection() {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent"
+                className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C84214]/50 to-transparent"
             />
 
             {/* Floating Orbs with parallax */}
             <motion.div
                 style={{ y: orb1Y, x: orb1X }}
-                className="absolute top-20 left-10 w-72 h-72 bg-violet-600/20 rounded-full blur-[120px]"
+                className="absolute top-20 left-10 w-72 h-72 bg-[#C84214]/10 rounded-full blur-[120px]"
             />
             <motion.div
                 style={{ y: orb2Y, x: orb2X }}
-                className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"
+                className="absolute bottom-20 right-10 w-96 h-96 bg-[#3E3D3A]/20 rounded-full blur-[120px]"
             />
 
             <div className="relative z-10 max-w-4xl mx-auto px-1 sm:px-6">
@@ -61,7 +61,7 @@ export function ContactSection() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="inline-block text-violet-400 text-sm font-semibold uppercase tracking-widest"
+                        className="inline-block text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]"
                     >
                         Agenda tu sesión
                     </motion.span>
@@ -70,10 +70,10 @@ export function ContactSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
-                        className="mt-4 text-4xl sm:text-5xl font-bold text-white"
+                        className="mt-4 text-4xl sm:text-5xl font-bold text-[#E8E5DE]"
                     >
                         Asesoramiento{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] via-[#D44A17] to-[#B7B3B0]">
                             Estratégico Gratuito
                         </span>
                     </motion.h2>
@@ -82,7 +82,7 @@ export function ContactSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 }}
-                        className="mt-6 text-neutral-400 text-lg max-w-xl mx-auto"
+                        className="mt-6 text-[#B7B3B0] text-lg max-w-xl mx-auto"
                     >
                         Elegí un horario en nuestro calendario. En 30 minutos analizaremos tus cuellos de botella y te propondremos un sistema para escalar sin fricción.
                     </motion.p>
@@ -99,7 +99,7 @@ export function ContactSection() {
                         {/* Animated glow */}
                         <motion.div
                             animate={{
-                                opacity: [0.3, 0.6, 0.3],
+                                opacity: [0.2, 0.4, 0.2],
                                 scale: [1, 1.02, 1]
                             }}
                             transition={{
@@ -107,9 +107,9 @@ export function ContactSection() {
                                 repeat: Infinity,
                                 ease: 'easeInOut'
                             }}
-                            className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-blue-600/20 rounded-2xl sm:rounded-3xl blur-xl"
+                            className="absolute inset-0 bg-gradient-to-r from-[#C84214]/15 to-[#3E3D3A]/20 rounded-2xl sm:rounded-3xl blur-xl"
                         />
-                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 bg-neutral-900/80 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex flex-col items-center justify-center calendly-container">
+                        <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#3E3D3A] bg-[#222120]/95 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex flex-col items-center justify-center calendly-container">
                             {isMounted ? (
                                 <InlineWidget
                                     url="https://calendly.com/individratec/30min?hide_gdpr_banner=1&locale=es-ES"
@@ -118,16 +118,16 @@ export function ContactSection() {
                                         customAnswers: undefined
                                     }}
                                     pageSettings={{
-                                        backgroundColor: '171717',
+                                        backgroundColor: '222120',
                                         hideEventTypeDetails: false,
                                         hideLandingPageDetails: false,
-                                        primaryColor: '7c3aed',
+                                        primaryColor: 'c84214',
                                         textColor: 'ffffff'
                                     }}
                                     utm={{}}
                                 />
                             ) : (
-                                <div className="w-8 h-8 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
+                                <div className="w-8 h-8 rounded-full border-2 border-[#C84214]/30 border-t-[#C84214] animate-spin" />
                             )}
 
                             {/* Fallback visible si el calendario no carga */}
@@ -137,14 +137,14 @@ export function ContactSection() {
                                     href="https://wa.me/5491160152435"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors"
+                                    className="text-[#C84214] hover:text-[#D44A17] underline underline-offset-2 transition-colors"
                                 >
                                     Escribinos por WhatsApp
                                 </a>
                                 {' '}o a{' '}
                                 <a
                                     href="mailto:individratec@gmail.com"
-                                    className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors"
+                                    className="text-[#C84214] hover:text-[#D44A17] underline underline-offset-2 transition-colors"
                                 >
                                     individratec@gmail.com
                                 </a>

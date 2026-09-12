@@ -9,8 +9,8 @@ import { AutomotiveIllustration } from './illustrations'
 const differentiators = [
     {
         icon: Factory,
-        accent: 'from-blue-500 to-cyan-500',
-        accentRgb: '59, 130, 246',
+        accent: 'from-[#B7B3B0] to-[#8E8B88]',
+        accentRgb: '183, 179, 176',
         label: 'Dominio',
         title: 'Venimos de adentro de la logística automotriz',
         description:
@@ -27,8 +27,8 @@ const differentiators = [
     },
     {
         icon: Cpu,
-        accent: 'from-violet-500 to-purple-500',
-        accentRgb: '139, 92, 246',
+        accent: 'from-[#C84214] to-[#A8340E]',
+        accentRgb: '200, 66, 20',
         label: 'Método',
         title: 'No vendemos magia. Vendemos ingeniería.',
         description:
@@ -82,7 +82,7 @@ function TiltCard({ item, index, isMobile }: { item: typeof differentiators[0]; 
                     rotateY: isMobile ? 0 : rotateY,
                     transformStyle: 'preserve-3d',
                 }}
-                className="group relative h-full p-6 lg:p-7 rounded-3xl border border-white/10 bg-neutral-900/60 backdrop-blur-md overflow-hidden transition-colors duration-300 hover:border-white/25"
+                className="group relative h-full p-6 lg:p-7 rounded-3xl border border-[#3E3D3A] bg-[#222120] backdrop-blur-md overflow-hidden transition-colors duration-300 hover:border-[#B7B3B0]/40"
             >
                 {/* Cursor spotlight (desktop) */}
                 {!isMobile && (
@@ -96,7 +96,7 @@ function TiltCard({ item, index, isMobile }: { item: typeof differentiators[0]; 
                 {/* Ambient corner glow */}
                 <div
                     aria-hidden
-                    className="pointer-events-none absolute -top-16 -right-16 w-44 h-44 rounded-full blur-[60px] opacity-25 group-hover:opacity-50 transition-opacity duration-500"
+                    className="pointer-events-none absolute -top-16 -right-16 w-44 h-44 rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-500"
                     style={{ background: `rgb(${item.accentRgb})` }}
                 />
 
@@ -146,29 +146,29 @@ export function DifferentiatorsSection() {
     const isMobile = useIsMobile()
 
     return (
-        <section id="diferenciadores" className="relative py-24 lg:py-32 bg-black overflow-hidden">
+        <section id="diferenciadores" className="relative py-24 lg:py-32 bg-[#0B0D0E] overflow-hidden">
             {/* Animated background */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#363533]/20 via-transparent to-transparent pointer-events-none" />
             {!isMobile && (
                 <>
                     <motion.div
                         aria-hidden
                         className="absolute top-10 -left-20 w-96 h-96 rounded-full blur-[110px] pointer-events-none"
-                        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%)' }}
+                        style={{ background: 'radial-gradient(circle, rgba(183,179,176,0.08) 0%, transparent 70%)' }}
                         animate={{ x: [0, 60, 0], y: [0, 30, 0] }}
                         transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
                     />
                     <motion.div
                         aria-hidden
                         className="absolute bottom-0 -right-20 w-96 h-96 rounded-full blur-[110px] pointer-events-none"
-                        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%)' }}
+                        style={{ background: 'radial-gradient(circle, rgba(200,66,20,0.08) 0%, transparent 70%)' }}
                         animate={{ x: [0, -50, 0], y: [0, -20, 0] }}
                         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
                     />
                 </>
             )}
             {/* Grid texture */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.025)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
             <div className="relative z-10 max-w-6xl mx-auto px-6">
                 <motion.div
@@ -177,12 +177,12 @@ export function DifferentiatorsSection() {
                     viewport={{ once: true, margin: '-80px' }}
                     className="text-center mb-14 lg:mb-20"
                 >
-                    <span className="inline-block text-violet-400 text-sm font-semibold uppercase tracking-widest">
+                    <span className="inline-block text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
                         Por qué INDIVIDRA
                     </span>
                     <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
                         Lo que{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                             ningún competidor externo
                         </span>{' '}
                         puede igualar

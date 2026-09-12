@@ -34,10 +34,10 @@ export function Footer() {
     const currentYear = new Date().getFullYear()
 
     return (
-        <footer className="relative bg-black border-t border-white/5 overflow-hidden">
+        <footer className="relative bg-[#0B0D0E] border-t border-[#B7B3B0]/15 overflow-hidden">
             {/* Background Effects - consistent with other sections */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.02)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(183,179,176,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(183,179,176,0.02)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none" />
 
             {/* Main Footer */}
             <div className="relative z-10 max-w-7xl mx-auto px-6 py-20">
@@ -52,14 +52,14 @@ export function Footer() {
                             className="inline-block"
                         >
                             <Image
-                                src="/soloLetras2.png"
-                                alt="INDIVIDRA"
-                                width={280}
-                                height={100}
-                                className="h-32 w-auto"
+                                src="/logo-individra-wordmark.png"
+                                alt="INDIVIDRA - Inteligencia Operativa"
+                                width={260}
+                                height={48}
+                                className="h-10 sm:h-12 w-auto object-contain"
                             />
                         </motion.a>
-                        <p className="mt-4 text-neutral-400 text-sm leading-relaxed">
+                        <p className="mt-4 text-[#B7B3B0] text-sm leading-relaxed">
                             Transformamos negocios con inteligencia artificial y desarrollo de software a medida.
                         </p>
 
@@ -71,7 +71,7 @@ export function Footer() {
                                     href={item.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
+                                    className="w-10 h-10 rounded-xl bg-[#1E1D1C] border border-[#3E3D3A] flex items-center justify-center text-[#B7B3B0] hover:text-[#E8E5DE] hover:border-[#C84214]/50 hover:bg-[#C84214]/10 hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
                                     aria-label={item.name}
                                 >
                                     {item.name === 'LinkedIn' && (
@@ -155,7 +155,7 @@ export function Footer() {
                                     href="mailto:individratec@gmail.com"
                                     className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-sm group"
                                 >
-                                    <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-violet-500/50 transition-colors">
+                                    <div className="w-8 h-8 rounded-lg bg-[#1E1D1C] border border-[#3E3D3A] flex items-center justify-center group-hover:border-[#C84214]/50 transition-colors">
                                         <Mail className="w-4 h-4" />
                                     </div>
                                     individratec@gmail.com
@@ -163,7 +163,7 @@ export function Footer() {
                             </li>
                             <li>
                                 <div className="flex items-center gap-3 text-neutral-400 text-sm">
-                                    <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center">
+                                    <div className="w-8 h-8 rounded-lg bg-[#1E1D1C] border border-[#3E3D3A] flex items-center justify-center">
                                         <MapPin className="w-4 h-4" />
                                     </div>
                                     Buenos Aires, Argentina
@@ -174,7 +174,7 @@ export function Footer() {
                         {/* CTA Button */}
                         <a
                             href="#contacto"
-                            className="group mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-medium rounded-xl shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
+                            className="group mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84214] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                         >
                             Iniciar proyecto
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
@@ -194,16 +194,16 @@ export function Footer() {
                             viewport={{ once: true }}
                         >
                             <Image
-                                src="/soloLogo.png"
-                                alt="INDIVIDRA Logo"
-                                width={100}
-                                height={100}
-                                className="h-28 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300"
+                                src="/logo-individra-icon.png"
+                                alt="INDIVIDRA Logo Icon"
+                                width={80}
+                                height={80}
+                                className="h-14 sm:h-16 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300 object-contain"
                             />
                         </motion.div>
 
                         {/* Copyright */}
-                        <p className="text-neutral-500 text-sm">
+                        <p className="text-[#B7B3B0] text-sm">
                             © {currentYear} Individra. Todos los derechos reservados.
                         </p>
                     </div>

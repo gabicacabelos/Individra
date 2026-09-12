@@ -24,7 +24,7 @@ const categories = [
         label: 'Logística & Distribución',
         tier: 'principal' as const,
         icon: Truck,
-        color: 'from-blue-500 to-cyan-600',
+        color: 'from-[#C84214] to-[#A8340E]',
         items: [
             { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp, web o voz, consultando tu sistema', benefit: 'Menos consultas repetidas' },
             { icon: ScanLine, title: 'Carga de Remitos', desc: 'Extrae los datos de remitos y comprobantes desde una foto o PDF, listos para revisar', benefit: 'Sin carga manual' },
@@ -51,12 +51,12 @@ export function CatalogSection() {
     }
 
     return (
-        <section ref={sectionRef} id="soluciones" className="relative pt-4 pb-24 md:py-32 bg-black overflow-hidden">
+        <section ref={sectionRef} id="soluciones" className="relative pt-4 pb-24 md:py-32 bg-[#0B0D0E] overflow-hidden">
             {/* Mobile animated background */}
             <MobileCatalogBackground />
 
             {/* Background */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent" />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6">
                 {/* Header */}
@@ -71,9 +71,9 @@ export function CatalogSection() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 text-violet-400 text-sm font-semibold uppercase tracking-widest"
+                        className="inline-flex items-center gap-2 text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]"
                     >
-                        <Zap className="w-4 h-4" />
+                        <Zap className="w-4 h-4 text-[#B7B3B0]" />
                         Automatizaciones por Rubro
                     </motion.span>
                     <motion.h2
@@ -84,7 +84,7 @@ export function CatalogSection() {
                         className="mt-4 text-4xl sm:text-5xl font-bold text-white"
                     >
                         Encontrá tu{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                             solución
                         </span>
                     </motion.h2>
@@ -130,7 +130,7 @@ export function CatalogSection() {
                                         whileInView={{ opacity: 1, x: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ delay: categoryIndex * 0.1 }}
-                                        className={`rounded-2xl border bg-neutral-900/50 backdrop-blur-sm overflow-hidden ${isPrincipal ? 'border-blue-500/40 shadow-lg shadow-blue-900/20' : 'border-white/10'}`}
+                                        className={`rounded-2xl border backdrop-blur-sm overflow-hidden ${isPrincipal ? 'border-[#C84214]/50 bg-[#262523] shadow-lg shadow-[#C84214]/10' : 'border-[#3E3D3A] bg-[#222120]'}`}
                                     >
                                     {/* Header */}
                                     <motion.button
@@ -153,7 +153,7 @@ export function CatalogSection() {
                                                 <div className="flex items-center gap-2 flex-wrap">
                                                     <h3 className="text-lg font-semibold text-white">{category.label}</h3>
                                                     {isPrincipal && (
-                                                        <span className="px-2 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-[10px] font-bold uppercase tracking-wider">
+                                                        <span className="px-2 py-0.5 rounded-full bg-[#C84214]/15 border border-[#C84214]/40 text-[#B7B3B0] text-[10px] font-bold uppercase tracking-wider">
                                                             Especialidad
                                                         </span>
                                                     )}
@@ -164,7 +164,7 @@ export function CatalogSection() {
                                         <motion.div
                                             animate={{ rotate: isExpanded ? 180 : 0 }}
                                             transition={{ duration: 0.3 }}
-                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isExpanded ? 'bg-violet-500/20 text-violet-400' : 'bg-neutral-800 text-neutral-400'
+                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isExpanded ? 'bg-[#C84214]/20 text-[#C84214]' : 'bg-[#1E1D1C] text-neutral-400'
                                                 }`}
                                         >
                                             <ChevronDown className="w-5 h-5" />
@@ -197,9 +197,9 @@ export function CatalogSection() {
                                                                 }}
                                                                 whileHover={{
                                                                     scale: 1.02,
-                                                                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                                                    backgroundColor: 'rgba(200, 66, 20, 0.08)',
                                                                 }}
-                                                                className="p-4 rounded-xl border border-white/5 bg-neutral-900/50 cursor-default transition-colors"
+                                                                className="p-4 rounded-xl border border-[#3E3D3A] bg-[#1E1D1C] cursor-default transition-colors"
                                                             >
                                                                 <div className="flex items-start gap-3">
                                                                     <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${category.color} bg-opacity-20 flex items-center justify-center flex-shrink-0`}>
@@ -207,10 +207,10 @@ export function CatalogSection() {
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
                                                                         <h4 className="font-medium text-white text-sm">{item.title}</h4>
-                                                                        <p className="text-neutral-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
-                                                                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20">
-                                                                            <Sparkles className="w-3 h-3 text-violet-400" />
-                                                                            <span className="text-xs text-violet-300">{item.benefit}</span>
+                                                                        <p className="text-neutral-400 text-xs mt-1 leading-relaxed">{item.desc}</p>
+                                                                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2A2826] border border-[#3E3D3A]">
+                                                                            <Sparkles className="w-3 h-3 text-[#C84214]" />
+                                                                            <span className="text-xs text-neutral-300">{item.benefit}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -238,21 +238,21 @@ export function CatalogSection() {
                 >
                     <motion.div
                         whileHover={{ scale: 1.01 }}
-                        className="relative p-6 sm:p-8 rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-900/20 via-neutral-900/50 to-blue-900/20 overflow-hidden"
+                        className="relative p-6 sm:p-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] overflow-hidden"
                     >
-                        {/* Animated background */}
+                        {/* Ambient background */}
                         <motion.div
                             animate={{
                                 x: [0, 100, 0],
-                                opacity: [0.1, 0.2, 0.1],
+                                opacity: [0.06, 0.12, 0.06],
                             }}
                             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute top-0 right-0 w-64 h-64 bg-violet-500 rounded-full blur-[100px]"
+                            className="absolute top-0 right-0 w-64 h-64 bg-[#C84214] rounded-full blur-[100px] opacity-10"
                         />
 
                         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C84214] to-[#A8340E] flex items-center justify-center">
                                     <Lightbulb className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
@@ -263,7 +263,7 @@ export function CatalogSection() {
 
                             <a
                                 href="#contacto"
-                                className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-medium rounded-full shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
+                                className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-[#C84214] text-white text-sm sm:text-base font-semibold rounded-full shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                             >
                                 Contanos
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />

@@ -52,14 +52,14 @@ export default function LegalPage() {
                         href="#privacidad"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
                     >
-                        <Shield className="w-5 h-5 text-blue-400" />
+                        <Shield className="w-5 h-5 text-[#B7B3B0]" />
                         <span>Política de Privacidad</span>
                     </a>
                     <a
                         href="#terminos"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
                     >
-                        <FileText className="w-5 h-5 text-violet-400" />
+                        <FileText className="w-5 h-5 text-[#C84214]" />
                         <span>Términos y Condiciones</span>
                     </a>
                 </motion.div>
@@ -189,8 +189,8 @@ export default function LegalPage() {
                     className="mb-20"
                 >
                     <div className="flex items-center gap-3 mb-8">
-                        <div className="p-3 bg-violet-500/10 rounded-xl">
-                            <FileText className="w-6 h-6 text-violet-400" />
+                        <div className="p-3 bg-[#C84214]/10 rounded-xl">
+                            <FileText className="w-6 h-6 text-[#C84214]" />
                         </div>
                         <h2 className="text-3xl font-bold">Términos y Condiciones</h2>
                     </div>

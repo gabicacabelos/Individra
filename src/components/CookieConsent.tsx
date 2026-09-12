@@ -26,8 +26,8 @@ export function CookieConsent() {
             aria-live="polite"
             className="fixed bottom-0 left-0 right-0 z-[200] px-4 py-4 sm:px-6"
             style={{
-                background: 'linear-gradient(to top, rgba(9,9,11,0.98) 0%, rgba(9,9,11,0.95) 100%)',
-                borderTop: '1px solid rgba(139,92,246,0.2)',
+                background: 'linear-gradient(to top, rgba(11,13,14,0.98) 0%, rgba(15,19,21,0.95) 100%)',
+                borderTop: '1px solid rgba(200,66,20,0.25)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
             }}
@@ -39,7 +39,7 @@ export function CookieConsent() {
                     {' '}(PostHog) para entender cómo usás el sitio y mejorarlo. No compartimos tus datos con terceros.{' '}
                     <Link
                         href="/legal#privacidad"
-                        className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors"
+                        className="text-[#C84214] hover:text-[#D44A17] underline underline-offset-2 transition-colors"
                     >
                         Política de Privacidad
                     </Link>
@@ -55,8 +55,8 @@ export function CookieConsent() {
                         onClick={accept}
                         className="px-5 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200"
                         style={{
-                            background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
-                            boxShadow: '0 0 20px rgba(124,58,237,0.25)',
+                            background: 'linear-gradient(135deg, #C84214, #A8340E)',
+                            boxShadow: '0 0 20px rgba(200,66,20,0.25)',
                         }}
                     >
                         Aceptar

@@ -40,7 +40,7 @@ function Port({ className }: { className?: string }) {
     return (
         <span
             aria-hidden
-            className={`absolute z-10 w-2.5 h-2.5 rounded-full border border-violet-400/60 bg-[#0d0d18] transition-colors duration-300 group-hover:bg-violet-500/60 ${className}`}
+            className={`absolute z-10 w-2.5 h-2.5 rounded-full border border-[#C84214]/60 bg-[#222120] transition-colors duration-300 group-hover:bg-[#C84214]/80 ${className}`}
         />
     )
 }
@@ -56,7 +56,7 @@ function Edge({ vertical = false }: { vertical?: boolean }) {
         >
             <path
                 d={vertical ? 'M12 0 L12 48' : 'M0 12 L48 12'}
-                stroke="rgba(139,92,246,0.35)"
+                stroke="rgba(200,66,20,0.45)"
                 strokeWidth="1.5"
                 fill="none"
                 strokeDasharray="3 5"
@@ -78,18 +78,18 @@ function ServiceNode({ service, index }: { service: (typeof services)[number]; i
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
-            className="group relative flex-1 min-w-0 rounded-xl border border-dashed border-white/[0.14] bg-[#0d0d18] p-6 lg:p-7 transition-colors duration-300 hover:border-violet-500/50"
+            className="group relative flex-1 min-w-0 rounded-xl border border-[#3E3D3A] bg-[#222120] p-6 lg:p-7 transition-colors duration-300 hover:border-[#C84214]/50 shadow-sm"
         >
             {/* Textura de canvas */}
             <div
                 aria-hidden
-                className="absolute inset-0 rounded-xl bg-[radial-gradient(rgba(139,92,246,0.07)_1px,transparent_1px)] bg-[size:14px_14px]"
+                className="absolute inset-0 rounded-xl bg-[radial-gradient(rgba(183,179,176,0.05)_1px,transparent_1px)] bg-[size:14px_14px]"
             />
             {/* Glow contenido, solo al hover */}
             <div
                 aria-hidden
                 className="pointer-events-none absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: 'radial-gradient(circle at 50% 0%, rgba(139,92,246,0.10), transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle at 50% 0%, rgba(200,66,20,0.12), transparent 70%)' }}
             />
 
             {/* Puertos: entrada/salida a los lados en desktop, arriba/abajo en mobile */}
@@ -99,11 +99,11 @@ function ServiceNode({ service, index }: { service: (typeof services)[number]; i
             <Port className="lg:hidden -bottom-[5px] left-1/2 -translate-x-1/2" />
 
             <div className="relative">
-                <div className="w-10 h-10 rounded-lg border border-violet-500/25 bg-violet-500/10 flex items-center justify-center transition-colors duration-300 group-hover:border-violet-500/50">
-                    <Icon className="w-5 h-5 text-violet-300" />
+                <div className="w-10 h-10 rounded-lg border border-[#C84214]/30 bg-[#C84214]/10 flex items-center justify-center transition-colors duration-300 group-hover:border-[#C84214]/60">
+                    <Icon className="w-5 h-5 text-[#C84214]" />
                 </div>
-                <h3 className="mt-5 text-lg lg:text-xl font-bold text-white">{service.title}</h3>
-                <p className="mt-2.5 text-neutral-400 text-sm leading-relaxed">{service.description}</p>
+                <h3 className="mt-5 text-lg lg:text-xl font-bold text-[#E8E5DE]">{service.title}</h3>
+                <p className="mt-2.5 text-[#B7B3B0] text-sm leading-relaxed">{service.description}</p>
             </div>
         </motion.div>
     )
@@ -120,37 +120,37 @@ export function ServicesSection() {
     const lineWidth = useTransform(scrollYProgress, [0, 0.5], ['0%', '100%'])
 
     return (
-        <section ref={sectionRef} id="servicios" className="relative py-24 lg:py-32 bg-black overflow-hidden">
+        <section ref={sectionRef} id="servicios" className="relative py-24 lg:py-32 bg-[#0B0D0E] overflow-hidden">
             {/* Mobile animated background */}
             <MobileServicesBackground />
 
             {/* Background Effects */}
             <motion.div
                 style={{ y: backgroundY }}
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent"
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent"
             />
 
             {/* Animated line */}
             <div className="absolute top-0 left-0 right-0 h-px overflow-hidden">
                 <motion.div
                     style={{ width: lineWidth }}
-                    className="h-full bg-gradient-to-r from-transparent via-violet-500 to-transparent mx-auto"
+                    className="h-full bg-gradient-to-r from-transparent via-[#C84214] to-transparent mx-auto"
                 />
             </div>
 
             <div className="relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-12 lg:mb-16 px-6">
-                    <span className="inline-block text-violet-400 text-sm font-semibold uppercase tracking-widest">
+                    <span className="inline-block text-[#B7B3B0] text-sm font-semibold uppercase tracking-widest">
                         Nuestros Servicios
                     </span>
-                    <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+                    <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-[#E8E5DE]">
                         Servicios que{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] via-[#D44A17] to-[#B7B3B0]">
                             impulsan tu negocio
                         </span>
                     </h2>
-                    <p className="mt-6 text-neutral-400 text-base lg:text-lg max-w-2xl mx-auto">
+                    <p className="mt-6 text-[#B7B3B0] text-base lg:text-lg max-w-2xl mx-auto">
                         Diseñamos ecosistemas avanzados de Inteligencia Artificial y automatización
                         para crear soluciones personalizadas que escalan y transforman tu operación.
                     </p>

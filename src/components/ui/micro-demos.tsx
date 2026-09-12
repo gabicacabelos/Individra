@@ -11,8 +11,8 @@
  * - Altura fija en el contenedor: reserva el espacio y evita layout shift.
  */
 
-const STAGE = 'relative h-[104px] rounded-xl border border-white/[0.06] bg-[#0d0d1c] overflow-hidden'
-const DOTS = 'absolute inset-0 bg-[radial-gradient(rgba(139,92,246,0.10)_1px,transparent_1px)] bg-[size:12px_12px]'
+const STAGE = 'relative h-[104px] rounded-xl border border-[#3E3D3A] bg-[#1E1D1C] overflow-hidden'
+const DOTS = 'absolute inset-0 bg-[radial-gradient(rgba(200,66,20,0.12)_1px,transparent_1px)] bg-[size:12px_12px]'
 
 function Stage({ children }: { children: React.ReactNode }) {
     return (
@@ -35,10 +35,10 @@ export function ChatStatusDemo() {
                     <p className="text-[10px] leading-snug text-neutral-300">¿Dónde está mi pedido?</p>
                 </div>
                 <div
-                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-violet-500/20 border border-violet-400/30 px-2.5 py-1.5"
+                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-[#C84214]/15 border border-[#C84214]/35 px-2.5 py-1.5"
                     style={{ animationName: 'md-rise', animationDelay: '1.1s' }}
                 >
-                    <p className="text-[10px] leading-snug text-violet-100">
+                    <p className="text-[10px] leading-snug text-[#FFE8DF]">
                         Sale hoy en el reparto de zona norte, 9–12hs
                     </p>
                 </div>
@@ -56,10 +56,10 @@ export function OcrDemo() {
                 <svg viewBox="0 0 34 42" className="md-anim w-8 h-10 shrink-0" style={{ animationName: 'md-float', animationDuration: '4s' }}>
                     <path
                         d="M3 3 h18 l10 10 v26 a2 2 0 0 1 -2 2 h-26 a2 2 0 0 1 -2 -2 v-34 a2 2 0 0 1 2 -2 z"
-                        fill="rgba(96,165,250,0.08)" stroke="#60a5fa" strokeWidth="2" strokeLinejoin="round"
+                        fill="rgba(200,66,20,0.08)" stroke="#C84214" strokeWidth="2" strokeLinejoin="round"
                     />
-                    <path d="M21 3 v10 h10" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinejoin="round" />
-                    <g stroke="#93c5fd" strokeWidth="1.6" strokeLinecap="round" opacity="0.7">
+                    <path d="M21 3 v10 h10" fill="none" stroke="#C84214" strokeWidth="2" strokeLinejoin="round" />
+                    <g stroke="#B7B3B0" strokeWidth="1.6" strokeLinecap="round" opacity="0.7">
                         <line x1="9" y1="22" x2="25" y2="22" />
                         <line x1="9" y1="28" x2="25" y2="28" />
                         <line x1="9" y1="34" x2="19" y2="34" />
@@ -67,7 +67,7 @@ export function OcrDemo() {
                 </svg>
 
                 {/* Flecha */}
-                <svg viewBox="0 0 24 12" className="w-5 h-3 shrink-0" fill="none" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 12" className="w-5 h-3 shrink-0" fill="none" stroke="#C84214" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="1" y1="6" x2="18" y2="6" strokeDasharray="2 3" />
                     <path d="M15 2 l5 4 -5 4" />
                 </svg>
@@ -77,7 +77,7 @@ export function OcrDemo() {
                     {[0, 1, 2].map((i) => (
                         <div key={i} className="h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
                             <div
-                                className="md-anim h-full rounded-full bg-gradient-to-r from-violet-400 to-blue-400 origin-left"
+                                className="md-anim h-full rounded-full bg-gradient-to-r from-[#C84214] to-[#B7B3B0] origin-left"
                                 style={{ animationName: 'md-fill', animationDelay: `${i * 0.35}s` }}
                             />
                         </div>
@@ -127,11 +127,11 @@ export function HomeAccessDemo() {
                 {rows.map(([label, value], i) => (
                     <div
                         key={label}
-                        className="md-anim flex items-center justify-between gap-2 rounded-md border border-violet-400/20 bg-violet-500/[0.08] px-2.5 py-1.5"
+                        className="md-anim flex items-center justify-between gap-2 rounded-md border border-[#C84214]/20 bg-[#C84214]/[0.08] px-2.5 py-1.5"
                         style={{ animationName: 'md-rise', animationDelay: `${i * 0.3}s` }}
                     >
                         <span className="text-[9px] text-neutral-400 shrink-0">{label}</span>
-                        <span className="text-[9px] font-medium text-violet-200 text-right">{value}</span>
+                        <span className="text-[9px] font-medium text-[#B7B3B0] text-right">{value}</span>
                     </div>
                 ))}
             </div>
@@ -145,16 +145,16 @@ export function PositionAlertDemo() {
         <Stage>
             <div className="h-full flex flex-col justify-center gap-1.5 px-3">
                 <div
-                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-violet-500/20 border border-violet-400/30 px-2.5 py-1.5"
+                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-[#C84214]/15 border border-[#C84214]/30 px-2.5 py-1.5"
                     style={{ animationName: 'md-rise' }}
                 >
-                    <p className="text-[10px] leading-snug text-violet-100">Tu pedido está a 2 paradas</p>
+                    <p className="text-[10px] leading-snug text-[#FFE8DF]">Tu pedido está a 2 paradas</p>
                 </div>
                 <div
-                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-violet-500/25 border border-violet-400/40 px-2.5 py-1.5"
+                    className="md-anim self-end max-w-[85%] rounded-lg rounded-br-sm bg-[#C84214]/25 border border-[#C84214]/45 px-2.5 py-1.5"
                     style={{ animationName: 'md-rise', animationDelay: '1.1s' }}
                 >
-                    <p className="text-[10px] leading-snug text-violet-50 font-medium">Sos la próxima parada</p>
+                    <p className="text-[10px] leading-snug text-white font-medium">Sos la próxima parada</p>
                 </div>
             </div>
         </Stage>
@@ -220,17 +220,17 @@ export function HandoffDemo() {
         <Stage>
             <div className="h-full flex items-center justify-center gap-2.5 px-3">
                 <span className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg border border-white/10 bg-white/[0.04]">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="4" y="7" width="16" height="12" rx="3" /><circle cx="9" cy="13" r="1.2" fill="#60a5fa" stroke="none" /><circle cx="15" cy="13" r="1.2" fill="#60a5fa" stroke="none" /><path d="M12 7V4" />
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#C84214" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="4" y="7" width="16" height="12" rx="3" /><circle cx="9" cy="13" r="1.2" fill="#C84214" stroke="none" /><circle cx="15" cy="13" r="1.2" fill="#C84214" stroke="none" /><path d="M12 7V4" />
                     </svg>
                 </span>
                 <span
-                    className="md-anim rounded-full border border-violet-400/30 bg-violet-500/20 px-2 py-0.5 text-[9px] text-violet-100"
+                    className="md-anim rounded-full border border-[#C84214]/30 bg-[#C84214]/15 px-2 py-0.5 text-[9px] text-[#FFE8DF]"
                     style={{ animationName: 'md-rise', animationDelay: '0.4s' }}
                 >
                     contexto
                 </span>
-                <svg viewBox="0 0 24 12" className="w-5 h-3 shrink-0" fill="none" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 12" className="w-5 h-3 shrink-0" fill="none" stroke="#B7B3B0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="1" y1="6" x2="18" y2="6" strokeDasharray="2 3" /><path d="M15 2 l5 4 -5 4" />
                 </svg>
                 <span
@@ -259,7 +259,7 @@ export function PriorNoticeDemo() {
                 </div>
                 <div className="flex items-center gap-1.5 pl-1">
                     <span
-                        className="md-anim inline-flex items-center gap-1 rounded-full border border-violet-400/60 bg-violet-500/25 px-2.5 py-1 text-[9px] font-medium text-violet-100"
+                        className="md-anim inline-flex items-center gap-1 rounded-full border border-[#C84214]/60 bg-[#C84214]/25 px-2.5 py-1 text-[9px] font-medium text-white"
                         style={{ animationName: 'md-pop', animationDelay: '0.9s' }}
                     >
                         Sí, espero
@@ -288,10 +288,10 @@ export function AnomalyLogDemo() {
                 {rows.map(([time, label], i) => (
                     <div
                         key={label}
-                        className="md-anim flex items-center gap-2 rounded-md border border-violet-400/20 bg-violet-500/[0.08] px-2 py-1.5"
+                        className="md-anim flex items-center gap-2 rounded-md border border-[#C84214]/20 bg-[#C84214]/[0.08] px-2 py-1.5"
                         style={{ animationName: 'md-rise', animationDelay: `${i * 0.35}s` }}
                     >
-                        <span className="font-mono text-[9px] text-violet-300/80 shrink-0">{time}</span>
+                        <span className="font-mono text-[9px] text-[#B7B3B0] shrink-0">{time}</span>
                         <span className="text-[9px] text-neutral-300">{label}</span>
                     </div>
                 ))}
@@ -307,10 +307,10 @@ export function ReputationShieldDemo() {
             <div className="h-full flex flex-col justify-center gap-1.5 px-3">
                 {/* Pregunta de satisfacción */}
                 <div
-                    className="md-anim self-end max-w-[88%] rounded-lg rounded-br-sm bg-violet-500/20 border border-violet-400/30 px-2.5 py-1.5"
+                    className="md-anim self-end max-w-[88%] rounded-lg rounded-br-sm bg-[#C84214]/15 border border-[#C84214]/30 px-2.5 py-1.5"
                     style={{ animationName: 'md-rise' }}
                 >
-                    <p className="text-[10px] leading-snug text-violet-100">¿Cómo fue tu experiencia con la entrega?</p>
+                    <p className="text-[10px] leading-snug text-[#FFE8DF]">¿Cómo fue tu experiencia con la entrega?</p>
                 </div>
                 {/* Opciones */}
                 <div className="flex items-center gap-1.5 pl-1">
@@ -372,18 +372,18 @@ export function MonthlyOperationsDemo() {
                 {/* 3 KPIs animados */}
                 <div className="grid grid-cols-3 gap-1.5">
                     <div
-                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-cyan-500/10 border border-cyan-400/25"
+                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-[#B7B3B0]/10 border border-[#B7B3B0]/25"
                         style={{ animationName: 'md-pop' }}
                     >
-                        <span className="text-[8px] text-cyan-300/80">Salvadas</span>
-                        <span className="text-[10px] font-mono font-bold text-cyan-200">88%</span>
+                        <span className="text-[8px] text-[#B7B3B0]">Salvadas</span>
+                        <span className="text-[10px] font-mono font-bold text-[#E8E5DE]">88%</span>
                     </div>
                     <div
-                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-violet-500/10 border border-violet-400/25"
+                        className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-[#C84214]/15 border border-[#C84214]/30"
                         style={{ animationName: 'md-pop', animationDelay: '0.2s' }}
                     >
-                        <span className="text-[8px] text-violet-300/80">Evidencias</span>
-                        <span className="text-[10px] font-mono font-bold text-violet-200">142</span>
+                        <span className="text-[8px] text-[#B7B3B0]">Evidencias</span>
+                        <span className="text-[10px] font-mono font-bold text-white">142</span>
                     </div>
                     <div
                         className="md-anim flex flex-col items-center justify-center p-1 rounded-md bg-emerald-500/10 border border-emerald-400/25"
@@ -396,14 +396,13 @@ export function MonthlyOperationsDemo() {
 
                 {/* Insight IA proyectado */}
                 <div
-                    className="md-anim flex items-center justify-between px-2.5 py-1 rounded-md bg-violet-500/15 border border-violet-400/30"
+                    className="md-anim flex items-center justify-between px-2.5 py-1 rounded-md bg-[#222120] border border-[#3E3D3A]"
                     style={{ animationName: 'md-rise', animationDelay: '0.8s' }}
                 >
-                    <span className="text-[9px] text-violet-200 font-medium flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                    <span className="text-[9px] text-[#FFE8DF] font-medium">
                         IA: Detección de patrones
                     </span>
-                    <span className="text-[9px] font-bold text-violet-300">Zona Norte OK</span>
+                    <span className="text-[9px] font-bold text-[#B7B3B0]">Zona Norte OK</span>
                 </div>
             </div>
         </Stage>

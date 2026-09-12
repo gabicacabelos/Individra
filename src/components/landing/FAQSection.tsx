@@ -41,12 +41,12 @@ export function FAQSection() {
     }
 
     return (
-        <section id="faq" className="relative py-32 bg-black overflow-hidden">
+        <section id="faq" className="relative py-32 bg-[#0B0D0E] overflow-hidden">
             {/* Mobile animated background */}
             <MobileFAQBackground />
 
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent" />
 
             {/* Animated line */}
             <motion.div
@@ -54,7 +54,7 @@ export function FAQSection() {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent"
+                className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C84214]/40 to-transparent"
             />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6">
@@ -71,9 +71,9 @@ export function FAQSection() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 text-violet-400 text-sm font-semibold uppercase tracking-widest"
+                        className="inline-flex items-center gap-2 text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]"
                     >
-                        <HelpCircle className="w-4 h-4" />
+                        <HelpCircle className="w-4 h-4 text-[#B7B3B0]" />
                         Preguntas Frecuentes
                     </motion.span>
                     <motion.h2
@@ -84,7 +84,7 @@ export function FAQSection() {
                         className="mt-4 text-4xl sm:text-5xl font-bold text-white"
                     >
                         ¿Tenés{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-blue-400">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                             dudas?
                         </span>
                     </motion.h2>
@@ -121,16 +121,16 @@ export function FAQSection() {
                             >
                                 <div
                                     className={`relative rounded-2xl border backdrop-blur-sm transition-all duration-300 overflow-hidden ${
-                                        isActive
-                                            ? 'border-violet-500/30 bg-neutral-900/80'
-                                            : 'border-white/10 bg-neutral-900/40 hover:border-white/20 hover:bg-neutral-900/60'
-                                    }`}
+                                         isActive
+                                             ? 'border-[#C84214]/50 bg-[#262523] shadow-lg shadow-[#C84214]/10'
+                                             : 'border-[#3E3D3A] bg-[#222120] hover:border-[#3E3D3A]/80 hover:bg-[#262523]'
+                                     }`}
                                 >
                                     {/* Glow effect when active */}
                                     {isActive && (
                                         <motion.div
                                             layoutId="faq-glow"
-                                            className="absolute inset-0 bg-gradient-to-r from-violet-600/5 to-blue-600/5 rounded-2xl"
+                                            className="absolute inset-0 bg-gradient-to-r from-[#C84214]/10 to-transparent rounded-2xl"
                                             transition={{ duration: 0.3 }}
                                         />
                                     )}
@@ -142,7 +142,7 @@ export function FAQSection() {
                                     >
                                         <div className="flex items-center gap-4">
                                             <span className={`text-sm font-mono transition-colors duration-300 ${
-                                                isActive ? 'text-violet-400' : 'text-neutral-600'
+                                                isActive ? 'text-[#C84214]' : 'text-neutral-600'
                                             }`}>
                                                 0{index + 1}
                                             </span>
@@ -157,7 +157,7 @@ export function FAQSection() {
                                             transition={{ duration: 0.3 }}
                                             className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
                                                 isActive
-                                                    ? 'bg-gradient-to-r from-violet-600 to-blue-600'
+                                                    ? 'bg-[#C84214]'
                                                     : 'bg-neutral-800 group-hover:bg-neutral-700'
                                             }`}
                                         >
@@ -193,7 +193,7 @@ export function FAQSection() {
                                                         initial={{ scaleX: 0 }}
                                                         animate={{ scaleX: 1 }}
                                                         transition={{ delay: 0.2, duration: 0.4 }}
-                                                        className="mt-4 h-px w-24 bg-gradient-to-r from-violet-500/50 to-transparent origin-left"
+                                                        className="mt-4 h-px w-24 bg-gradient-to-r from-[#C84214]/50 to-transparent origin-left"
                                                     />
                                                 </div>
                                             </motion.div>
@@ -216,7 +216,7 @@ export function FAQSection() {
                     <p className="text-neutral-500 mb-4">¿No encontrás tu respuesta?</p>
                     <a
                         href="#contacto"
-                        className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
+                        className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-[#C84214] text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
                     >
                         Contactanos
                         <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-200" />

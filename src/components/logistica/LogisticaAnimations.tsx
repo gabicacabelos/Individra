@@ -39,23 +39,23 @@ export function HeroLogisticsScene({ className }: Props) {
         >
             <defs>
                 <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#a78bfa" />
-                    <stop offset="55%" stopColor="#60a5fa" />
-                    <stop offset="100%" stopColor="#22d3ee" />
+                    <stop offset="0%" stopColor="#C84214" />
+                    <stop offset="55%" stopColor="#D44A17" />
+                    <stop offset="100%" stopColor="#B7B3B0" />
                 </linearGradient>
                 <radialGradient id="hero-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(139,92,246,0.28)" />
-                    <stop offset="100%" stopColor="rgba(139,92,246,0)" />
+                    <stop offset="0%" stopColor="rgba(200,66,20,0.25)" />
+                    <stop offset="100%" stopColor="rgba(200,66,20,0)" />
                 </radialGradient>
-                <radialGradient id="hero-glow-cyan" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(34,211,238,0.22)" />
-                    <stop offset="100%" stopColor="rgba(34,211,238,0)" />
+                <radialGradient id="hero-glow-smoke" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="rgba(62,61,58,0.40)" />
+                    <stop offset="100%" stopColor="rgba(62,61,58,0)" />
                 </radialGradient>
             </defs>
 
             {/* Ambient glows */}
             <ellipse cx="240" cy="210" rx="220" ry="140" fill="url(#hero-glow)" />
-            <ellipse cx="400" cy="120" rx="110" ry="90" fill="url(#hero-glow-cyan)" />
+            <ellipse cx="400" cy="120" rx="110" ry="90" fill="url(#hero-glow-smoke)" />
 
             {/* ---- Tracking route (origen -> destino), flujo animado ---- */}
             <path
@@ -78,48 +78,29 @@ export function HeroLogisticsScene({ className }: Props) {
             {/* Origen: depósito / warehouse */}
             <g>
                 <path d="M40 250 v-34 l24 -16 l24 16 v34" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} />
-                <rect x="52" y="228" width="24" height="22" rx="2" stroke="#93c5fd" strokeWidth="2" {...stroke} />
-                <line x1="52" y1="238" x2="76" y2="238" stroke="#93c5fd" strokeWidth="2" {...stroke} />
+                <rect x="52" y="228" width="24" height="22" rx="2" stroke="#B7B3B0" strokeWidth="2" {...stroke} />
+                <line x1="52" y1="238" x2="76" y2="238" stroke="#B7B3B0" strokeWidth="2" {...stroke} />
             </g>
 
-            {/* Nodos de señal pulsando a lo largo de la ruta */}
+            {/* Nodos de señal limpios a lo largo de la ruta (sin destellos intermitentes) */}
             {[
-                { cx: 168, cy: 205, d: 0 },
-                { cx: 262, cy: 140, d: 0.6 },
-                { cx: 348, cy: 122, d: 1.2 },
+                { cx: 168, cy: 205 },
+                { cx: 262, cy: 140 },
+                { cx: 348, cy: 122 },
             ].map((n, i) => (
                 <g key={i}>
-                    <motion.circle
-                        cx={n.cx}
-                        cy={n.cy}
-                        r="4"
-                        fill="none"
-                        stroke="#22d3ee"
-                        strokeWidth="1.5"
-                        initial={{ scale: 0.6, opacity: 0.7 }}
-                        animate={{ scale: [0.6, 2.2], opacity: [0.7, 0] }}
-                        transition={loop({ duration: 2, repeat: Infinity, ease: 'easeOut', delay: n.d })}
-                        style={{ transformOrigin: `${n.cx}px ${n.cy}px` }}
-                    />
-                    <circle cx={n.cx} cy={n.cy} r="2.5" fill="#22d3ee" />
+                    <circle cx={n.cx} cy={n.cy} r="4" fill="#222120" stroke="#C84214" strokeWidth="1.5" />
+                    <circle cx={n.cx} cy={n.cy} r="2" fill="#C84214" />
                 </g>
             ))}
 
-            {/* Destino: pin con pings */}
+            {/* Destino: pin sobrio y preciso */}
             <g>
-                <motion.circle
-                    cx="410" cy="92" r="10"
-                    fill="none" stroke="#a78bfa" strokeWidth="2"
-                    initial={{ scale: 1, opacity: 0.8 }}
-                    animate={{ scale: [1, 2.6], opacity: [0.8, 0] }}
-                    transition={loop({ duration: 2.4, repeat: Infinity, ease: 'easeOut' })}
-                    style={{ transformOrigin: '410px 92px' }}
-                />
                 <path
                     d="M410 70 c 12 0 21 9 21 21 c 0 14 -21 33 -21 33 c 0 0 -21 -19 -21 -33 c 0 -12 9 -21 21 -21 z"
-                    stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.10)"
+                    stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.12)"
                 />
-                <circle cx="410" cy="91" r="6.5" fill="none" stroke="#22d3ee" strokeWidth="2" />
+                <circle cx="410" cy="91" r="6.5" fill="none" stroke="#D44A17" strokeWidth="2" />
             </g>
 
             {/* ---- Camión (bob sutil + ruedas girando) ---- */}
@@ -128,14 +109,14 @@ export function HeroLogisticsScene({ className }: Props) {
                 transition={loop({ duration: 2.6, repeat: Infinity, ease: 'easeInOut' })}
             >
                 {/* Trailer */}
-                <rect x="150" y="238" width="120" height="60" rx="7" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(96,165,250,0.05)" />
+                <rect x="150" y="238" width="120" height="60" rx="7" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(183,179,176,0.06)" />
                 <line x1="168" y1="238" x2="168" y2="298" stroke="url(#hero-grad)" strokeWidth="1.5" opacity="0.5" {...stroke} />
                 <line x1="150" y1="262" x2="270" y2="262" stroke="url(#hero-grad)" strokeWidth="1.5" opacity="0.35" {...stroke} />
                 {/* Cab */}
-                <path d="M270 252 h28 l20 22 v24 h-48 z" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(167,139,250,0.06)" />
-                <rect x="278" y="258" width="22" height="16" rx="2" stroke="#22d3ee" strokeWidth="2" {...stroke} />
+                <path d="M270 252 h28 l20 22 v24 h-48 z" stroke="url(#hero-grad)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.08)" />
+                <rect x="278" y="258" width="22" height="16" rx="2" stroke="#D44A17" strokeWidth="2" {...stroke} />
                 {/* Faro */}
-                <circle cx="316" cy="290" r="2.5" fill="#22d3ee" />
+                <circle cx="316" cy="290" r="2.5" fill="#C84214" />
                 {/* Ruedas */}
                 {[196, 300].map((cx) => (
                     <g key={cx}>
@@ -145,20 +126,20 @@ export function HeroLogisticsScene({ className }: Props) {
                             transition={loop({ duration: 1.4, repeat: Infinity, ease: 'linear' })}
                             style={{ transformOrigin: `${cx}px 300px` }}
                         >
-                            <line x1={cx} y1="290" x2={cx} y2="310" stroke="#60a5fa" strokeWidth="1.5" {...stroke} />
-                            <line x1={cx - 10} y1="300" x2={cx + 10} y2="300" stroke="#60a5fa" strokeWidth="1.5" {...stroke} />
+                            <line x1={cx} y1="290" x2={cx} y2="310" stroke="#B7B3B0" strokeWidth="1.5" {...stroke} />
+                            <line x1={cx - 10} y1="300" x2={cx + 10} y2="300" stroke="#B7B3B0" strokeWidth="1.5" {...stroke} />
                         </motion.g>
-                        <circle cx={cx} cy="300" r="3" fill="#a78bfa" />
+                        <circle cx={cx} cy="300" r="3" fill="#C84214" />
                     </g>
                 ))}
             </motion.g>
 
             {/* Paquetes cerca del depósito */}
             <g opacity="0.9">
-                <rect x="96" y="266" width="30" height="30" rx="3" stroke="#93c5fd" strokeWidth="2" {...stroke} />
-                <line x1="96" y1="281" x2="126" y2="281" stroke="#93c5fd" strokeWidth="2" {...stroke} />
-                <line x1="111" y1="266" x2="111" y2="281" stroke="#93c5fd" strokeWidth="2" {...stroke} />
-                <rect x="104" y="244" width="22" height="22" rx="3" stroke="#93c5fd" strokeWidth="2" opacity="0.7" {...stroke} />
+                <rect x="96" y="266" width="30" height="30" rx="3" stroke="#B7B3B0" strokeWidth="2" {...stroke} />
+                <line x1="96" y1="281" x2="126" y2="281" stroke="#B7B3B0" strokeWidth="2" {...stroke} />
+                <line x1="111" y1="266" x2="111" y2="281" stroke="#B7B3B0" strokeWidth="2" {...stroke} />
+                <rect x="104" y="244" width="22" height="22" rx="3" stroke="#B7B3B0" strokeWidth="2" opacity="0.7" {...stroke} />
             </g>
 
             {/* ---- Burbujas de WhatsApp que ciclan ---- */}
@@ -169,9 +150,9 @@ export function HeroLogisticsScene({ className }: Props) {
                 transition={loop({ duration: 5, repeat: Infinity, times: [0, 0.12, 0.5, 0.62], ease: 'easeOut' })}
             >
                 <path d="M60 44 h150 a12 12 0 0 1 12 12 v24 a12 12 0 0 1 -12 12 h-128 l-16 14 v-14 a12 12 0 0 1 -6 -12 v-24 a12 12 0 0 1 12 -12 z"
-                    stroke="#64748b" strokeWidth="2" {...stroke} fill="rgba(148,163,184,0.08)" />
-                <line x1="76" y1="62" x2="200" y2="62" stroke="#94a3b8" strokeWidth="2.5" opacity="0.6" {...stroke} />
-                <line x1="76" y1="76" x2="168" y2="76" stroke="#94a3b8" strokeWidth="2.5" opacity="0.35" {...stroke} />
+                    stroke="#3E3D3A" strokeWidth="2" {...stroke} fill="rgba(62,61,58,0.25)" />
+                <line x1="76" y1="62" x2="200" y2="62" stroke="#6E6C6A" strokeWidth="2.5" opacity="0.6" {...stroke} />
+                <line x1="76" y1="76" x2="168" y2="76" stroke="#6E6C6A" strokeWidth="2.5" opacity="0.35" {...stroke} />
             </motion.g>
 
             {/* Saliente (respuesta con check) */}
@@ -181,11 +162,11 @@ export function HeroLogisticsScene({ className }: Props) {
                 transition={loop({ duration: 5, repeat: Infinity, times: [0, 0.5, 0.6, 0.9, 1], ease: 'easeOut' })}
             >
                 <path d="M250 96 h150 a12 12 0 0 1 12 12 v24 a12 12 0 0 1 -12 12 h-16 l-16 14 v-14 h-102 a12 12 0 0 1 -12 -12 v-24 a12 12 0 0 1 12 -12 z"
-                    stroke="url(#hero-grad)" strokeWidth="2" {...stroke} fill="rgba(139,92,246,0.12)" />
-                <line x1="266" y1="114" x2="384" y2="114" stroke="#c4b5fd" strokeWidth="2.5" opacity="0.7" {...stroke} />
+                    stroke="url(#hero-grad)" strokeWidth="2" {...stroke} fill="rgba(200,66,20,0.12)" />
+                <line x1="266" y1="114" x2="384" y2="114" stroke="#E8E5DE" strokeWidth="2.5" opacity="0.7" {...stroke} />
                 {/* doble check */}
-                <path d="M366 130 l5 5 9 -11" stroke="#22d3ee" strokeWidth="2.2" {...stroke} />
-                <path d="M374 130 l5 5 9 -11" stroke="#22d3ee" strokeWidth="2.2" {...stroke} />
+                <path d="M366 130 l5 5 9 -11" stroke="#C84214" strokeWidth="2.2" {...stroke} />
+                <path d="M374 130 l5 5 9 -11" stroke="#C84214" strokeWidth="2.2" {...stroke} />
             </motion.g>
         </svg>
     )
@@ -204,19 +185,19 @@ export function SaturatedOpsScene({ className }: Props) {
         <svg viewBox="0 0 320 240" className={className} role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="ops-grad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#a78bfa" />
-                    <stop offset="100%" stopColor="#22d3ee" />
+                    <stop offset="0%" stopColor="#C84214" />
+                    <stop offset="100%" stopColor="#D44A17" />
                 </linearGradient>
                 <radialGradient id="ops-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(139,92,246,0.26)" />
-                    <stop offset="100%" stopColor="rgba(244,63,94,0)" />
+                    <stop offset="0%" stopColor="rgba(200,66,20,0.22)" />
+                    <stop offset="100%" stopColor="rgba(62,61,58,0)" />
                 </radialGradient>
             </defs>
 
             <ellipse cx="160" cy="128" rx="140" ry="94" fill="url(#ops-glow)" />
 
             {/* Teléfono */}
-            <rect x="116" y="60" width="88" height="156" rx="14" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.05)" />
+            <rect x="116" y="60" width="88" height="156" rx="14" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.06)" />
             <line x1="150" y1="74" x2="170" y2="74" stroke="url(#ops-grad)" strokeWidth="2.5" {...stroke} />
 
             {/* Burbujas desbordando: aparecen una tras otra (backlog) */}
@@ -233,7 +214,7 @@ export function SaturatedOpsScene({ className }: Props) {
                 >
                     <path
                         d={`M130 ${b.y} h${b.w} a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-${b.w - 14} l-9 9 v-9 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 z`}
-                        stroke="#c4b5fd" strokeWidth="2" {...stroke} fill="rgba(139,92,246,0.08)"
+                        stroke="#B7B3B0" strokeWidth="2" {...stroke} fill="rgba(200,66,20,0.08)"
                     />
                 </motion.g>
             ))}
@@ -249,32 +230,28 @@ export function SaturatedOpsScene({ className }: Props) {
                 />
             ))}
 
-            {/* Badge de notificaciones pulsante */}
-            <motion.g
-                animate={reduce ? undefined : { scale: [1, 1.12, 1] }}
-                transition={loop({ duration: 1.6, repeat: Infinity, ease: 'easeInOut' })}
-                style={{ transformOrigin: '200px 66px' }}
-            >
-                <circle cx="200" cy="66" r="14" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} fill="rgba(139,92,246,0.16)" />
-                <text x="200" y="71" textAnchor="middle" fontSize="13" fill="#a78bfa" fontFamily="ui-monospace, monospace" fontWeight="bold">+9</text>
-            </motion.g>
+            {/* Badge de notificaciones (estático y limpio) */}
+            <g>
+                <circle cx="200" cy="66" r="14" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} fill="rgba(200,66,20,0.16)" />
+                <text x="200" y="71" textAnchor="middle" fontSize="13" fill="#C84214" fontFamily="ui-monospace, monospace" fontWeight="bold">+9</text>
+            </g>
 
             {/* Reloj con manecilla girando (tiempo perdido) */}
             <g>
                 <circle cx="74" cy="80" r="22" stroke="url(#ops-grad)" strokeWidth="2" {...stroke} />
-                <line x1="74" y1="80" x2="74" y2="66" stroke="#a78bfa" strokeWidth="2" {...stroke} />
+                <line x1="74" y1="80" x2="74" y2="66" stroke="#C84214" strokeWidth="2" {...stroke} />
                 <motion.line
                     x1="74" y1="80" x2="74" y2="70"
-                    stroke="#22d3ee" strokeWidth="2.5" {...stroke}
+                    stroke="#D44A17" strokeWidth="2.5" {...stroke}
                     animate={reduce ? undefined : { rotate: 360 }}
                     transition={loop({ duration: 4, repeat: Infinity, ease: 'linear' })}
                     style={{ transformOrigin: '74px 80px' }}
                 />
-                <circle cx="74" cy="80" r="2.5" fill="#22d3ee" />
+                <circle cx="74" cy="80" r="2.5" fill="#C84214" />
             </g>
 
             {/* Papeles sueltos */}
-            <rect x="238" y="152" width="36" height="26" rx="3" stroke="#c4b5fd" strokeWidth="2" opacity="0.7" transform="rotate(12 256 165)" {...stroke} />
+            <rect x="238" y="152" width="36" height="26" rx="3" stroke="#B7B3B0" strokeWidth="2" opacity="0.7" transform="rotate(12 256 165)" {...stroke} />
         </svg>
     )
 }
@@ -294,8 +271,8 @@ function IconWrap({ children, gradId }: { children: React.ReactNode; gradId: str
         <svg viewBox="0 0 72 72" className="w-full h-full" role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#a78bfa" />
-                    <stop offset="100%" stopColor="#22d3ee" />
+                    <stop offset="0%" stopColor="#C84214" />
+                    <stop offset="100%" stopColor="#D44A17" />
                 </linearGradient>
             </defs>
             {children}
@@ -312,7 +289,7 @@ export function HomeAccessIcon() {
                 stroke="url(#mod-home)" strokeWidth="2.5" {...stroke}
                 {...drawIn} transition={{ duration: 1 }}
             />
-            <line x1="36" y1="16" x2="36" y2="8" stroke="#a78bfa" strokeWidth="2.5" {...stroke} />
+            <line x1="36" y1="16" x2="36" y2="8" stroke="#C84214" strokeWidth="2.5" {...stroke} />
             <motion.g
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -320,9 +297,9 @@ export function HomeAccessIcon() {
                 transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 14 }}
                 style={{ transformOrigin: '46px 47px' }}
             >
-                <rect x="34" y="38" width="24" height="18" rx="3" stroke="url(#mod-home)" strokeWidth="2.2" {...stroke} fill="rgba(34,211,238,0.10)" />
-                <line x1="39" y1="44" x2="53" y2="44" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
-                <line x1="39" y1="50" x2="49" y2="50" stroke="#22d3ee" strokeWidth="1.8" {...stroke} />
+                <rect x="34" y="38" width="24" height="18" rx="3" stroke="url(#mod-home)" strokeWidth="2.2" {...stroke} fill="rgba(200,66,20,0.12)" />
+                <line x1="39" y1="44" x2="53" y2="44" stroke="#D44A17" strokeWidth="1.8" {...stroke} />
+                <line x1="39" y1="50" x2="49" y2="50" stroke="#D44A17" strokeWidth="1.8" {...stroke} />
             </motion.g>
         </IconWrap>
     )
@@ -330,7 +307,6 @@ export function HomeAccessIcon() {
 
 /* Aviso por posición: ruta con badge de paradas restantes */
 export function PositionAlertIcon() {
-    const reduce = useReducedMotion()
     return (
         <IconWrap gradId="mod-position">
             <motion.path
@@ -338,7 +314,7 @@ export function PositionAlertIcon() {
                 stroke="url(#mod-position)" strokeWidth="2.5" strokeDasharray="2 6" {...stroke}
                 {...drawIn} transition={{ duration: 1 }}
             />
-            <circle cx="10" cy="52" r="3.5" fill="#a78bfa" />
+            <circle cx="10" cy="52" r="3.5" fill="#C84214" />
             <motion.g
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -346,17 +322,9 @@ export function PositionAlertIcon() {
                 transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 14 }}
                 style={{ transformOrigin: '56px 16px' }}
             >
-                <circle cx="56" cy="16" r="12" stroke="url(#mod-position)" strokeWidth="2.5" {...stroke} fill="rgba(34,211,238,0.10)" />
-                <text x="56" y="21" textAnchor="middle" fontSize="13" fill="#22d3ee" fontFamily="ui-monospace, monospace" fontWeight="bold">2</text>
+                <circle cx="56" cy="16" r="12" stroke="url(#mod-position)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.12)" />
+                <text x="56" y="21" textAnchor="middle" fontSize="13" fill="#C84214" fontFamily="ui-monospace, monospace" fontWeight="bold">2</text>
             </motion.g>
-            {!reduce && (
-                <motion.circle
-                    cx="10" cy="52" r="3.5" fill="none" stroke="#a78bfa" strokeWidth="1.5"
-                    animate={{ scale: [1, 2.4], opacity: [0.7, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-                    style={{ transformOrigin: '10px 52px' }}
-                />
-            )}
         </IconWrap>
     )
 }
@@ -371,7 +339,7 @@ export function ExpirationClockIcon() {
                 stroke="url(#mod-clock)" strokeWidth="2.5" {...stroke}
                 {...drawIn} transition={{ duration: 1 }}
             />
-            <line x1="36" y1="36" x2="36" y2="20" stroke="#a78bfa" strokeWidth="2" {...stroke} />
+            <line x1="36" y1="36" x2="36" y2="20" stroke="#C84214" strokeWidth="2" {...stroke} />
             <motion.line
                 x1="36" y1="36" x2="48" y2="36"
                 strokeWidth="2.5" {...stroke}
@@ -379,7 +347,7 @@ export function ExpirationClockIcon() {
                 transition={reduce ? undefined : { duration: 4, repeat: Infinity, ease: 'linear' }}
                 style={{ transformOrigin: '36px 36px' }}
             />
-            <circle cx="36" cy="36" r="2.5" fill="#22d3ee" />
+            <circle cx="36" cy="36" r="2.5" fill="#D44A17" />
         </IconWrap>
     )
 }
@@ -394,19 +362,19 @@ export function SelfSchedulingIcon() {
                 {...drawIn} transition={{ duration: 0.9 }}
             />
             <line x1="14" y1="30" x2="58" y2="30" stroke="url(#mod-cal)" strokeWidth="2" {...stroke} />
-            <line x1="24" y1="14" x2="24" y2="22" stroke="#a78bfa" strokeWidth="2.5" {...stroke} />
-            <line x1="48" y1="14" x2="48" y2="22" stroke="#a78bfa" strokeWidth="2.5" {...stroke} />
+            <line x1="24" y1="14" x2="24" y2="22" stroke="#C84214" strokeWidth="2.5" {...stroke} />
+            <line x1="48" y1="14" x2="48" y2="22" stroke="#C84214" strokeWidth="2.5" {...stroke} />
             {/* slots */}
             {[
                 [22, 38], [33, 38], [44, 38],
                 [22, 48], [33, 48], [44, 48],
             ].map(([x, y], i) => (
-                <rect key={i} x={x} y={y} width="6" height="6" rx="1.5" fill="#60a5fa" opacity="0.35" />
+                <rect key={i} x={x} y={y} width="6" height="6" rx="1.5" fill="#B7B3B0" opacity="0.35" />
             ))}
             {/* slot elegido */}
             <motion.rect
                 x="33" y="48" width="6" height="6" rx="1.5"
-                fill="#22d3ee"
+                fill="#C84214"
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -414,7 +382,7 @@ export function SelfSchedulingIcon() {
                 style={{ transformOrigin: '36px 51px' }}
             />
             <motion.circle
-                cx="36" cy="51" r="9" fill="none" stroke="#22d3ee" strokeWidth="2"
+                cx="36" cy="51" r="9" fill="none" stroke="#C84214" strokeWidth="2"
                 initial={{ opacity: 0, scale: 0.4 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -432,19 +400,19 @@ export function AnomalyLogIcon() {
         <IconWrap gradId="mod-alert">
             <motion.path
                 d="M30 14 c 10 0 18 8 18 18 c 0 12 -18 26 -18 26 c 0 0 -18 -14 -18 -26 c 0 -10 8 -18 18 -18 z"
-                stroke="url(#mod-alert)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                stroke="url(#mod-alert)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.08)"
                 {...drawIn} transition={{ duration: 1 }}
             />
             {/* signo de alerta */}
-            <line x1="30" y1="26" x2="30" y2="36" stroke="#22d3ee" strokeWidth="2.5" {...stroke} />
-            <circle cx="30" cy="42" r="1.6" fill="#22d3ee" />
-            {/* badge de registro con parpadeo */}
+            <line x1="30" y1="26" x2="30" y2="36" stroke="#C84214" strokeWidth="2.5" {...stroke} />
+            <circle cx="30" cy="42" r="1.6" fill="#C84214" />
+            {/* badge de registro con pulso suave */}
             <motion.g
-                animate={reduce ? undefined : { opacity: [0.4, 1, 0.4] }}
-                transition={reduce ? undefined : { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                animate={reduce ? undefined : { opacity: [0.6, 1, 0.6] }}
+                transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
             >
-                <circle cx="52" cy="50" r="11" stroke="url(#mod-alert)" strokeWidth="2.5" {...stroke} fill="rgba(34,211,238,0.10)" />
-                <path d="M52 44 v6 l4 3" stroke="#22d3ee" strokeWidth="2.2" {...stroke} />
+                <circle cx="52" cy="50" r="11" stroke="url(#mod-alert)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.10)" />
+                <path d="M52 44 v6 l4 3" stroke="#D44A17" strokeWidth="2.2" {...stroke} />
             </motion.g>
         </IconWrap>
     )
@@ -458,7 +426,7 @@ export function ReputationShieldIcon() {
             {/* Escudo base */}
             <motion.path
                 d="M36 12 L56 20 V40 C56 50 48 56 36 62 C24 56 16 50 16 40 V20 Z"
-                stroke="url(#mod-rep)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                stroke="url(#mod-rep)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.08)"
                 {...drawIn} transition={{ duration: 1 }}
             />
             {/* Estrella de reseña */}
@@ -471,14 +439,14 @@ export function ReputationShieldIcon() {
             >
                 <path
                     d="M36 24 l3.5 7 7.5 1.1 -5.5 5.3 1.3 7.6 -6.8 -3.6 -6.8 3.6 1.3 -7.6 -5.5 -5.3 7.5 -1.1 z"
-                    stroke="#22d3ee" strokeWidth="2" {...stroke} fill="rgba(34,211,238,0.15)"
+                    stroke="#D44A17" strokeWidth="2" {...stroke} fill="rgba(200,66,20,0.15)"
                 />
             </motion.g>
             {/* Pulso de protección */}
             {!reduce && (
                 <motion.path
                     d="M36 12 L56 20 V40 C56 50 48 56 36 62 C24 56 16 50 16 40 V20 Z"
-                    stroke="#a78bfa" strokeWidth="1.5" {...stroke} fill="none"
+                    stroke="#C84214" strokeWidth="1.5" {...stroke} fill="none"
                     animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0, 0.5] }}
                     transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                     style={{ transformOrigin: '36px 37px' }}
@@ -496,15 +464,15 @@ export function DriverAdmissionIcon() {
             {/* Tarjeta de credencial / chofer */}
             <motion.rect
                 x="14" y="16" width="44" height="40" rx="6"
-                stroke="url(#mod-driver)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                stroke="url(#mod-driver)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.08)"
                 {...drawIn} transition={{ duration: 1 }}
             />
             {/* Avatar chofer */}
-            <circle cx="28" cy="30" r="5" stroke="#22d3ee" strokeWidth="2" fill="none" />
-            <path d="M20 44 c 0 -4.5 3.5 -7 8 -7 s 8 2.5 8 7" stroke="#22d3ee" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <circle cx="28" cy="30" r="5" stroke="#C84214" strokeWidth="2" fill="none" />
+            <path d="M20 44 c 0 -4.5 3.5 -7 8 -7 s 8 2.5 8 7" stroke="#C84214" strokeWidth="2" fill="none" strokeLinecap="round" />
             {/* Líneas de datos / validación */}
-            <line x1="40" y1="28" x2="50" y2="28" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
-            <line x1="40" y1="34" x2="48" y2="34" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
+            <line x1="40" y1="28" x2="50" y2="28" stroke="#B7B3B0" strokeWidth="2" strokeLinecap="round" />
+            <line x1="40" y1="34" x2="48" y2="34" stroke="#B7B3B0" strokeWidth="2" strokeLinecap="round" />
             {/* Check badge */}
             <motion.g
                 initial={{ scale: 0 }}
@@ -522,18 +490,17 @@ export function DriverAdmissionIcon() {
 
 /* Parte mensual de operación: dashboard analítico con barras y tendencia */
 export function MonthlyOperationsIcon() {
-    const reduce = useReducedMotion()
     return (
         <IconWrap gradId="mod-analytics">
             {/* Marco de dashboard */}
             <motion.rect
                 x="12" y="14" width="48" height="44" rx="6"
-                stroke="url(#mod-analytics)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.08)"
+                stroke="url(#mod-analytics)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.08)"
                 {...drawIn} transition={{ duration: 1 }}
             />
             {/* Barras animadas de métricas */}
             <motion.rect
-                x="20" y="34" width="6" height="16" rx="2" fill="#a78bfa"
+                x="20" y="34" width="6" height="16" rx="2" fill="#3E3D3A"
                 initial={{ scaleY: 0 }}
                 whileInView={{ scaleY: 1 }}
                 viewport={{ once: true }}
@@ -541,7 +508,7 @@ export function MonthlyOperationsIcon() {
                 style={{ transformOrigin: '23px 50px' }}
             />
             <motion.rect
-                x="30" y="26" width="6" height="24" rx="2" fill="#60a5fa"
+                x="30" y="26" width="6" height="24" rx="2" fill="#B7B3B0"
                 initial={{ scaleY: 0 }}
                 whileInView={{ scaleY: 1 }}
                 viewport={{ once: true }}
@@ -549,7 +516,7 @@ export function MonthlyOperationsIcon() {
                 style={{ transformOrigin: '33px 50px' }}
             />
             <motion.rect
-                x="40" y="20" width="6" height="30" rx="2" fill="#22d3ee"
+                x="40" y="20" width="6" height="30" rx="2" fill="#C84214"
                 initial={{ scaleY: 0 }}
                 whileInView={{ scaleY: 1 }}
                 viewport={{ once: true }}
@@ -559,19 +526,11 @@ export function MonthlyOperationsIcon() {
             {/* Línea de tendencia proyectada */}
             <motion.path
                 d="M18 42 L28 32 L38 24 L52 18"
-                stroke="#34d399" strokeWidth="2" strokeDasharray="3 3" {...stroke}
+                stroke="#D44A17" strokeWidth="2" strokeDasharray="3 3" {...stroke}
                 {...drawIn} transition={{ delay: 0.8, duration: 0.8 }}
             />
-            {/* Nodo de proyección con pulso */}
-            <circle cx="52" cy="18" r="3" fill="#34d399" />
-            {!reduce && (
-                <motion.circle
-                    cx="52" cy="18" r="3" fill="none" stroke="#34d399" strokeWidth="1.5"
-                    animate={{ scale: [1, 2.2], opacity: [0.8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-                    style={{ transformOrigin: '52px 18px' }}
-                />
-            )}
+            {/* Nodo de proyección limpio sin ping */}
+            <circle cx="52" cy="18" r="3" fill="#D44A17" />
         </IconWrap>
     )
 }
@@ -588,13 +547,13 @@ export function AmbientOrbs({ className }: Props) {
         <div className={className} aria-hidden>
             <motion.div
                 className="absolute top-10 -left-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle, rgba(200,66,20,0.14) 0%, transparent 70%)' }}
                 animate={{ x: [0, 50, 0], y: [0, 40, 0] }}
                 transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.div
                 className="absolute bottom-10 -right-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.12) 0%, transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle, rgba(62,61,58,0.30) 0%, transparent 70%)' }}
                 animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
                 transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
             />
@@ -609,9 +568,9 @@ export function RouteDivider({ className }: Props) {
         <svg viewBox="0 0 1200 40" className={className} preserveAspectRatio="none" role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="div-grad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="rgba(139,92,246,0)" />
-                    <stop offset="50%" stopColor="rgba(96,165,250,0.6)" />
-                    <stop offset="100%" stopColor="rgba(34,211,238,0)" />
+                    <stop offset="0%" stopColor="rgba(200,66,20,0)" />
+                    <stop offset="50%" stopColor="rgba(200,66,20,0.6)" />
+                    <stop offset="100%" stopColor="rgba(183,179,176,0)" />
                 </linearGradient>
             </defs>
             <line x1="0" y1="20" x2="1200" y2="20" stroke="url(#div-grad)" strokeWidth="2" strokeDasharray="2 10" {...stroke}>
@@ -619,7 +578,7 @@ export function RouteDivider({ className }: Props) {
             </line>
             {!reduce && (
                 <motion.circle
-                    cy="20" r="4" fill="#22d3ee"
+                    cy="20" r="4" fill="#C84214"
                     animate={{ cx: [-20, 1220] }}
                     transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
                 />
@@ -650,8 +609,8 @@ export function DeliveredSealScene({ className }: Props) {
         <svg viewBox="0 0 240 120" className={className} role="img" aria-hidden xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="seal-grad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#a78bfa" />
-                    <stop offset="100%" stopColor="#22d3ee" />
+                    <stop offset="0%" stopColor="#C84214" />
+                    <stop offset="100%" stopColor="#D44A17" />
                 </linearGradient>
             </defs>
 
@@ -663,7 +622,7 @@ export function DeliveredSealScene({ className }: Props) {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: reduce ? 0 : 1.1, ease: 'easeInOut' }}
             />
-            <circle cx="18" cy="92" r="4" fill="#a78bfa" />
+            <circle cx="18" cy="92" r="4" fill="#C84214" />
 
             {/* Pin de destino que aterriza */}
             <motion.g
@@ -674,9 +633,9 @@ export function DeliveredSealScene({ className }: Props) {
             >
                 <path
                     d="M186 22 c 10 0 17 7 17 17 c 0 11 -17 27 -17 27 c 0 0 -17 -16 -17 -27 c 0 -10 7 -17 17 -17 z"
-                    stroke="url(#seal-grad)" strokeWidth="2.5" {...stroke} fill="rgba(139,92,246,0.12)"
+                    stroke="url(#seal-grad)" strokeWidth="2.5" {...stroke} fill="rgba(200,66,20,0.12)"
                 />
-                <circle cx="186" cy="39" r="5.5" fill="none" stroke="#22d3ee" strokeWidth="2" />
+                <circle cx="186" cy="39" r="5.5" fill="none" stroke="#C84214" strokeWidth="2" />
             </motion.g>
 
             {/* Sello: check que remata la secuencia */}

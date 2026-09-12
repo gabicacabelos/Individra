@@ -33,34 +33,21 @@ function ChannelIcon({ kind, className }: { kind: 'call' | 'doc' | 'chat'; class
 }
 
 const alertCards = [
-    { kind: 'call' as const, tag: 'Llamada perdida', text: '"¿Dónde está mi envío?"', accent: 'violet', rot: -9, x: -36, y: -30, delay: 0 },
-    { kind: 'doc' as const, tag: 'Remito', text: 'Error de carga manual', accent: 'blue', rot: 7, x: 34, y: 24, delay: 0.4 },
-    { kind: 'chat' as const, tag: 'WhatsApp · 12', text: 'Mensajes sin responder', accent: 'cyan', rot: -2, x: 0, y: 0, delay: 0.8 },
+    { kind: 'call' as const, tag: 'Llamada perdida', text: '"¿Dónde está mi envío?"', accent: 'orange', rot: -9, x: -36, y: -30, delay: 0 },
+    { kind: 'doc' as const, tag: 'Remito', text: 'Error de carga manual', accent: 'steel', rot: 7, x: 34, y: 24, delay: 0.4 },
+    { kind: 'chat' as const, tag: 'WhatsApp · 12', text: 'Mensajes sin responder', accent: 'smoke', rot: -2, x: 0, y: 0, delay: 0.8 },
 ]
 
 const accentMap: Record<string, string> = {
-    violet: 'border-violet-400/30 text-violet-300',
-    blue: 'border-blue-400/30 text-blue-300',
-    cyan: 'border-cyan-400/30 text-cyan-300',
+    orange: 'border-[#C84214]/40 text-[#C84214]',
+    steel: 'border-[#B7B3B0]/40 text-[#B7B3B0]',
+    smoke: 'border-[#3E3D3A] text-neutral-300',
 }
 
 function OverwhelmStack() {
     const reduce = useReducedMotion()
     return (
         <div aria-hidden className="relative h-[210px] w-full">
-            {/* Contador de alertas, flotando arriba */}
-            <motion.div
-                className="absolute left-1/2 -top-1 z-40 -translate-x-1/2 flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-[#16162a] px-3 py-1 shadow-[0_8px_30px_rgba(139,92,246,0.35)]"
-                animate={reduce ? undefined : { scale: [1, 1.06, 1] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75 animate-ping" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-400" />
-                </span>
-                <span className="text-[11px] font-bold text-white">Todo, a la vez</span>
-            </motion.div>
-
             {/* Pila de tarjetas de alerta, cada una de un canal distinto */}
             {alertCards.map((c, i) => (
                 <div
@@ -69,7 +56,7 @@ function OverwhelmStack() {
                     style={{ transform: `translate(-50%,-50%) translate(${c.x}px, ${c.y}px) rotate(${c.rot}deg)`, zIndex: 10 + i * 10 }}
                 >
                     <motion.div
-                        className="w-[210px] rounded-2xl border border-white/10 bg-[#14142a] p-3 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.7)]"
+                        className="w-[210px] rounded-2xl border border-[#3E3D3A] bg-[#222120] p-3 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.7)]"
                         animate={reduce ? undefined : { y: [0, -5, 0] }}
                         transition={{ duration: 3 + i * 0.6, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
                     >
@@ -139,9 +126,9 @@ export function PainCarousel({ pains }: Props) {
                         slideRefs.current[0] = el
                     }}
                     data-index={0}
-                    className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col items-center justify-center gap-3 px-5 py-6 rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-950/50 via-[#15152a] to-blue-950/30"
+                    className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col items-center justify-center gap-3 px-5 py-6 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514]"
                 >
-                    <div aria-hidden className="absolute w-56 h-56 -top-10 rounded-full bg-violet-500/20 blur-[70px]" />
+                    <div aria-hidden className="absolute w-56 h-56 -top-10 rounded-full bg-[#C84214]/10 blur-[70px]" />
                     <OverwhelmStack />
                     <p className="relative text-center text-neutral-300 text-sm leading-relaxed">
                         Cae por <span className="text-white font-medium">todos lados</span>, al mismo tiempo.
@@ -156,17 +143,17 @@ export function PainCarousel({ pains }: Props) {
                             slideRefs.current[i + 1] = el
                         }}
                         data-index={i + 1}
-                        className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col justify-center px-5 py-6 rounded-2xl border border-white/10 bg-white/[0.02]"
+                        className="relative snap-center shrink-0 w-[86%] sm:w-[62%] overflow-hidden flex flex-col justify-center px-5 py-6 rounded-2xl border border-[#3E3D3A] bg-[#222120]"
                     >
                         {/* Número índice como marca de agua a la derecha */}
                         <span
                             aria-hidden
-                            className="pointer-events-none absolute top-1/2 -right-2 -translate-y-1/2 text-[6rem] font-black leading-none text-violet-500/[0.07] select-none"
+                            className="pointer-events-none absolute top-1/2 -right-2 -translate-y-1/2 text-[6rem] font-black leading-none text-white/[0.04] select-none"
                         >
                             {String(i + 1).padStart(2, '0')}
                         </span>
-                        <span className="relative mb-3 inline-flex w-9 h-9 items-center justify-center rounded-lg border border-violet-500/30 bg-violet-500/10">
-                            <span className="w-2 h-2 rounded-full bg-violet-400" />
+                        <span className="relative mb-3 inline-flex w-9 h-9 items-center justify-center rounded-lg border border-[#B7B3B0]/30 bg-[#B7B3B0]/10">
+                            <span className="w-2 h-2 rounded-full bg-[#B7B3B0]" />
                         </span>
                         <p className="relative pr-10 text-neutral-200 text-[15px] leading-relaxed">{pain}</p>
                     </div>
@@ -180,7 +167,7 @@ export function PainCarousel({ pains }: Props) {
                         <span
                             key={i}
                             className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                                i === active ? 'bg-gradient-to-r from-violet-500 to-blue-500' : 'bg-white/10'
+                                i === active ? 'bg-gradient-to-r from-[#C84214] to-[#B7B3B0]' : 'bg-white/10'
                             }`}
                         />
                     ))}
