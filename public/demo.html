@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDIVIDRA — Demo de Operación & Auditoría Financiera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --graphite:#0B0D0E; --g2:#14181B; --g3:#1B2024; --g4:#232A2F; --g5:#2C343B;
+    --paper:#E8E5DE; --dim:#9A9E9C; --faint:#6C7377;
+    --orange:#FF6A2A; --orange-glow:rgba(255,106,42,.14);
+    --steel:#68727A; --line:rgba(104,114,122,.24);
+    --wa-bg:#0b141a; --wa-in:#1f2c34; --wa-out:#005c4b;
+    --ok:#8FA3A0; --emerald:#10B981; --emerald-glow:rgba(16,185,129,.14);
+    --danger:#EF4444; --danger-glow:rgba(239,68,68,.14);
+    --blue:#38BDF8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--graphite);color:var(--paper);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.dp{font-family:"Space Grotesk",system-ui,sans-serif;}
+  .mono{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 26px;}
+
+  /* Header bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line);}
+  .wordmark{font-family:"Space Grotesk";font-weight:700;letter-spacing:.18em;font-size:20px;display:flex;align-items:center;gap:8px;}
+  .wordmark::before{content:"";display:inline-block;width:10px;height:10px;background:var(--orange);border-radius:2px;}
+  .top-actions{display:flex;align-items:center;gap:12px;}
+  .chip{font-size:12px;color:var(--dim);border:1px solid var(--line);padding:5px 12px;border-radius:999px;}
+  .btn-top{font-family:"Space Grotesk";font-size:12.5px;font-weight:600;color:var(--paper);background:var(--g3);border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;transition:border-color .2s,color .2s;}
+  .btn-top:hover{border-color:var(--orange);color:var(--orange);}
+
+  /* Hero */
+  .hero{padding:72px 0 44px;position:relative;}
+  .hero::before{content:"";position:absolute;inset:-30% -15% auto auto;width:680px;height:680px;background:radial-gradient(circle at 70% 30%,rgba(255,106,42,.12),transparent 65%);pointer-events:none;z-index:0;}
+  .hero>*{position:relative;z-index:1;}
+  .eyebrow{font-size:12.5px;color:var(--orange);letter-spacing:.06em;font-weight:600;margin-bottom:18px;text-transform:uppercase;}
+  .hero h1{font-size:clamp(32px,5.2vw,56px);font-weight:600;line-height:1.05;letter-spacing:-.018em;max-width:18ch;}
+  .hero h1 em{font-style:normal;color:var(--orange);}
+  .hero p{margin-top:22px;max-width:64ch;color:var(--dim);font-size:17px;line-height:1.6;}
+  .legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:30px;font-size:13.5px;color:var(--dim);}
+  .legend .k{display:inline-flex;align-items:center;gap:9px;}
+  .dot{width:10px;height:10px;border-radius:3px;flex:none;}
+  .dot.auto{background:var(--steel);} .dot.human{background:var(--orange);}
+
+  /* Compatibility banner */
+  .compat{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:13px 18px;border:1px solid var(--line);border-radius:12px;background:var(--g2);margin-bottom:14px;}
+  .compat-l{font-size:12.5px;color:var(--dim);font-weight:500;display:flex;align-items:center;gap:9px;}
+  .compat-l::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 3px rgba(143,163,160,.15);}
+  .compat-b{display:flex;gap:8px;flex-wrap:wrap;}
+  .cbadge{font-family:"Space Grotesk";font-size:11.5px;color:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 11px;letter-spacing:.02em;}
+
+  /* Nav tabs */
+  .nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 6px;}
+  .tab{font-family:"Space Grotesk";font-size:13px;font-weight:500;color:var(--dim);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 15px;cursor:pointer;transition:all .15s;}
+  .tab:hover{color:var(--paper);border-color:var(--faint);}
+  .tab.active{background:var(--paper);color:var(--graphite);border-color:var(--paper);font-weight:600;}
+  .tab.featured{border-color:rgba(255,106,42,.4);color:var(--paper);}
+  .tab.featured.active{background:var(--orange);color:var(--graphite);border-color:var(--orange);}
+
+  .controls{display:flex;gap:12px;align-items:center;margin:18px 0 12px;flex-wrap:wrap;}
+  .btn{font-family:"Space Grotesk";font-weight:600;font-size:14.5px;border:none;border-radius:10px;padding:12px 22px;cursor:pointer;transition:transform .12s,background .15s,border-color .15s;}
+  .btn:focus-visible{outline:2px solid var(--orange);outline-offset:3px;}
+  .btn-primary{background:var(--orange);color:var(--graphite);}
+  .btn-primary:hover{transform:translateY(-1px);background:#ff7b42;}
+  .btn-ghost{background:transparent;color:var(--paper);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--faint);}
+  .btn:disabled{opacity:.4;cursor:default;transform:none;}
+  .note{font-size:13px;color:var(--dim);}
+
+  /* Stage Grid */
+  .stagegrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start;padding:6px 0;}
+  .stagegrid.full{grid-template-columns:1fr;}
+  .stagegrid.full .trace{display:none;}
+  @media(max-width:890px){.stagegrid{grid-template-columns:1fr;}}
+
+  .stage{background:var(--g2);border:1px solid var(--line);border-radius:18px;padding:24px;min-height:510px;}
+  .stage-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap;}
+  .stage-h .t{font-family:"Space Grotesk";font-weight:600;font-size:16px;}
+  .stage-h .s{font-size:12px;color:var(--dim);}
+
+  /* Trace log */
+  .trace{background:var(--g2);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .trace-h{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .trace-h .t{font-family:"Space Grotesk";font-weight:600;font-size:14px;}
+  .trace-h .c{font-size:11.5px;color:var(--dim);}
+  .trace-b{padding:12px;display:flex;flex-direction:column;gap:9px;min-height:430px;max-height:510px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a3942 transparent;}
+  .trace-b::-webkit-scrollbar{width:6px}.trace-b::-webkit-scrollbar-thumb{background:#2a3942;border-radius:6px}
+  .ev{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--g3);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;}
+  .ev.on{opacity:1;transform:none;}
+  .ev .tag{font-family:"Space Grotesk";font-size:10px;font-weight:600;letter-spacing:.1em;padding:3px 7px;border-radius:5px;display:inline-block;}
+  .ev.auto .tag{color:var(--steel);border:1px solid var(--line);}
+  .ev.human{border-color:rgba(255,106,42,.5);background:linear-gradient(180deg,rgba(255,106,42,.08),transparent 70%);}
+  .ev.human .tag{color:var(--graphite);background:var(--orange);}
+  .ev.result .tag{color:var(--ok);border:1px solid rgba(143,163,160,.5);}
+  .ev.shield{border-color:rgba(16,185,129,.4);background:linear-gradient(180deg,rgba(16,185,129,.08),transparent 70%);}
+  .ev.shield .tag{color:#047857;background:var(--emerald);}
+  .ev .m{margin-top:7px;font-size:13px;color:var(--paper);line-height:1.4;}
+  .ev .mt{margin-top:6px;font-size:11px;color:var(--dim);}
+  .trace-empty{margin:auto;text-align:center;color:var(--faint);font-size:13px;max-width:24ch;}
+
+  .rv{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease;}
+  .rv.on{opacity:1;transform:none;}
+
+  /* --- WhatsApp Phone Module --- */
+  .phone{background:var(--wa-bg);border-radius:22px;padding:10px;border:1px solid #223;max-width:360px;margin:0 auto;}
+  .ph-head{display:flex;align-items:center;gap:10px;padding:6px 6px 10px;border-bottom:1px solid rgba(255,255,255,.06);}
+  .ph-av{width:36px;height:36px;border-radius:50%;background:var(--wa-out);display:grid;place-items:center;font-family:"Space Grotesk";font-weight:600;color:#cfeee4;font-size:13px;}
+  .ph-who{font-size:14px;font-weight:600;color:#e9edef;} .ph-st{font-size:11px;color:#8696a0;}
+  .chat{height:380px;overflow-y:auto;padding:14px 6px 4px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:#2a3942 transparent;}
+  .chat::-webkit-scrollbar{width:6px}.chat::-webkit-scrollbar-thumb{background:#2a3942;border-radius:6px}
+  .bub{max-width:84%;padding:8px 11px;border-radius:9px;font-size:13px;line-height:1.42;color:#e9edef;opacity:0;transform:translateY(6px);transition:opacity .28s,transform .28s;}
+  .bub.on{opacity:1;transform:none;}
+  .bub .t{font-size:10px;color:#8696a0;display:block;text-align:right;margin-top:3px;}
+  .bub.inb{background:var(--wa-in);align-self:flex-start;border-top-left-radius:2px;}
+  .bub.outb{background:var(--wa-out);align-self:flex-end;border-top-right-radius:2px;}
+
+  /* --- Browser / OCR Module --- */
+  .browser{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--g3);}
+  .br-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--g4);border-bottom:1px solid var(--line);}
+  .br-dots{display:flex;gap:5px;} .br-dots i{width:9px;height:9px;border-radius:50%;background:#39424a;}
+  .br-url{flex:1;background:var(--graphite);border-radius:6px;padding:6px 11px;font-size:12px;color:var(--dim);font-family:"IBM Plex Sans";}
+  .br-body{padding:20px;}
+  .br-body h4{font-family:"Space Grotesk";font-size:15px;margin-bottom:4px;}
+  .br-body .sub{font-size:12.5px;color:var(--dim);margin-bottom:18px;}
+  .docs{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .doc{border:1px dashed var(--line);border-radius:10px;padding:13px;transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+  .doc .dn{font-size:13px;font-weight:600;}
+  .doc .dstate{font-size:11.5px;color:var(--faint);margin-top:4px;}
+  .doc.up{border-style:solid;border-color:var(--line);background:var(--g2);}
+  .doc.up .dstate{color:var(--dim);}
+  .doc.ok{border-color:rgba(143,163,160,.45);}
+  .doc.ok .dstate{color:var(--ok);}
+  .doc .scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--orange),transparent);opacity:0;}
+  .doc.scanning .scan{animation:scan 1s ease forwards;}
+  @keyframes scan{0%{opacity:1;top:0}100%{opacity:0;top:100%}}
+  .layer-banner{margin-top:16px;border:1px solid rgba(143,163,160,.4);border-radius:10px;padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:10px;}
+  .layer-banner .badge{font-family:"Space Grotesk";font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--ok);border:1px solid rgba(143,163,160,.4);padding:3px 7px;border-radius:5px;}
+
+  /* --- Map / Telemetría Module --- */
+  .map{position:relative;height:290px;border:1px solid var(--line);border-radius:12px;background:
+      repeating-linear-gradient(0deg,transparent 0 38px,rgba(104,114,122,.10) 38px 39px),
+      repeating-linear-gradient(90deg,transparent 0 46px,rgba(104,114,122,.10) 46px 47px),
+      var(--g3);overflow:hidden;}
+  .pin{position:absolute;transform:translate(-50%,-100%);text-align:center;}
+  .pin .head{width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);margin:0 auto;border:2px solid;}
+  .pin .lbl{font-size:10.5px;margin-top:6px;white-space:nowrap;background:var(--graphite);padding:2px 6px;border-radius:5px;border:1px solid var(--line);}
+  .pin.home .head{background:rgba(232,229,222,.15);border-color:var(--paper);}
+  .pin.fail .head{background:transparent;border-color:var(--steel);border-style:dashed;}
+  .pin.fail .lbl{color:var(--dim);}
+  .distline{position:absolute;height:1px;background:repeating-linear-gradient(90deg,var(--steel) 0 6px,transparent 6px 12px);transform-origin:left center;opacity:0;transition:opacity .4s;}
+  .distline.on{opacity:1;}
+  .distline .d{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--dim);background:var(--graphite);padding:1px 6px;border-radius:5px;border:1px solid var(--line);white-space:nowrap;}
+  .sources{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+  .src{border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:12.5px;background:var(--g3);}
+  .src .lab{font-size:10px;letter-spacing:.08em;color:var(--faint);font-family:"Space Grotesk";font-weight:600;margin-bottom:5px;}
+  .src b{color:var(--paper);font-weight:600;}
+
+  /* --- Reloj Module --- */
+  .pkg{display:flex;gap:18px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--g3);}
+  .pkg .big{font-family:"Space Grotesk";font-weight:700;font-size:40px;line-height:1;color:var(--paper);}
+  .pkg .big small{display:block;font-size:12px;color:var(--dim);font-weight:500;letter-spacing:.04em;margin-top:6px;}
+  .track{display:flex;gap:8px;margin-top:18px;}
+  .tn{flex:1;border:1px solid var(--line);border-radius:9px;padding:11px;text-align:center;font-size:12px;color:var(--faint);transition:border-color .3s,color .3s,background .3s;}
+  .tn .d{font-family:"Space Grotesk";font-weight:600;font-size:15px;color:var(--dim);}
+  .tn.hit{border-color:rgba(255,106,42,.5);color:var(--paper);background:linear-gradient(180deg,rgba(255,106,42,.08),transparent);}
+  .tn.hit .d{color:var(--orange);}
+  .morning{margin-top:16px;border:1px solid var(--line);border-radius:11px;padding:14px;}
+  .morning .h{font-size:12px;color:var(--dim);margin-bottom:10px;font-family:"Space Grotesk";font-weight:600;letter-spacing:.03em;}
+  .mrow{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-top:1px solid var(--line);}
+  .mrow:first-of-type{border-top:none;}
+  .mrow .risk{color:var(--orange);font-weight:600;font-size:12px;}
+
+  /* --- Escudo Module --- */
+  .sat{max-width:340px;margin:0 auto;border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--g3);text-align:center;}
+  .sat .q{font-size:15px;font-weight:600;margin-bottom:16px;}
+  .satbtns{display:flex;flex-direction:column;gap:10px;}
+  .satbtn{border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px;background:var(--g2);color:var(--paper);transition:border-color .3s,background .3s;}
+  .satbtn.pick{border-color:var(--orange);}
+  .branch{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;}
+  .bcard{border:1px solid var(--line);border-radius:11px;padding:14px;font-size:12.5px;}
+  .bcard .bh{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;margin-bottom:7px;}
+  .bcard.good .bh{color:var(--ok);}
+  .bcard.bad .bh{color:var(--orange);}
+  .bcard .tagmini{display:inline-block;margin-top:9px;font-size:10.5px;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:2px 7px;}
+
+  /* --- Ficha Module --- */
+  .ficha{border:1px solid var(--line);border-radius:12px;background:var(--g3);overflow:hidden;}
+  .fic-h{padding:13px 16px;border-bottom:1px solid var(--line);font-family:"Space Grotesk";font-weight:600;font-size:13.5px;}
+  .fic-row{display:flex;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line);font-size:13.5px;}
+  .fic-row:first-of-type{border-top:none;}
+  .fic-row .fk{color:var(--dim);} .fic-row .fv{font-weight:600;}
+  .route{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .route .rt-h{font-size:12px;color:var(--dim);font-family:"Space Grotesk";font-weight:600;letter-spacing:.03em;margin-bottom:12px;}
+  .rt-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;}
+  .rt-tag{font-size:11.5px;color:var(--ok);border:1px solid rgba(143,163,160,.4);border-radius:6px;padding:3px 8px;}
+  .rt-note{margin-top:10px;font-size:12.5px;color:var(--dim);}
+
+  /* ==========================================================================
+     NUEVO MÓDULO: PARTE DEL DADOR (VENDEDOR FLEX / E-COMMERCE) - ALTO IMPACTO
+     ========================================================================== */
+  .dador-portal{display:flex;flex-direction:column;gap:16px;}
+  .dador-top{background:var(--g3);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .dador-seller{display:flex;align-items:center;gap:14px;}
+  .seller-avatar{width:42px;height:42px;background:linear-gradient(135deg,#FFE600,#FF9900);color:#111;border-radius:10px;display:grid;place-items:center;font-weight:700;font-family:"Space Grotesk";font-size:15px;box-shadow:0 4px 12px rgba(255,200,0,.2);}
+  .seller-info h4{font-size:15px;font-weight:600;color:var(--paper);display:flex;align-items:center;gap:8px;}
+  .seller-info .sub{font-size:12px;color:var(--dim);}
+  .ml-tag{font-size:10.5px;background:#FFE600;color:#111;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.02em;}
+  
+  .shield-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.4);color:#34D399;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.02em;}
+  .shield-dot{width:7px;height:7px;border-radius:50%;background:#10B981;box-shadow:0 0 8px #10B981;}
+
+  .dador-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media(max-width:700px){.dador-grid{grid-template-columns:1fr 1fr;}}
+  .d-card{background:var(--g3);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;overflow:hidden;}
+  .d-card .lbl{font-size:11px;color:var(--dim);font-family:"Space Grotesk";font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+  .d-card .val{font-size:24px;font-family:"Space Grotesk";font-weight:700;color:var(--paper);}
+  .d-card .val.green{color:#34D399;}
+  .d-card .val.orange{color:var(--orange);}
+  .d-card .meta{font-size:11px;color:var(--faint);margin-top:4px;}
+  .d-bar{height:4px;background:var(--g4);border-radius:2px;margin-top:8px;overflow:hidden;}
+  .d-bar-fill{height:100%;background:var(--emerald);width:0%;transition:width 1s cubic-bezier(.22,1,.36,1);}
+
+  /* Inspector de Disputa / Descargo en Vivo */
+  .dispute-box{background:var(--g3);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;overflow:hidden;}
+  .dispute-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:10px;}
+  .dispute-title{font-size:13.5px;font-weight:600;color:var(--paper);display:flex;align-items:center;gap:8px;}
+  .dispute-badge{font-size:11px;padding:3px 8px;border-radius:5px;font-weight:600;}
+  .dispute-badge.alert{background:rgba(239,68,68,.18);color:#F87171;border:1px solid rgba(239,68,68,.4);}
+  .dispute-badge.resolved{background:rgba(16,185,129,.18);color:#34D399;border:1px solid rgba(16,185,129,.4);}
+
+  .dispute-claim{background:var(--g2);border-left:3px solid var(--danger);border-radius:6px;padding:10px 14px;font-size:12.5px;color:var(--paper);margin-bottom:14px;}
+  .dispute-claim b{color:#F87171;}
+
+  .evidence-timeline{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  @media(max-width:600px){.evidence-timeline{grid-template-columns:1fr;}}
+  .ev-step{background:var(--g2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:12px;}
+  .ev-step .h{font-family:"Space Grotesk";font-weight:600;font-size:11px;color:var(--dim);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+  .ev-step .b{color:var(--paper);line-height:1.4;}
+  .ev-step.verified{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.04);}
+  .ev-step.verified .h{color:#34D399;}
+
+  .verdict-banner{background:linear-gradient(90deg,rgba(16,185,129,.15),rgba(16,185,129,.05));border:1px solid rgba(16,185,129,.4);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .verdict-text{font-size:13px;color:var(--paper);}
+  .verdict-text b{color:#34D399;}
+  .verdict-act{font-size:11.5px;color:var(--graphite);background:#34D399;padding:4px 10px;border-radius:6px;font-weight:600;font-family:"Space Grotesk";}
+
+  .dador-pitch{border:1px solid rgba(255,106,42,.3);background:linear-gradient(180deg,rgba(255,106,42,.06),transparent);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.5;}
+  .dador-pitch b{color:var(--orange);}
+
+  /* Dashboard mensual (parte) */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:560px){.kpis{grid-template-columns:1fr 1fr;}}
+  .kpi{border:1px solid var(--line);border-radius:12px;padding:15px;background:var(--g3);}
+  .kpi .n{font-family:"Space Grotesk";font-weight:700;font-size:26px;color:var(--paper);}
+  .kpi .n.accent{color:var(--orange);}
+  .kpi .l{font-size:11.5px;color:var(--dim);margin-top:5px;line-height:1.35;}
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+  @media(max-width:640px){.charts{grid-template-columns:1fr;}}
+  .panel{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--g3);}
+  .panel .ph{font-size:12px;color:var(--dim);margin-bottom:14px;font-family:"Space Grotesk";font-weight:600;letter-spacing:.03em;}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:120px;}
+  .barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .bar{width:100%;border-radius:5px 5px 0 0;background:var(--steel);height:0;transition:height .9s cubic-bezier(.22,1,.36,1);}
+  .bar.hot{background:var(--orange);}
+  .barcol .bl{font-size:10.5px;color:var(--faint);}
+  .ai{border:1px solid rgba(255,106,42,.4);border-radius:11px;padding:14px;font-size:13px;line-height:1.5;}
+  .ai .aih{font-family:"Space Grotesk";font-weight:600;font-size:11px;letter-spacing:.09em;color:var(--orange);margin-bottom:8px;}
+  .ai .disc{font-size:11px;color:var(--faint);margin-top:9px;}
+
+  /* ==========================================================================
+     NUEVA SECCIÓN: AUDITORÍA FINANCIERA REAL (ARGENTINA JULIO 2026)
+     ========================================================================== */
+  .band{border-top:1px solid var(--line);margin-top:70px;padding:60px 0 16px;}
+  .fin-header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:28px;}
+  .fin-header h2{font-size:clamp(26px,3.8vw,38px);font-weight:600;letter-spacing:-.015em;line-height:1.15;}
+  .fin-header p{color:var(--dim);max-width:58ch;margin-top:10px;font-size:16px;}
+  
+  /* Toggle ARS / USD */
+  .curr-switch{background:var(--g3);border:1px solid var(--line);border-radius:999px;padding:4px;display:inline-flex;gap:4px;}
+  .curr-btn{font-family:"Space Grotesk";font-size:12.5px;font-weight:600;color:var(--dim);background:transparent;border:none;border-radius:999px;padding:6px 14px;cursor:pointer;transition:all .15s;}
+  .curr-btn.active{background:var(--orange);color:var(--graphite);}
+
+  /* Chips de fuentes auditadas */
+  .fin-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px;}
+  .fchip{background:var(--g2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px;}
+  .fchip b{color:var(--paper);font-weight:600;}
+
+  /* Grid de 4 Motores de Sangrado */
+  .bleed-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+  @media(max-width:960px){.bleed-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.bleed-grid{grid-template-columns:1fr;}}
+  
+  .b-card{background:var(--g2);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s;}
+  .b-card:hover{border-color:var(--steel);}
+  .b-card .num{font-family:"Space Grotesk";font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.08em;margin-bottom:8px;}
+  .b-card h3{font-size:15px;font-weight:600;color:var(--paper);line-height:1.3;margin-bottom:8px;}
+  .b-card .desc{font-size:12px;color:var(--dim);line-height:1.45;margin-bottom:14px;}
+  .b-calc{background:var(--g3);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--faint);font-family:"JetBrains Mono",monospace;margin-bottom:12px;border:1px solid rgba(104,114,122,.15);}
+  .b-loss{font-family:"Space Grotesk";font-weight:700;font-size:22px;color:#F87171;}
+  .b-loss small{font-size:12px;font-weight:500;color:var(--dim);}
+
+  /* Banner total sangrado */
+  .bleed-total-banner{background:linear-gradient(90deg,rgba(239,68,68,.12),rgba(239,68,68,.04));border:1px solid rgba(239,68,68,.35);border-radius:14px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:40px;}
+  .bt-left h4{font-size:16px;font-weight:600;color:var(--paper);}
+  .bt-left p{font-size:13px;color:var(--dim);margin-top:2px;}
+  .bt-right{text-align:right;}
+  .bt-amount{font-family:"Space Grotesk";font-size:32px;font-weight:700;color:#F87171;}
+  .bt-sub{font-size:12px;color:var(--dim);}
+
+  /* Comparativa y Calculadora de Retorno */
+  .roi-container{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:32px;align-items:start;}
+  @media(max-width:890px){.roi-container{grid-template-columns:1fr;}}
+
+  .audit-inputs{background:var(--g2);border:1px solid var(--line);border-radius:18px;padding:24px;}
+  .audit-inputs h3{font-size:17px;font-weight:600;margin-bottom:6px;}
+  .audit-inputs .subtitle{font-size:13px;color:var(--dim);margin-bottom:20px;}
+  
+  .slider-row{margin-bottom:18px;}
+  .slider-label{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;margin-bottom:8px;}
+  .slider-label span{color:var(--paper);font-weight:500;}
+  .slider-label b{font-family:"Space Grotesk";font-size:15px;color:var(--orange);}
+  .slider-row input[type=range]{width:100%;accent-color:var(--orange);background:var(--g4);height:6px;border-radius:3px;cursor:pointer;}
+  
+  .grid-inputs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+  .in-box{margin-bottom:12px;}
+  .in-box label{display:block;font-size:12px;color:var(--dim);margin-bottom:6px;}
+  .in-box input{width:100%;background:var(--g3);border:1px solid var(--line);border-radius:8px;color:var(--paper);font-family:"IBM Plex Sans";font-size:14.5px;padding:9px 12px;}
+  .in-box input:focus{outline:none;border-color:var(--orange);}
+
+  /* Tarjeta de Resultados Ejecutivos */
+  .exec-card{background:var(--g2);border:1px solid rgba(255,106,42,.4);border-radius:18px;padding:26px;position:sticky;top:20px;box-shadow:0 12px 36px rgba(0,0,0,.4);}
+  .exec-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .exec-card-head h4{font-size:14px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+  .roi-pill{background:rgba(255,106,42,.15);border:1px solid var(--orange);color:var(--orange);font-family:"Space Grotesk";font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;}
+
+  .hero-gain{font-family:"Space Grotesk";font-weight:700;font-size:clamp(36px,4.5vw,46px);color:var(--orange);line-height:1;margin:8px 0 4px;}
+  .hero-gain-sub{font-size:13px;color:var(--dim);margin-bottom:22px;}
+
+  .kpi-line{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .kpi-line .k{color:var(--dim);}
+  .kpi-line .v{font-family:"Space Grotesk";font-weight:600;font-size:15px;color:var(--paper);}
+  .kpi-line.highlight{border-color:rgba(255,106,42,.4);background:rgba(255,106,42,.04);margin:6px -12px 0;padding:12px;border-radius:8px;}
+  .kpi-line.highlight .v{color:var(--orange);font-size:17px;}
+
+  .payback-box{margin-top:18px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.35);border-radius:12px;padding:14px 16px;font-size:13px;display:flex;align-items:center;gap:12px;}
+  .payback-box .icon{font-size:20px;}
+  .payback-box b{color:#34D399;font-family:"Space Grotesk";}
+
+  /* Proyección a 12 meses */
+  .projection-12m{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--g3);}
+  .p-12-head{font-size:11.5px;font-family:"Space Grotesk";font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+  .p-12-row{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;}
+  .p-12-row.diff{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-weight:600;color:#34D399;}
+
+  .audit-notes{margin-top:20px;font-size:11.5px;color:var(--faint);line-height:1.55;}
+
+  /* CTA */
+  .cta{border-top:1px solid var(--line);margin-top:70px;padding:64px 0 80px;text-align:center;}
+  .cta h2{font-size:clamp(26px,3.8vw,36px);font-weight:600;}
+  .cta p{color:var(--dim);margin:16px auto 30px;max-width:52ch;font-size:16.5px;}
+  .cta .btn-primary{padding:15px 34px;font-size:16px;}
+  footer{border-top:1px solid var(--line);padding:26px 0;color:var(--faint);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  /* --- Agente IA conversacional (módulo de clasificación en vivo) --- */
+  .agent-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:20px;align-items:start;}
+  @media(max-width:820px){.agent-layout{grid-template-columns:1fr;}}
+  .pedido-card{border:1px solid var(--line);border-radius:12px;background:var(--g3);overflow:hidden;margin-bottom:14px;}
+  .pc-row{display:flex;justify-content:space-between;padding:8px 14px;font-size:12.5px;border-top:1px solid var(--line);}
+  .pc-row:first-child{border-top:none;}
+  .pc-k{color:var(--dim);} .pc-v{font-weight:600;color:var(--paper);}
+  .agent-input-row{display:flex;gap:8px;margin-top:12px;}
+  .agent-input-row input{flex:1;min-width:0;background:var(--g3);border:1px solid var(--line);border-radius:9px;color:var(--paper);font-family:"IBM Plex Sans";font-size:13.5px;padding:10px 13px;}
+  .agent-input-row input:focus{outline:none;border-color:var(--orange);}
+  .agent-input-row button{white-space:nowrap;padding:10px 16px;font-size:13px;}
+  .agent-suggestions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .sugg-chip{font-size:11.5px;color:var(--dim);background:var(--g3);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;transition:border-color .15s,color .15s;font-family:"IBM Plex Sans";}
+  .sugg-chip:hover{border-color:var(--orange);color:var(--paper);}
+  .bub.wait{background:transparent;border:1px dashed var(--faint);color:var(--dim);}
+  .agent-json-h{font-family:"Space Grotesk";font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .agent-live-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse-dot 1.6s infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+  .agent-json{background:var(--g3);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:12px;color:#9be3c4;white-space:pre-wrap;word-break:break-word;line-height:1.55;}
+  .agent-flag{margin-top:12px;border-radius:10px;padding:10px 13px;font-size:12.5px;border:1px solid var(--line);background:var(--g3);color:var(--dim);}
+  .agent-flag.flag-auto{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.08);color:#34D399;}
+  .agent-flag.flag-human{border-color:rgba(255,106,42,.4);background:rgba(255,106,42,.08);color:var(--orange);}
+  .agent-disclaimer{margin-top:14px;font-size:11px;color:var(--faint);line-height:1.5;border-top:1px solid var(--line);padding-top:12px;}
+  .agent-prompt{margin-top:14px;}
+  .agent-prompt summary{cursor:pointer;font-size:12px;color:var(--dim);font-family:"Space Grotesk";font-weight:600;}
+  .agent-prompt pre{margin-top:10px;background:var(--g3);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--dim);white-space:pre-wrap;line-height:1.5;max-height:260px;overflow-y:auto;}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv,.bub,.ev{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="wordmark">INDIVIDRA</span>
+    <div class="top-actions">
+      <span class="chip">Inteligencia Operativa & Logística</span>
+      <a href="#roi" class="btn-top">Auditoría Financiera</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap hero">
+  <div class="eyebrow">Demo interactiva · logística y distribución de última milla</div>
+  <h1>Mirá cómo se ordena tu operación <em>sin cambiar cómo trabaja tu equipo.</em></h1>
+  <p>Cada módulo aborda una fuga real de dinero en tu depósito y tu flota. Probá el recorrido interactivo, observá la trazabilidad interna y auditá abajo el impacto económico exacto en pesos y dólares.</p>
+  <div class="legend">
+    <span class="k"><span class="dot auto"></span> Automático · instantáneo · sin intervención</span>
+    <span class="k"><span class="dot human"></span> Decisión humana · el equipo valida y decide</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="compat">
+    <span class="compat-l">Integración limpia con tus sistemas actuales</span>
+    <div class="compat-b">
+      <span class="cbadge">Tango</span>
+      <span class="cbadge">Bejerman</span>
+      <span class="cbadge">QuadMinds</span>
+      <span class="cbadge">Intway</span>
+      <span class="cbadge">Excel / Sheets</span>
+      <span class="cbadge">Mercado Libre Flex</span>
+      <span class="cbadge">Webhooks API</span>
+    </div>
+  </div>
+
+  <!-- Barra de Módulos -->
+  <div class="nav" id="nav" role="tablist"></div>
+
+  <div class="controls">
+    <button class="btn btn-primary" id="playBtn">Reproducir Módulo</button>
+    <button class="btn btn-ghost" id="resetBtn" disabled>Reiniciar</button>
+    <span class="note" id="note"></span>
+  </div>
+
+  <div class="stagegrid" id="stagegrid">
+    <div class="stage" id="stage"></div>
+    <div class="trace">
+      <div class="trace-h"><span class="t">Trazabilidad Operativa</span><span class="c" id="evCount">0 eventos</span></div>
+      <div class="trace-b" id="traceB"><div class="trace-empty" id="traceEmpty">Cada evento queda auditado en el registro determinístico.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     SECCIÓN: AUDITORÍA FINANCIERA & CALCULADORA DE RETORNO (ROI)
+     ========================================================================== -->
+<div class="wrap band" id="roi">
+  <div class="fin-header">
+    <div>
+      <div class="eyebrow">Auditoría Financiera · Datos Reales Argentina (Julio 2026)</div>
+      <h2>💰 Cuánto pierde tu logística por mes — y cómo lo resolvemos</h2>
+      <p>Números fríos y auditables. Basados en costos verificables de combustible (YPF), convenio Camioneros CCT 40/89 y tasas de fricción estándar de última milla.</p>
+    </div>
+    <div>
+      <div class="curr-switch">
+        <button class="curr-btn active" id="btnUSD">Ver en USD ($)</button>
+        <button class="curr-btn" id="btnARS">Ver en ARS ($)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chips de Parámetros Verificables -->
+  <div class="fin-chips">
+    <div class="fchip">⛽ Gasoil Diesel 500 YPF: <b>$2.198 / L</b></div>
+    <div class="fchip">🚚 Chofer CCT 40/89: <b>$1.060.010 bruto ($8.730/h costo emp.)</b></div>
+    <div class="fchip">⏱️ Costo hora admin: <b>$5.114 / h</b></div>
+    <div class="fchip">💵 Dólar ref.: <b>$1.200 ARS</b></div>
+    <div class="fchip">📦 Costo por entrega fallida: <b>$9.980 ARS</b></div>
+  </div>
+
+  <!-- Grid de los 4 Motores del Sangrado -->
+  <div class="bleed-grid">
+    <div class="b-card">
+      <div>
+        <div class="num">01 · VISITAS FALLIDAS</div>
+        <h3>Entregas fallidas y re-despachos</h3>
+        <div class="desc">10% de paquetes rebotados ("no había nadie", timbre roto). Exige doble viaje y consumo inútil.</div>
+        <div class="b-calc">220 fallas × $9.980 (gasoil + chofer 20m + 2do viaje)</div>
+      </div>
+      <div class="b-loss" id="loss1">$2.195.600 <small>ARS/mes</small></div>
+    </div>
+
+    <div class="b-card">
+      <div>
+        <div class="num">02 · LLAMADAS Y ATENCIÓN</div>
+        <h3>Admin: "¿Dónde está mi pedido?"</h3>
+        <div class="desc">40 consultas telefónicas por día (4 min c/u) desgastando al personal de tráfico y cobranzas.</div>
+        <div class="b-calc">2.67 hs/día × 22 días × $5.114/hora admin</div>
+      </div>
+      <div class="b-loss" id="loss2">$300.290 <small>ARS/mes</small></div>
+    </div>
+
+    <div class="b-card">
+      <div>
+        <div class="num">03 · CUSTODIA VENCIDA</div>
+        <h3>Paquetes devueltos a origen</h3>
+        <div class="desc">Plazo de guarda agotado sin respuesta del receptor. Logística inversa completa a pérdida.</div>
+        <div class="b-calc">33 paquetes/mes × $12.000 costo retorno</div>
+      </div>
+      <div class="b-loss" id="loss3">$396.000 <small>ARS/mes</small></div>
+    </div>
+
+    <div class="b-card">
+      <div>
+        <div class="num">04 · DAÑO REPUTACIONAL</div>
+        <h3>Fuga de clientes y 1⭐ en Google</h3>
+        <div class="desc">Vendedores Flex y empresas que no renuevan contrato por quejas públicas en reseñas.</div>
+        <div class="b-calc">2 a 3 contratos que no cierran al mes</div>
+      </div>
+      <div class="b-loss" id="loss4">$504.000 <small>ARS/mes</small></div>
+    </div>
+  </div>
+
+  <!-- Banner Total Sangrado Mensual -->
+  <div class="bleed-total-banner">
+    <div class="bt-left">
+      <h4>Pérdida mensual oculta en una operación base de 100 entregas/día</h4>
+      <p>Dinero que se escapa todos los meses por descoordinación operativa y falta de trazabilidad en dos fuentes.</p>
+    </div>
+    <div class="bt-right">
+      <div class="bt-amount" id="lossTotal">$3.395.890 ARS</div>
+      <div class="bt-sub" id="lossTotalUSD">≈ USD 2.830 / mes tirados a la basura</div>
+    </div>
+  </div>
+
+  <!-- Calculadora Interactiva de Retorno -->
+  <div class="roi-container">
+    <div class="audit-inputs">
+      <h3>Simulá el impacto en tu propia flota</h3>
+      <p class="subtitle">Ajustá los controles según el volumen real de tu operación:</p>
+
+      <div class="slider-row">
+        <div class="slider-label"><span>Entregas por día</span><b id="lbl_entregas">100 / día</b></div>
+        <input type="range" id="sl_entregas" min="30" max="600" step="10" value="100">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label"><span>Tasa típica de fallo en 1er intento (%)</span><b id="lbl_falla">10%</b></div>
+        <input type="range" id="sl_falla" min="4" max="25" step="1" value="10">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label"><span>Llamadas / consultas telefónicas al día</span><b id="lbl_llamadas">40 / día</b></div>
+        <input type="range" id="sl_llamadas" min="10" max="150" step="5" value="40">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label"><span>Reducción de fallos con INDIVIDRA (Conservador)</span><b id="lbl_mejora">50%</b></div>
+        <input type="range" id="sl_mejora" min="30" max="75" step="5" value="50">
+      </div>
+
+      <div class="grid-inputs">
+        <div class="in-box">
+          <label>Días hábiles por mes</label>
+          <input type="number" id="in_dias" value="22" min="15" max="26">
+        </div>
+        <div class="in-box">
+          <label>Fee mensual INDIVIDRA (USD)</label>
+          <input type="number" id="in_fee" value="400" min="200" step="50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultados Ejecutivos -->
+    <div class="exec-card">
+      <div class="exec-card-head">
+        <h4>Retorno de Inversión</h4>
+        <div class="roi-pill" id="out_roi">ROI 289%</div>
+      </div>
+
+      <div class="hero-gain" id="out_neto">+USD 1.156</div>
+      <div class="hero-gain-sub">ganancia neta limpia por mes en tu bolsillo</div>
+
+      <div class="kpi-line"><span class="k">Ahorro bruto estimado</span><span class="v" id="out_bruto">USD 1.556</span></div>
+      <div class="kpi-line"><span class="k">Reentregas evitadas / mes</span><span class="v" id="out_reev">110 paquetes</span></div>
+      <div class="kpi-line"><span class="k">Horas admin recuperadas</span><span class="v" id="out_horas">47 horas</span></div>
+      <div class="kpi-line"><span class="k">Costo del sistema INDIVIDRA</span><span class="v" id="out_costo">USD 400</span></div>
+      <div class="kpi-line highlight"><span class="k">Ganancia mensual neta</span><span class="v" id="out_neto_line">+USD 1.156</span></div>
+
+      <div class="payback-box">
+        <div class="icon">⚡</div>
+        <div>Se paga solo en <b id="out_payback">~8 días hábiles</b> de cada mes.</div>
+      </div>
+
+      <!-- Proyección Anual -->
+      <div class="projection-12m">
+        <div class="p-12-head">Balance Anual Comparativo (12 meses)</div>
+        <div class="p-12-row"><span>Sin sistema (pérdida acumulada):</span><span style="color:#F87171;" id="p12_loss">USD 33.960</span></div>
+        <div class="p-12-row"><span>Inversión INDIVIDRA:</span><span id="p12_inv">USD 4.800</span></div>
+        <div class="p-12-row"><span>Ahorro neto generado:</span><span id="p12_save">USD 13.872</span></div>
+        <div class="p-12-row diff"><span>Diferencia neta a tu favor:</span><span id="p12_diff">+USD 9.072</span></div>
+      </div>
+
+      <div class="audit-notes">
+        Fee de USD 400 incluye los 6 módulos, WhatsApp Business API oficial, infraestructura cloud y soporte continuo. Sin costos ocultos de setup ni licencias por chofer.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     LLAMADO A LA ACCIÓN (WHATSAPP GABRIEL)
+     ========================================================================== -->
+<div class="wrap cta">
+  <h2>¿Querés auditar el número exacto de tu flota?</h2>
+  <p>Hagamos un diagnóstico rápido de 15 minutos con tus planillas reales para ver cuántas reentregas y horas admin podés recuperar este mismo mes.</p>
+  <a class="btn btn-primary" id="btnCta" href="https://wa.me/5491160152435?text=Hola%20Gabriel,%20vi%20la%20demo%20interactiva%20y%20el%20an%C3%A1lisis%20financiero%20de%20INDIVIDRA.%20Quiero%20coordinar%20una%20reuni%C3%B3n%20de%20diagn%C3%B3stico%20para%20mi%20log%C3%ADstica." target="_blank" rel="noopener">Coordinar reunión con Gabriel</a>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span>INDIVIDRA · Inteligencia Operativa para Logística y Distribución</span>
+    <span>Buenos Aires, Argentina · individratec.com</span>
+  </footer>
+</div>
+
+<!-- ==========================================================================
+     SCRIPT DE INTERACCIÓN & LÓGICA FINANCIERA
+     ========================================================================== -->
+<script>
+(function(){
+  "use strict";
+
+  // Monedas y formato
+  let currency = 'USD'; // 'USD' o 'ARS'
+  const DOLAR = 1200;
+  const nf = new Intl.NumberFormat('es-AR');
+  const fmtARS = v => '$' + nf.format(Math.round(v));
+  const fmtUSD = v => 'USD ' + nf.format(Math.round(v));
+  const fmtMoney = (vARS, vUSD) => currency === 'USD' ? fmtUSD(vUSD) : fmtARS(vARS);
+
+  // Elementos DOM
+  const stage = document.getElementById('stage');
+  const traceB = document.getElementById('traceB');
+  const traceEmpty = document.getElementById('traceEmpty');
+  const evCount = document.getElementById('evCount');
+  const nav = document.getElementById('nav');
+  const playBtn = document.getElementById('playBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const note = document.getElementById('note');
+  const grid = document.getElementById('stagegrid');
+
+  function reduced(){ return window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+  function clk(){ const d = new Date(); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
+
+  let timers = [], running = false, runId = 0, evN = 0, current = 'coord';
+  const A = (ms, fn) => timers.push(setTimeout(fn, reduced() ? ms * 0.2 : ms));
+
+  function logEvent(kind, tag, msg, meta){
+    traceEmpty.style.display = 'none';
+    const d = document.createElement('div');
+    d.className = 'ev ' + kind;
+    d.innerHTML = '<span class="tag">' + tag + '</span><div class="m">' + msg + '</div><div class="mt">' + meta + '</div>';
+    traceB.appendChild(d);
+    requestAnimationFrame(() => d.classList.add('on'));
+    traceB.scrollTop = traceB.scrollHeight;
+    evN++;
+    evCount.textContent = evN + (evN === 1 ? ' evento' : ' eventos');
+  }
+
+  const on = sel => { const e = stage.querySelector(sel); if(e) e.classList.add('on'); };
+
+  function countUp(el, to, ms, prefix, suffix){
+    if(!el) return;
+    const my = runId;
+    prefix = prefix || ''; suffix = suffix || '';
+    if(reduced()){ el.textContent = prefix + nf.format(to) + suffix; return; }
+    const start = performance.now();
+    function tick(now){
+      if(my !== runId) return;
+      const p = Math.min((now - start) / ms, 1);
+      el.textContent = prefix + nf.format(Math.round(to * p)) + suffix;
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------------- AGENTE IA CONVERSACIONAL (simulación determinística en el navegador) ----------------
+     Reproduce las reglas duras del prompt de producción: nunca inventa datos del pedido, un mensaje
+     ambiguo/agresivo/fuera de turno exige humano, la reprogramación es siempre una sugerencia (nunca
+     estado definitivo) y jamás promete horario exacto (siempre franjas). No llama a ningún LLM externo. */
+  let agentGen = 0;
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function agentClassify(text){
+    const t = (text || '').toLowerCase();
+    const has = arr => arr.some(w => t.includes(w));
+
+    const agresivo = has(['estafa','denuncia','abogado','demanda','indignad','inaceptable','pésimo','pesimo','esto es un curro','atiendan ya','urgente que me llamen']);
+    const nuevaDireccion = has(['me mudé','me mude','otra dirección','otra direccion','nueva dirección','nueva direccion','cambio de domicilio']);
+    const rechaza = has(['no quiero','cancelar','no me interesa','devolver el pedido','ya no lo quiero','anulen el pedido']);
+    const reprograma = has(['no voy a estar','no puedo hoy','no estoy','mañana','otro día','otro dia','reprogram','puede ser','pasenlo para','pasarlo para']);
+    const dejarEn = has(['dejalo en','portería','porteria','con el encargado','en la puerta','buzón','buzon']);
+    const confirma = has(['sí','si,','si dale','dale','ok','okay','ahí estoy','ahi estoy','confirmado','perfecto','voy a estar']);
+    const consulta = has(['dónde está','donde esta','a qué hora','a que hora','cuánto','cuanto','cuándo llega','cuando llega','?']);
+
+    let intencion, nuevo_estado = null, franja_sugerida = null, requiere_humano = false;
+
+    if (agresivo || nuevaDireccion) {
+      intencion = 'otro'; requiere_humano = true;
+    } else if (rechaza) {
+      intencion = 'rechaza'; requiere_humano = true;
+    } else if (reprograma) {
+      intencion = 'reprograma'; requiere_humano = true;
+      franja_sugerida = t.includes('tarde') ? 'Tarde, franja 14–18 hs (a confirmar por tráfico)'
+                       : t.includes('mañana') ? 'Mañana, franja 9–12 hs (a confirmar por tráfico)'
+                       : 'Próxima franja disponible (a confirmar por tráfico)';
+    } else if (dejarEn) {
+      intencion = 'confirma'; requiere_humano = true; // cambia el modo de entrega: lo valida tráfico igual
+    } else if (confirma) {
+      intencion = 'confirma'; requiere_humano = false;
+    } else if (consulta) {
+      intencion = 'consulta'; requiere_humano = false;
+    } else {
+      intencion = 'otro'; requiere_humano = true; // mensaje ambiguo => requiere humano
+    }
+
+    return { intencion, nuevo_estado, franja_sugerida, requiere_humano };
+  }
+
+  function handleAgentTurn(rawText){
+    const text = (rawText || '').trim();
+    if(!text) return;
+    const chat = stage.querySelector('#agChat');
+    const input = stage.querySelector('#agInput');
+    const jsonEl = stage.querySelector('#agJson');
+    const flagEl = stage.querySelector('#agFlag');
+    const estadoEl = stage.querySelector('#ag_estado');
+    if(!chat) return;
+    const myGen = agentGen;
+
+    const addBub = (cls, txt) => {
+      const b = document.createElement('div');
+      b.className = 'bub ' + cls;
+      b.innerHTML = escapeHtml(txt) + '<span class="t">' + clk() + '</span>';
+      chat.appendChild(b);
+      requestAnimationFrame(() => b.classList.add('on'));
+      chat.scrollTop = chat.scrollHeight;
+      return b;
+    };
+
+    addBub('inb', text);
+    if(input) input.value = '';
+
+    const result = agentClassify(text);
+    if(jsonEl) jsonEl.textContent = JSON.stringify(result, null, 2);
+
+    logEvent(result.requiere_humano ? 'human' : 'auto',
+      result.requiere_humano ? 'AGENTE · REQUIERE HUMANO' : 'AGENTE · AUTO',
+      'Clasificado como "' + result.intencion + '"' + (result.franja_sugerida ? ' · sugiere: ' + result.franja_sugerida : '') + '.',
+      result.requiere_humano ? 'El agente propone · una persona confirma' : 'Resuelto sin intervención');
+
+    if(flagEl){
+      flagEl.hidden = false;
+      flagEl.className = 'agent-flag ' + (result.requiere_humano ? 'flag-human' : 'flag-auto');
+      flagEl.textContent = result.requiere_humano
+        ? '🚩 Derivado a tráfico / atención — el agente no decide solo.'
+        : '✅ Resuelto automáticamente por el agente.';
+    }
+
+    setTimeout(() => {
+      if(myGen !== agentGen) return;
+      if(result.requiere_humano){
+        addBub('outb wait', '🕓 Recibido. Alguien del equipo te confirma en breve.');
+        setTimeout(() => {
+          if(myGen !== agentGen) return;
+          if(result.intencion === 'reprograma'){
+            logEvent('human', 'DECISIÓN HUMANA', 'Tráfico confirma la reprogramación sugerida por el agente.', 'Franja: ' + (result.franja_sugerida || 'a coordinar'));
+            if(estadoEl) estadoEl.textContent = 'Reprogramado';
+            addBub('outb', '¡Listo! Quedó reprogramado — ' + (result.franja_sugerida || 'te confirmamos la franja') + ' 🚚');
+          } else {
+            logEvent('human', 'DECISIÓN HUMANA', 'Una persona del equipo revisa el caso y responde en privado.', 'Caso: ' + result.intencion);
+            addBub('outb', 'Gracias por avisar, ya te contacta alguien del equipo para resolverlo. 🙏');
+          }
+        }, 1500);
+      } else {
+        const reply = result.intencion === 'confirma' ? '¡Buenísimo, te esperamos en la franja avisada! 🚚'
+                    : result.intencion === 'consulta' ? 'Tu pedido está en camino, franja estimada 14–18 hs 🕓'
+                    : 'Gracias, quedó registrado.';
+        addBub('outb', reply);
+        logEvent('result', 'RESULTADO', 'Consulta resuelta sin abrir un ticket ni llamar por teléfono.', 'Cero intervención humana');
+      }
+    }, 900);
+  }
+
+  /* ---------------- MÓDULOS DE LA DEMO ---------------- */
+  const modules = {
+
+    coord: {
+      label: 'Coordinación previa',
+      note: 'Una entrega que estaba por fracasar se rescata a tiempo. Módulos: Coordinación previa + Aviso por posición.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">WhatsApp · Marta (Destinataria)</span><span class="s">lo que ve tu cliente final</span></div>'
+        + '<div class="phone"><div class="ph-head"><div class="ph-av">MG</div><div><div class="ph-who">Distribuidora Central</div><div class="ph-st" id="phSt">en línea</div></div></div>'
+        + '<div class="chat" id="chat"></div></div>';
+      },
+      play(){
+        const chat = stage.querySelector('#chat'), st = stage.querySelector('#phSt');
+        const out = t => { const b = document.createElement('div'); b.className = 'bub outb'; b.innerHTML = t + '<span class="t">' + clk() + '</span>'; chat.appendChild(b); requestAnimationFrame(() => b.classList.add('on')); chat.scrollTop = chat.scrollHeight; };
+        const inb = t => { const b = document.createElement('div'); b.className = 'bub inb'; b.innerHTML = t + '<span class="t">' + clk() + '</span>'; chat.appendChild(b); requestAnimationFrame(() => b.classList.add('on')); chat.scrollTop = chat.scrollHeight; };
+
+        A(300, () => logEvent('auto', 'DETECTADO', 'Entrega #4821 para hoy · Zona Oeste · Marta G.', 'ERP → INDIVIDRA · sin intervención'));
+        A(1100, () => { st.textContent = 'escribiendo…'; });
+        A(1700, () => { st.textContent = 'en línea'; out('Hola Marta 👋 Tu pedido #4821 llega hoy entre las 14 y 18 hs. ¿Vas a estar en el domicilio?'); });
+        A(2100, () => logEvent('auto', 'ENVIADO', 'Coordinación previa enviada por WhatsApp.', 'Módulo: Coordinación previa'));
+        A(2900, () => inb('Uy, hoy no estoy 😔 ¿Puede ser mañana a la mañana?'));
+        A(3400, () => logEvent('auto', 'REGISTRADO', 'No disponible hoy. Pide reprogramar a mañana AM.', 'Interpretado y registrado automáticamente'));
+        A(4300, () => logEvent('human', 'DECISIÓN HUMANA', 'Reprogramar #4821 a mañana 9–12 hs. Tráfico confirma con un toque.', 'INDIVIDRA propone · una persona valida'));
+        A(5000, () => { st.textContent = 'escribiendo…'; });
+        A(5600, () => { st.textContent = 'en línea'; out('¡Listo Marta! Reprogramado para mañana 9–12 hs. Te aviso cuando el chofer esté saliendo 🚚'); });
+        A(6100, () => logEvent('result', 'RESULTADO', 'Entrega fallida evitada. Reentrega ahorrada ($9.980).', 'Cero llamadas salientes del equipo'));
+        A(7000, () => logEvent('auto', 'AL DÍA SIGUIENTE', 'Chofer a 2 paradas del domicilio.', 'Módulo: Aviso por posición'));
+        A(7600, () => out('Marta, el chofer está a ~20 min. ¡Ya casi llega! 🚚'));
+        A(8300, () => inb('¡Buenísimo, ya lo espero! 🙌'));
+        A(8900, () => logEvent('result', 'CERRADO', 'Entrega concretada en el 1er intento reprogramado.', 'Cliente satisfecho · Cero reclamos'));
+        done(9600);
+      }
+    },
+
+    agente: {
+      label: 'Agente IA (demo)',
+      featured: true,
+      note: 'Escribí un mensaje como si fueras el destinatario (o probá una sugerencia) y mirá al agente clasificarlo en JSON estructurado, nunca en texto libre.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Agente IA · Clasificación en Vivo</span><span class="s">motor conversacional de coordinación previa</span></div>'
+        + '<div class="agent-layout">'
+        + '  <div>'
+        + '    <div class="pedido-card">'
+        + '      <div class="pc-row"><span class="pc-k">Pedido</span><span class="pc-v">#4821</span></div>'
+        + '      <div class="pc-row"><span class="pc-k">Destinatario</span><span class="pc-v">Marta G.</span></div>'
+        + '      <div class="pc-row"><span class="pc-k">Zona</span><span class="pc-v">Oeste</span></div>'
+        + '      <div class="pc-row"><span class="pc-k">Chofer</span><span class="pc-v">Braian R.</span></div>'
+        + '      <div class="pc-row"><span class="pc-k">Estado</span><span class="pc-v" id="ag_estado">Pendiente</span></div>'
+        + '    </div>'
+        + '    <div class="phone"><div class="ph-head"><div class="ph-av">MG</div><div><div class="ph-who">Marta G. (Destinataria)</div><div class="ph-st" id="agPhSt">en línea</div></div></div>'
+        + '    <div class="chat" id="agChat"></div></div>'
+        + '    <div class="agent-input-row">'
+        + '      <input type="text" id="agInput" maxlength="180" placeholder="Escribí como si fueras el destinatario… ej: “no voy a estar hoy”">'
+        + '      <button type="button" class="btn btn-primary" id="agSend">Enviar</button>'
+        + '    </div>'
+        + '    <div class="agent-suggestions">'
+        + '      <button type="button" class="sugg-chip" data-txt="No voy a estar hoy, ¿puede ser mañana a la mañana?">No voy a estar hoy</button>'
+        + '      <button type="button" class="sugg-chip" data-txt="Dejalo en portería con el encargado">Dejalo en portería</button>'
+        + '      <button type="button" class="sugg-chip" data-txt="Esto es un curro, quiero que me atiendan ya">Reclamo agresivo</button>'
+        + '      <button type="button" class="sugg-chip" data-txt="Me mudé, ahora vivo en otra dirección">Nueva dirección</button>'
+        + '      <button type="button" class="sugg-chip" data-txt="Sí, dale, ahí estoy">Confirma</button>'
+        + '    </div>'
+        + '  </div>'
+        + '  <div>'
+        + '    <div class="agent-json-h">Salida estructurada del agente <span class="agent-live-dot"></span></div>'
+        + '    <pre class="agent-json mono" id="agJson">{\n  "intencion": null,\n  "nuevo_estado": null,\n  "franja_sugerida": null,\n  "requiere_humano": false\n}</pre>'
+        + '    <div class="agent-flag" id="agFlag" hidden></div>'
+        + '    <div class="agent-disclaimer">⚠️ Simulación determinística en el navegador (sin llamar a un LLM externo), pensada para mostrar el flujo. Reproduce las reglas duras del prompt real: nunca inventa datos del pedido, nunca confirma una reprogramación por sí solo — solo la sugiere — y jamás promete un horario exacto, siempre franjas. En producción corre sobre un modelo de OpenRouter con este mismo prompt.</div>'
+        + '    <details class="agent-prompt"><summary>Ver el prompt de producción del agente</summary>'
+        + '      <pre>Sos el motor conversacional de la demo de INDIVIDRA logística. Tu único trabajo es interpretar el mensaje en lenguaje natural del destinatario y devolver una clasificación estructurada, nunca texto libre.\n\nSalida obligatoria — solo JSON:\n{ "intencion": "confirma"|"reprograma"|"rechaza"|"consulta"|"otro", "nuevo_estado": "&lt;Pendiente/En camino/Reprogramado/Entregado&gt; o null", "franja_sugerida": "&lt;texto corto o null&gt;", "requiere_humano": true|false }\n\nReglas duras:\n• Nunca inventa datos del pedido; solo clasifica lo que dice el destinatario.\n• Mensaje ambiguo, agresivo o fuera de turno (reclamo, dirección no registrada) → requiere_humano: true.\n• Reprogramar es siempre una propuesta: nunca marca “Reprogramado” en forma definitiva, solo lo sugiere — lo confirma tráfico.\n• Cero datos sensibles, cero promesas de horario exacto (siempre franjas).</pre>'
+        + '    </details>'
+        + '  </div>'
+        + '</div>';
+      },
+      mount(){
+        agentGen++;
+        const input = stage.querySelector('#agInput');
+        const sendBtn = stage.querySelector('#agSend');
+        if(sendBtn && input) sendBtn.addEventListener('click', () => handleAgentTurn(input.value));
+        if(input) input.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleAgentTurn(input.value); } });
+        stage.querySelectorAll('.sugg-chip').forEach(ch => ch.addEventListener('click', () => handleAgentTurn(ch.dataset.txt)));
+      },
+      play(){
+        const chat = stage.querySelector('#agChat'), st = stage.querySelector('#agPhSt');
+        const out = t => { const b = document.createElement('div'); b.className = 'bub outb'; b.innerHTML = t + '<span class="t">' + clk() + '</span>'; chat.appendChild(b); requestAnimationFrame(() => b.classList.add('on')); chat.scrollTop = chat.scrollHeight; };
+        A(300, () => logEvent('auto', 'DETECTADO', 'Entrega #4821 para hoy · Zona Oeste.', 'ERP → INDIVIDRA · sin intervención'));
+        A(1000, () => { st.textContent = 'escribiendo…'; });
+        A(1600, () => { st.textContent = 'en línea'; out('Hola 👋 Tu pedido #4821 llega hoy entre las 14 y 18 hs. ¿Vas a estar en el domicilio?'); });
+        A(2000, () => logEvent('auto', 'ENVIADO', 'Coordinación previa enviada por WhatsApp.', 'Módulo: Coordinación previa'));
+        A(2700, () => {
+          running = false; playBtn.disabled = false;
+          note.textContent = 'Ahora escribí vos la respuesta del destinatario (o probá una sugerencia) y mirá al agente clasificarla en tiempo real, abajo a la derecha.';
+        });
+      }
+    },
+
+    admision: {
+      label: 'Admisión de choferes',
+      note: 'Alta ágil de choferes sin WhatsApps perdidos. Módulos: Admisión inteligente + Legajo vivo.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Portal Web Autogestión</span><span class="s">alta de chofer · OCR inteligente</span></div>'
+        + '<div class="browser"><div class="br-bar"><div class="br-dots"><i></i><i></i><i></i></div><div class="br-url">portal.tulogistica.com/choferes/alta</div></div>'
+        + '<div class="br-body"><h4>Alta de chofer y documentación vehicular</h4><div class="sub">Subí tus 4 documentos. La validación de vigencia es automática e instantánea.</div>'
+        + '<div class="docs">'
+        + '<div class="doc" id="d1"><div class="dn">Licencia Nacional</div><div class="dstate">Pendiente</div><div class="scan"></div></div>'
+        + '<div class="doc" id="d2"><div class="dn">Cédula Verde</div><div class="dstate">Pendiente</div><div class="scan"></div></div>'
+        + '<div class="doc" id="d3"><div class="dn">VTV Vigente</div><div class="dstate">Pendiente</div><div class="scan"></div></div>'
+        + '<div class="doc" id="d4"><div class="dn">Póliza de Seguro</div><div class="dstate">Pendiente</div><div class="scan"></div></div>'
+        + '</div>'
+        + '<div class="layer-banner rv" id="adBanner"><span class="badge">CAPA 1 · OK</span><span>Vencimientos verificados → ingresa al pool activo de choferes</span></div>'
+        + '</div></div>';
+      },
+      play(){
+        const docs = ['#d1','#d2','#d3','#d4'];
+        const exp = ['vence 03/2027','al día','vence 11/2026','vence 08/2026'];
+        A(300, () => logEvent('auto', 'RECIBIDO', 'Postulante carga documentación por portal web.', 'Sin fotos sueltas por WhatsApp'));
+        docs.forEach((d,i) => {
+          A(700 + i*350, () => { const e = stage.querySelector(d); e.classList.add('up'); e.querySelector('.dstate').textContent = 'Subido'; });
+        });
+        A(2300, () => logEvent('auto', 'CAPA 1 · OCR', 'Extrae y valida vencimientos de los 4 documentos.', 'Determinístico · Cero carga manual'));
+        docs.forEach((d,i) => {
+          A(2500 + i*450, () => { const e = stage.querySelector(d); e.classList.add('scanning'); });
+          A(2950 + i*450, () => { const e = stage.querySelector(d); e.classList.remove('scanning'); e.classList.add('ok'); e.querySelector('.dstate').textContent = '✓ ' + exp[i]; });
+        });
+        A(5000, () => { on('#adBanner'); logEvent('auto', 'POOL ACTIVO', 'Candidato apto incorporado al pool con acuse automático.', 'Cumplimiento normativo Ley 25.326'); });
+        A(5800, () => logEvent('auto', 'CAPA 2 · DIGEST', 'Resumen diario a tráfico: choferes aprobados por zona y tipo de utilitario.', 'Filtrado previo'));
+        A(6700, () => logEvent('human', 'DECISIÓN HUMANA', 'Encargado de tráfico confirma asignación de ruta.', 'INDIVIDRA filtra · una persona decide'));
+        A(7500, () => logEvent('result', 'RESULTADO', 'Chofer listo para operar. Legajo vivo con alertas de vencimiento.', 'Cero planillas manuales'));
+        done(8200);
+      }
+    },
+
+    anomalias: {
+      label: 'Registro de anomalías',
+      note: 'Doble fuente de prueba para visitas dudosas. Módulo: Registro de anomalías geolocalizado.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Telemetría y Evidencia Cruzada</span><span class="s">dos fuentes objetivas, no una sospecha</span></div>'
+        + '<div class="map" id="map">'
+        + '<div class="distline" id="dline"><span class="d" id="dtxt">— m</span></div>'
+        + '<div class="pin home rv" id="pHome" style="left:32%;top:64%"><div class="head"></div><div class="lbl">Domicilio de Marta</div></div>'
+        + '<div class="pin fail rv" id="pFail" style="left:74%;top:30%"><div class="head"></div><div class="lbl">Visita marcada “Fallida” 14:02</div></div>'
+        + '</div>'
+        + '<div class="sources">'
+        + '<div class="src rv" id="src1"><div class="lab">FUENTE 1 · TELEMETRÍA CHOFER</div>Chofer marcó <b>“no había nadie”</b> a las 14:02 hs.</div>'
+        + '<div class="src rv" id="src2"><div class="lab">FUENTE 2 · DESTINATARIO</div>Marta confirmó por WhatsApp: <b>estuvo en casa</b> todo el día.</div>'
+        + '</div>';
+      },
+      play(){
+        A(400, () => on('#pHome'));
+        A(500, () => logEvent('auto', 'EN RUTA', 'Unidad en reparto · destino: domicilio de Marta.', 'GPS en seguimiento'));
+        A(1300, () => on('#pFail'));
+        A(1400, () => logEvent('auto', 'MARCA DE VISITA', 'Chofer reporta visita como fallida desde la app.', 'Fuente 1 · evento registrado'));
+        A(2200, () => {
+          const map = stage.querySelector('#map'), line = stage.querySelector('#dline');
+          const mr = map.getBoundingClientRect();
+          const hx = (0.32*mr.width), hy = (0.64*mr.height), fx = (0.74*mr.width), fy = (0.30*mr.height);
+          const dx = fx - hx, dy = fy - hy, len = Math.sqrt(dx*dx + dy*dy), ang = Math.atan2(dy,dx)*180/Math.PI;
+          line.style.left = hx + 'px'; line.style.top = hy + 'px'; line.style.width = len + 'px'; line.style.transform = 'rotate(' + ang + 'deg)';
+          line.classList.add('on');
+          stage.querySelector('#dtxt').textContent = '620 m de distancia del domicilio real';
+        });
+        A(2400, () => logEvent('auto', 'DISTANCIA', 'Alerta: evento registrado a 620 m del domicilio verificado.', 'Fecha · hora · coordenadas auditadas'));
+        A(3200, () => on('#src1'));
+        A(3900, () => on('#src2'));
+        A(4200, () => logEvent('auto', 'CRUCE', 'Cruce automático: chofer fuera de geocerca + cliente confirma presencia.', 'Evidencia irrefutable de 2 fuentes'));
+        A(5100, () => logEvent('human', 'DECISIÓN HUMANA', 'El supervisor revisa el reporte a fin de mes con datos objetivos.', 'Sin discusiones subjetivas'));
+        A(5800, () => logEvent('result', 'RESULTADO', 'Anomalía documentada para liquidación justa del flete.', 'Transparencia total'));
+        done(6500);
+      }
+    },
+
+    reloj: {
+      label: 'Reloj de vencimiento',
+      note: 'Evitá que los paquetes vuelvan al remitente. Módulo: Reloj de vencimiento de custodia.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Cuenta Regresiva de Guarda</span><span class="s">alerta proactiva antes de la devolución</span></div>'
+        + '<div class="pkg"><div class="big" id="dayBig">5<small>DÍAS PARA LA DEVOLUCIÓN</small></div>'
+        + '<div style="flex:1;font-size:13px;color:var(--dim)">Paquete <b style="color:var(--paper)">#3390</b> retenido en depósito. INDIVIDRA cronometra los plazos y alerta al destinatario a los 5, 2 y 1 día antes de devolver la carga al dador.</div></div>'
+        + '<div class="track"><div class="tn" id="t5"><div class="d">5</div>aviso</div><div class="tn" id="t2"><div class="d">2</div>aviso</div><div class="tn" id="t1"><div class="d">1</div>último</div></div>'
+        + '<div class="morning rv" id="morning"><div class="h">Lista Matutina · Paquetes en Riesgo Crítico</div>'
+        + '<div class="mrow"><span>#3390 · Marta G. · Zona Oeste</span><span class="risk">1 día (vence hoy)</span></div>'
+        + '<div class="mrow"><span>#3418 · Depósito Sur · Calzados S.A.</span><span class="risk">2 días restantes</span></div>'
+        + '<div class="mrow"><span>#3421 · Local Centro · Insumos BA</span><span class="risk">2 días restantes</span></div></div>';
+      },
+      play(){
+        const big = stage.querySelector('#dayBig');
+        const setDay = n => big.innerHTML = n + '<small>DÍA' + (n == 1 ? '' : 'S') + ' PARA LA DEVOLUCIÓN</small>';
+        A(400, () => logEvent('auto', 'DÍA 5', 'Paquete #3390 acumula 5 días sin entrega.', 'Módulo: Reloj de vencimiento'));
+        A(600, () => { stage.querySelector('#t5').classList.add('hit'); });
+        A(1200, () => logEvent('auto', 'AVISO 1', 'WhatsApp automático al destinatario recordando retiro.', 'Sin intervención'));
+        A(2000, () => { setDay(2); stage.querySelector('#t2').classList.add('hit'); logEvent('auto', 'DÍA 2', 'Segundo recordatorio automático con link de confirmación.', 'Automático'); });
+        A(3200, () => { setDay(1); stage.querySelector('#t1').classList.add('hit'); logEvent('auto', 'ÚLTIMO DÍA', 'Aviso de urgencia antes de emitir logística inversa.', 'Alta prioridad'); });
+        A(4200, () => { on('#morning'); logEvent('auto', 'DIGEST DIARIO', 'Alerta en el tablero del depósito con paquetes en riesgo crítico.', 'Priorización matutina'); });
+        A(5100, () => logEvent('human', 'DECISIÓN HUMANA', 'Encargado asigna el paquete a una ruta express prioritaria.', 'Acción preventiva'));
+        A(5900, () => logEvent('result', 'RESULTADO', 'Paquete entregado a tiempo. Costo de devolución evitado ($12.000).', 'Cliente retenido'));
+        done(6600);
+      }
+    },
+
+    escudo: {
+      label: 'Escudo de reputación',
+      note: 'Blindá tu puntaje público en Google y redes. Módulo: Escudo de satisfacción post-entrega.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Encuesta Inteligente Post-Entrega</span><span class="s">las 5 estrellas a Google, los reclamos en privado</span></div>'
+        + '<div class="sat"><div class="q">¿Cómo calificarías la entrega de tu pedido, Marta?</div>'
+        + '<div class="satbtns"><div class="satbtn" id="sGood">⭐ Excelente, todo perfecto</div><div class="satbtn" id="sBad">😕 Tuve un inconveniente</div></div></div>'
+        + '<div class="branch"><div class="bcard good rv" id="bGood"><div class="bh">Cliente Satisfecho → Google Reviews</div>Se lo deriva directo a dejar su reseña pública con 1 solo toque.<div class="tagmini">⭐ Reseña pública ganada</div></div>'
+        + '<div class="bcard bad rv" id="bBad"><div class="bh">Inconveniente → Gestión Privada</div>Se captura el reclamo en el acto antes de que llegue a internet o redes.<div class="tagmini">🛡️ Interceptado en privado</div></div></div>';
+      },
+      play(){
+        A(400, () => logEvent('auto', 'CONFIRMACIÓN', 'Entrega #4821 finalizada con éxito. Se dispara mini-encuesta.', 'Sin fricción para el chofer'));
+        A(1200, () => { stage.querySelector('#sGood').classList.add('pick'); on('#bGood'); logEvent('auto', 'PROMOTOR', 'Cliente califica excelente → derivado directo a Google Maps.', 'Reputación pública en aumento'); });
+        A(2400, () => { stage.querySelector('#sGood').classList.remove('pick'); stage.querySelector('#sBad').classList.add('pick'); on('#bBad'); logEvent('auto', 'DETRACTOR', 'Cliente reporta un problema → ticket confidencial inmediato.', 'Frenado antes de redes'); });
+        A(3400, () => logEvent('human', 'DECISIÓN HUMANA', 'El jefe de atención al cliente contacta a Marta para resolverlo.', 'Contención personalizada'));
+        A(4200, () => logEvent('result', 'RESULTADO', 'Calificación protegida (+1⭐ en 3-6 meses). Clientes satisfechos.', 'Impacto comercial directo'));
+        done(4900);
+      }
+    },
+
+    ficha: {
+      label: 'Ficha del domicilio',
+      note: 'El acceso difícil viaja con la hoja de ruta. Módulo: Memoria operativa de domicilios.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Memoria de Accesos</span><span class="s">el dato no se pierde: viaja con el próximo viaje</span></div>'
+        + '<div class="ficha"><div class="fic-h">Av. Siempreviva 742 · Barrio Los Álamos</div>'
+        + '<div class="fic-row rv" id="f1"><span class="fk">Portería / Guardia</span><span class="fv">Sí · 24 hs (ingreso por calle lateral)</span></div>'
+        + '<div class="fic-row rv" id="f2"><span class="fk">Timbre</span><span class="fv">No funciona (anunciarse en guardia)</span></div>'
+        + '<div class="fic-row rv" id="f3"><span class="fk">Entre calles</span><span class="fv">Olmos y Rivadavia</span></div>'
+        + '<div class="fic-row rv" id="f4"><span class="fk">Autorización de entrega</span><span class="fv">Permite dejar en portería con recibo</span></div>'
+        + '</div>'
+        + '<div class="route rv" id="route"><div class="rt-h">Hoja de Ruta del Chofer (Próxima Entrega)</div>'
+        + '<div class="rt-row"><span>Av. Siempreviva 742</span><span class="rt-tag">Ficha de acceso vinculada</span></div>'
+        + '<div class="rt-note">El chofer ya sabe antes de frenar: entrar por guardia lateral, no tocar timbre, entregar en portería.</div></div>';
+      },
+      play(){
+        A(300, () => logEvent('auto', '1ra VISITA', 'Primera entrega a Av. Siempreviva 742.', 'Identificación de complejidad'));
+        A(1000, () => { on('#f1'); logEvent('auto', 'CAPTURA', 'Se registra portería 24 hs tras la primera entrega exitosa.', 'Memoria determinística'); });
+        A(1500, () => on('#f2'));
+        A(2000, () => on('#f3'));
+        A(2600, () => { on('#f4'); logEvent('human', 'DECISIÓN HUMANA', 'El destinatario autorizó entrega en guardia.', 'Consentimiento auditado'); });
+        A(3500, () => { on('#route'); logEvent('auto', 'PRÓXIMO REPARTO', 'El chofer nuevo recibe las instrucciones en su hoja de ruta.', 'Cero llamadas de auxilio'); });
+        A(4400, () => logEvent('result', 'RESULTADO', '2da entrega completada al 1er intento. Se elimina el "no había nadie".', 'Reentrega de $9.980 evitada'));
+        done(5100);
+      }
+    },
+
+    /* ==========================================================================
+       MÓDULO REDISEÑADO: PARTE DEL DADOR (VENDEDOR FLEX) - ALTO IMPACTO
+       ========================================================================== */
+    dador: {
+      label: 'Parte del dador (Flex)',
+      featured: true,
+      note: 'Para logísticas de e-commerce y Mercado Libre Flex. El escudo que cuida la medalla de tus clientes dadores.',
+      stage(){
+        return ''
+        + '<div class="stage-h">'
+        + '  <span class="t">Parte del Dador · Portal Ejecutivo Flex</span>'
+        + '  <span class="s">Doble evidencia para no perder la cuenta</span>'
+        + '</div>'
+        + '<div class="dador-portal">'
+        + '  <!-- Cabecera de la cuenta -->'
+        + '  <div class="dador-top">'
+        + '    <div class="dador-seller">'
+        + '      <div class="seller-avatar">ET</div>'
+        + '      <div class="seller-info">'
+        + '        <h4>ElectroTech Baires <span class="ml-tag">MercadoLíder Platinum</span></h4>'
+        + '        <div class="sub">Cuenta Flex #274 · Período: Semana 34 (26 Ago - 01 Sep)</div>'
+        + '      </div>'
+        + '    </div>'
+        + '    <div class="shield-badge"><span class="shield-dot"></span>REPUTACIÓN PROTEGIDA 100%</div>'
+        + '  </div>'
+        + '  <!-- Métricas clave del período -->'
+        + '  <div class="dador-grid">'
+        + '    <div class="d-card">'
+        + '      <div class="lbl">Envíos a Tiempo</div>'
+        + '      <div class="val green" id="pd_pct">0%</div>'
+        + '      <div class="meta" id="pd_entregas">0 / 148 entregados</div>'
+        + '      <div class="d-bar"><div class="d-bar-fill" id="pd_bar"></div></div>'
+        + '    </div>'
+        + '    <div class="d-card">'
+        + '      <div class="lbl">Doble Evidencia</div>'
+        + '      <div class="val" id="pd_ev">0</div>'
+        + '      <div class="meta">GPS &lt;20m + Chat WhatsApp</div>'
+        + '    </div>'
+        + '    <div class="d-card">'
+        + '      <div class="lbl">Fallas Justificadas</div>'
+        + '      <div class="val" id="pd_fallas">0</div>'
+        + '      <div class="meta">Ausencias con acuse digital</div>'
+        + '    </div>'
+        + '    <div class="d-card">'
+        + '      <div class="lbl">Sanciones ML Anuladas</div>'
+        + '      <div class="val green" id="pd_anuladas">0</div>'
+        + '      <div class="meta">Ahorro seller: ~$340.000</div>'
+        + '    </div>'
+        + '  </div>'
+        + '  <!-- Inspector de Disputa en Tiempo Real -->'
+        + '  <div class="dispute-box rv" id="disputeBox">'
+        + '    <div class="dispute-head">'
+        + '      <div class="dispute-title">📦 Caso Testigo: Envío #FLEX-98214 (Auriculares Pro)</div>'
+        + '      <div class="dispute-badge alert" id="disputeStatus">Disputa en Mercado Libre</div>'
+        + '    </div>'
+        + '    <div class="dispute-claim" id="disputeClaim">'
+        + '      <b>Reclamo del Comprador en ML:</b> "Estuve esperando todo el día y el chofer nunca vino. Me cancelaron la entrega."'
+        + '    </div>'
+        + '    <div class="evidence-timeline">'
+        + '      <div class="ev-step" id="evStep1">'
+        + '        <div class="h">📍 1. Telemetría GPS Chofer</div>'
+        + '        <div class="b">Unidad #14 frenada en puerta a las 14:32:18 hs (precisión 4 metros).</div>'
+        + '      </div>'
+        + '      <div class="ev-step" id="evStep2">'
+        + '        <div class="h">💬 2. Lectura WhatsApp Destinatario</div>'
+        + '        <div class="b">Mensaje leído 14:30 hs. Respuesta del cliente: <i>"Llego a las 18 hs"</i>.</div>'
+        + '      </div>'
+        + '      <div class="ev-step" id="evStep3">'
+        + '        <div class="h">🚪 3. Constancia de Portería</div>'
+        + '        <div class="b">Portero Horacio no recibe sin autorización firmada del titular.</div>'
+        + '      </div>'
+        + '      <div class="ev-step" id="evStep4">'
+        + '        <div class="h">📸 4. Foto Georreferenciada</div>'
+        + '        <div class="b">Fachada con numeración visible y sticker de visita con código hash.</div>'
+        + '      </div>'
+        + '    </div>'
+        + '    <div class="verdict-banner rv" id="verdictBanner">'
+        + '      <div class="verdict-text">⚖️ <b>Dictamen Soporte Mercado Libre:</b> Descargo aceptado. Se cancela la penalidad y se preserva el color verde de reputación del vendedor.</div>'
+        + '      <div class="verdict-act">DESCARGO RESUELTO</div>'
+        + '    </div>'
+        + '  </div>'
+        + '  <!-- Propuesta de Valor Estratégico -->'
+        + '  <div class="dador-pitch">'
+        + '    <b>¿Por qué este módulo te hace ganar cuentas?</b> Los vendedores de Mercado Libre viven con el miedo constante de perder su medalla Platinum por culpa de entregas mal reportadas. Con este parte semanal automatizado, tu logística no es un flete más: <b>sos el seguro de vida de su negocio</b>. Nunca te cambian por un competidor que no puede darles esta evidencia inobjetable.'
+        + '  </div>'
+        + '</div>';
+      },
+      play(){
+        A(300, () => logEvent('auto', 'FLEX INTEGRADO', 'Carga semanal Vendedor Flex #274 recibida.', '148 paquetes procesados'));
+        A(800, () => {
+          countUp(stage.querySelector('#pd_pct'), 96, 900, '', '%');
+          stage.querySelector('#pd_bar').style.width = '96%';
+          stage.querySelector('#pd_entregas').textContent = '142 / 148 a tiempo';
+        });
+        A(1200, () => {
+          countUp(stage.querySelector('#pd_ev'), 142, 900);
+          countUp(stage.querySelector('#pd_fallas'), 4, 900);
+          countUp(stage.querySelector('#pd_anuladas'), 2, 900);
+          logEvent('shield', 'DOBLE EVIDENCIA', '142 entregas certificadas con geocerca <20m y confirmación WhatsApp.', 'Doble fuente de prueba');
+        });
+        A(2000, () => {
+          on('#disputeBox');
+          logEvent('auto', 'DISPUTA ML', 'Envío #FLEX-98214: Comprador alega en Mercado Libre que el chofer nunca pasó.', 'Riesgo de sanción a la cuenta');
+        });
+        A(2600, () => {
+          stage.querySelector('#evStep1').classList.add('verified');
+          logEvent('auto', 'TELEMETRÍA', 'Telemetría confirma unidad en la puerta a las 14:32:18 hs.', 'GPS verificado');
+        });
+        A(3200, () => {
+          stage.querySelector('#evStep2').classList.add('verified');
+          stage.querySelector('#evStep3').classList.add('verified');
+          stage.querySelector('#evStep4').classList.add('verified');
+          logEvent('auto', 'DOSSIER', 'Se compila acuse WhatsApp + acta de portería + fotografía geolocalizada.', 'Dossier probatorio generado');
+        });
+        A(4000, () => {
+          const st = stage.querySelector('#disputeStatus');
+          st.className = 'dispute-badge resolved';
+          st.textContent = 'Penalidad Anulada por ML';
+          on('#verdictBanner');
+          logEvent('shield', 'FALLO FAVORABLE', 'Mercado Libre acepta el descargo: anula penalidad y cuida la reputación del dador.', 'Medalla Platinum a salvo');
+        });
+        A(4900, () => {
+          logEvent('human', 'FIDELIZACIÓN', 'El dueño envía el informe semanal al dador. Cuenta blindada ante la competencia.', 'Relación comercial afianzada');
+        });
+        A(5600, () => {
+          logEvent('result', 'RESULTADO', '142 entregas exitosas, 4 justificadas y 2 sanciones evitadas.', 'Ahorro seller: $340.000 ARS');
+        });
+        done(6400);
+      }
+    },
+
+    parte: {
+      label: 'Parte mensual de operación',
+      full: true,
+      note: 'Se consolida automáticamente sumando los datos que producen tus módulos activos.',
+      stage(){
+        return ''
+        + '<div class="stage-h"><span class="t">Parte Mensual de Operación Consolidado</span><span class="s">agrega lo que ya producen tus módulos sin carga manual</span></div>'
+        + '<div class="kpis">'
+        + '<div class="kpi"><div class="n" id="k1">0</div><div class="l">Reprogramaciones exitosas</div></div>'
+        + '<div class="kpi"><div class="n" id="k2">0</div><div class="l">Paquetes salvados de devolución</div></div>'
+        + '<div class="kpi"><div class="n" id="k3">0</div><div class="l">Visitas fallidas con doble evidencia</div></div>'
+        + '<div class="kpi"><div class="n" id="k4">0</div><div class="l">Reseñas 5⭐ capturadas</div></div>'
+        + '<div class="kpi"><div class="n accent" id="k5">0</div><div class="l">Reclamos interceptados en privado</div></div>'
+        + '<div class="kpi"><div class="n" id="k6">0<span style="font-size:16px">%</span></div><div class="l">Entregas salvadas s/ total en riesgo</div></div>'
+        + '</div>'
+        + '<div class="charts">'
+        + '<div class="panel"><div class="ph">Reclamos por zona operativa</div><div class="bars">'
+        + '<div class="barcol"><div class="bar" data-h="40" style="height:0"></div><div class="bl">Sur</div></div>'
+        + '<div class="barcol"><div class="bar hot" data-h="115" style="height:0"></div><div class="bl">Norte</div></div>'
+        + '<div class="barcol"><div class="bar" data-h="60" style="height:0"></div><div class="bl">Oeste</div></div>'
+        + '<div class="barcol"><div class="bar" data-h="30" style="height:0"></div><div class="bl">CABA</div></div>'
+        + '</div></div>'
+        + '<div class="panel"><div class="ph">Diagnóstico Inteligente</div>'
+        + '<div class="ai rv" id="aiCard"><div class="aih">PATRÓN DETECTADO</div>Zona Norte concentra el <b>52% de los reclamos</b>, y el 70% ocurre entre las 15 y 18 hs. Se recomienda desfasar el ruteo de esa zona 1 hora.<div class="disc">La inteligencia redacta sobre datos determinísticos procesados en SQL. No inventa números: resalta oportunidades y vos decidís.</div></div>'
+        + '</div></div>';
+      },
+      play(){
+        A(300, () => logEvent('auto', 'CONSOLIDADO', 'Agregación mensual de eventos_operacion.', 'Sin pedir planillas nuevas'));
+        A(700, () => { countUp(stage.querySelector('#k1'), 128, 900); countUp(stage.querySelector('#k2'), 64, 900); });
+        A(1100, () => { countUp(stage.querySelector('#k3'), 19, 900); countUp(stage.querySelector('#k4'), 142, 900); });
+        A(1500, () => { countUp(stage.querySelector('#k5'), 23, 900); countUp(stage.querySelector('#k6'), 88, 900, '', '%'); });
+        A(1900, () => { stage.querySelectorAll('.bar').forEach(b => b.style.height = b.dataset.h + 'px'); logEvent('auto', 'MÉTRICAS', 'Cálculo de ahorros y efectividad de flota.', 'Base de datos determinística'); });
+        A(3000, () => { on('#aiCard'); logEvent('auto', 'PATRÓN', 'Detección de cuello de botella en franja horaria Zona Norte.', 'Diagnóstico operativo'); });
+        A(4000, () => logEvent('human', 'DECISIÓN HUMANA', 'El gerente de operaciones ajusta las franjas horarias del reparto.', 'Decisión con datos en mano'));
+        A(4800, () => logEvent('result', 'RESULTADO', 'Operación transparente y medible. Control total de la flota.', 'Se activa sin costo extra'));
+        done(5500);
+      }
+    }
+  };
+
+  const order = ['coord', 'agente', 'dador', 'admision', 'anomalias', 'reloj', 'escudo', 'ficha', 'parte'];
+
+  function done(ms){
+    A(ms, () => {
+      running = false;
+      note.textContent = 'Caso finalizado. Podés probar otro módulo o calcular tu ahorro abajo ↓';
+      playBtn.disabled = false;
+    });
+  }
+
+  order.forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (k === current ? ' active' : '') + (modules[k].featured ? ' featured' : '');
+    b.textContent = modules[k].label;
+    b.dataset.k = k;
+    b.setAttribute('role', 'tab');
+    b.addEventListener('click', () => select(k));
+    nav.appendChild(b);
+  });
+
+  function clearRun(){ timers.forEach(clearTimeout); timers = []; running = false; runId++; }
+  function resetTrace(){ traceB.innerHTML = ''; traceB.appendChild(traceEmpty); traceEmpty.style.display = ''; evN = 0; evCount.textContent = '0 eventos'; }
+
+  function select(k){
+    current = k; clearRun();
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.k === k));
+    grid.classList.toggle('full', !!modules[k].full);
+    stage.innerHTML = modules[k].stage();
+    if (modules[k].mount) modules[k].mount();
+    resetTrace();
+    playBtn.disabled = false; resetBtn.disabled = true;
+    note.textContent = modules[k].note;
+  }
+
+  function play(){
+    if(running) return;
+    clearRun(); stage.innerHTML = modules[current].stage();
+    if (modules[current].mount) modules[current].mount();
+    resetTrace();
+    running = true; playBtn.disabled = true; resetBtn.disabled = false; note.textContent = 'Reproduciendo caso en vivo…';
+    modules[current].play();
+  }
+
+  function reset(){ select(current); }
+
+  playBtn.addEventListener('click', play);
+  resetBtn.addEventListener('click', reset);
+  select('coord');
+
+  /* ==========================================================================
+     LÓGICA DE AUDITORÍA FINANCIERA & CALCULADORA DINÁMICA
+     ========================================================================== */
+  const sl_entregas = document.getElementById('sl_entregas');
+  const sl_falla = document.getElementById('sl_falla');
+  const sl_llamadas = document.getElementById('sl_llamadas');
+  const sl_mejora = document.getElementById('sl_mejora');
+  const in_dias = document.getElementById('in_dias');
+  const in_fee = document.getElementById('in_fee');
+
+  const lbl_entregas = document.getElementById('lbl_entregas');
+  const lbl_falla = document.getElementById('lbl_falla');
+  const lbl_llamadas = document.getElementById('lbl_llamadas');
+  const lbl_mejora = document.getElementById('lbl_mejora');
+
+  const out_roi = document.getElementById('out_roi');
+  const out_neto = document.getElementById('out_neto');
+  const out_bruto = document.getElementById('out_bruto');
+  const out_reev = document.getElementById('out_reev');
+  const out_horas = document.getElementById('out_horas');
+  const out_costo = document.getElementById('out_costo');
+  const out_neto_line = document.getElementById('out_neto_line');
+  const out_payback = document.getElementById('out_payback');
+
+  const p12_loss = document.getElementById('p12_loss');
+  const p12_inv = document.getElementById('p12_inv');
+  const p12_save = document.getElementById('p12_save');
+  const p12_diff = document.getElementById('p12_diff');
+
+  const loss1 = document.getElementById('loss1');
+  const loss2 = document.getElementById('loss2');
+  const loss3 = document.getElementById('loss3');
+  const loss4 = document.getElementById('loss4');
+  const lossTotal = document.getElementById('lossTotal');
+  const lossTotalUSD = document.getElementById('lossTotalUSD');
+
+  const btnUSD = document.getElementById('btnUSD');
+  const btnARS = document.getElementById('btnARS');
+
+  btnUSD.addEventListener('click', () => {
+    currency = 'USD';
+    btnUSD.classList.add('active');
+    btnARS.classList.remove('active');
+    calcFinancials();
+  });
+
+  btnARS.addEventListener('click', () => {
+    currency = 'ARS';
+    btnARS.classList.add('active');
+    btnUSD.classList.remove('active');
+    calcFinancials();
+  });
+
+  function calcFinancials(){
+    const entregasDia = parseFloat(sl_entregas.value) || 100;
+    const tasaFalla = (parseFloat(sl_falla.value) || 10) / 100;
+    const llamadasDia = parseFloat(sl_llamadas.value) || 40;
+    const mejoraTasa = (parseFloat(sl_mejora.value) || 50) / 100;
+    const diasMes = parseFloat(in_dias.value) || 22;
+    const feeUSD = parseFloat(in_fee.value) || 400;
+
+    // Actualizar etiquetas sliders
+    lbl_entregas.textContent = entregasDia + ' / día';
+    lbl_falla.textContent = Math.round(tasaFalla * 100) + '%';
+    lbl_llamadas.textContent = llamadasDia + ' / día';
+    lbl_mejora.textContent = Math.round(mejoraTasa * 100) + '%';
+
+    // Constantes verificadas julio 2026 Argentina
+    const COSTO_FALLA_ARS = 9980; // gasoil + chofer 20 min + reintento
+    const COSTO_HORA_ADMIN_ARS = 5114;
+    const COSTO_DEVOLUCION_ARS = 12000;
+
+    // 1. Entregas fallidas
+    const fallasMes = entregasDia * diasMes * tasaFalla;
+    const perdidaFallasARS = fallasMes * COSTO_FALLA_ARS;
+    const perdidaFallasUSD = perdidaFallasARS / DOLAR;
+
+    // 2. Horas admin consultas (4 min c/u)
+    const horasAdminDia = (llamadasDia * 4) / 60;
+    const perdidaAdminARS = horasAdminDia * diasMes * COSTO_HORA_ADMIN_ARS;
+    const perdidaAdminUSD = perdidaAdminARS / DOLAR;
+
+    // 3. Devoluciones por vencimiento de plazo (~1.5% de entregas)
+    const devolucionesMes = (entregasDia * diasMes) * 0.015;
+    const perdidaDevolucionARS = devolucionesMes * COSTO_DEVOLUCION_ARS;
+    const perdidaDevolucionUSD = perdidaDevolucionARS / DOLAR;
+
+    // 4. Daño reputacional y cuentas perdidas (fijo conservador escalado)
+    const factorEscala = entregasDia / 100;
+    const perdidaReputacionARS = 504000 * factorEscala;
+    const perdidaReputacionUSD = perdidaReputacionARS / DOLAR;
+
+    // Sangrado Total
+    const sangradoTotalARS = perdidaFallasARS + perdidaAdminARS + perdidaDevolucionARS + perdidaReputacionARS;
+    const sangradoTotalUSD = sangradoTotalARS / DOLAR;
+
+    // Renderizar tarjetas de los 4 motores
+    loss1.innerHTML = fmtMoney(perdidaFallasARS, perdidaFallasUSD) + ' <small>' + currency + '/mes</small>';
+    loss2.innerHTML = fmtMoney(perdidaAdminARS, perdidaAdminUSD) + ' <small>' + currency + '/mes</small>';
+    loss3.innerHTML = fmtMoney(perdidaDevolucionARS, perdidaDevolucionUSD) + ' <small>' + currency + '/mes</small>';
+    loss4.innerHTML = fmtMoney(perdidaReputacionARS, perdidaReputacionUSD) + ' <small>' + currency + '/mes</small>';
+
+    lossTotal.textContent = fmtMoney(sangradoTotalARS, sangradoTotalUSD) + ' ' + currency;
+    lossTotalUSD.textContent = currency === 'USD' 
+      ? '≈ ' + fmtARS(sangradoTotalARS) + ' ARS / mes en pérdidas ocultas' 
+      : '≈ ' + fmtUSD(sangradoTotalUSD) + ' USD / mes en pérdidas ocultas';
+
+    // Ahorro generado con INDIVIDRA
+    const fallasEvitadas = fallasMes * mejoraTasa;
+    const ahorroFallasARS = fallasEvitadas * COSTO_FALLA_ARS;
+
+    const horasAdminRecuperadas = horasAdminDia * diasMes * 0.8; // 80% resuelto por bot
+    const ahorroAdminARS = horasAdminRecuperadas * COSTO_HORA_ADMIN_ARS;
+
+    const devolucionesEvitadas = devolucionesMes * 0.7; // 70% salvadas por reloj
+    const ahorroDevolucionARS = devolucionesEvitadas * COSTO_DEVOLUCION_ARS;
+
+    const ahorroReputacionARS = perdidaReputacionARS * 0.5;
+
+    const ahorroBrutoARS = ahorroFallasARS + ahorroAdminARS + ahorroDevolucionARS + ahorroReputacionARS;
+    const ahorroBrutoUSD = ahorroBrutoARS / DOLAR;
+
+    const feeARS = feeUSD * DOLAR;
+    const gananciaNetaARS = ahorroBrutoARS - feeARS;
+    const gananciaNetaUSD = ahorroBrutoUSD - feeUSD;
+
+    const roi = feeUSD > 0 ? Math.round((gananciaNetaUSD / feeUSD) * 100) : 0;
+    const diasRecupero = gananciaNetaARS > 0 ? Math.max(2, Math.round((feeARS / (ahorroBrutoARS / diasMes)))) : 0;
+
+    // Actualizar tarjeta ejecutiva
+    out_roi.textContent = 'ROI ' + roi + '%';
+    out_neto.textContent = (gananciaNetaUSD >= 0 ? '+' : '') + fmtMoney(gananciaNetaARS, gananciaNetaUSD);
+    out_neto_line.textContent = (gananciaNetaUSD >= 0 ? '+' : '') + fmtMoney(gananciaNetaARS, gananciaNetaUSD);
+    out_bruto.textContent = fmtMoney(ahorroBrutoARS, ahorroBrutoUSD);
+    out_reev.textContent = Math.round(fallasEvitadas) + ' paquetes';
+    out_horas.textContent = Math.round(horasAdminRecuperadas) + ' horas';
+    out_costo.textContent = fmtMoney(feeARS, feeUSD);
+
+    out_payback.textContent = '~' + diasRecupero + ' días hábiles';
+
+    // Proyección 12 meses
+    const loss12ARS = sangradoTotalARS * 12;
+    const loss12USD = sangradoTotalUSD * 12;
+    const inv12ARS = feeARS * 12;
+    const inv12USD = feeUSD * 12;
+    const save12ARS = gananciaNetaARS * 12;
+    const save12USD = gananciaNetaUSD * 12;
+    const diff12ARS = save12ARS;
+    const diff12USD = save12USD;
+
+    p12_loss.textContent = fmtMoney(loss12ARS, loss12USD);
+    p12_inv.textContent = fmtMoney(inv12ARS, inv12USD);
+    p12_save.textContent = fmtMoney(save12ARS, save12USD);
+    p12_diff.textContent = '+' + fmtMoney(diff12ARS, diff12USD);
+  }
+
+  // Event Listeners para recálculo interactivo en tiempo real
+  [sl_entregas, sl_falla, sl_llamadas, sl_mejora, in_dias, in_fee].forEach(el => {
+    el.addEventListener('input', calcFinancials);
+  });
+
+  calcFinancials();
+
+})();
+</script>
+</body>
+</html>
