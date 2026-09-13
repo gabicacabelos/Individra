@@ -13,7 +13,6 @@
  * Borrador inicial: revisar el copy antes de publicar.
  */
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Calendar, Database } from 'lucide-react'
 
@@ -67,20 +66,6 @@ export function PropuestaComercialSection() {
                     <p className="mt-6 text-neutral-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
                         Sin permanencia y con tus datos siempre en tus manos. La tecnología tiene que defenderse por el valor que te genera todos los días, no por un contrato que te obligue a quedarte.
                     </p>
-                </motion.div>
-
-                {/* 3D Claymorphism Visual Badge - Flotando sin marco, acoplado al fondo */}
-                <motion.div
-                    {...reveal}
-                    className="max-w-md mx-auto mb-10 flex justify-center pointer-events-none"
-                >
-                    <Image
-                        src="/individra_3d_icons.png"
-                        alt="Valores y Compromiso INDIVIDRA"
-                        width={900}
-                        height={500}
-                        className="w-full max-w-[400px] h-auto object-contain filter drop-shadow-[0_15px_35px_rgba(200,66,20,0.3)]"
-                    />
                 </motion.div>
 
                 {/* Pilares */}

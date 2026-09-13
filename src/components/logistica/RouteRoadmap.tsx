@@ -59,26 +59,11 @@ export function RouteRoadmap() {
     const drawn = useTransform(scrollYProgress, [0.05, 0.75], [0, 1])
     const pathLength = drawn
 
-    // `isolate` crea el contexto de apilamiento: sin él, el fondo con -z-10 se va
-    // detrás del bg opaco del <main> y no se ve.
     return (
-        <div ref={ref} className="relative w-full isolate">
-            {/* Fondo: mapa con ruta. Decorativo, detrás de todo.
-                Va con next/image (no background-image de CSS) porque el PNG fuente
-                pesa 5.7 MB: así se sirve en WebP/AVIF al tamaño del viewport.
-                Bordes difuminados con máscara para que se funda con el fondo. */}
-            <div
-                aria-hidden
-                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_75%_70%_at_50%_50%,black_25%,rgba(0,0,0,0.6)_55%,transparent_85%)] [-webkit-mask-image:radial-gradient(ellipse_75%_70%_at_50%_50%,black_25%,rgba(0,0,0,0.6)_55%,transparent_85%)]"
-            >
-                <Image
-                    src="/logistica-mapa-ai.jpg"
-                    alt="Mapa de Telemetría INDIVIDRA"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 1200px"
-                    className="object-cover opacity-[0.45] filter contrast-110"
-                />
-            </div>
+        <div ref={ref} className="relative w-full">
+            {/* Antes había acá un mapamundi de telemetría de fondo (paleta celeste,
+                ajena a la marca). Se quita: el remate de la sección es la brújula 3D,
+                que va abajo y se ve en todos los breakpoints. */}
 
             {/* ===== Desktop: la ruta con los hitos encima ===== */}
             <div className="hidden lg:block relative w-full max-w-5xl mx-auto" style={{ aspectRatio: `${VB.w} / ${VB.h}` }}>
@@ -128,13 +113,13 @@ export function RouteRoadmap() {
                 celeste ajena a la marca y overlays de gradiente para disimular
                 los bordes. Se reemplaza por el icono 3D clay naranja, que ya
                 viene sin fondo y no necesita difuminado. */}
-            <div aria-hidden className="lg:hidden flex justify-center px-2">
+            <div aria-hidden className="flex justify-center px-2 lg:mt-6">
                 <Image
                     src="/3d/icono-brujula.png"
                     alt=""
                     width={225}
                     height={225}
-                    className="h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(200,66,20,0.32)]"
+                    className="h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(200,66,20,0.32)] lg:h-32"
                 />
             </div>
 

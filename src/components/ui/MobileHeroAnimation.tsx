@@ -32,29 +32,15 @@ export function MobileHeroAnimation() {
                 }}
                 className="relative z-10 w-[240px] sm:w-[270px] h-[240px] sm:h-[270px] flex items-center justify-center pointer-events-none"
             >
-                {/* Looping Orbital Ring 1 */}
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 rounded-full border border-dashed border-[#B7B3B0]/30"
-                />
-
-                {/* Looping Orbital Ring 2 */}
-                <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-3 rounded-full border border-[#B7B3B0]/20"
-                    style={{ strokeDasharray: '4 10' }}
-                />
-
-                {/* 3D Core with radial blend */}
-                <div className="relative w-[190px] sm:w-[220px] h-[190px] sm:h-[220px] [mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)] [-webkit-mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)]">
+                {/* Emblema 3D levitando, completo y sin orbitales (igual que en desktop).
+                    Sin mask-image: el PNG ya viene recortado al sujeto. */}
+                <div className="relative w-[210px] sm:w-[240px] h-[210px] sm:h-[240px]">
                     <Image
                         src="/individra-3d-floating.png"
-                        alt="INDIVIDRA 3D Core"
+                        alt="Emblema 3D de INDIVIDRA"
                         width={440}
                         height={440}
-                        className="w-full h-full object-contain filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+                        className="w-full h-full object-contain drop-shadow-[0_18px_34px_rgba(200,66,20,0.26)]"
                         priority
                     />
                 </div>

@@ -166,36 +166,17 @@ export function HeroSection() {
                             }}
                             className="relative z-20 w-[440px] h-[440px] flex items-center justify-center pointer-events-none"
                         >
-                            {/* Outer Orbital Telemetry Ring 1 - Clockwise */}
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[470px] h-[470px] rounded-full border border-dashed border-[#B7B3B0]/20"
-                            />
-
-                            {/* Inner Orbital Telemetry Ring 2 - Counter-Clockwise */}
-                            <motion.div
-                                animate={{ rotate: -360 }}
-                                transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[400px] h-[400px] rounded-full border border-[#B7B3B0]/15"
-                                style={{ strokeDasharray: '6 14' }}
-                            />
-
-                            {/* Tilted Elliptical Gyro Ring */}
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[490px] h-[340px] rounded-[100%] border border-[#3E3D3A]/30 transform -rotate-12"
-                            />
-
-                            {/* The 3D Titanium Core - Levitando con sombra fija */}
-                            <div className="relative w-[380px] h-[380px] [mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)] [-webkit-mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)]">
+                            {/* Emblema 3D levitando, completo y sin orbitales.
+                                Sin mask-image: el PNG ya viene recortado al sujeto, y la
+                                mascara radial que disimulaba el backdrop del render viejo
+                                ahora le cortaba los bordes al propio logo. */}
+                            <div className="relative w-[380px] h-[380px]">
                                 <Image
                                     src="/individra-3d-floating.png"
-                                    alt="INDIVIDRA 3D Titanium Core"
+                                    alt="Emblema 3D de INDIVIDRA"
                                     width={760}
                                     height={760}
-                                    className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
+                                    className="w-full h-full object-contain drop-shadow-[0_26px_50px_rgba(200,66,20,0.28)]"
                                     priority
                                 />
                             </div>
