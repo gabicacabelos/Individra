@@ -115,7 +115,6 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">3. Servicios de Terceros</h3>
                             <p className="mb-4">Utilizamos los siguientes servicios de terceros que pueden procesar tu información:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li><strong className="text-white">Resend:</strong> Para el envío de correos electrónicos transaccionales.</li>
                                 <li><strong className="text-white">PostHog:</strong> Para analíticas y mejora de la experiencia de usuario.</li>
                                 <li><strong className="text-white">Groq:</strong> Para el procesamiento de inteligencia artificial en los diagnósticos.</li>
                                 <li><strong className="text-white">Vercel:</strong> Para el alojamiento de nuestra plataforma web.</li>
