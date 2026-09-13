@@ -13,8 +13,9 @@
  * Borrador inicial: revisar el copy antes de publicar.
  */
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Calendar, Database, Sparkles } from 'lucide-react'
+import { Calendar, Database } from 'lucide-react'
 
 const reveal = {
     initial: { opacity: 0, y: 20 },
@@ -43,16 +44,6 @@ const pilares = [
         glow: 'bg-[#B7B3B0]/10',
         eyebrowColor: 'text-[#B7B3B0]',
     },
-    {
-        Icon: Sparkles,
-        eyebrow: 'Clientes fundadores',
-        title: 'Precio especial para los primeros 5 clientes',
-        body: 'INDIVIDRA recién arranca. Los primeros 5 clientes acceden a un setup reducido a cambio de compartir su caso como referencia. Un intercambio honesto: vos accedés a un precio que no vas a encontrar más adelante, yo construyo evidencia real con tu operación.',
-        accent: 'from-[#4E4C48] to-[#363533]',
-        border: 'border-[#3E3D3A]',
-        glow: 'bg-[#3E3D3A]/20',
-        eyebrowColor: 'text-[#B7B3B0]',
-    },
 ]
 
 export function PropuestaComercialSection() {
@@ -63,23 +54,37 @@ export function PropuestaComercialSection() {
 
             <div className="relative z-10 max-w-6xl mx-auto px-6">
                 {/* Header */}
-                <motion.div {...reveal} className="text-center mb-14 lg:mb-16">
+                <motion.div {...reveal} className="text-center mb-10 lg:mb-12">
                     <span className="text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
                         Cómo trabajamos
                     </span>
                     <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl mx-auto">
-                        Tres reglas que le pongo a{' '}
+                        Dos reglas que le pongo a{' '}
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
                             mi propio negocio
                         </span>
                     </h2>
                     <p className="mt-6 text-neutral-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-                        Sin permanencia, con tus datos siempre en tus manos, y un precio especial para los primeros 5 clientes que confíen cuando todavía no puedo mostrar cientos de casos.
+                        Sin permanencia y con tus datos siempre en tus manos. La tecnología tiene que defenderse por el valor que te genera todos los días, no por un contrato que te obligue a quedarte.
                     </p>
                 </motion.div>
 
+                {/* 3D Claymorphism Visual Badge - Flotando sin marco, acoplado al fondo */}
+                <motion.div
+                    {...reveal}
+                    className="max-w-md mx-auto mb-10 flex justify-center pointer-events-none"
+                >
+                    <Image
+                        src="/individra_3d_icons.png"
+                        alt="Valores y Compromiso INDIVIDRA"
+                        width={900}
+                        height={500}
+                        className="w-full max-w-[400px] h-auto object-contain filter drop-shadow-[0_15px_35px_rgba(200,66,20,0.3)]"
+                    />
+                </motion.div>
+
                 {/* Pilares */}
-                <div className="grid md:grid-cols-3 gap-5 lg:gap-6">
+                <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                     {pilares.map((p, i) => {
                         const Icon = p.Icon
                         return (

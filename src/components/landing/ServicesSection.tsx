@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import Image from 'next/image'
 import { Bot, Zap, Network } from 'lucide-react'
 import { useRef } from 'react'
 import { MobileServicesBackground } from '@/components/ui/MobileBackgroundEffects'
@@ -141,6 +142,17 @@ export function ServicesSection() {
             <div className="relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-12 lg:mb-16 px-6">
+                    {/* Icono 3D de marca, sin fondo */}
+                    <div className="mb-3 flex justify-center">
+                        <Image
+                            src="/3d/icono-engranaje.png"
+                            alt=""
+                            aria-hidden
+                            width={222}
+                            height={222}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                        />
+                    </div>
                     <span className="inline-block text-[#B7B3B0] text-sm font-semibold uppercase tracking-widest">
                         Nuestros Servicios
                     </span>

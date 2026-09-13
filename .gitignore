@@ -48,3 +48,10 @@ graphify-out/
 .claude/
 scratch_artifact.json
 
+
+# Respaldos locales de imagenes originales (pre-limpieza de cutout). No van al deploy.
+/_backup-imagenes/
+# Componente dado de baja, se conserva solo en local como red de seguridad
+/src/components/_removed/
+# Fotos de perfil personales: public/ se sirve publicamente
+/public/perfil_linkedin/

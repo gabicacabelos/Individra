@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { InlineWidget } from 'react-calendly'
 
 export function ContactSection() {
@@ -56,6 +57,23 @@ export function ContactSection() {
                     transition={{ duration: 0.8, ease: 'easeOut' }}
                     className="text-center mb-12 sm:mb-16"
                 >
+                    {/* Calendario 3D sin fondo: ancla visual del "elegí un horario" */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 14, scale: 0.9 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-3 flex justify-center"
+                    >
+                        <Image
+                            src="/3d/icono-calendario.png"
+                            alt=""
+                            aria-hidden
+                            width={295}
+                            height={310}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-20"
+                        />
+                    </motion.div>
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}

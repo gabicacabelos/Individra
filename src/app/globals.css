@@ -166,6 +166,16 @@
     color: #E8E5DE;
   }
 
+  /* Track de sliders horizontales: se arrastra sin barra visible */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Fade in animation for mobile process section */
   @keyframes fadeIn {
     from {
@@ -326,4 +336,12 @@
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
     animation-fill-mode: both;
+}
+
+/* Custom 3D Cursor Support */
+@media (pointer: fine) {
+    .custom-cursor-enabled,
+    .custom-cursor-enabled * {
+        cursor: none !important;
+    }
 }

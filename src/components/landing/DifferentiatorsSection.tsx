@@ -1,143 +1,176 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion'
-import { Factory, ShieldCheck, Cpu } from 'lucide-react'
 import { useRef } from 'react'
+import { motion, useMotionValue, useMotionTemplate } from 'framer-motion'
+import { Factory, ShieldCheck, Cpu, MapPin, Lock, Wrench } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { AutomotiveIllustration } from './illustrations'
 
 const differentiators = [
     {
         icon: Factory,
-        accent: 'from-[#B7B3B0] to-[#8E8B88]',
         accentRgb: '183, 179, 176',
         label: 'Dominio',
         title: 'Venimos de adentro de la logística automotriz',
         description:
             'Prestación tercerizada dentro de la cadena de suministro de la industria automotriz (ecosistema Peugeot–Stellantis). Conocemos los tiempos, los procesos y las exigencias de calidad de la logística industrial por haberlos operado, no por leerlos en un manual.',
+        proof: [
+            { icon: MapPin, text: 'Piso de planta, no teoría' },
+            { icon: Wrench, text: 'Procesos que ya operamos' },
+        ],
+        featured: true,
     },
     {
         icon: ShieldCheck,
-        accent: 'from-emerald-500 to-teal-500',
         accentRgb: '16, 185, 129',
         label: 'Soberanía de datos',
         title: 'Tus datos, en Alemania y bajo GDPR',
         description:
-            'Alojamos todo en infraestructura propia en Alemania, bajo GDPR, el estándar de protección de datos más estricto del mundo. Aislamiento por cliente: tu información nunca se mezcla con la de otro ni se usa para entrenar modelos de terceros. Si algún día te vas, te la llevás.',
+            'Infraestructura propia en Alemania, bajo el estándar de protección de datos más estricto del mundo. Aislamiento por cliente: tu información nunca se mezcla ni entrena modelos de terceros. Si algún día te vas, te la llevás.',
+        proof: [{ icon: Lock, text: 'Aislamiento por cliente' }],
     },
     {
         icon: Cpu,
-        accent: 'from-[#C84214] to-[#A8340E]',
         accentRgb: '200, 66, 20',
         label: 'Método',
         title: 'No vendemos magia. Vendemos ingeniería.',
         description:
             'Cada sistema se diseña, se documenta y se mantiene como infraestructura crítica de tu empresa, con acompañamiento técnico humano todos los meses.',
+        proof: [{ icon: Wrench, text: 'Documentado y mantenido' }],
     },
 ]
 
-function TiltCard({ item, index, isMobile }: { item: typeof differentiators[0]; index: number; isMobile: boolean }) {
+/** Tarjeta con spotlight que sigue al cursor (patrón spotlight-card) + borde que reacciona. */
+function SpotlightCard({
+    item,
+    index,
+    isMobile,
+}: {
+    item: (typeof differentiators)[number]
+    index: number
+    isMobile: boolean
+}) {
     const Icon = item.icon
     const ref = useRef<HTMLDivElement>(null)
+    const mx = useMotionValue(-400)
+    const my = useMotionValue(-400)
 
-    // Normalized pointer position (0..1)
-    const mx = useMotionValue(0.5)
-    const my = useMotionValue(0.5)
+    const spotlight = useMotionTemplate`radial-gradient(420px circle at ${mx}px ${my}px, rgba(${item.accentRgb}, 0.14), transparent 62%)`
+    const edge = useMotionTemplate`radial-gradient(320px circle at ${mx}px ${my}px, rgba(${item.accentRgb}, 0.5), transparent 60%)`
 
-    const rotateX = useSpring(useTransform(my, [0, 1], [9, -9]), { stiffness: 150, damping: 18 })
-    const rotateY = useSpring(useTransform(mx, [0, 1], [-9, 9]), { stiffness: 150, damping: 18 })
-
-    const spotX = useTransform(mx, (v) => `${v * 100}%`)
-    const spotY = useTransform(my, (v) => `${v * 100}%`)
-    const spotlight = useMotionTemplate`radial-gradient(320px circle at ${spotX} ${spotY}, rgba(${item.accentRgb}, 0.18), transparent 65%)`
-
-    const handleMove = (e: React.MouseEvent) => {
+    const onMove = (e: React.MouseEvent) => {
         if (isMobile || !ref.current) return
-        const rect = ref.current.getBoundingClientRect()
-        mx.set((e.clientX - rect.left) / rect.width)
-        my.set((e.clientY - rect.top) / rect.height)
+        const r = ref.current.getBoundingClientRect()
+        mx.set(e.clientX - r.left)
+        my.set(e.clientY - r.top)
     }
-    const handleLeave = () => {
-        mx.set(0.5)
-        my.set(0.5)
+    const onLeave = () => {
+        mx.set(-400)
+        my.set(-400)
     }
-
-    const depth = (z: number) => (isMobile ? undefined : { transform: `translateZ(${z}px)` })
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 40, rotateX: -12 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: index * 0.12, type: 'spring', stiffness: 110, damping: 18 }}
-            style={{ perspective: 1100 }}
-            className="h-full"
+            ref={ref}
+            onMouseMove={onMove}
+            onMouseLeave={onLeave}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-70px' }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className={`group relative overflow-hidden rounded-3xl border border-[#3E3D3A] bg-[#16171A] ${
+                item.featured ? 'p-7 lg:p-9' : 'p-6 lg:p-7'
+            } ${item.featured ? 'lg:col-span-3 lg:row-span-2' : 'lg:col-span-2'}`}
         >
-            <motion.div
-                ref={ref}
-                onMouseMove={handleMove}
-                onMouseLeave={handleLeave}
-                style={{
-                    rotateX: isMobile ? 0 : rotateX,
-                    rotateY: isMobile ? 0 : rotateY,
-                    transformStyle: 'preserve-3d',
-                }}
-                className="group relative h-full p-6 lg:p-7 rounded-3xl border border-[#3E3D3A] bg-[#222120] backdrop-blur-md overflow-hidden transition-colors duration-300 hover:border-[#B7B3B0]/40"
-            >
-                {/* Cursor spotlight (desktop) */}
-                {!isMobile && (
-                    <motion.div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                        style={{ background: spotlight }}
-                    />
-                )}
-
-                {/* Ambient corner glow */}
-                <div
+            {/* borde iluminado por el cursor */}
+            {!isMobile && (
+                <motion.div
                     aria-hidden
-                    className="pointer-events-none absolute -top-16 -right-16 w-44 h-44 rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-500"
-                    style={{ background: `rgb(${item.accentRgb})` }}
+                    style={{ background: edge }}
+                    className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    // el borde se ve solo en el perímetro
+                    // (máscara: relleno recortado por el padding de 1px)
                 />
-
-                {/* Watermark ilustrativo (solo tarjeta automotriz) */}
-                {index === 0 && (
-                    <AutomotiveIllustration className="pointer-events-none absolute bottom-2 right-2 w-36 opacity-[0.14] group-hover:opacity-[0.22] transition-opacity duration-500" />
-                )}
-
-                {/* Top accent hairline */}
-                <div
+            )}
+            <div
+                aria-hidden
+                className="pointer-events-none absolute inset-[1px] rounded-[23px] bg-[#16171A]"
+            />
+            {!isMobile && (
+                <motion.div
                     aria-hidden
-                    className={`absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent to-transparent`}
-                    style={{ backgroundImage: `linear-gradient(90deg, transparent, rgba(${item.accentRgb},0.7), transparent)` }}
+                    style={{ background: spotlight }}
+                    className="pointer-events-none absolute inset-[1px] rounded-[23px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
+            )}
 
-                {/* Label + index */}
-                <div className="relative flex items-center justify-between mb-5" style={depth(30)}>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: `rgb(${item.accentRgb})` }}>
-                        {item.label}
+            {/* glow ambiental */}
+            <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-[0.14] blur-[60px] transition-opacity duration-500 group-hover:opacity-30"
+                style={{ background: `rgb(${item.accentRgb})` }}
+            />
+
+            {item.featured && (
+                <AutomotiveIllustration className="pointer-events-none absolute -bottom-4 right-2 w-52 opacity-[0.10] transition-opacity duration-500 group-hover:opacity-[0.18]" />
+            )}
+
+            {/* contenido */}
+            <div className="relative">
+                <div className="mb-5 flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <div
+                            className="flex h-11 w-11 items-center justify-center rounded-2xl border"
+                            style={{
+                                borderColor: `rgba(${item.accentRgb},0.35)`,
+                                background: `rgba(${item.accentRgb},0.10)`,
+                                color: `rgb(${item.accentRgb})`,
+                            }}
+                        >
+                            <Icon className="h-5 w-5" />
+                        </div>
+                        <span
+                            className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em]"
+                            style={{ color: `rgb(${item.accentRgb})` }}
+                        >
+                            {item.label}
+                        </span>
+                    </div>
+                    <span className="select-none font-mono text-3xl font-black leading-none text-white/[0.06]">
+                        0{index + 1}
                     </span>
-                    <span className="text-4xl font-black leading-none text-white/5 select-none">0{index + 1}</span>
                 </div>
 
-                {/* Icon */}
-                <motion.div
-                    style={depth(50)}
-                    animate={isMobile ? undefined : { y: [0, -6, 0] }}
-                    transition={isMobile ? undefined : { duration: 4 + index, repeat: Infinity, ease: 'easeInOut' }}
-                    className={`relative w-[52px] h-[52px] rounded-2xl bg-gradient-to-br ${item.accent} flex items-center justify-center mb-5 shadow-lg`}
+                <h3
+                    className={`font-bold leading-snug text-white ${
+                        item.featured ? 'text-2xl lg:text-[28px]' : 'text-lg lg:text-xl'
+                    }`}
                 >
-                    <span aria-hidden className="absolute inset-0 rounded-2xl blur-md opacity-50" style={{ background: `rgb(${item.accentRgb})` }} />
-                    <Icon className="relative w-6 h-6 text-white" />
-                </motion.div>
-
-                <h3 className="relative text-lg lg:text-xl font-bold text-white mb-3 leading-snug" style={depth(35)}>
                     {item.title}
                 </h3>
-                <p className="relative text-neutral-400 text-sm leading-relaxed" style={depth(20)}>
+                <p
+                    className={`mt-3 leading-relaxed text-neutral-400 ${
+                        item.featured ? 'max-w-xl text-[15px]' : 'text-sm'
+                    }`}
+                >
                     {item.description}
                 </p>
-            </motion.div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                    {item.proof.map((p) => {
+                        const PIcon = p.icon
+                        return (
+                            <span
+                                key={p.text}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-[#3E3D3A] bg-[#1C1D20] px-2.5 py-1 text-[11px] text-neutral-400"
+                            >
+                                <PIcon className="h-3 w-3" style={{ color: `rgb(${item.accentRgb})` }} />
+                                {p.text}
+                            </span>
+                        )
+                    })}
+                </div>
+            </div>
         </motion.div>
     )
 }
@@ -146,52 +179,33 @@ export function DifferentiatorsSection() {
     const isMobile = useIsMobile()
 
     return (
-        <section id="diferenciadores" className="relative py-24 lg:py-32 bg-[#0B0D0E] overflow-hidden">
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#363533]/20 via-transparent to-transparent pointer-events-none" />
-            {!isMobile && (
-                <>
-                    <motion.div
-                        aria-hidden
-                        className="absolute top-10 -left-20 w-96 h-96 rounded-full blur-[110px] pointer-events-none"
-                        style={{ background: 'radial-gradient(circle, rgba(183,179,176,0.08) 0%, transparent 70%)' }}
-                        animate={{ x: [0, 60, 0], y: [0, 30, 0] }}
-                        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                    <motion.div
-                        aria-hidden
-                        className="absolute bottom-0 -right-20 w-96 h-96 rounded-full blur-[110px] pointer-events-none"
-                        style={{ background: 'radial-gradient(circle, rgba(200,66,20,0.08) 0%, transparent 70%)' }}
-                        animate={{ x: [0, -50, 0], y: [0, -20, 0] }}
-                        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                </>
-            )}
-            {/* Grid texture */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+        <section id="diferenciadores" className="relative overflow-hidden bg-[#0B0D0E] py-24 lg:py-32">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#363533]/20 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
-            <div className="relative z-10 max-w-6xl mx-auto px-6">
+            <div className="relative z-10 mx-auto max-w-6xl px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-80px' }}
-                    className="text-center mb-14 lg:mb-20"
+                    className="mb-12 max-w-3xl lg:mb-16"
                 >
-                    <span className="inline-block text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
+                    <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-[#B7B3B0] sm:text-sm">
                         Por qué INDIVIDRA
                     </span>
-                    <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+                    <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
                         Lo que{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
+                        <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
                             ningún competidor externo
                         </span>{' '}
                         puede igualar
                     </h2>
                 </motion.div>
 
-                <div className="grid md:grid-cols-3 gap-6">
+                {/* Bento asimétrico: el diferencial más fuerte ocupa el bloque grande */}
+                <div className="grid gap-5 lg:grid-cols-5 lg:grid-rows-2">
                     {differentiators.map((item, i) => (
-                        <TiltCard key={i} item={item} index={i} isMobile={isMobile} />
+                        <SpotlightCard key={item.label} item={item} index={i} isMobile={isMobile} />
                     ))}
                 </div>
             </div>

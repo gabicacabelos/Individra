@@ -14,59 +14,6 @@ const strokeProps = {
     strokeLinejoin: 'round' as const,
 }
 
-/* ---------- Logística: camión + paquetes + tracking ---------- */
-export function LogisticsIllustration({ className }: IlloProps) {
-    return (
-        <svg viewBox="0 0 420 260" className={className} aria-hidden role="img" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="logi-grad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#C84214" />
-                    <stop offset="100%" stopColor="#D44A17" />
-                </linearGradient>
-                <radialGradient id="logi-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(200,66,20,0.30)" />
-                    <stop offset="100%" stopColor="rgba(200,66,20,0)" />
-                </radialGradient>
-            </defs>
-
-            <ellipse cx="230" cy="150" rx="150" ry="90" fill="url(#logi-glow)" />
-
-            {/* Tracking route */}
-            <path d="M50 66 C 140 30, 250 40, 356 58" stroke="url(#logi-grad)" strokeWidth="2" strokeDasharray="2 8" {...strokeProps} opacity="0.7" />
-            <circle cx="50" cy="66" r="4" fill="#C84214" />
-            <circle cx="196" cy="40" r="4" fill="#D44A17" />
-            {/* Location pin */}
-            <path d="M356 34 c 12 0 20 9 20 20 c 0 14 -20 30 -20 30 c 0 0 -20 -16 -20 -30 c 0 -11 8 -20 20 -20 z" stroke="url(#logi-grad)" strokeWidth="2" {...strokeProps} />
-            <circle cx="356" cy="54" r="6" fill="none" stroke="#D44A17" strokeWidth="2" />
-
-            {/* Ground */}
-            <line x1="24" y1="212" x2="396" y2="212" stroke="url(#logi-grad)" strokeWidth="2" strokeDasharray="1 10" {...strokeProps} opacity="0.5" />
-
-            {/* Packages */}
-            <rect x="44" y="150" width="52" height="46" rx="5" stroke="#B7B3B0" strokeWidth="2" {...strokeProps} />
-            <line x1="44" y1="168" x2="96" y2="168" stroke="#B7B3B0" strokeWidth="2" {...strokeProps} />
-            <line x1="70" y1="150" x2="70" y2="168" stroke="#B7B3B0" strokeWidth="2" {...strokeProps} />
-            <rect x="58" y="118" width="34" height="32" rx="4" stroke="#B7B3B0" strokeWidth="2" {...strokeProps} opacity="0.8" />
-
-            {/* Truck trailer */}
-            <rect x="130" y="120" width="150" height="76" rx="8" stroke="url(#logi-grad)" strokeWidth="2.5" {...strokeProps} />
-            <line x1="150" y1="120" x2="150" y2="196" stroke="url(#logi-grad)" strokeWidth="2" {...strokeProps} opacity="0.5" />
-            {/* Cab */}
-            <path d="M280 138 h34 l22 26 v32 h-56 z" stroke="url(#logi-grad)" strokeWidth="2.5" {...strokeProps} />
-            <rect x="290" y="146" width="26" height="20" rx="3" stroke="#D44A17" strokeWidth="2" {...strokeProps} />
-            {/* Wheels */}
-            <circle cx="176" cy="200" r="16" stroke="url(#logi-grad)" strokeWidth="2.5" {...strokeProps} />
-            <circle cx="176" cy="200" r="5" fill="#C84214" />
-            <circle cx="308" cy="200" r="16" stroke="url(#logi-grad)" strokeWidth="2.5" {...strokeProps} />
-            <circle cx="308" cy="200" r="5" fill="#C84214" />
-
-            {/* accents */}
-            <circle cx="120" cy="60" r="3" fill="#D44A17" opacity="0.8" />
-            <circle cx="300" cy="90" r="2.5" fill="#C84214" opacity="0.7" />
-        </svg>
-    )
-}
-
 /* ---------- Automotriz: chasis + cadena de suministro ---------- */
 export function AutomotiveIllustration({ className }: IlloProps) {
     return (

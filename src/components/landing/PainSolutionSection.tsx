@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import {
     Phone,
     FileWarning,
@@ -106,6 +107,17 @@ export function PainSolutionSection() {
                     viewport={{ once: true, margin: '-80px' }}
                     className="text-center mb-10 lg:mb-14"
                 >
+                    {/* Reloj de arena 3D: las horas que hoy se pierden en tareas manuales */}
+                    <div className="mb-3 flex justify-center">
+                        <Image
+                            src="/3d/icono-reloj.png"
+                            alt=""
+                            aria-hidden
+                            width={158}
+                            height={224}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                        />
+                    </div>
                     <span className="text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
                         El problema
                     </span>

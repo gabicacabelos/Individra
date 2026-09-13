@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Minus, HelpCircle } from 'lucide-react'
 import { MobileFAQBackground } from '@/components/ui/MobileBackgroundEffects'
@@ -66,6 +67,23 @@ export function FAQSection() {
                     transition={{ duration: 0.8, ease: 'easeOut' }}
                     className="text-center mb-16"
                 >
+                    {/* Icono 3D on-brand, sin fondo: reemplaza al icono plano sobre el título */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 14, scale: 0.9 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-3 flex justify-center"
+                    >
+                        <Image
+                            src="/3d/icono-chat.png"
+                            alt=""
+                            aria-hidden
+                            width={308}
+                            height={291}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-20"
+                        />
+                    </motion.div>
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}

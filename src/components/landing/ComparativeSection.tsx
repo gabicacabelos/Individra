@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'framer-motion'
+import Image from 'next/image'
 import { useRef } from 'react'
 import { Rocket, XCircle, CheckCircle2 } from 'lucide-react'
 
@@ -52,6 +53,23 @@ export function ComparativeSection() {
                 className="relative z-10 max-w-7xl mx-auto px-6"
             >
                 <div className="text-center mb-16 lg:mb-24">
+                    {/* Icono 3D de marca, sin fondo */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 14, scale: 0.9 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-4 flex justify-center"
+                    >
+                        <Image
+                            src="/3d/icono-comparativa.png"
+                            alt=""
+                            aria-hidden
+                            width={224}
+                            height={224}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                        />
+                    </motion.div>
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}

@@ -161,9 +161,11 @@ export function LogisticaLanding() {
                 </div>
             </motion.header>
 
-            {/* ===== 1) HERO ===== */}
+            {/* ===== 1) HERO SECTION ===== */}
             <section className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/5 via-transparent to-transparent pointer-events-none" />
+                {/* Dark Vignette & Brand Gradients */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D0E] via-[#0B0D0E]/95 to-[#0B0D0E] pointer-events-none" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/15 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(200,66,20,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(200,66,20,0.03)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-24 sm:pt-36 sm:pb-32">
@@ -228,6 +230,17 @@ export function LogisticaLanding() {
             <section className="relative border-y border-white/5 overflow-hidden">
                 <AmbientOrbs className="absolute inset-0 pointer-events-none opacity-60" />
                 <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-24">
+                    {/* Camión 3D sin fondo: ancla el tema operativo de la sección */}
+                    <motion.div {...reveal} className="mb-4 flex justify-center">
+                        <Image
+                            src="/3d/icono-camion.png"
+                            alt=""
+                            aria-hidden
+                            width={224}
+                            height={185}
+                            className="h-16 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-[72px]"
+                        />
+                    </motion.div>
                     <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center max-w-3xl mx-auto">
                         Si esto pasa en tu operación, se puede automatizar.
                     </motion.h2>
@@ -259,6 +272,17 @@ export function LogisticaLanding() {
             <section className="relative">
                 <RouteDivider className="absolute top-0 left-0 w-full h-8" />
                 <div className="max-w-6xl mx-auto px-6 py-20 sm:py-28">
+                    {/* Estrella 3D sin fondo: refuerza que son reseñas puntuadas de Google */}
+                    <motion.div {...reveal} className="mb-4">
+                        <Image
+                            src="/3d/icono-estrella.png"
+                            alt=""
+                            aria-hidden
+                            width={346}
+                            height={342}
+                            className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
+                        />
+                    </motion.div>
                     <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white max-w-3xl">
                         Esto dicen los clientes de las logísticas en Google. Todos los días.
                     </motion.h2>

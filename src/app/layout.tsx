@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { PostHogProvider } from '@/providers/PostHogProvider'
 import { CookieConsent } from '@/components/CookieConsent'
+import { CustomCursor } from '@/components/ui/CustomCursor'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -130,6 +131,7 @@ export default function RootLayout({
                     Saltar al contenido principal
                 </a>
                 <PostHogProvider>
+                    <CustomCursor />
                     {children}
                     <CookieConsent />
                 </PostHogProvider>

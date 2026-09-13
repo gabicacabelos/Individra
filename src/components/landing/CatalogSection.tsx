@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { MobileCatalogBackground } from '@/components/ui/MobileBackgroundEffects'
-import { LogisticsIllustration } from './illustrations'
 import {
     MessageSquare,
     Bell,
@@ -66,6 +66,17 @@ export function CatalogSection() {
                     viewport={{ once: true }}
                     className="text-center mb-10 md:mb-16"
                 >
+                    {/* Icono 3D de marca, sin fondo */}
+                    <div className="mb-3 flex justify-center">
+                        <Image
+                            src="/3d/icono-rubros.png"
+                            alt=""
+                            aria-hidden
+                            width={224}
+                            height={216}
+                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                        />
+                    </div>
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
@@ -97,16 +108,6 @@ export function CatalogSection() {
                     >
                         Nuestro foco es la logística y la distribución. Abrí el rubro y descubrí qué podemos automatizar.
                     </motion.p>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-8 flex justify-center"
-                    >
-                        <LogisticsIllustration className="w-full max-w-md h-auto" />
-                    </motion.div>
                 </motion.div >
 
                 {/* Accordion */}

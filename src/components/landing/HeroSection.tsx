@@ -140,55 +140,55 @@ export function HeroSection() {
                             className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,_rgba(110,108,106,0.22)_0%,_rgba(62,61,58,0.12)_45%,_transparent_72%)] blur-3xl pointer-events-none"
                         />
 
-                        {/* Looping ambient pulse glow in Burnt Orange and Smoke Gray */}
+                        {/* Looping ambient pulse glow in Burnt Orange and Smoke Gray - 4s loop */}
                         <motion.div
                             animate={{
-                                scale: [1, 1.15, 1],
-                                opacity: [0.15, 0.35, 0.15],
+                                scale: [1, 1.2, 1],
+                                opacity: [0.18, 0.42, 0.18],
                             }}
                             transition={{
-                                duration: 6,
+                                duration: 4,
                                 repeat: Infinity,
                                 ease: 'easeInOut',
                             }}
-                            className="absolute w-[440px] h-[440px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(200,66,20,0.18)_0%,_rgba(54,53,51,0.25)_45%,_transparent_70%)] blur-3xl pointer-events-none"
+                            className="absolute w-[440px] h-[440px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(200,66,20,0.22)_0%,_rgba(54,53,51,0.28)_45%,_transparent_70%)] blur-3xl pointer-events-none"
                         />
 
-                        {/* Free-Floating 3D Emblem Container */}
+                        {/* Free-Floating 3D Emblem Container - Levitación suave de arriba hacia abajo */}
                         <motion.div
                             animate={{
-                                y: [0, -18, 0],
-                                rotateZ: [0, 0.6, 0, -0.6, 0],
+                                y: [0, -12, 0],
                             }}
                             transition={{
-                                y: { duration: 5.5, repeat: Infinity, ease: 'easeInOut' },
-                                rotateZ: { duration: 9, repeat: Infinity, ease: 'easeInOut' },
+                                duration: 4.5,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
                             }}
                             className="relative z-20 w-[440px] h-[440px] flex items-center justify-center pointer-events-none"
                         >
                             {/* Outer Orbital Telemetry Ring 1 - Clockwise */}
                             <motion.div
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[470px] h-[470px] rounded-full border border-dashed border-[#B7B3B0]/30"
+                                transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
+                                className="absolute w-[470px] h-[470px] rounded-full border border-dashed border-[#B7B3B0]/20"
                             />
 
                             {/* Inner Orbital Telemetry Ring 2 - Counter-Clockwise */}
                             <motion.div
                                 animate={{ rotate: -360 }}
-                                transition={{ duration: 42, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[400px] h-[400px] rounded-full border border-[#B7B3B0]/20"
+                                transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
+                                className="absolute w-[400px] h-[400px] rounded-full border border-[#B7B3B0]/15"
                                 style={{ strokeDasharray: '6 14' }}
                             />
 
                             {/* Tilted Elliptical Gyro Ring */}
                             <motion.div
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-                                className="absolute w-[490px] h-[340px] rounded-[100%] border border-[#3E3D3A]/40 transform -rotate-12"
+                                transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
+                                className="absolute w-[490px] h-[340px] rounded-[100%] border border-[#3E3D3A]/30 transform -rotate-12"
                             />
 
-                            {/* The 3D Titanium Core - Free floating with seamless radial blending */}
+                            {/* The 3D Titanium Core - Levitando con sombra fija */}
                             <div className="relative w-[380px] h-[380px] [mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)] [-webkit-mask-image:radial-gradient(circle_at_50%_50%,black_48%,rgba(0,0,0,0.85)_62%,transparent_78%)]">
                                 <Image
                                     src="/individra-3d-floating.png"

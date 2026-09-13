@@ -69,14 +69,14 @@ export function RouteRoadmap() {
                 Bordes difuminados con máscara para que se funda con el fondo. */}
             <div
                 aria-hidden
-                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_62%_58%_at_50%_50%,black_10%,rgba(0,0,0,0.45)_42%,transparent_74%)] [-webkit-mask-image:radial-gradient(ellipse_62%_58%_at_50%_50%,black_10%,rgba(0,0,0,0.45)_42%,transparent_74%)]"
+                className="hidden lg:block pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_75%_70%_at_50%_50%,black_25%,rgba(0,0,0,0.6)_55%,transparent_85%)] [-webkit-mask-image:radial-gradient(ellipse_75%_70%_at_50%_50%,black_25%,rgba(0,0,0,0.6)_55%,transparent_85%)]"
             >
                 <Image
-                    src="/logistica-mapa.png"
-                    alt=""
+                    src="/logistica-mapa-ai.jpg"
+                    alt="Mapa de Telemetría INDIVIDRA"
                     fill
-                    sizes="(max-width: 1024px) 100vw, 1100px"
-                    className="object-cover opacity-[0.28]"
+                    sizes="(max-width: 1024px) 100vw, 1200px"
+                    className="object-cover opacity-[0.45] filter contrast-110"
                 />
             </div>
 
@@ -123,27 +123,19 @@ export function RouteRoadmap() {
                 ))}
             </div>
 
-            {/* ===== Mobile: la imagen como figura simple =====
-                Sin mask-image, sin backdrop-blur, sin z negativo: esa
-                combinacion sobre la imagen corrompia el paint en Android
-                (smearing al scrollear). Las pildoras de hitos se quitan
-                a pedido: parecian botones. */}
-            <div aria-hidden className="lg:hidden mx-auto max-w-sm px-2">
-                <div className="relative overflow-hidden rounded-2xl">
-                    <Image
-                        src="/logistica-mapa.png"
-                        alt=""
-                        width={2564}
-                        height={1632}
-                        sizes="100vw"
-                        className="w-full h-auto opacity-85"
-                    />
-                    {/* Difuminado por overlays (sin mask-image: corrompia el paint
-                        en Android). Arriba/abajo + ambos costados. */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D0E] via-transparent to-[#0B0D0E]/70" />
-                    <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0B0D0E] to-transparent" />
-                    <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0B0D0E] to-transparent" />
-                </div>
+            {/* ===== Mobile: figura 3D de marca =====
+                Antes habia un render de mapa con pin azul: fondo opaco, paleta
+                celeste ajena a la marca y overlays de gradiente para disimular
+                los bordes. Se reemplaza por el icono 3D clay naranja, que ya
+                viene sin fondo y no necesita difuminado. */}
+            <div aria-hidden className="lg:hidden flex justify-center px-2">
+                <Image
+                    src="/3d/icono-brujula.png"
+                    alt=""
+                    width={225}
+                    height={225}
+                    className="h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(200,66,20,0.32)]"
+                />
             </div>
 
         </div>
