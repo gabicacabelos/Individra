@@ -473,9 +473,6 @@ export function LogisticaLanding() {
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#C84214]/30 bg-[#C84214]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
                                     El panel donde vive todo lo que producen tus módulos
                                 </div>
-                                <div className="inline-flex items-center px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
-                                    Próximamente
-                                </div>
                             </div>
 
                             <div className="grid lg:grid-cols-12 gap-6 items-center">
@@ -494,8 +491,11 @@ export function LogisticaLanding() {
                                     </p>
                                 </div>
 
-                                <div className="lg:col-span-5 flex flex-col justify-center">
+                                <div className="lg:col-span-5 flex flex-col justify-center gap-2">
                                     <MonthlyOperationsDemo />
+                                    <p className="text-[10px] text-neutral-500 italic text-center">
+                                        Datos ilustrativos, no de un cliente real.
+                                    </p>
                                 </div>
                             </div>
 
