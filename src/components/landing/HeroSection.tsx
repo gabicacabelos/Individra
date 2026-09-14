@@ -114,7 +114,7 @@ export function HeroSection() {
                                     rel="noopener noreferrer"
                                     className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-[#C84214] text-white text-sm sm:text-base font-bold rounded-full overflow-hidden shadow-lg shadow-[#C84214]/25 hover:shadow-[#C84214]/40 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center"
                                 >
-                                    <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Agendar Auditoría Gratuita</span>
+                                    <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Pedí tu diagnóstico gratuito</span>
                                 </a>
                                 <a
                                     href="#servicios"

@@ -75,9 +75,9 @@ const modules = [
         context: 'Durante la entrega',
         quote: 'Estuve de 9 a 18 esperando y nunca vinieron. Perdí el día entero.',
         name: 'Aviso por posición',
-        desc: 'A medida que el chofer avanza en su ruta, el destinatario recibe cuántas paradas faltan. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas. Se activa por caso. No se cobra en las entregas donde no se usa.',
+        desc: 'El chofer comparte su ubicación en vivo desde el bot de Telegram: sin app propia que instalar, sin hardware que comprar. A medida que avanza en la ruta, el destinatario recibe cuántas paradas faltan. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas. Se activa por caso.',
         Icon: PositionAlertIcon,
-        descShort: 'El destinatario recibe cuántas paradas faltan, sin horarios inventados. Se activa por caso, no se cobra si no se usa.',
+        descShort: 'El chofer comparte ubicación en vivo por Telegram y el destinatario recibe cuántas paradas faltan. Sin horarios inventados.',
         Demo: PositionAlertDemo,
     },
     {
@@ -95,7 +95,7 @@ const modules = [
         context: 'Después de la entrega',
         quote: 'Una empresa espectacular pero nadie te pide que dejes reseña. Los únicos que escriben son los enojados.',
         name: 'Escudo de reputación',
-        desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo. ~USD 10/mes de WhatsApp.',
+        desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo.',
         Icon: ReputationShieldIcon,
         descShort: 'Si el destinatario está contento, un tap lo lleva a Google. Si tiene un reclamo, se captura privado. Cero fricción para el chofer.',
         Demo: ReputationShieldDemo,
@@ -105,7 +105,7 @@ const modules = [
         context: 'Control de operación',
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías',
-        desc: 'Cuando una visita se marca como fallida lejos del domicilio, el evento queda registrado con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
+        desc: 'La ubicación que el chofer comparte por Telegram queda registrada con cada visita. Si una se marca como fallida lejos del domicilio, el evento se guarda con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
         Icon: AnomalyLogIcon,
         descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada y cruzada con la confirmación del destinatario. A fin de mes tenés el reporte.',
         Demo: AnomalyLogDemo,
@@ -461,7 +461,7 @@ export function LogisticaLanding() {
                         </div>
                     </motion.div>
 
-                    {/* Complemento: Parte mensual de operación (dashboard analítico animado) */}
+                    {/* Panel de operación: es lo que empaqueta y hace visible todo lo que producen los módulos */}
                     <motion.div
                         {...reveal}
                         className="mt-6 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] p-6 sm:p-8 relative overflow-hidden shadow-2xl group"
@@ -471,7 +471,7 @@ export function LogisticaLanding() {
                         <div className="relative z-10 space-y-6">
                             <div className="flex flex-wrap items-center gap-2">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#C84214]/30 bg-[#C84214]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
-                                    Complemento — se activa con 2+ módulos, sin costo adicional
+                                    El panel donde vive todo lo que producen tus módulos
                                 </div>
                                 <div className="inline-flex items-center px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
                                     Próximamente
@@ -490,7 +490,7 @@ export function LogisticaLanding() {
                                     </div>
 
                                     <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
-                                        Un dashboard que agrega en un solo lugar todo lo que producen tus módulos activos. La IA analiza los datos en tiempo real, detecta patrones que a simple vista se te escapan y proyecta tendencias antes de que se conviertan en pérdidas.
+                                        Cada módulo que activás deja registro de lo que hizo: reprogramaciones evitadas, paquetes salvados de la devolución, visitas con evidencia, reclamos interceptados. El panel junta todo eso en un solo lugar y te deja preguntarle en lenguaje natural qué pasó en tu operación. La IA marca los patrones que a simple vista se escapan; vos decidís.
                                     </p>
                                 </div>
 

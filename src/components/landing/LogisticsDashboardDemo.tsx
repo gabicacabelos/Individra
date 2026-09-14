@@ -100,7 +100,7 @@ const records: IncidentRecord[] = [
         zone: 'Avellaneda, Parque Industrial',
         carrier: 'Móvil 05 · Pablo Kowalski',
         issue: 'Conformidad de remito físico por triplicado',
-        resolution: 'OCR de remito procesado e impactado en ERP en 2.4s.',
+        resolution: 'OCR de remito procesado e impactado en ERP, sin carga manual.',
         status: 'RESUELTO',
         statusType: 'success',
         timestamp: '10:32 hs',

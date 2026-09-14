@@ -26,7 +26,7 @@ const differentiators = [
         label: 'Soberanía de datos',
         title: 'Tus datos, en Alemania y bajo GDPR',
         description:
-            'Infraestructura propia en Alemania, bajo el estándar de protección de datos más estricto del mundo. Aislamiento por cliente: tu información nunca se mezcla ni entrena modelos de terceros. Si algún día te vas, te la llevás.',
+            'Infraestructura propia en Alemania, bajo el estándar de protección de datos más estricto del mundo. Cada cliente corre en su propia instancia: tu información no se mezcla con la de otro. No entrenamos modelos con tus datos, y los proveedores que usamos tampoco lo hacen por contrato. Si algún día te vas, te la llevás.',
         proof: [{ icon: Lock, text: 'Aislamiento por cliente' }],
     },
     {

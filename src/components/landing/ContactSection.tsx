@@ -90,9 +90,9 @@ export function ContactSection() {
                         transition={{ delay: 0.3 }}
                         className="mt-4 text-4xl sm:text-5xl font-bold text-[#E8E5DE]"
                     >
-                        Asesoramiento{' '}
+                        Diagnóstico{' '}
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] via-[#D44A17] to-[#B7B3B0]">
-                            Estratégico Gratuito
+                            gratuito de 30 minutos
                         </span>
                     </motion.h2>
                     <motion.p

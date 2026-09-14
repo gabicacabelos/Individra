@@ -29,8 +29,8 @@ const categories = [
             { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp, web o voz, consultando tu sistema', benefit: 'Menos consultas repetidas' },
             { icon: ScanLine, title: 'Carga de Remitos', desc: 'Extrae los datos de remitos y comprobantes desde una foto o PDF, listos para revisar', benefit: 'Sin carga manual' },
             { icon: Bell, title: 'Avisos de Entrega', desc: 'Notifica salida, llegada o demora según tus reglas, sin depender de que alguien se acuerde', benefit: 'Cero olvidos' },
-            { icon: AlertTriangle, title: 'Detección de anomalías', desc: 'Cruza ubicación del chofer con respuesta del destinatario según reglas simples', benefit: 'Evidencia real' },
-            { icon: ClipboardList, title: 'Ficha de acceso', desc: 'Guarda cómo se accede a cada domicilio y lo comparte con el chofer automáticamente', benefit: 'Memoria acumulativa' },
+            { icon: AlertTriangle, title: 'Registro de anomalías', desc: 'Cruza la ubicación que comparte el chofer con la respuesta del destinatario, para que el reporte tenga evidencia de dos fuentes', benefit: 'Evidencia real' },
+            { icon: ClipboardList, title: 'Ficha del domicilio', desc: 'Guarda cómo se accede a cada domicilio y lo comparte con el chofer automáticamente', benefit: 'Memoria acumulativa' },
         ]
     },
 ]
