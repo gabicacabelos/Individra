@@ -14,6 +14,7 @@
  */
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Calendar, Database } from 'lucide-react'
 
 const reveal = {
@@ -54,6 +55,17 @@ export function PropuestaComercialSection() {
             <div className="relative z-10 max-w-6xl mx-auto px-6">
                 {/* Header */}
                 <motion.div {...reveal} className="text-center mb-10 lg:mb-12">
+                    <div className="mb-3 flex justify-center">
+                        <Image
+                            src="/3d/icono-brujula.png"
+                            alt=""
+                            aria-hidden
+                            width={224}
+                            height={224}
+                            quality={95}
+                            className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
+                        />
+                    </div>
                     <span className="text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
                         Cómo trabajamos
                     </span>

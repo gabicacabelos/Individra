@@ -66,8 +66,10 @@ export function Navbar() {
                         <Image
                             src="/logo-individra-rebrand.png"
                             alt="INDIVIDRA - Inteligencia Operativa"
-                            width={246}
-                            height={48}
+                            width={640}
+                            height={125}
+                            quality={95}
+                            sizes="(max-width: 640px) 200px, 260px"
                             className="h-9 sm:h-11 lg:h-12 w-auto object-contain"
                             priority
                         />

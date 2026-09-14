@@ -146,7 +146,7 @@ export function LogisticaLanding() {
                             <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
                         </Link>
                         <Link href="/" className="flex items-center py-1" aria-label="Volver al inicio">
-                            <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={246} height={48} className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
+                            <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={640} height={125} quality={95} sizes="(max-width: 640px) 200px, 260px" className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
                         </Link>
                     </div>
                     <a

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { MobileCatalogBackground } from '@/components/ui/MobileBackgroundEffects'
 import {
@@ -219,6 +220,22 @@ export function CatalogSection() {
                                                         )
                                                     })}
                                                 </div>
+
+                                                {/* Acceso directo a la landing dedicada de logística.
+                                                    Clave en mobile: el menú hamburguesa oculta el link
+                                                    "Logística" del navbar, así que este botón garantiza
+                                                    la entrada a /logistica desde el contenido. */}
+                                                {category.id === 'logistica' && (
+                                                    <div className="px-5 pb-5">
+                                                        <Link
+                                                            href="/logistica"
+                                                            className="group flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-xl bg-[#C84214] text-white text-sm sm:text-base font-semibold shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.99] transition-all duration-200"
+                                                        >
+                                                            Ver la solución completa de logística
+                                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                                                        </Link>
+                                                    </div>
+                                                )}
                                             </motion.div>
                                         )}
                                     </AnimatePresence>

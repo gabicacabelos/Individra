@@ -1,14 +1,8 @@
 'use client'
 
 import { useRef, useState, useMemo } from 'react'
-import dynamic from 'next/dynamic'
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
-// Carga diferida: mantiene three.js/drei y el preload de robot-hands.glb (11 MB)
-// fuera del bundle de mobile, donde el modelo nunca se muestra.
-const ScrollModel3D = dynamic(
-    () => import('@/components/ui/ScrollModel3D').then((m) => m.ScrollModel3D),
-    { ssr: false }
-)
+import Image from 'next/image'
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
 import { Search, Lightbulb, Cpu, Rocket, BarChart, ArrowRight } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -23,6 +17,7 @@ const steps = [
         description: 'Auditoría de procesos e identificación de oportunidades.',
         color: 'from-[#C84214] to-[#B7B3B0]',
         glowColor: 'rgba(200,66,20,0.25)',
+        image: '/3d/icono-brujula.png',
     },
     {
         id: 2,
@@ -33,6 +28,7 @@ const steps = [
         description: 'Arquitectura personalizada y selección de herramientas IA.',
         color: 'from-[#B7B3B0] to-[#E8E5DE]',
         glowColor: 'rgba(183,179,176,0.25)',
+        image: '/3d/icono-estrella.png',
     },
     {
         id: 3,
@@ -41,6 +37,7 @@ const steps = [
         label: 'Desarrollo',
         title: 'Construimos tu sistema',
         description: 'Desarrollo, entrenamiento de modelos y prompts a medida.',
+        image: '/3d/icono-engranaje.png',
         color: 'from-[#3E3D3A] to-[#B7B3B0]',
         glowColor: 'rgba(62,61,58,0.3)',
     },
@@ -53,6 +50,7 @@ const steps = [
         description: 'Despliegue, integración y capacitación de tu equipo.',
         color: 'from-[#C84214] to-[#B7B3B0]',
         glowColor: 'rgba(200,66,20,0.25)',
+        image: '/3d/icono-camion.png',
     },
     {
         id: 5,
@@ -63,6 +61,7 @@ const steps = [
         description: 'Monitoreo, análisis y optimización constante.',
         color: 'from-[#3E3D3A] to-[#E8E5DE]',
         glowColor: 'rgba(62,61,58,0.3)',
+        image: '/3d/icono-comparativa.png',
     },
 ]
 
@@ -154,20 +153,13 @@ export function ConnectionSection() {
                                     background: `radial-gradient(circle, ${currentStep.glowColor} 0%, transparent 70%)`,
                                 }}
                             />
-                            {!isMobile ? (
-                                <ScrollModel3D
-                                    scrollProgress={scrollProgress}
-                                    className="relative z-10"
-                                />
-                            ) : (
-                                <MobileProcessAnimation
-                                    activeStep={activeStep}
-                                    scrollProgress={scrollProgress}
-                                    glowColor={currentStep.glowColor}
-                                    IconComponent={currentStep.icon}
-                                    totalSteps={steps.length}
-                                />
-                            )}
+                            <MobileProcessAnimation
+                                activeStep={activeStep}
+                                scrollProgress={scrollProgress}
+                                glowColor={currentStep.glowColor}
+                                IconComponent={currentStep.icon}
+                                totalSteps={steps.length}
+                            />
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
                                 <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
@@ -308,14 +300,31 @@ export function ConnectionSection() {
                                 transition={{ duration: 0.8 }}
                             />
 
-                            {/* Model — solo se monta en desktop: `hidden lg:block` es CSS y
-                                montaba un canvas WebGL invisible en mobile. */}
-                            {!isMobile && (
-                                <ScrollModel3D
-                                    scrollProgress={scrollProgress}
-                                    className="relative z-10"
-                                />
-                            )}
+                            {/* Ícono clay del paso activo, centrado en los anillos.
+                                Reemplaza el modelo 3D de manos robóticas (fuera de la
+                                estética de marca) y refuerza el lenguaje clay del resto
+                                del sitio. Crossfade suave al cambiar de paso. */}
+                            <div className="absolute inset-0 z-10 flex items-center justify-center" style={{ marginTop: '-3rem' }}>
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeStep}
+                                        initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.9, y: -12 }}
+                                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                    >
+                                        <Image
+                                            src={currentStep.image}
+                                            alt=""
+                                            aria-hidden
+                                            width={320}
+                                            height={320}
+                                            quality={95}
+                                            className="h-52 w-auto object-contain drop-shadow-[0_20px_50px_rgba(200,66,20,0.28)]"
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
 
                             {/* Step number display */}
                             <motion.div
