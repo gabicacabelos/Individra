@@ -278,34 +278,32 @@ export function ProcessWorkflowSection() {
                     DESKTOP VIEW: STICKY NARRATIVE + CONNECTED RAIL
                    ======================================================= */}
                 <div className="hidden lg:grid lg:grid-cols-[0.82fr_1fr] lg:gap-20">
-                    {/* Columna izquierda: relato + hub 3D (sticky en desktop) */}
+                    {/* Columna izquierda: hub 3D (sticky en desktop) */}
                     <div className="lg:sticky lg:top-28 lg:self-start">
-                        <div className="rounded-2xl border border-[#2E3035] bg-[#14161A] p-6">
-                            <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#C84214]">
-                                Arquitectura Hub &amp; Spoke
-                            </span>
-                            <h4 className="mt-2 text-lg font-bold text-white">
-                                Sincronización en Tiempo Real
-                            </h4>
-                            <p className="mt-2 text-sm leading-relaxed text-neutral-300">
-                                Un único núcleo automatizado orquesta tus depósitos, la flota en calle, el ERP de administración y cada cliente final sin llamadas telefónicas ni carga manual.
-                            </p>
-
-                            <div className="mt-6 flex flex-col gap-2.5 font-mono text-xs text-neutral-400">
-                                <div className="flex items-center gap-2">
-                                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                                    <span>Tango &amp; Bejerman ERP Sync: Activo</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                                    <span>Google Maps Geocoding: Activo</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="h-2 w-2 rounded-full bg-[#C84214]" />
-                                    <span>WhatsApp Cloud WABA: En Línea 24/7</span>
-                                </div>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7 }}
+                            className="relative"
+                        >
+                            <Image
+                                src="/logistics_hub_3d.png"
+                                alt="Hub de distribución inteligente de INDIVIDRA"
+                                width={560}
+                                height={543}
+                                className="w-full max-w-[420px] object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
+                            />
+                            <div className="mt-4 max-w-[380px] border-l-2 border-[#C84214]/60 pl-4">
+                                <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">
+                                    Arquitectura Hub &amp; Spoke
+                                </span>
+                                <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">
+                                    Un nodo orquesta en tiempo real tus depósitos, la flota en calle,
+                                    el ERP de administración y cada cliente final sin llamadas ni carga manual.
+                                </p>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Columna derecha: riel con progreso ligado al scroll */}

@@ -17,7 +17,6 @@ import {
     DriverAdmissionIcon,
     MonthlyOperationsIcon,
 } from './LogisticaAnimations'
-import { RouteRoadmap } from './RouteRoadmap'
 import { PhoneChatHero } from './PhoneChatHero'
 import { PainCarousel } from './PainCarousel'
 import {
@@ -533,12 +532,6 @@ export function LogisticaLanding() {
                     </motion.div>
 
                     {/* Cierre de conversión */}
-                    {/* Remate: la ruta se dibuja con el scroll y enciende los módulos.
-                        Cierra la metáfora que abre el hero. */}
-                    <div className="mt-16">
-                        <RouteRoadmap />
-                    </div>
-
                     <motion.div
                         {...reveal}
                         className="mt-10 flex flex-col items-start gap-3 p-6 sm:p-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514]"

@@ -16,15 +16,15 @@ export function MobileHeroAnimation() {
                     repeat: Infinity,
                     ease: 'easeInOut',
                 }}
-                className="relative z-10 w-[240px] sm:w-[270px] h-[240px] sm:h-[270px] flex items-center justify-center pointer-events-none"
+                className="relative z-10 w-[270px] sm:w-[310px] h-[270px] sm:h-[310px] flex items-center justify-center pointer-events-none"
             >
                 {/* Emblema 3D levitando, completo y sin emisiones de luz */}
-                <div className="relative w-[220px] sm:w-[250px] h-[220px] sm:h-[250px]">
+                <div className="relative w-[250px] sm:w-[290px] h-[250px] sm:h-[290px]">
                     <Image
                         src="/individra-3d-floating.png"
                         alt="Emblema 3D de INDIVIDRA"
-                        width={500}
-                        height={500}
+                        width={600}
+                        height={600}
                         className="w-full h-full object-contain"
                         priority
                     />

@@ -144,15 +144,15 @@ export function HeroSection() {
                                 repeat: Infinity,
                                 ease: 'easeInOut',
                             }}
-                            className="relative z-20 w-[440px] h-[440px] flex items-center justify-center pointer-events-none"
+                            className="relative z-20 w-[490px] h-[490px] xl:w-[540px] xl:h-[540px] flex items-center justify-center pointer-events-none"
                         >
                             {/* Emblema 3D levitando, completo como antes y sin emisiones de luz */}
-                            <div className="relative w-[400px] h-[400px]">
+                            <div className="relative w-[460px] h-[460px] xl:w-[510px] xl:h-[510px]">
                                 <Image
                                     src="/individra-3d-floating.png"
                                     alt="Emblema 3D de INDIVIDRA"
-                                    width={800}
-                                    height={800}
+                                    width={900}
+                                    height={900}
                                     className="w-full h-full object-contain"
                                     priority
                                 />
