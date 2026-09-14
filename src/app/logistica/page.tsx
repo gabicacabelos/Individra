@@ -4,7 +4,7 @@ import { LogisticaLanding } from '@/components/logistica/LogisticaLanding'
 export const metadata: Metadata = {
     title: 'Logística | Individra — Automatización de entregas por WhatsApp',
     description:
-        'Un asistente por WhatsApp, web y teléfono que responde el estado de cada entrega, coordina las visitas antes de que salga el camión y avisa cuando algo se demora. Sin cambiar tu sistema actual.',
+        'Un asistente por WhatsApp y web que responde el estado de cada entrega, coordina las visitas antes de que salga el camión y avisa cuando algo se demora. Sin cambiar tu sistema actual.',
     alternates: {
         canonical: '/logistica',
     },

@@ -45,7 +45,7 @@ const pains = [
 const solutions = [
     {
         icon: MessageSquare,
-        text: 'Responde el estado de cada pedido en segundos, por WhatsApp, web o teléfono, consultando tu sistema o tu planilla. Diseñado para resolver en el primer mensaje.',
+        text: 'Responde el estado de cada pedido en segundos, por WhatsApp o web, consultando tu sistema o tu planilla. Diseñado para resolver en el primer mensaje.',
         Demo: ChatStatusDemo,
     },
     {

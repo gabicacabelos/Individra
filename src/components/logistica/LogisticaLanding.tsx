@@ -187,7 +187,7 @@ export function LogisticaLanding() {
                                 transition={{ delay: 0.1 }}
                                 className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl"
                             >
-                                Montamos un asistente por WhatsApp, web y teléfono que responde el estado de cada entrega con datos
+                                Montamos un asistente por WhatsApp y web que responde el estado de cada entrega con datos
                                 reales, coordina las visitas antes de que salga el camión y avisa solo cuando algo se demora.{' '}
                                 <span className="text-neutral-200">Sin cambiar tu sistema actual.</span>
                             </motion.p>

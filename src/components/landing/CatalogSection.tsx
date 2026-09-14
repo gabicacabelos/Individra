@@ -26,7 +26,7 @@ const categories = [
         icon: Truck,
         color: 'from-[#C84214] to-[#A8340E]',
         items: [
-            { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp, web o voz, consultando tu sistema', benefit: 'Menos consultas repetidas' },
+            { icon: MessageSquare, title: 'Estado de Pedidos 24/7', desc: 'Responde por dónde va cada pedido o remito, por WhatsApp o web, consultando tu sistema', benefit: 'Menos consultas repetidas' },
             { icon: ScanLine, title: 'Carga de Remitos', desc: 'Extrae los datos de remitos y comprobantes desde una foto o PDF, listos para revisar', benefit: 'Sin carga manual' },
             { icon: Bell, title: 'Avisos de Entrega', desc: 'Notifica salida, llegada o demora según tus reglas, sin depender de que alguien se acuerde', benefit: 'Cero olvidos' },
             { icon: AlertTriangle, title: 'Registro de anomalías', desc: 'Cruza la ubicación que comparte el chofer con la respuesta del destinatario, para que el reporte tenga evidencia de dos fuentes', benefit: 'Evidencia real' },
