@@ -1,8 +1,7 @@
 'use client'
 
 import { useRef, useState, useMemo } from 'react'
-import Image from 'next/image'
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
 import { Search, Lightbulb, Cpu, Rocket, BarChart, ArrowRight } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -17,7 +16,6 @@ const steps = [
         description: 'Auditoría de procesos e identificación de oportunidades.',
         color: 'from-[#C84214] to-[#B7B3B0]',
         glowColor: 'rgba(200,66,20,0.25)',
-        image: '/3d/icono-brujula.png',
     },
     {
         id: 2,
@@ -28,7 +26,6 @@ const steps = [
         description: 'Arquitectura personalizada y selección de herramientas IA.',
         color: 'from-[#B7B3B0] to-[#E8E5DE]',
         glowColor: 'rgba(183,179,176,0.25)',
-        image: '/3d/icono-estrella.png',
     },
     {
         id: 3,
@@ -37,7 +34,6 @@ const steps = [
         label: 'Desarrollo',
         title: 'Construimos tu sistema',
         description: 'Desarrollo, entrenamiento de modelos y prompts a medida.',
-        image: '/3d/icono-engranaje.png',
         color: 'from-[#3E3D3A] to-[#B7B3B0]',
         glowColor: 'rgba(62,61,58,0.3)',
     },
@@ -50,7 +46,6 @@ const steps = [
         description: 'Despliegue, integración y capacitación de tu equipo.',
         color: 'from-[#C84214] to-[#B7B3B0]',
         glowColor: 'rgba(200,66,20,0.25)',
-        image: '/3d/icono-camion.png',
     },
     {
         id: 5,
@@ -61,7 +56,6 @@ const steps = [
         description: 'Monitoreo, análisis y optimización constante.',
         color: 'from-[#3E3D3A] to-[#E8E5DE]',
         glowColor: 'rgba(62,61,58,0.3)',
-        image: '/3d/icono-comparativa.png',
     },
 ]
 
@@ -103,6 +97,7 @@ export function ConnectionSection() {
 
     // Memoize the current step data
     const currentStep = useMemo(() => steps[activeStep], [activeStep])
+    const StepIcon = currentStep.icon
 
     return (
         <section
@@ -300,30 +295,21 @@ export function ConnectionSection() {
                                 transition={{ duration: 0.8 }}
                             />
 
-                            {/* Ícono clay del paso activo, centrado en los anillos.
-                                Reemplaza el modelo 3D de manos robóticas (fuera de la
-                                estética de marca) y refuerza el lenguaje clay del resto
-                                del sitio. Crossfade suave al cambiar de paso. */}
+                            {/* Foco del paso activo: el ícono del paso en un disco glossy,
+                                centrado en los anillos. Reemplaza el modelo 3D de manos
+                                robóticas (fuera de la estética de marca) y cambia por paso,
+                                en sintonía con la línea de tiempo de la izquierda. No usa los
+                                íconos clay, que quedan reservados 1 por sección (sin repetir). */}
                             <div className="absolute inset-0 z-10 flex items-center justify-center" style={{ marginTop: '-3rem' }}>
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeStep}
-                                        initial={{ opacity: 0, scale: 0.85, y: 12 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.9, y: -12 }}
-                                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                                    >
-                                        <Image
-                                            src={currentStep.image}
-                                            alt=""
-                                            aria-hidden
-                                            width={320}
-                                            height={320}
-                                            quality={95}
-                                            className="h-52 w-auto object-contain drop-shadow-[0_20px_50px_rgba(200,66,20,0.28)]"
-                                        />
-                                    </motion.div>
-                                </AnimatePresence>
+                                <motion.div
+                                    key={activeStep}
+                                    initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                    className={`flex h-40 w-40 items-center justify-center rounded-[2.25rem] bg-gradient-to-br ${currentStep.color} shadow-[0_24px_60px_-12px_rgba(0,0,0,0.7)]`}
+                                >
+                                    <StepIcon className="h-16 w-16 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]" />
+                                </motion.div>
                             </div>
 
                             {/* Step number display */}
