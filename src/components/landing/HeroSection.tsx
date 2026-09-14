@@ -126,7 +126,7 @@ export function HeroSection() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Right Content - Free-floating 3D Scene in space (sin recuadro) */}
+                    {/* Right Content - Free-floating 3D Emblem in space */}
                     <motion.div
                         style={{ y: isMobile ? 0 : robotY }}
                         initial={{ opacity: 0, scale: 0.85 }}
@@ -134,30 +134,10 @@ export function HeroSection() {
                         transition={{ duration: 1.2, delay: 0.2 }}
                         className="hidden lg:flex flex-1 justify-center items-center relative w-full h-[580px]"
                     >
-                        {/* Atmospheric Smoke Gray Fog Behind 3D Scene */}
-                        <div
-                            aria-hidden
-                            className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,_rgba(110,108,106,0.22)_0%,_rgba(62,61,58,0.12)_45%,_transparent_72%)] blur-3xl pointer-events-none"
-                        />
-
-                        {/* Looping ambient pulse glow in Burnt Orange and Smoke Gray - 4s loop */}
+                        {/* Free-Floating 3D Emblem Container - Levitación suave y pura sin efectos de luz */}
                         <motion.div
                             animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.18, 0.42, 0.18],
-                            }}
-                            transition={{
-                                duration: 4,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                            }}
-                            className="absolute w-[440px] h-[440px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(200,66,20,0.22)_0%,_rgba(54,53,51,0.28)_45%,_transparent_70%)] blur-3xl pointer-events-none"
-                        />
-
-                        {/* Free-Floating 3D Emblem Container - Levitación suave de arriba hacia abajo */}
-                        <motion.div
-                            animate={{
-                                y: [0, -12, 0],
+                                y: [0, -14, 0],
                             }}
                             transition={{
                                 duration: 4.5,
@@ -166,17 +146,14 @@ export function HeroSection() {
                             }}
                             className="relative z-20 w-[440px] h-[440px] flex items-center justify-center pointer-events-none"
                         >
-                            {/* Emblema 3D levitando, completo y sin orbitales.
-                                Sin mask-image: el PNG ya viene recortado al sujeto, y la
-                                mascara radial que disimulaba el backdrop del render viejo
-                                ahora le cortaba los bordes al propio logo. */}
-                            <div className="relative w-[380px] h-[380px]">
+                            {/* Emblema 3D levitando, completo como antes y sin emisiones de luz */}
+                            <div className="relative w-[400px] h-[400px]">
                                 <Image
                                     src="/individra-3d-floating.png"
                                     alt="Emblema 3D de INDIVIDRA"
-                                    width={760}
-                                    height={760}
-                                    className="w-full h-full object-contain drop-shadow-[0_26px_50px_rgba(200,66,20,0.28)]"
+                                    width={800}
+                                    height={800}
+                                    className="w-full h-full object-contain"
                                     priority
                                 />
                             </div>
