@@ -90,7 +90,7 @@ export function Navbar() {
                             onClick={(e) => handleNavClick(e, '#contacto')}
                             className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs lg:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-md hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
                         >
-                            Empezar ahora
+                            Diagnóstico gratuito
                         </a>
                     </div>
 
@@ -129,7 +129,7 @@ export function Navbar() {
                                  onClick={(e) => handleNavClick(e, '#contacto')}
                                  className="mt-3 px-5 py-3 bg-[#C84214] text-white text-base font-bold rounded-xl hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 text-center cursor-pointer shadow-md shadow-[#C84214]/25"
                              >
-                                 Empezar ahora
+                                 Diagnóstico gratuito
                              </a>
                         </div>
                     </motion.div>

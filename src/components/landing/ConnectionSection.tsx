@@ -288,7 +288,7 @@ export function ConnectionSection() {
                                     href="#contacto"
                                     className="group inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-[#C84214] hover:bg-[#B3390F] text-white text-sm sm:text-base font-semibold rounded-full hover:shadow-lg hover:shadow-[#C84214]/25 transition-all duration-300"
                                 >
-                                    Comenzar ahora
+                                    Diagnóstico gratuito
                                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                                 </a>
                             </motion.div>

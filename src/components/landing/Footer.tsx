@@ -176,7 +176,7 @@ export function Footer() {
                             href="#contacto"
                             className="group mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84214] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                         >
-                            Iniciar proyecto
+                            Diagnóstico gratuito
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                         </a>
                     </div>

@@ -411,9 +411,6 @@ export function LogisticaLanding() {
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#B7B3B0]/30 bg-[#B7B3B0]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
                                         Módulo para logísticas de e-commerce
                                     </div>
-                                    <div className="inline-flex items-center px-2.5 py-1 rounded-full border border-amber-400/30 bg-amber-500/10 text-[10px] font-semibold text-amber-300 uppercase tracking-wider">
-                                        Próximamente
-                                    </div>
                                 </div>
 
                                 <h3 className="text-xl sm:text-2xl font-bold text-white">

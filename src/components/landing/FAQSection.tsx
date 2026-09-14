@@ -15,7 +15,7 @@ const faqs = [
     {
         id: 2,
         question: '¿Cuánto tiempo toma implementar una solución de IA?',
-        answer: 'Depende de la complejidad del proyecto. Un chatbot básico puede estar listo en 2-3 semanas, mientras que una solución de automatización completa puede tomar 1-3 meses. Siempre comenzamos con un MVP para validar resultados rápidamente.',
+        answer: 'Depende del alcance: no es un chatbot genérico, es un sistema diseñado para tu operación. Arrancamos con el diagnóstico gratuito para entender tu proceso real, documentamos el sistema antes de tocar código, y lo activamos módulo por módulo, así ves resultados sin esperar a que todo esté terminado.',
     },
     {
         id: 3,

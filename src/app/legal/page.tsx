@@ -92,9 +92,9 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">1. Información que Recopilamos</h3>
                             <p className="mb-4">Recopilamos los siguientes tipos de información:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li><strong className="text-white">Dirección de correo electrónico:</strong> Cuando solicitás recibir el diagnóstico completo por email.</li>
-                                <li><strong className="text-white">Descripción de tu problema o proceso:</strong> El texto que ingresás en el diagnóstico de IA para analizar tu situación empresarial.</li>
-                                <li><strong className="text-white">Datos de uso:</strong> Información sobre cómo interactuás con nuestro sitio (páginas visitadas, tiempo de permanencia, acciones realizadas).</li>
+                                <li><strong className="text-white">Datos de reserva:</strong> Cuando agendás el diagnóstico gratuito, tu nombre y email, a través del widget de Calendly.</li>
+                                <li><strong className="text-white">Mensajes de WhatsApp:</strong> Si nos escribís por ese canal, tu número y el contenido de esa conversación.</li>
+                                <li><strong className="text-white">Datos de uso:</strong> Información sobre cómo interactuás con nuestro sitio (páginas visitadas, tiempo de permanencia, acciones realizadas), solo si diste tu consentimiento de cookies.</li>
                                 <li><strong className="text-white">Información técnica:</strong> Dirección IP, tipo de navegador, dispositivo y sistema operativo.</li>
                             </ul>
                         </div>
@@ -103,9 +103,9 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">2. Cómo Usamos tu Información</h3>
                             <p className="mb-4">Utilizamos tu información para:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li>Generar diagnósticos personalizados de automatización para tu negocio.</li>
-                                <li>Enviarte el análisis completo con timeline y costos estimados por email.</li>
-                                <li>Mejorar nuestros servicios y la experiencia de usuario.</li>
+                                <li>Coordinar y recordarte el diagnóstico gratuito que reservaste.</li>
+                                <li>Responder tus consultas por WhatsApp.</li>
+                                <li>Mejorar nuestros servicios y la experiencia de usuario, a partir de datos de uso agregados.</li>
                                 <li>Contactarte sobre servicios que puedan interesarte (solo si diste tu consentimiento).</li>
                                 <li>Cumplir con obligaciones legales.</li>
                             </ul>
@@ -116,7 +116,8 @@ export default function LegalPage() {
                             <p className="mb-4">Utilizamos los siguientes servicios de terceros que pueden procesar tu información:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
                                 <li><strong className="text-white">PostHog:</strong> Para analíticas y mejora de la experiencia de usuario.</li>
-                                <li><strong className="text-white">Groq:</strong> Para el procesamiento de inteligencia artificial en los diagnósticos.</li>
+                                <li><strong className="text-white">Calendly:</strong> Para agendar el diagnóstico gratuito. Tu nombre y email quedan en su plataforma, bajo su propia política de privacidad.</li>
+                                <li><strong className="text-white">WhatsApp (Meta):</strong> Para las conversaciones que inicies por ese canal.</li>
                                 <li><strong className="text-white">Vercel:</strong> Para el alojamiento de nuestra plataforma web.</li>
                             </ul>
                             <p className="mt-4">
@@ -138,8 +139,7 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">5. Retención de Datos</h3>
                             <p>
                                 Conservamos tu información personal solo durante el tiempo necesario para cumplir con los fines
-                                para los que fue recopilada, o según lo requiera la ley. Los datos de diagnóstico se conservan
-                                por un período máximo de 2 años.
+                                para los que fue recopilada, o según lo requiera la ley.
                             </p>
                         </div>
 
@@ -207,20 +207,20 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">1. Descripción del Servicio</h3>
                             <p>
                                 Individra ofrece servicios de consultoría en automatización e inteligencia artificial
-                                para empresas, incluyendo un diagnóstico gratuito basado en IA, desarrollo de chatbots,
+                                para empresas, incluyendo un diagnóstico gratuito, desarrollo de chatbots,
                                 agentes de IA, y soluciones de automatización personalizadas.
                             </p>
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold text-white mb-4">2. Diagnóstico de IA</h3>
-                            <p className="mb-4">El diagnóstico gratuito de IA:</p>
+                            <h3 className="text-xl font-semibold text-white mb-4">2. Diagnóstico Gratuito</h3>
+                            <p className="mb-4">El diagnóstico gratuito de 30 minutos:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li>Es una herramienta orientativa y no constituye asesoría profesional vinculante.</li>
+                                <li>Es una conversación con una persona de nuestro equipo, no un proceso automatizado.</li>
+                                <li>Es orientativo y no constituye asesoría profesional vinculante.</li>
                                 <li>Está diseñado exclusivamente para analizar procesos empresariales, no problemas personales.</li>
-                                <li>Tiene un límite de 2 usos por usuario cada 24 horas.</li>
-                                <li>Los resultados son estimaciones basadas en información general y pueden variar según cada caso específico.</li>
-                                <li>Los costos y tiempos mostrados son aproximados y están sujetos a evaluación detallada.</li>
+                                <li>Se agenda a través de Calendly; podés reprogramarlo o cancelarlo desde el mismo enlace de confirmación.</li>
+                                <li>Cualquier costo o plazo que se mencione durante la charla es una estimación preliminar, sujeta a evaluación detallada.</li>
                             </ul>
                         </div>
 
@@ -229,7 +229,7 @@ export default function LegalPage() {
                             <p className="mb-4">Al usar nuestros servicios, te comprometés a:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
                                 <li>Proporcionar información veraz y relacionada con tu actividad empresarial.</li>
-                                <li>No intentar manipular, hackear o abusar del sistema de diagnóstico.</li>
+                                <li>No intentar manipular, hackear o abusar del sitio o nuestros sistemas.</li>
                                 <li>No utilizar el servicio para fines ilegales o no autorizados.</li>
                                 <li>No ingresar contenido ofensivo, discriminatorio o inapropiado.</li>
                                 <li>Respetar la propiedad intelectual de Individra y terceros.</li>
@@ -250,7 +250,7 @@ export default function LegalPage() {
                             <h3 className="text-xl font-semibold text-white mb-4">5. Limitación de Responsabilidad</h3>
                             <p className="mb-4">Individra no será responsable por:</p>
                             <ul className="list-disc list-inside space-y-2 ml-4">
-                                <li>Decisiones tomadas basándose únicamente en el diagnóstico de IA.</li>
+                                <li>Decisiones tomadas basándose únicamente en el diagnóstico gratuito.</li>
                                 <li>Pérdidas económicas derivadas del uso o imposibilidad de uso del servicio.</li>
                                 <li>Interrupciones o errores técnicos en la plataforma.</li>
                                 <li>Contenido de terceros o sitios web enlazados.</li>

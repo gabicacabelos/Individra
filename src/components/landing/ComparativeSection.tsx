@@ -19,7 +19,7 @@ const features = [
     {
         name: 'Dueño de los Datos',
         saas: 'Ellos. Tus datos viven en su nube, mezclados con los de todos, y pueden entrenar sus modelos.',
-        individra: 'Vos. Corre en infraestructura propia y aislada en Alemania (GDPR): tus datos no se mezclan con los de nadie ni entrenan nada. Portabilidad garantizada: si te vas, te los llevás.',
+        individra: 'Vos. Corre en infraestructura propia y aislada en Alemania (GDPR): tus datos no se mezclan con los de nadie. No entrenamos modelos con tus datos, y los proveedores que usamos tampoco lo hacen por contrato. Portabilidad garantizada: si te vas, te los llevás.',
     },
     {
         name: 'Lógica de Negocio',
