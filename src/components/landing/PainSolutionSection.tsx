@@ -16,7 +16,6 @@ import {
     ArrowDown,
 } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { PainIllustration, SolutionIllustration } from './illustrations'
 import { ChatStatusDemo, OcrDemo, NotifyDemo, MemoryContextDemo, HandoffDemo } from '@/components/ui/micro-demos'
 
 const pains = [
@@ -136,7 +135,15 @@ export function PainSolutionSection() {
                     transition={{ duration: 0.5 }}
                     className="flex justify-center mb-8 lg:mb-10"
                 >
-                    <PainIllustration className="w-64 sm:w-72 h-auto" />
+                    <Image
+                        src="/3d/icono-manos-caja.png"
+                        alt=""
+                        aria-hidden
+                        width={512}
+                        height={349}
+                        quality={95}
+                        className="w-56 sm:w-64 h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
+                    />
                 </motion.div>
 
                 <div className="space-y-3">
@@ -236,7 +243,15 @@ export function PainSolutionSection() {
                     transition={{ duration: 0.5 }}
                     className="flex justify-center mb-8 lg:mb-10"
                 >
-                    <SolutionIllustration className="w-64 sm:w-72 h-auto" />
+                    <Image
+                        src="/3d/icono-asistente-movil.png"
+                        alt=""
+                        aria-hidden
+                        width={512}
+                        height={471}
+                        quality={95}
+                        className="w-56 sm:w-64 h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
+                    />
                 </motion.div>
 
                 <div className="grid sm:grid-cols-2 gap-3">
