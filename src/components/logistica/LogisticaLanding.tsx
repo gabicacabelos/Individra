@@ -14,8 +14,6 @@ import {
     ExpirationClockIcon,
     ReputationShieldIcon,
     AnomalyLogIcon,
-    DriverAdmissionIcon,
-    MonthlyOperationsIcon,
 } from './LogisticaAnimations'
 import { PhoneChatHero } from './PhoneChatHero'
 import { PainCarousel } from './PainCarousel'
@@ -427,10 +425,16 @@ export function LogisticaLanding() {
                                     Módulo de Flota & Operación Interna
                                 </div>
                                 
-                                <div className="flex items-center gap-3.5">
-                                    <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/30 bg-[#C84214]/10 p-1.5 flex items-center justify-center">
-                                        <DriverAdmissionIcon />
-                                    </div>
+                                <div className="flex items-center gap-3">
+                                    <Image
+                                        src="/3d/icono-credencial.png"
+                                        alt=""
+                                        aria-hidden
+                                        width={224}
+                                        height={145}
+                                        quality={95}
+                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] sm:h-12"
+                                    />
                                     <h3 className="text-xl sm:text-2xl font-bold text-white">
                                         Admisión Inteligente de Choferes
                                     </h3>
@@ -559,10 +563,16 @@ export function LogisticaLanding() {
 
                             <div className="grid lg:grid-cols-12 gap-6 items-center">
                                 <div className="lg:col-span-7 space-y-3">
-                                    <div className="flex items-center gap-3.5">
-                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/30 bg-[#C84214]/10 p-1.5 flex items-center justify-center group-hover:scale-105 group-hover:border-[#C84214]/50 transition-all duration-300">
-                                            <MonthlyOperationsIcon />
-                                        </div>
+                                    <div className="flex items-center gap-3">
+                                        <Image
+                                            src="/3d/icono-comparativa.png"
+                                            alt=""
+                                            aria-hidden
+                                            width={224}
+                                            height={224}
+                                            quality={95}
+                                            className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105 sm:h-14"
+                                        />
                                         <h3 className="text-xl sm:text-2xl font-bold text-white">
                                             Parte mensual de operación
                                         </h3>
