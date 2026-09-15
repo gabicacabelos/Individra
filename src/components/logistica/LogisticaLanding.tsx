@@ -48,7 +48,7 @@ const modules = [
         quote: 'Me imponen el día y nunca preguntan si voy a estar.',
         name: 'Coordinación previa',
         desc: 'La noche anterior, cada destinatario recibe un mensaje: ¿vas a estar mañana? El que no puede, se saca de la carga antes de cargar el camión. Sin cambiar cómo armás tu ruta. Si después querés ofrecer franjas horarias, se activa sin tocar nada.',
-        img: '/3d/icono-campana.png', iw: 208, ih: 224,
+        img: '/3d/icono-campana.png', iw: 473, ih: 512, anim: 'ring' as const,
         descShort: 'La noche anterior, cada destinatario confirma si va a estar mañana. El que no puede, se saca de la carga antes de cargar el camión.',
         Demo: PriorNoticeDemo,
     },
@@ -360,6 +360,7 @@ export function LogisticaLanding() {
                     <div className="mt-12 grid md:grid-cols-2 gap-5 lg:gap-6">
                         {modules.map((m, i) => {
                             const Demo = m.Demo
+                            const ring = (m as { anim?: string }).anim === 'ring'
                             return (
                             <motion.div
                                 key={i}
@@ -386,15 +387,36 @@ export function LogisticaLanding() {
                                         <span className="h-px flex-1 bg-white/10" />
                                     </div>
                                     <div className="mt-2 flex items-center gap-3">
-                                        <Image
-                                            src={m.img}
-                                            alt=""
-                                            aria-hidden
-                                            width={m.iw}
-                                            height={m.ih}
-                                            quality={95}
-                                            className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
-                                        />
+                                        {ring ? (
+                                            <motion.div
+                                                className="shrink-0"
+                                                style={{ transformOrigin: 'top center' }}
+                                                initial={{ rotate: 0 }}
+                                                whileInView={{ rotate: [0, -16, 13, -9, 6, -3, 0] }}
+                                                viewport={{ once: true, margin: '-60px' }}
+                                                transition={{ duration: 1.1, delay: 0.15, ease: 'easeInOut' }}
+                                            >
+                                                <Image
+                                                    src={m.img}
+                                                    alt=""
+                                                    aria-hidden
+                                                    width={m.iw}
+                                                    height={m.ih}
+                                                    quality={95}
+                                                    className="h-12 w-auto object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
+                                                />
+                                            </motion.div>
+                                        ) : (
+                                            <Image
+                                                src={m.img}
+                                                alt=""
+                                                aria-hidden
+                                                width={m.iw}
+                                                height={m.ih}
+                                                quality={95}
+                                                className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
+                                            />
+                                        )}
                                         <h3 className="text-lg font-bold text-white">{m.name}</h3>
                                     </div>
                                     <p className="mt-3 text-neutral-300 text-sm leading-relaxed lg:hidden">{m.descShort}</p>
