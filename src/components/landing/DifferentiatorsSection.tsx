@@ -45,11 +45,11 @@ export function DifferentiatorsSection() {
                     className="mb-10 flex flex-col items-center text-center lg:mb-14"
                 >
                     <Image
-                        src="/3d/icono-estrella.png"
+                        src="/3d/icono-trofeo.png"
                         alt=""
                         aria-hidden
-                        width={224}
-                        height={224}
+                        width={509}
+                        height={512}
                         quality={95}
                         className="mb-3 h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                     />

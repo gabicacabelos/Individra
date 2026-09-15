@@ -413,9 +413,20 @@ export function LogisticaLanding() {
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl sm:text-2xl font-bold text-white">
-                                    Parte del dador
-                                </h3>
+                                <div className="flex items-center gap-3">
+                                    <Image
+                                        src="/3d/icono-remito.png"
+                                        alt=""
+                                        aria-hidden
+                                        width={512}
+                                        height={494}
+                                        quality={95}
+                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(183,179,176,0.28)] sm:h-12"
+                                    />
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                        Parte del dador
+                                    </h3>
+                                </div>
 
                                 <div className="border-l-2 border-[#B7B3B0]/50 pl-4 py-1 text-sm text-neutral-400 italic">
                                     &ldquo;Uno vende bien, la logística entrega mal, y el cliente le pega mala reseña al vendedor. Perdés cuentas por lo que hizo o dejó de hacer otro.&rdquo;
