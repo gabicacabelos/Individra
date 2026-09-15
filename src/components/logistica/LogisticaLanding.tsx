@@ -58,7 +58,7 @@ const modules = [
         quote: 'Es un barrio cerrado con guardia 24 horas y ponen que no había nadie.',
         name: 'Ficha del domicilio',
         desc: 'Después de la primera entrega a una dirección, el sistema guarda cómo se accede: portería, timbre, entre calles, si acepta dejar con vecino. La próxima vez, el dato viaja con la hoja de ruta sin que nadie lo busque.',
-        img: '/3d/icono-casa.png', iw: 224, ih: 216,
+        img: '/3d/icono-casa.png', iw: 512, ih: 363,
         descShort: 'Después de la primera entrega, el sistema guarda cómo se accede: portería, timbre, entre calles. La próxima vez, viaja con la hoja de ruta.',
         Demo: HomeAccessDemo,
     },
@@ -78,7 +78,7 @@ const modules = [
         quote: 'Hoy era el último día de plazo. Nadie me avisó y lo devolvieron al remitente.',
         name: 'Reloj de vencimiento',
         desc: 'Cuenta los días que un paquete lleva sin entregarse. Avisa al destinatario a los 5, 2 y 1 día antes de que se devuelva. Y le manda al dueño la lista de paquetes en riesgo cada mañana.',
-        img: '/3d/icono-arena.png', iw: 158, ih: 224,
+        img: '/3d/icono-reloj-vto.png', iw: 457, ih: 512,
         descShort: 'Cuenta los días sin entrega y avisa al destinatario antes de la devolución. Al dueño le manda la lista de riesgo cada mañana.',
         Demo: ExpirationClockDemo,
     },
@@ -88,7 +88,7 @@ const modules = [
         quote: 'Una empresa espectacular pero nadie te pide que dejes reseña. Los únicos que escriben son los enojados.',
         name: 'Escudo de reputación',
         desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo.',
-        img: '/3d/icono-escudo.png', iw: 179, ih: 224,
+        img: '/3d/icono-escudo.png', iw: 439, ih: 512,
         descShort: 'Si el destinatario está contento, un tap lo lleva a Google. Si tiene un reclamo, se captura privado. Cero fricción para el chofer.',
         Demo: ReputationShieldDemo,
     },
@@ -98,7 +98,7 @@ const modules = [
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías',
         desc: 'La ubicación que el chofer comparte por Telegram queda registrada con cada visita. Si una se marca como fallida lejos del domicilio, el evento se guarda con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
-        img: '/3d/icono-lupa.png', iw: 223, ih: 223,
+        img: '/3d/icono-lupa.png', iw: 512, ih: 498,
         descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada y cruzada con la confirmación del destinatario. A fin de mes tenés el reporte.',
         Demo: AnomalyLogDemo,
     },
@@ -430,8 +430,8 @@ export function LogisticaLanding() {
                                         src="/3d/icono-credencial.png"
                                         alt=""
                                         aria-hidden
-                                        width={224}
-                                        height={145}
+                                        width={344}
+                                        height={512}
                                         quality={95}
                                         className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] sm:h-12"
                                     />
@@ -568,8 +568,8 @@ export function LogisticaLanding() {
                                             src="/3d/icono-monitor.png"
                                             alt=""
                                             aria-hidden
-                                            width={224}
-                                            height={224}
+                                            width={512}
+                                            height={507}
                                             quality={95}
                                             className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105 sm:h-14"
                                         />
@@ -646,7 +646,23 @@ export function LogisticaLanding() {
 
             {/* ===== Footer mínimo ===== */}
             <footer className="border-t border-white/10 bg-[#0B0D0E]">
-                <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                {/* Cierre visual: caja premiada — cada entrega, con estándar de calidad */}
+                <motion.div {...reveal} className="max-w-6xl mx-auto px-6 pt-12 pb-2 flex flex-col items-center text-center">
+                    <Image
+                        src="/3d/icono-caja-premio.png"
+                        alt=""
+                        aria-hidden
+                        width={512}
+                        height={479}
+                        quality={95}
+                        className="h-24 w-auto object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.3)] sm:h-28"
+                    />
+                    <p className="mt-4 max-w-md text-sm sm:text-base text-neutral-400 leading-relaxed">
+                        Cada entrega, con estándar de calidad. Eso es lo que
+                        <span className="text-neutral-200"> defiende tu reputación</span>.
+                    </p>
+                </motion.div>
+                <div className="max-w-6xl mx-auto px-6 pt-8 pb-8 border-t border-white/5 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-colors">
                         Volver al inicio
                     </Link>

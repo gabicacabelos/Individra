@@ -145,11 +145,12 @@ export function ServicesSection() {
                     {/* Icono 3D de marca, sin fondo */}
                     <div className="mb-3 flex justify-center">
                         <Image
-                            src="/3d/icono-engranaje.png"
+                            src="/3d/icono-cinta.png"
                             alt=""
                             aria-hidden
-                            width={222}
-                            height={222}
+                            width={512}
+                            height={498}
+                            quality={95}
                             className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
                         />
                     </div>
