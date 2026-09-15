@@ -8,12 +8,6 @@ import { ArrowRight, Quote } from 'lucide-react'
 import {
     AmbientOrbs,
     RouteDivider,
-    SelfSchedulingIcon,
-    HomeAccessIcon,
-    PositionAlertIcon,
-    ExpirationClockIcon,
-    ReputationShieldIcon,
-    AnomalyLogIcon,
 } from './LogisticaAnimations'
 import { PhoneChatHero } from './PhoneChatHero'
 import { PainCarousel } from './PainCarousel'
@@ -54,7 +48,7 @@ const modules = [
         quote: 'Me imponen el día y nunca preguntan si voy a estar.',
         name: 'Coordinación previa',
         desc: 'La noche anterior, cada destinatario recibe un mensaje: ¿vas a estar mañana? El que no puede, se saca de la carga antes de cargar el camión. Sin cambiar cómo armás tu ruta. Si después querés ofrecer franjas horarias, se activa sin tocar nada.',
-        Icon: SelfSchedulingIcon,
+        img: '/3d/icono-campana.png', iw: 208, ih: 224,
         descShort: 'La noche anterior, cada destinatario confirma si va a estar mañana. El que no puede, se saca de la carga antes de cargar el camión.',
         Demo: PriorNoticeDemo,
     },
@@ -64,7 +58,7 @@ const modules = [
         quote: 'Es un barrio cerrado con guardia 24 horas y ponen que no había nadie.',
         name: 'Ficha del domicilio',
         desc: 'Después de la primera entrega a una dirección, el sistema guarda cómo se accede: portería, timbre, entre calles, si acepta dejar con vecino. La próxima vez, el dato viaja con la hoja de ruta sin que nadie lo busque.',
-        Icon: HomeAccessIcon,
+        img: '/3d/icono-casa.png', iw: 224, ih: 216,
         descShort: 'Después de la primera entrega, el sistema guarda cómo se accede: portería, timbre, entre calles. La próxima vez, viaja con la hoja de ruta.',
         Demo: HomeAccessDemo,
     },
@@ -74,7 +68,7 @@ const modules = [
         quote: 'Estuve de 9 a 18 esperando y nunca vinieron. Perdí el día entero.',
         name: 'Aviso por posición',
         desc: 'El chofer comparte su ubicación en vivo desde el bot de Telegram: sin app propia que instalar, sin hardware que comprar. A medida que avanza en la ruta, el destinatario recibe cuántas paradas faltan. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas. Se activa por caso.',
-        Icon: PositionAlertIcon,
+        img: '/3d/icono-pin.png', iw: 131, ih: 224,
         descShort: 'El chofer comparte ubicación en vivo por Telegram y el destinatario recibe cuántas paradas faltan. Sin horarios inventados.',
         Demo: PositionAlertDemo,
     },
@@ -84,7 +78,7 @@ const modules = [
         quote: 'Hoy era el último día de plazo. Nadie me avisó y lo devolvieron al remitente.',
         name: 'Reloj de vencimiento',
         desc: 'Cuenta los días que un paquete lleva sin entregarse. Avisa al destinatario a los 5, 2 y 1 día antes de que se devuelva. Y le manda al dueño la lista de paquetes en riesgo cada mañana.',
-        Icon: ExpirationClockIcon,
+        img: '/3d/icono-arena.png', iw: 158, ih: 224,
         descShort: 'Cuenta los días sin entrega y avisa al destinatario antes de la devolución. Al dueño le manda la lista de riesgo cada mañana.',
         Demo: ExpirationClockDemo,
     },
@@ -94,7 +88,7 @@ const modules = [
         quote: 'Una empresa espectacular pero nadie te pide que dejes reseña. Los únicos que escriben son los enojados.',
         name: 'Escudo de reputación',
         desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo.',
-        Icon: ReputationShieldIcon,
+        img: '/3d/icono-escudo.png', iw: 179, ih: 224,
         descShort: 'Si el destinatario está contento, un tap lo lleva a Google. Si tiene un reclamo, se captura privado. Cero fricción para el chofer.',
         Demo: ReputationShieldDemo,
     },
@@ -104,7 +98,7 @@ const modules = [
         quote: 'Dijeron que pasaron y que no había nadie. Es mentira, estuve en casa todo el día.',
         name: 'Registro de anomalías',
         desc: 'La ubicación que el chofer comparte por Telegram queda registrada con cada visita. Si una se marca como fallida lejos del domicilio, el evento se guarda con fecha, hora y ubicación, y se cruza con la confirmación del destinatario para que el reporte tenga evidencia de dos fuentes, no una sospecha. A fin de mes tenés un reporte de qué pasó de verdad en tu operación, sin acusar a nadie en el momento.',
-        Icon: AnomalyLogIcon,
+        img: '/3d/icono-lupa.png', iw: 223, ih: 223,
         descShort: 'Cuando una visita se marca como fallida lejos del domicilio, queda registrada y cruzada con la confirmación del destinatario. A fin de mes tenés el reporte.',
         Demo: AnomalyLogDemo,
     },
@@ -364,7 +358,6 @@ export function LogisticaLanding() {
 
                     <div className="mt-12 grid md:grid-cols-2 gap-5 lg:gap-6">
                         {modules.map((m, i) => {
-                            const Icon = m.Icon
                             const Demo = m.Demo
                             return (
                             <motion.div
@@ -392,9 +385,15 @@ export function LogisticaLanding() {
                                         <span className="h-px flex-1 bg-white/10" />
                                     </div>
                                     <div className="mt-2 flex items-center gap-3">
-                                        <div className="shrink-0 w-12 h-12 rounded-xl border border-[#C84214]/25 bg-[#C84214]/[0.07] p-1.5 group-hover:border-[#C84214]/50 group-hover:scale-105 transition-all duration-300">
-                                            <Icon />
-                                        </div>
+                                        <Image
+                                            src={m.img}
+                                            alt=""
+                                            aria-hidden
+                                            width={m.iw}
+                                            height={m.ih}
+                                            quality={95}
+                                            className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
+                                        />
                                         <h3 className="text-lg font-bold text-white">{m.name}</h3>
                                     </div>
                                     <p className="mt-3 text-neutral-300 text-sm leading-relaxed lg:hidden">{m.descShort}</p>
@@ -565,7 +564,7 @@ export function LogisticaLanding() {
                                 <div className="lg:col-span-7 space-y-3">
                                     <div className="flex items-center gap-3">
                                         <Image
-                                            src="/3d/icono-comparativa.png"
+                                            src="/3d/icono-monitor.png"
                                             alt=""
                                             aria-hidden
                                             width={224}
