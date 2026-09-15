@@ -207,8 +207,17 @@ export function PainSolutionSection() {
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-80px' }}
-                    className="text-center mb-10 lg:mb-14"
+                    className="flex flex-col items-center text-center mb-10 lg:mb-14"
                 >
+                    <Image
+                        src="/3d/icono-pulgar.png"
+                        alt=""
+                        aria-hidden
+                        width={429}
+                        height={512}
+                        quality={95}
+                        className="mb-3 h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
+                    />
                     <span className="text-[#C84214] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
                         La solución
                     </span>
