@@ -131,6 +131,15 @@ export function ProcessWorkflowSection() {
             <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
                 {/* Header de la sección */}
                 <div className="mb-10 sm:mb-14">
+                    <Image
+                        src="/3d/icono-mapa.png"
+                        alt=""
+                        aria-hidden
+                        width={512}
+                        height={478}
+                        quality={95}
+                        className="mb-3 h-14 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.28)] sm:h-16"
+                    />
                     <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-[#C84214] sm:text-sm">
                         El circuito operativo INDIVIDRA
                     </span>
