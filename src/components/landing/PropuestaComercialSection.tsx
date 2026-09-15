@@ -57,11 +57,11 @@ export function PropuestaComercialSection() {
                 <motion.div {...reveal} className="text-center mb-10 lg:mb-12">
                     <div className="mb-3 flex justify-center">
                         <Image
-                            src="/3d/icono-brujula.png"
+                            src="/3d/icono-escudo-lock.png"
                             alt=""
                             aria-hidden
-                            width={224}
-                            height={224}
+                            width={433}
+                            height={512}
                             quality={95}
                             className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                         />

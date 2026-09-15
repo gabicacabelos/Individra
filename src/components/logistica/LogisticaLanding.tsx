@@ -68,7 +68,7 @@ const modules = [
         quote: 'Estuve de 9 a 18 esperando y nunca vinieron. Perdí el día entero.',
         name: 'Aviso por posición',
         desc: 'El chofer comparte su ubicación en vivo desde el bot de Telegram: sin app propia que instalar, sin hardware que comprar. A medida que avanza en la ruta, el destinatario recibe cuántas paradas faltan. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas. Se activa por caso.',
-        img: '/3d/icono-pin.png', iw: 131, ih: 224,
+        img: '/3d/icono-pin-oro.png', iw: 425, ih: 512,
         descShort: 'El chofer comparte ubicación en vivo por Telegram y el destinatario recibe cuántas paradas faltan. Sin horarios inventados.',
         Demo: PositionAlertDemo,
     },
@@ -340,11 +340,12 @@ export function LogisticaLanding() {
                     {/* Estrella 3D sin fondo: refuerza que son reseñas puntuadas de Google */}
                     <motion.div {...reveal} className="mb-4">
                         <Image
-                            src="/3d/icono-estrella.png"
+                            src="/3d/icono-notif.png"
                             alt=""
                             aria-hidden
-                            width={346}
-                            height={342}
+                            width={512}
+                            height={376}
+                            quality={95}
                             className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                         />
                     </motion.div>

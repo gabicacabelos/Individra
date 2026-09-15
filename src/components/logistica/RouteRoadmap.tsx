@@ -115,11 +115,12 @@ export function RouteRoadmap() {
                 viene sin fondo y no necesita difuminado. */}
             <div aria-hidden className="flex justify-center px-2 lg:mt-6">
                 <Image
-                    src="/3d/icono-brujula.png"
+                    src="/3d/icono-logistica.png"
                     alt=""
-                    width={225}
-                    height={225}
-                    className="h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(200,66,20,0.32)] lg:h-32"
+                    width={512}
+                    height={280}
+                    quality={95}
+                    className="w-64 h-auto object-contain drop-shadow-[0_18px_36px_rgba(200,66,20,0.32)] sm:w-72"
                 />
             </div>
 
