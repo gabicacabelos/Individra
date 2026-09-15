@@ -2,14 +2,17 @@
 
 import { useRef, useState, useMemo } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import Image from 'next/image'
 import { MobileProcessAnimation } from '@/components/ui/MobileProcessAnimation'
-import { Search, Lightbulb, Cpu, Rocket, BarChart, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const steps = [
     {
         id: 1,
-        icon: Search,
+        img: '/3d/icono-chatbot.png',
+        iw: 512,
+        ih: 503,
         number: '01',
         label: 'Descubrimiento',
         title: 'Entendemos tu negocio',
@@ -19,7 +22,9 @@ const steps = [
     },
     {
         id: 2,
-        icon: Lightbulb,
+        img: '/3d/icono-cerebro.png',
+        iw: 280,
+        ih: 512,
         number: '02',
         label: 'Estrategia',
         title: 'Diseñamos la solución',
@@ -29,7 +34,9 @@ const steps = [
     },
     {
         id: 3,
-        icon: Cpu,
+        img: '/3d/icono-robot.png',
+        iw: 477,
+        ih: 512,
         number: '03',
         label: 'Desarrollo',
         title: 'Construimos tu sistema',
@@ -39,7 +46,9 @@ const steps = [
     },
     {
         id: 4,
-        icon: Rocket,
+        img: '/3d/icono-24h.png',
+        iw: 462,
+        ih: 512,
         number: '04',
         label: 'Implementación',
         title: 'Lanzamos y conectamos',
@@ -49,7 +58,9 @@ const steps = [
     },
     {
         id: 5,
-        icon: BarChart,
+        img: '/3d/icono-cronometro.png',
+        iw: 512,
+        ih: 446,
         number: '05',
         label: 'Optimización',
         title: 'Mejoramos continuamente',
@@ -97,7 +108,6 @@ export function ConnectionSection() {
 
     // Memoize the current step data
     const currentStep = useMemo(() => steps[activeStep], [activeStep])
-    const StepIcon = currentStep.icon
 
     return (
         <section
@@ -152,9 +162,10 @@ export function ConnectionSection() {
                                 activeStep={activeStep}
                                 scrollProgress={scrollProgress}
                                 glowColor={currentStep.glowColor}
-                                IconComponent={currentStep.icon}
+                                img={currentStep.img}
+                                iw={currentStep.iw}
+                                ih={currentStep.ih}
                                 totalSteps={steps.length}
-                                gradientClass={currentStep.color}
                             />
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
@@ -196,7 +207,6 @@ export function ConnectionSection() {
                                 </div>
 
                                 {steps.map((step, index) => {
-                                    const Icon = step.icon
                                     const isActive = index === activeStep
                                     const isPast = index < activeStep
 
@@ -210,27 +220,23 @@ export function ConnectionSection() {
                                                 transform: isActive ? 'scale(1)' : 'scale(0.98)',
                                             }}
                                         >
-                                            {/* Icon */}
+                                            {/* Ícono clay 3D del paso */}
                                             <div className="relative z-10 flex-shrink-0">
-                                                <div
-                                                    className={`w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-500 ${isActive
-                                                        ? `bg-gradient-to-br ${step.color} shadow-lg`
-                                                        : isPast
-                                                            ? 'bg-neutral-800'
-                                                            : 'bg-neutral-900 border border-neutral-800'
-                                                        }`}
-                                                >
-                                                    <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${isActive || isPast ? 'text-white' : 'text-neutral-500'}`} />
-                                                </div>
-                                                {/* Pulse effect - desktop only */}
-                                                {isActive && !isMobile && (
-                                                    <motion.div
-                                                        initial={{ scale: 1, opacity: 0.5 }}
-                                                        animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                                                        transition={{ duration: 2, repeat: Infinity }}
-                                                        className={`absolute inset-0 rounded-lg sm:rounded-xl bg-gradient-to-br ${step.color} -z-10`}
-                                                    />
-                                                )}
+                                                <Image
+                                                    src={step.img}
+                                                    alt=""
+                                                    aria-hidden
+                                                    width={step.iw}
+                                                    height={step.ih}
+                                                    quality={95}
+                                                    className={`h-9 w-auto sm:h-12 object-contain transition-all duration-500 ${
+                                                        isActive
+                                                            ? 'opacity-100 drop-shadow-[0_8px_18px_rgba(200,66,20,0.35)] scale-100'
+                                                            : isPast
+                                                                ? 'opacity-70 scale-95'
+                                                                : 'opacity-35 scale-95 grayscale'
+                                                    }`}
+                                                />
                                             </div>
 
                                             {/* Content */}
@@ -307,9 +313,17 @@ export function ConnectionSection() {
                                     initial={{ opacity: 0, scale: 0.85, y: 12 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                                    className={`flex h-40 w-40 items-center justify-center rounded-[2.25rem] bg-gradient-to-br ${currentStep.color} shadow-[0_24px_60px_-12px_rgba(0,0,0,0.7)]`}
+                                    className="flex items-center justify-center"
                                 >
-                                    <StepIcon className="h-16 w-16 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]" />
+                                    <Image
+                                        src={currentStep.img}
+                                        alt=""
+                                        aria-hidden
+                                        width={currentStep.iw}
+                                        height={currentStep.ih}
+                                        quality={95}
+                                        className="h-52 w-auto object-contain drop-shadow-[0_28px_60px_rgba(200,66,20,0.32)]"
+                                    />
                                 </motion.div>
                             </div>
 
