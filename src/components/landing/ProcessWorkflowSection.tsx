@@ -1,19 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef, useState } from 'react'
-import { motion, useScroll, useSpring, useTransform, AnimatePresence } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import {
     FileDown,
     MapPinCheck,
     BellRing,
     LifeBuoy,
     FileCheck2,
-    ChevronLeft,
-    ChevronRight,
-    ArrowRight,
-    Terminal,
-    CheckCircle2,
 } from 'lucide-react'
 
 const workflowSteps = [
@@ -114,7 +109,6 @@ function DesktopStep({ step, index }: { step: (typeof workflowSteps)[number]; in
 
 export function ProcessWorkflowSection() {
     const railRef = useRef<HTMLDivElement>(null)
-    const [mobileStepIndex, setMobileStepIndex] = useState(0)
 
     const { scrollYProgress } = useScroll({
         target: railRef,
@@ -122,9 +116,6 @@ export function ProcessWorkflowSection() {
     })
     const fill = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 })
     const fillHeight = useTransform(fill, (v) => `${v * 100}%`)
-
-    const activeStep = workflowSteps[mobileStepIndex]
-    const ActiveIcon = activeStep.icon
 
     return (
         <section
@@ -156,122 +147,42 @@ export function ProcessWorkflowSection() {
                 </div>
 
                 {/* =======================================================
-                    MOBILE VIEW: INTERACTIVE PIPELINE STEPPER (CERO FALLOS)
+                    MOBILE VIEW: misma narrativa que desktop — línea de tiempo
+                    vertical con los 5 pasos y el hub 3D al final.
                    ======================================================= */}
                 <div className="lg:hidden">
-                    {/* Stepper Tabs - Desplazables horizontalmente */}
-                    <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-none -mx-4 px-4">
-                        {workflowSteps.map((step, idx) => {
-                            const isCurrent = idx === mobileStepIndex
-                            return (
-                                <button
-                                    key={step.id}
-                                    onClick={() => setMobileStepIndex(idx)}
-                                    className={`shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl font-mono text-xs transition-all duration-200 cursor-pointer ${
-                                        isCurrent
-                                            ? 'bg-[#C84214] text-white shadow-lg shadow-[#C84214]/25 font-bold'
-                                            : 'bg-[#15171A] text-neutral-400 border border-[#2E3035] hover:border-[#3E3D3A] hover:text-white'
-                                    }`}
-                                >
-                                    <span className={isCurrent ? 'text-white' : 'text-[#C84214]'}>
-                                        {step.id}
-                                    </span>
-                                    <span>{step.tag}</span>
-                                </button>
-                            )
-                        })}
+                    {/* Riel con la línea de tiempo (mismos nodos que desktop) */}
+                    <div className="relative">
+                        <div
+                            aria-hidden
+                            className="absolute left-[22px] top-4 bottom-10 w-px bg-gradient-to-b from-[#C84214] via-[#E85D04]/50 to-[#3E3D3A]/40 shadow-[0_0_12px_rgba(200,66,20,0.4)]"
+                        />
+                        <ol className="relative">
+                            {workflowSteps.map((step, i) => (
+                                <DesktopStep key={step.id} step={step} index={i} />
+                            ))}
+                        </ol>
                     </div>
 
-                    {/* Active Step Card */}
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeStep.id}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -12 }}
-                            transition={{ duration: 0.25 }}
-                            className="rounded-2xl border border-[#2E3035] bg-[#14161A] p-5 shadow-xl relative overflow-hidden"
-                        >
-                            {/* Accent bar top */}
-                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C84214] via-[#D44A17] to-transparent" />
-
-                            {/* Header del card */}
-                            <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#26282C]">
-                                <div className="flex items-center gap-2.5">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#3E3D3A] bg-[#1B1D21] text-[#FFA380]">
-                                        <ActiveIcon className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <div className="font-mono text-[11px] font-semibold tracking-wider text-[#C84214]">
-                                            PASO {activeStep.id} DE 05
-                                        </div>
-                                        <div className="text-xs font-mono text-neutral-400">
-                                            {activeStep.subtitle}
-                                        </div>
-                                    </div>
-                                </div>
-                                <span className="rounded border border-[#3E3D3A] bg-[#1E2024] px-2 py-0.5 font-mono text-[10px] text-neutral-300">
-                                    {activeStep.tag}
-                                </span>
-                            </div>
-
-                            {/* Título y Descripción */}
-                            <div className="py-4">
-                                <h3 className="text-lg font-bold text-white leading-snug">
-                                    {activeStep.title}
-                                </h3>
-                                <p className="mt-2 text-sm leading-relaxed text-neutral-300">
-                                    {activeStep.desc}
-                                </p>
-                            </div>
-
-                            {/* Live Pipeline Telemetry Box */}
-                            <div className="rounded-xl border border-[#2E3035] bg-[#0E1012] p-3 text-xs font-mono">
-                                <div className="flex items-center gap-2 text-[#C84214] font-semibold text-[11px] mb-1">
-                                    <Terminal className="h-3.5 w-3.5" />
-                                    CIRCUITO AUTÓNOMO
-                                </div>
-                                <div className="text-neutral-300 text-[11px] leading-relaxed">
-                                    {activeStep.pipeline}
-                                </div>
-                                <div className="mt-2 pt-2 border-t border-[#26282C] flex items-center gap-1.5 text-[10px] text-emerald-400 font-mono">
-                                    <CheckCircle2 className="h-3 w-3" />
-                                    <span>{activeStep.telemetry}</span>
-                                </div>
-                            </div>
-
-                            {/* Controles Prev / Next */}
-                            <div className="mt-5 flex items-center justify-between pt-2 border-t border-[#26282C]">
-                                <button
-                                    onClick={() => setMobileStepIndex(Math.max(0, mobileStepIndex - 1))}
-                                    disabled={mobileStepIndex === 0}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2E3035] bg-[#1B1D21] text-xs font-mono text-neutral-300 disabled:opacity-30 cursor-pointer"
-                                >
-                                    <ChevronLeft className="h-3.5 w-3.5" />
-                                    Anterior
-                                </button>
-                                <div className="flex gap-1.5">
-                                    {workflowSteps.map((_, i) => (
-                                        <div
-                                            key={i}
-                                            onClick={() => setMobileStepIndex(i)}
-                                            className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                                                i === mobileStepIndex ? 'w-5 bg-[#C84214]' : 'w-1.5 bg-[#3E3D3A]'
-                                            }`}
-                                        />
-                                    ))}
-                                </div>
-                                <button
-                                    onClick={() => setMobileStepIndex(Math.min(workflowSteps.length - 1, mobileStepIndex + 1))}
-                                    disabled={mobileStepIndex === workflowSteps.length - 1}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2E3035] bg-[#1B1D21] text-xs font-mono text-neutral-300 disabled:opacity-30 cursor-pointer"
-                                >
-                                    Siguiente
-                                    <ChevronRight className="h-3.5 w-3.5" />
-                                </button>
-                            </div>
-                        </motion.div>
-                    </AnimatePresence>
+                    {/* Hub 3D al final, con el mismo pie que en desktop */}
+                    <div className="mt-8 flex flex-col items-center text-center">
+                        <Image
+                            src="/logistics_hub_3d.png"
+                            alt="Hub de distribución inteligente de INDIVIDRA"
+                            width={560}
+                            height={543}
+                            className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.28)]"
+                        />
+                        <div className="mt-4 max-w-[340px] border-l-2 border-[#C84214]/60 pl-4 text-left">
+                            <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">
+                                Arquitectura Hub &amp; Spoke
+                            </span>
+                            <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">
+                                Un nodo orquesta en tiempo real tus depósitos, la flota en calle,
+                                el ERP de administración y cada cliente final sin llamadas ni carga manual.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* =======================================================

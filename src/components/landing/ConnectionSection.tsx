@@ -154,6 +154,7 @@ export function ConnectionSection() {
                                 glowColor={currentStep.glowColor}
                                 IconComponent={currentStep.icon}
                                 totalSteps={steps.length}
+                                gradientClass={currentStep.color}
                             />
                             {/* Step indicator on mobile */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
