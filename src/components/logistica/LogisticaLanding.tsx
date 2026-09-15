@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -118,6 +118,34 @@ const reveal = {
     viewport: { once: true, margin: '-60px' },
 }
 
+// Flujo de un pedido en 3 pasos (íconos clay: caja → sobre → pulgar).
+const flowSteps = [
+    {
+        n: '01',
+        src: '/3d/icono-caja.png',
+        w: 512,
+        h: 457,
+        title: 'Entra el pedido',
+        desc: 'Ingresa desde tu ERP, Tiendanube o MercadoLibre. Sin carga manual ni tipeo.',
+    },
+    {
+        n: '02',
+        src: '/3d/icono-sobre.png',
+        w: 467,
+        h: 512,
+        title: 'Avisás al cliente',
+        desc: 'Aviso automático por WhatsApp con el estado real de la entrega, antes de que pregunte.',
+    },
+    {
+        n: '03',
+        src: '/3d/icono-pulgar.png',
+        w: 429,
+        h: 512,
+        title: 'Entrega conforme',
+        desc: 'Se cierra con evidencia del chofer y confirmación del destinatario. Prueba de que se hizo bien.',
+    },
+]
+
 export function LogisticaLanding() {
     const [isScrolled, setIsScrolled] = useState(false)
 
@@ -218,6 +246,52 @@ export function LogisticaLanding() {
                             <PhoneChatHero />
                         </motion.div>
 
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== 1.5) FLUJO EN 3 PASOS (caja → sobre → pulgar) ===== */}
+            <section className="relative border-b border-white/5 bg-[#0B0D0E]">
+                <div className="max-w-6xl mx-auto px-6 py-16 sm:py-20">
+                    <motion.div {...reveal} className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+                        <span className="text-[#C84214] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">
+                            En la práctica
+                        </span>
+                        <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                            Así de simple se ve en tu operación
+                        </h2>
+                    </motion.div>
+
+                    <div className="flex flex-col lg:flex-row lg:items-stretch gap-3">
+                        {flowSteps.map((s, i) => (
+                            <Fragment key={s.n}>
+                                <motion.div
+                                    {...reveal}
+                                    transition={{ delay: i * 0.08 }}
+                                    className="flex-1 flex flex-col items-center text-center rounded-2xl border border-[#3E3D3A] bg-[#161514] px-6 py-8 transition-colors duration-300 hover:border-[#C84214]/40"
+                                >
+                                    <Image
+                                        src={s.src}
+                                        alt=""
+                                        aria-hidden
+                                        width={s.w}
+                                        height={s.h}
+                                        quality={95}
+                                        className="h-16 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.28)] sm:h-[72px]"
+                                    />
+                                    <span className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">
+                                        Paso {s.n}
+                                    </span>
+                                    <h3 className="mt-1.5 text-lg font-bold text-white">{s.title}</h3>
+                                    <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{s.desc}</p>
+                                </motion.div>
+                                {i < flowSteps.length - 1 && (
+                                    <div className="flex items-center justify-center lg:px-1" aria-hidden>
+                                        <ArrowRight className="h-5 w-5 shrink-0 rotate-90 text-[#C84214]/60 lg:rotate-0" />
+                                    </div>
+                                )}
+                            </Fragment>
+                        ))}
                     </div>
                 </div>
             </section>
