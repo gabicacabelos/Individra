@@ -2,7 +2,6 @@ import {
     Navbar,
     HeroSection,
     ServicesSection,
-    ConnectionSection,
     CatalogSection,
     FAQSection,
     ContactSection,
@@ -25,7 +24,6 @@ export default function Home() {
             <ProcessWorkflowSection />
             <PainSolutionSection />
             <ServicesSection />
-            <ConnectionSection />
             <CatalogSection />
             <DifferentiatorsSection />
             <ComparativeSection />

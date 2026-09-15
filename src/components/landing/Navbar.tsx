@@ -43,7 +43,7 @@ export function Navbar() {
     const navLinks = [
         { href: '#inicio', label: 'Inicio' },
         { href: '#servicios', label: 'Servicios' },
-        { href: '#proceso', label: 'Proceso' },
+        { href: '#proceso-operativo', label: 'Proceso' },
         { href: '/logistica', label: 'Logística' },
         { href: '#soluciones', label: 'Soluciones' },
         { href: '#faq', label: 'FAQ' },
