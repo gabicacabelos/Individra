@@ -236,8 +236,8 @@ export function PainSolutionSection() {
                         src="/3d/icono-asistente-movil.png"
                         alt=""
                         aria-hidden
-                        width={512}
-                        height={471}
+                        width={560}
+                        height={550}
                         quality={95}
                         className="w-56 sm:w-64 h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
                     />
