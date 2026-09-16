@@ -295,6 +295,19 @@ export function LogisticaLanding() {
             <section className="relative border-y border-white/5 overflow-hidden">
                 <AmbientOrbs className="absolute inset-0 pointer-events-none opacity-60" />
                 <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-24">
+                    {/* Solo mobile: operario tapado de cajas (reemplaza al camión que estaba acá).
+                        En desktop la ilustración de la van va al costado, en el carrusel. */}
+                    <motion.div {...reveal} className="lg:hidden mb-6 flex justify-center">
+                        <Image
+                            src="/3d/operario-cajas.png"
+                            alt=""
+                            aria-hidden
+                            width={529}
+                            height={560}
+                            quality={95}
+                            className="w-48 sm:w-56 h-auto object-contain drop-shadow-[0_18px_40px_rgba(200,66,20,0.28)]"
+                        />
+                    </motion.div>
                     <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center max-w-3xl mx-auto">
                         Si esto pasa en tu operación, se puede automatizar.
                     </motion.h2>
