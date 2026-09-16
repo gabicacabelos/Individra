@@ -46,7 +46,7 @@ const workflowSteps = [
         id: '04',
         title: 'Agente de rescate en calle',
         subtitle: 'Resolución de Excepciones',
-        desc: '¿El chofer llegó y no hay nadie? El agente contacta al destinatario al instante por WhatsApp para reprogramar o coordinar la entrega con un vecino, mientras el camión todavía está en la puerta.',
+        desc: 'Cuando ni el aviso previo alcanzó y el chofer llega sin nadie en casa, entra la excepción: sin que el chofer frene a llamar, el sistema contacta al destinatario al instante por WhatsApp para reprogramar o coordinar con un vecino, mientras el camión todavía está en la puerta. Y el intento queda registrado como evidencia de que se hizo.',
         icon: LifeBuoy,
         tag: 'Recupera la entrega',
         pipeline: 'Parada en Destino ➔ Sin Timbre ➔ Protocolo Rescate',
