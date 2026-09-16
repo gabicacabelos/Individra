@@ -63,7 +63,7 @@ export function PropuestaComercialSection() {
                             width={433}
                             height={512}
                             quality={95}
-                            className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
+                            className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
                     </div>
                     <span className="text-[#B7B3B0] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">

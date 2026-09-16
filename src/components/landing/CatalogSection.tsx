@@ -67,8 +67,14 @@ export function CatalogSection() {
                     viewport={{ once: true }}
                     className="text-center mb-10 md:mb-16"
                 >
-                    {/* Icono 3D de marca, sin fondo */}
-                    <div className="mb-3 flex justify-center">
+                    {/* Icono 3D de marca — entra "volando" desde abajo al scrollear */}
+                    <motion.div
+                        className="mb-3 flex justify-center"
+                        initial={{ opacity: 0, y: 80, rotate: -8, scale: 0.9 }}
+                        whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ type: 'spring', stiffness: 90, damping: 12, mass: 0.8 }}
+                    >
                         <Image
                             src="/3d/icono-cohete.png"
                             alt=""
@@ -76,9 +82,9 @@ export function CatalogSection() {
                             width={512}
                             height={447}
                             quality={95}
-                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                            className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
-                    </div>
+                    </motion.div>
                     <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}

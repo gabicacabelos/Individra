@@ -151,7 +151,7 @@ export function ServicesSection() {
                             width={512}
                             height={498}
                             quality={95}
-                            className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
+                            className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
                     </div>
                     <span className="inline-block text-[#B7B3B0] text-sm font-semibold uppercase tracking-widest">
