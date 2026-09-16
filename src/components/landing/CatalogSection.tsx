@@ -66,13 +66,18 @@ export function CatalogSection() {
                     viewport={{ once: true }}
                     className="text-center mb-10 md:mb-16"
                 >
-                    {/* Icono 3D de marca — entra "volando" desde abajo al scrollear */}
+                    {/* Icono 3D de marca — entra "volando" desde abajo, bien evidente */}
                     <motion.div
                         className="mb-3 flex justify-center"
-                        initial={{ opacity: 0, y: 80, rotate: -8, scale: 0.9 }}
-                        whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
-                        viewport={{ once: true, margin: '-80px' }}
-                        transition={{ type: 'spring', stiffness: 90, damping: 12, mass: 0.8 }}
+                        initial={{ opacity: 0, y: 220, rotate: -18, scale: 0.5 }}
+                        whileInView={{
+                            opacity: [0, 1, 1],
+                            y: [220, -26, 0],
+                            rotate: [-18, 6, 0],
+                            scale: [0.5, 1.08, 1],
+                        }}
+                        viewport={{ once: true, amount: 0.6 }}
+                        transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], times: [0, 0.72, 1] }}
                     >
                         <Image
                             src="/3d/icono-cohete.png"
