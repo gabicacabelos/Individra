@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: 'Individra | Automatización con IA y Desarrollo de Software',
+    title: 'INDIVIDRA | Inteligencia Operativa y Automatización con IA',
     description:
-        'Soluciones de inteligencia artificial y automatización para empresas. Chatbots WhatsApp, agentes IA, desarrollo web y apps a medida. Buenos Aires, Argentina.',
+        'Construimos los sistemas que automatizan la operación de tu PyME: logística, atención y procesos. Inteligencia operativa e IA a medida en Buenos Aires, Argentina.',
     keywords: [
         'automatización con IA',
         'inteligencia artificial para empresas',
@@ -48,11 +48,11 @@ export const metadata: Metadata = {
         shortcut: '/favicon.ico',
     },
     openGraph: {
-        title: 'Individra | Automatización con IA y Desarrollo de Software',
+        title: 'INDIVIDRA | Inteligencia Operativa y Automatización con IA',
         description:
-            'Soluciones de inteligencia artificial y automatización para empresas. Chatbots, agentes IA y desarrollo a medida.',
+            'Sistemas que automatizan la operación de tu PyME: logística, atención y procesos. Para que tu empresa no dependa de una sola persona.',
         url: 'https://www.individratec.com',
-        siteName: 'Individra',
+        siteName: 'INDIVIDRA',
         locale: 'es_AR',
         type: 'website',
         images: [
@@ -60,14 +60,14 @@ export const metadata: Metadata = {
                 url: '/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'Individra - Automatización con IA',
+                alt: 'INDIVIDRA - Inteligencia Operativa',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Individra | Automatización con IA',
-        description: 'Soluciones de inteligencia artificial y automatización para empresas.',
+        title: 'INDIVIDRA | Inteligencia Operativa',
+        description: 'Sistemas que automatizan la operación de tu PyME, con IA a medida.',
         images: ['/og-image.png'],
     },
     robots: {
@@ -86,10 +86,12 @@ export const metadata: Metadata = {
 const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Individra',
-    description: 'Soluciones de inteligencia artificial y automatización para empresas',
+    name: 'INDIVIDRA',
+    alternateName: 'Individra',
+    slogan: 'Inteligencia Operativa',
+    description: 'Inteligencia operativa: sistemas de automatización e IA a medida para la operación de PyMEs en Argentina.',
     url: 'https://www.individratec.com',
-    logo: 'https://www.individratec.com/logo-individra-rebrand.png',
+    logo: 'https://www.individratec.com/logo-individra-icon.png',
     email: 'individratec@gmail.com',
     address: {
         '@type': 'PostalAddress',
