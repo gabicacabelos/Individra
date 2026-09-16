@@ -14,7 +14,6 @@ import {
     ClipboardList,
     Sparkles,
     ArrowRight,
-    Lightbulb,
     ChevronDown,
     Zap
 } from 'lucide-react'
@@ -277,8 +276,36 @@ export function CatalogSection() {
 
                         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C84214] to-[#A8340E] flex items-center justify-center">
-                                    <Lightbulb className="w-6 h-6 text-white" />
+                                {/* Lamparita que se enciende gradualmente al entrar en pantalla:
+                                    crossfade apagada -> encendida + glow cálido que crece. */}
+                                <div className="relative flex items-center justify-center w-14 h-16 shrink-0">
+                                    <motion.div
+                                        aria-hidden
+                                        className="absolute inset-0 rounded-full blur-xl"
+                                        style={{ background: 'radial-gradient(circle, rgba(255,170,60,0.75), transparent 70%)' }}
+                                        initial={{ opacity: 0, scale: 0.6 }}
+                                        whileInView={{ opacity: [0, 0, 0.9], scale: [0.6, 0.8, 1.2] }}
+                                        viewport={{ once: true, margin: '-80px' }}
+                                        transition={{ duration: 1.3, times: [0, 0.4, 1], ease: 'easeOut' }}
+                                    />
+                                    <motion.div
+                                        className="absolute inset-0 flex items-center justify-center"
+                                        initial={{ opacity: 1 }}
+                                        whileInView={{ opacity: 0 }}
+                                        viewport={{ once: true, margin: '-80px' }}
+                                        transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
+                                    >
+                                        <Image src="/3d/lampara-off.png" alt="" aria-hidden width={306} height={512} className="h-16 w-auto object-contain" />
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute inset-0 flex items-center justify-center"
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        viewport={{ once: true, margin: '-80px' }}
+                                        transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
+                                    >
+                                        <Image src="/3d/lampara-on.png" alt="" aria-hidden width={306} height={512} className="h-16 w-auto object-contain drop-shadow-[0_0_16px_rgba(255,170,60,0.65)]" />
+                                    </motion.div>
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold text-white">¿Tu caso es diferente?</h3>

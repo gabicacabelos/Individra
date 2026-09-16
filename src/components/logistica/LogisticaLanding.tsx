@@ -743,11 +743,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
             onMouseLeave={() => setIsPaused(false)}
         >
             <div className="grid grid-cols-[auto_1fr] gap-8 xl:gap-14 items-center">
-                {/* Ilustración estática a la izquierda.
-                    Asset de unDraw (licencia abierta, uso comercial sin atribución),
-                    recoloreado al violeta de marca. Va con <img> y no next/image
-                    porque es un SVG: optimizarlo no aporta y evita tener que
-                    habilitar dangerouslyAllowSVG en la config. */}
+                {/* Ilustración de la operación de reparto (render 3D premium). */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -757,12 +753,14 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                 >
                     {/* Glow detrás para asentar la ilustración sobre el fondo oscuro */}
                     <div aria-hidden className="absolute inset-0 -m-10 bg-[radial-gradient(circle_at_50%_50%,rgba(200,66,20,0.15),transparent_70%)] blur-2xl" />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src="/dolor-operacion.svg"
+                    <Image
+                        src="/3d/ilustracion-reparto.png"
                         alt=""
                         aria-hidden
-                        className="relative w-[440px] xl:w-[500px] h-auto"
+                        width={900}
+                        height={522}
+                        quality={95}
+                        className="relative w-[440px] xl:w-[500px] h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
                     />
                 </motion.div>
 
