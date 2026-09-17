@@ -84,7 +84,7 @@ function EcommerceNav() {
                 </div>
 
                 <Link
-                    href="/diagnostico"
+                    href="/diagnostico?origen=ecommerce"
                     className="px-4 py-2 bg-[#C84214] text-white text-xs sm:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
                 >
                     Diagnóstico gratuito
@@ -144,7 +144,7 @@ function Hero() {
                         className="mt-8 flex flex-wrap gap-3"
                     >
                         <Link
-                            href="/diagnostico"
+                            href="/diagnostico?origen=ecommerce"
                             className="group inline-flex items-center gap-2 px-6 py-3.5 bg-[#C84214] text-white font-bold rounded-xl shadow-lg shadow-[#C84214]/25 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                         >
                             Hacer el diagnóstico gratis
@@ -339,7 +339,7 @@ const PHASES: Phase[] = [
             {
                 icon: ShieldCheck,
                 title: 'Escudo de reputación',
-                desc: 'Detecta al cliente molesto antes de que deje la mala reseña y lo deriva a una solución; al cliente contento lo invita a puntuar. Clave para tu ranking en Mercado Libre.',
+                desc: 'Detecta al cliente molesto apenas aparece la señal y lo deriva a una solución real antes de que el problema escale a reclamo. Menos reclamos abiertos es lo que cuida tu ranking en Mercado Libre.',
             },
             {
                 icon: Repeat,
@@ -587,7 +587,7 @@ function FinalCTA() {
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                     <Link
-                        href="/diagnostico"
+                        href="/diagnostico?origen=ecommerce"
                         className="group inline-flex items-center gap-2 px-7 py-4 bg-[#C84214] text-white font-bold rounded-xl shadow-lg shadow-[#C84214]/25 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                     >
                         Hacer el diagnóstico gratis

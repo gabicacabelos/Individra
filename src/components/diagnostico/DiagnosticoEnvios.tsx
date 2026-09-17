@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import posthog from 'posthog-js'
 
@@ -332,6 +332,22 @@ export function DiagnosticoEnvios() {
     const [enviando, setEnviando] = useState(false)
     const [error, setError] = useState('')
 
+    /**
+     * De dónde vino la persona. La landing /ecommerce manda `?origen=ecommerce`;
+     * el link que se comparte directo en grupos de vendedores no trae nada y
+     * queda como 'directo'. Importa porque las dos fuentes miden cosas distintas:
+     * la landing vende multicanal + IA, el link directo mide interés en el
+     * monitoreo de envíos. Mezclar ambas señales invalidaría el experimento.
+     *
+     * Se lee de window en vez de useSearchParams para no forzar la página a
+     * dinámica ni envolverla en un Suspense: es solo analítica.
+     */
+    const [origen, setOrigen] = useState('directo')
+    useEffect(() => {
+        const param = new URLSearchParams(window.location.search).get('origen')
+        if (param) setOrigen(param)
+    }, [])
+
     // Todo se deriva del recorrido activo: nada de acumuladores que se desincronizan.
     const { activas, puntaje, maximo, porcentaje, nivel } = calcular(respuestas)
     const pregunta = activas[indice]
@@ -340,7 +356,7 @@ export function DiagnosticoEnvios() {
     const acciones = construirAcciones(respuestas, nivel)
 
     function empezar() {
-        track('diagnostico_iniciado')
+        track('diagnostico_iniciado', { origen })
         setPaso('preguntas')
     }
 
@@ -368,6 +384,7 @@ export function DiagnosticoEnvios() {
                 canal: nuevas.canal,
                 volumen: nuevas.volumen,
                 intencion: nuevas.intencion,
+                origen,
             })
             setPaso('resultado')
         }
@@ -397,6 +414,7 @@ export function DiagnosticoEnvios() {
                     porcentaje,
                     nivel,
                     respuestas,
+                    origen,
                 }),
             })
             if (!res.ok) throw new Error('No se pudo enviar')
@@ -406,6 +424,7 @@ export function DiagnosticoEnvios() {
                 puntaje,
                 porcentaje,
                 intencion: respuestas.intencion,
+                origen,
             })
             setPaso('listo')
         } catch {

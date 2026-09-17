@@ -30,6 +30,9 @@ export async function POST(req: Request) {
             puntajeMaximo: data.puntajeMaximo ?? null,
             porcentaje: data.porcentaje ?? null,
             nivel: data.nivel || '',
+            // De dónde vino: 'ecommerce' (landing) o 'directo' (link compartido).
+            // Las dos fuentes miden cosas distintas, no hay que mezclarlas.
+            origen: data.origen || 'directo',
             // Respuestas crudas: esto es la data de validación
             respuestas: data.respuestas || {},
             timestamp: new Date().toISOString(),
