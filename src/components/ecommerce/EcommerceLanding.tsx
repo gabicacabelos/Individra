@@ -321,11 +321,14 @@ function UnifiedInbox() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="relative rounded-2xl border border-[#3E3D3A] bg-[#121312]/90 backdrop-blur p-5 shadow-2xl shadow-black/40"
         >
-            {/* Render 3D asomando por la esquina superior izquierda. Se apoya
-                sobre el borde del panel en vez de taparlo: los avatares de
-                canales viven arriba a la derecha y los mensajes más abajo,
-                así que esta esquina es la única que queda libre. */}
-            <div className="absolute -top-20 -left-2 sm:-top-24 sm:-left-4 z-20 pointer-events-none">
+            {/* Render 3D asomando por el costado derecho. Va a media altura, no
+                arriba: los avatares de canales ocupan el ángulo superior derecho
+                y la respuesta de la IA el inferior, así que la franja del medio
+                es la única parte del flanco derecho que queda libre. */}
+            {/* El voladizo es responsivo a propósito: por debajo de xl el panel
+                llega casi al borde del viewport y la sección tiene overflow-hidden,
+                así que un saliente grande se recortaría. */}
+            <div className="hidden sm:block absolute top-[30%] -right-4 xl:-right-10 z-20 pointer-events-none">
                 <div
                     aria-hidden
                     className="absolute inset-0 m-4 rounded-full bg-[#C84214]/30 blur-2xl"
