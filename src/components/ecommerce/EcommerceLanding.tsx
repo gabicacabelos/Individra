@@ -328,20 +328,18 @@ function UnifiedInbox() {
             {/* El voladizo es responsivo a propósito: por debajo de xl el panel
                 llega casi al borde del viewport y la sección tiene overflow-hidden,
                 así que un saliente grande se recortaría. */}
-            <div className="hidden sm:block absolute top-[30%] -right-4 xl:-right-10 z-20 pointer-events-none">
-                <div
-                    aria-hidden
-                    className="absolute inset-0 m-4 rounded-full bg-[#C84214]/30 blur-2xl"
-                />
+            <div className="hidden sm:block absolute top-[26%] -right-4 xl:-right-10 2xl:-right-20 z-20 pointer-events-none">
                 <Float distance={8} duration={4.8} delay={0.3}>
+                    {/* Levitación pura, sin halo ni sombra proyectada: el emblema 3D
+                        del home principal sigue el mismo criterio. */}
                     <Image
                         src={ART.multicanal.src}
                         alt={ART.multicanal.alt}
                         width={ART.multicanal.w}
                         height={ART.multicanal.h}
                         quality={95}
-                        sizes="256px"
-                        className="relative h-24 sm:h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.6)]"
+                        sizes="384px"
+                        className="relative h-32 sm:h-36 xl:h-44 w-auto object-contain"
                         priority
                     />
                 </Float>
