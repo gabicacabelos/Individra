@@ -88,6 +88,12 @@ const ART = {
         h: 512,
         alt: 'Botón de encendido iluminado',
     },
+    monitorOferta: {
+        src: '/3d/ecommerce/monitor-oferta.webp',
+        w: 460,
+        h: 512,
+        alt: 'Monitor con la ficha de un producto y una etiqueta de descuento',
+    },
     /**
      * Render ancho con el 56% superior izquierdo completamente vacío
      * (medido sobre el canal alfa: 0% de píxeles con contenido ahí).
@@ -315,6 +321,29 @@ function UnifiedInbox() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="relative rounded-2xl border border-[#3E3D3A] bg-[#121312]/90 backdrop-blur p-5 shadow-2xl shadow-black/40"
         >
+            {/* Render 3D asomando por la esquina superior izquierda. Se apoya
+                sobre el borde del panel en vez de taparlo: los avatares de
+                canales viven arriba a la derecha y los mensajes más abajo,
+                así que esta esquina es la única que queda libre. */}
+            <div className="absolute -top-20 -left-2 sm:-top-24 sm:-left-4 z-20 pointer-events-none">
+                <div
+                    aria-hidden
+                    className="absolute inset-0 m-4 rounded-full bg-[#C84214]/30 blur-2xl"
+                />
+                <Float distance={8} duration={4.8} delay={0.3}>
+                    <Image
+                        src={ART.multicanal.src}
+                        alt={ART.multicanal.alt}
+                        width={ART.multicanal.w}
+                        height={ART.multicanal.h}
+                        quality={95}
+                        sizes="256px"
+                        className="relative h-24 sm:h-28 w-auto object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.6)]"
+                        priority
+                    />
+                </Float>
+            </div>
+
             {/* header del panel */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2">
@@ -469,7 +498,7 @@ const PHASES: Phase[] = [
         kicker: 'Durante la venta',
         items: [
             {
-                art: ART.multicanal,
+                art: ART.monitorOferta,
                 title: 'Centro multicanal',
                 desc: 'El corazón de Individra para ecommerce: unifica Mercado Libre, Tiendanube, Shopify, WhatsApp e Instagram en una sola bandeja. Una conversación por cliente, sin saltar entre apps ni perder el hilo.',
                 star: true,
