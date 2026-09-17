@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { ART } from '../constants/assets'
+import { WHATSAPP_HREF } from '../constants/contact'
 import { Float } from '../motion'
 
 /* ---------- CTA final ---------- */
@@ -38,7 +39,9 @@ export function FinalCTA() {
                                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </Link>
                             <a
-                                href="mailto:individratec@gmail.com"
+                                href={WHATSAPP_HREF}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-[#3E3D3A] text-[#E8E5DE] font-semibold hover:border-[#C84214]/50 hover:bg-white/5 transition-all duration-200"
                             >
                                 Hablar con el equipo

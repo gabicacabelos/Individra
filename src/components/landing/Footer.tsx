@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mail, MapPin, ArrowUpRight } from 'lucide-react'
+import { Mail, MapPin, ArrowUpRight, MessageCircle } from 'lucide-react'
 
 const navigation = {
     main: [
@@ -32,10 +32,19 @@ const navigation = {
 
 interface FooterProps {
     ctaHref?: string
+    /** Link del bloque de contacto. Default: el mailto que usa el resto del sitio. */
+    contactHref?: string
+    /** Texto visible junto al link de contacto. Default: la dirección de mail. */
+    contactLabel?: string
 }
 
-export function Footer({ ctaHref = '/#contacto' }: FooterProps = {}) {
+export function Footer({
+    ctaHref = '/#contacto',
+    contactHref = 'mailto:individratec@gmail.com',
+    contactLabel = 'individratec@gmail.com',
+}: FooterProps = {}) {
     const currentYear = new Date().getFullYear()
+    const isWhatsapp = contactHref.startsWith('https://wa.me')
 
     return (
         <footer className="relative bg-[#0B0D0E] border-t border-[#B7B3B0]/15 overflow-hidden">
@@ -156,13 +165,18 @@ export function Footer({ ctaHref = '/#contacto' }: FooterProps = {}) {
                         <ul className="space-y-4">
                             <li>
                                 <a
-                                    href="mailto:individratec@gmail.com"
+                                    href={contactHref}
+                                    {...(isWhatsapp ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                     className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-sm group"
                                 >
                                     <div className="w-8 h-8 rounded-lg bg-[#1E1D1C] border border-[#3E3D3A] flex items-center justify-center group-hover:border-[#C84214]/50 transition-colors">
-                                        <Mail className="w-4 h-4" />
+                                        {isWhatsapp ? (
+                                            <MessageCircle className="w-4 h-4" />
+                                        ) : (
+                                            <Mail className="w-4 h-4" />
+                                        )}
                                     </div>
-                                    individratec@gmail.com
+                                    {contactLabel}
                                 </a>
                             </li>
                             <li>

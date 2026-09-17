@@ -1,8 +1,10 @@
 'use client'
 
 import { Footer } from '@/components/landing/Footer'
+import { WHATSAPP_HREF } from './constants/contact'
 import { EcommerceNav } from './sections/Nav'
 import { Hero } from './sections/Hero'
+import { Metrics } from './sections/Metrics'
 import { ChannelStrip } from './sections/ChannelStrip'
 import { Capabilities } from './sections/Capabilities'
 import { StarSpotlight } from './sections/StarSpotlight'
@@ -25,12 +27,17 @@ export function EcommerceLanding() {
         <main id="main-content" className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE] antialiased">
             <EcommerceNav />
             <Hero />
+            <Metrics />
             <ChannelStrip />
             <Capabilities />
             <StarSpotlight />
             <FAQ />
             <FinalCTA />
-            <Footer ctaHref="/diagnostico?origen=ecommerce" />
+            <Footer
+                ctaHref="/diagnostico?origen=ecommerce"
+                contactHref={WHATSAPP_HREF}
+                contactLabel="+54 9 11 6015-2435 (WhatsApp)"
+            />
         </main>
     )
 }
