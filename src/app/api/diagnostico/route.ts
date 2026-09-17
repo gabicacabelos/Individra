@@ -27,6 +27,8 @@ export async function POST(req: Request) {
             whatsapp: data.contacto.whatsapp || '',
             // Resultado del diagnóstico
             puntaje: data.puntaje ?? null,
+            puntajeMaximo: data.puntajeMaximo ?? null,
+            porcentaje: data.porcentaje ?? null,
             nivel: data.nivel || '',
             // Respuestas crudas: esto es la data de validación
             respuestas: data.respuestas || {},
