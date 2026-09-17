@@ -3,14 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
     MessagesSquare,
-    MessageCircleQuestion,
-    ShoppingCart,
-    PackageSearch,
-    ShieldCheck,
-    Repeat,
     ArrowUpRight,
     Plus,
     Minus,
@@ -28,6 +23,88 @@ import { Footer } from '@/components/landing/Footer'
    ============================================================ */
 
 const BRAND = '#C84214'
+
+/* ---------- Íconos 3D ----------
+   Los .webp viven en /public/3d/ecommerce. Se recortaron al bounding box
+   real del alfa y se bajaron a 512px de lado mayor, así que el width/height
+   de acá es la proporción exacta del archivo: pasarlos mal deforma el render.
+   Solo se usa la familia "objeto" (cajas, carritos, teléfonos): los assets
+   con personajes ilustrados rompen la estética oscura del resto del sitio. */
+
+type Art = { src: string; w: number; h: number; alt: string }
+
+const ART = {
+    auriculares: {
+        src: '/3d/ecommerce/auriculares.webp',
+        w: 512,
+        h: 367,
+        alt: 'Auriculares de atención al cliente',
+    },
+    carritoLleno: {
+        src: '/3d/ecommerce/carrito-lleno.webp',
+        w: 448,
+        h: 512,
+        alt: 'Carrito de compras cargado de paquetes',
+    },
+    multicanal: {
+        src: '/3d/ecommerce/multicanal.webp',
+        w: 504,
+        h: 512,
+        alt: 'Teléfono con los íconos de los canales de venta y paquetes en tránsito',
+    },
+    cajaCronometro: {
+        src: '/3d/ecommerce/caja-cronometro.webp',
+        w: 512,
+        h: 446,
+        alt: 'Paquete junto a un cronómetro',
+    },
+    pagoCheck: {
+        src: '/3d/ecommerce/pago-check.webp',
+        w: 512,
+        h: 501,
+        alt: 'Mano con un teléfono y una operación aprobada',
+    },
+    cajaAbierta: {
+        src: '/3d/ecommerce/caja-abierta.webp',
+        w: 459,
+        h: 512,
+        alt: 'Caja abierta con productos saliendo',
+    },
+} satisfies Record<string, Art>
+
+/**
+ * Flotación continua para los renders 3D.
+ * Se desactiva si el sistema pide menos movimiento: una animación infinita
+ * es exactamente lo que molesta a quien activó esa preferencia.
+ */
+function Float({
+    children,
+    delay = 0,
+    distance = 6,
+    duration = 4,
+}: {
+    children: React.ReactNode
+    delay?: number
+    distance?: number
+    duration?: number
+}) {
+    const reduce = useReducedMotion()
+    if (reduce) return <>{children}</>
+    return (
+        <motion.div
+            animate={{ y: [-distance, distance] }}
+            transition={{
+                duration,
+                delay,
+                repeat: Infinity,
+                repeatType: 'reverse',
+                ease: 'easeInOut',
+            }}
+        >
+            {children}
+        </motion.div>
+    )
+}
 
 type Channel = {
     name: string
@@ -286,7 +363,7 @@ function ChannelStrip() {
 /* ---------- Capacidades: riel de ciclo de venta (layout propio) ---------- */
 
 type Capability = {
-    icon: typeof MessagesSquare
+    art: Art
     title: string
     desc: string
     star?: boolean
@@ -304,12 +381,12 @@ const PHASES: Phase[] = [
         kicker: 'Antes de la compra',
         items: [
             {
-                icon: MessageCircleQuestion,
+                art: ART.auriculares,
                 title: 'Vendedor 24/7',
                 desc: 'Contesta al instante preguntas de stock, talles, medidas, compatibilidad y envíos en publicaciones, web y WhatsApp. Aprende de tu catálogo y no deja una consulta sin respuesta.',
             },
             {
-                icon: ShoppingCart,
+                art: ART.carritoLleno,
                 title: 'Recuperador de carritos',
                 desc: 'Retoma automáticamente al que preguntó y no compró o abandonó el carrito, con un seguimiento oportuno y no invasivo que vuelve a abrir la conversación.',
             },
@@ -320,13 +397,13 @@ const PHASES: Phase[] = [
         kicker: 'Durante la venta',
         items: [
             {
-                icon: MessagesSquare,
+                art: ART.multicanal,
                 title: 'Centro multicanal',
                 desc: 'El corazón de Individra para ecommerce: unifica Mercado Libre, Tiendanube, Shopify, WhatsApp e Instagram en una sola bandeja. Una conversación por cliente, sin saltar entre apps ni perder el hilo.',
                 star: true,
             },
             {
-                icon: PackageSearch,
+                art: ART.cajaCronometro,
                 title: 'Estado del pedido automático',
                 desc: 'Avisa de forma proactiva dónde está cada envío y corta el "¿dónde está mi paquete?" antes de que el cliente lo pregunte. Apoyado en la fortaleza logística de Individra.',
             },
@@ -337,12 +414,12 @@ const PHASES: Phase[] = [
         kicker: 'Después de la compra',
         items: [
             {
-                icon: ShieldCheck,
+                art: ART.pagoCheck,
                 title: 'Escudo de reputación',
                 desc: 'Detecta al cliente molesto apenas aparece la señal y lo deriva a una solución real antes de que el problema escale a reclamo. Menos reclamos abiertos es lo que cuida tu ranking en Mercado Libre.',
             },
             {
-                icon: Repeat,
+                art: ART.cajaAbierta,
                 title: 'Post-venta y recompra',
                 desc: 'Gestiona cambios, devoluciones y garantías, y dispara campañas de recompra segmentadas para que el cliente vuelva sin trabajo manual de tu equipo.',
             },
@@ -385,8 +462,14 @@ function Capabilities() {
                                 </div>
 
                                 <div className="grid sm:grid-cols-2 gap-4">
-                                    {phase.items.map((cap) => (
-                                        <CapabilityCard key={cap.title} cap={cap} />
+                                    {phase.items.map((cap, ci) => (
+                                        <CapabilityCard
+                                            key={cap.title}
+                                            cap={cap}
+                                            // Desfasamos la flotación para que las seis
+                                            // tarjetas no suban y bajen en bloque.
+                                            delay={(pi * 2 + ci) * 0.45}
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -398,8 +481,7 @@ function Capabilities() {
     )
 }
 
-function CapabilityCard({ cap }: { cap: Capability }) {
-    const Icon = cap.icon
+function CapabilityCard({ cap, delay = 0 }: { cap: Capability; delay?: number }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -418,13 +500,31 @@ function CapabilityCard({ cap }: { cap: Capability }) {
                     Estrella
                 </span>
             )}
-            <div
-                className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${
-                    cap.star ? 'bg-[#C84214] text-white' : 'bg-[#C84214]/12 text-[#C84214] group-hover:scale-110 transition-transform'
-                }`}
-            >
-                <Icon className="w-5 h-5" />
+
+            {/* Render 3D sobre un halo terracota: el halo reemplaza al recuadro
+                de color del ícono plano, que contra un render con volumen
+                quedaba como una estampilla pegada. */}
+            <div className="relative mb-4 h-20 sm:h-24 flex items-end">
+                <div
+                    aria-hidden
+                    className="absolute left-2 bottom-1 w-20 h-20 rounded-full bg-[#C84214]/20 blur-2xl group-hover:bg-[#C84214]/35 transition-colors duration-500"
+                />
+                <Float delay={delay} distance={5} duration={4.2}>
+                    <Image
+                        src={cap.art.src}
+                        alt={cap.art.alt}
+                        width={cap.art.w}
+                        height={cap.art.h}
+                        quality={95}
+                        // Se muestra a ~96-134px, pero en pantallas 2x hace falta el
+                        // doble de píxeles reales o el render sale blando. El archivo
+                        // pesa 14-48KB, así que pedir el candidato grande no cuesta nada.
+                        sizes="256px"
+                        className="relative h-20 sm:h-24 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.28)] transition-transform duration-500 group-hover:scale-[1.08]"
+                    />
+                </Float>
             </div>
+
             <h4 className="text-lg font-bold text-[#E8E5DE] mb-2">{cap.title}</h4>
             <p className="text-sm text-[#B7B3B0] leading-relaxed text-pretty">{cap.desc}</p>
         </motion.div>
@@ -468,8 +568,29 @@ function StarSpotlight() {
                     </ul>
                 </div>
 
-                {/* Visual: canales convergiendo a un núcleo */}
+                {/* Visual: el render del módulo estrella + los canales convergiendo.
+                    Es el mismo asset que usa la tarjeta de "Centro multicanal" en la
+                    grilla de arriba: la repetición es deliberada, funciona como
+                    reconocimiento entre la tarjeta y su desarrollo. */}
                 <div className="relative rounded-2xl border border-[#3E3D3A] bg-[#121312]/80 p-8">
+                    <div className="relative flex justify-center pb-8">
+                        <div
+                            aria-hidden
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-[#C84214]/25 blur-3xl"
+                        />
+                        <Float distance={10} duration={6}>
+                            <Image
+                                src={ART.multicanal.src}
+                                alt={ART.multicanal.alt}
+                                width={ART.multicanal.w}
+                                height={ART.multicanal.h}
+                                quality={95}
+                                sizes="512px"
+                                className="relative h-44 sm:h-56 w-auto object-contain drop-shadow-[0_28px_55px_rgba(200,66,20,0.35)]"
+                            />
+                        </Float>
+                    </div>
+
                     <div className="grid grid-cols-3 gap-4 items-center">
                         {CHANNELS.slice(0, 3).map((c) => (
                             <ConvergeBadge key={c.name} channel={c} />
