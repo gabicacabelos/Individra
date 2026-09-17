@@ -912,7 +912,7 @@ export function EcommerceLanding() {
             <StarSpotlight />
             <FAQ />
             <FinalCTA />
-            <Footer />
+            <Footer ctaHref="/diagnostico?origen=ecommerce" />
         </main>
     )
 }

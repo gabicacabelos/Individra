@@ -7,18 +7,18 @@ import { Mail, MapPin, ArrowUpRight } from 'lucide-react'
 
 const navigation = {
     main: [
-        { name: 'Inicio', href: '#inicio' },
-        { name: 'Servicios', href: '#servicios' },
-        { name: 'Soluciones', href: '#soluciones' },
-        { name: 'Proceso', href: '#proceso-operativo' },
-        { name: 'FAQ', href: '#faq' },
-        { name: 'Contacto', href: '#contacto' },
+        { name: 'Inicio', href: '/#inicio' },
+        { name: 'Servicios', href: '/#servicios' },
+        { name: 'Soluciones', href: '/#soluciones' },
+        { name: 'Proceso', href: '/#proceso-operativo' },
+        { name: 'FAQ', href: '/#faq' },
+        { name: 'Contacto', href: '/#contacto' },
     ],
     services: [
-        { name: 'Automatización IA', href: '#servicios' },
-        { name: 'Agentes Virtuales', href: '#servicios' },
-        { name: 'Desarrollo Web', href: '#servicios' },
-        { name: 'Consultoría Tech', href: '#contacto' },
+        { name: 'Automatización IA', href: '/#servicios' },
+        { name: 'Agentes Virtuales', href: '/#servicios' },
+        { name: 'Desarrollo Web', href: '/#servicios' },
+        { name: 'Consultoría Tech', href: '/#contacto' },
     ],
     legal: [
         { name: 'Política de Privacidad', href: '/legal#privacidad' },
@@ -30,7 +30,11 @@ const navigation = {
     ],
 }
 
-export function Footer() {
+interface FooterProps {
+    ctaHref?: string
+}
+
+export function Footer({ ctaHref = '/#contacto' }: FooterProps = {}) {
     const currentYear = new Date().getFullYear()
 
     return (
@@ -45,7 +49,7 @@ export function Footer() {
                     {/* Brand Column */}
                     <div className="lg:col-span-1">
                         <motion.a
-                            href="#inicio"
+                            href="/#inicio"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
@@ -173,7 +177,7 @@ export function Footer() {
 
                         {/* CTA Button */}
                         <a
-                            href="#contacto"
+                            href={ctaHref}
                             className="group mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84214] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                         >
                             Diagnóstico gratuito
