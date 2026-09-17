@@ -70,6 +70,35 @@ const ART = {
         h: 512,
         alt: 'Caja abierta con productos saliendo',
     },
+    tiendaPhone: {
+        src: '/3d/ecommerce/tienda-phone.webp',
+        w: 317,
+        h: 512,
+        alt: 'Teléfono con la vidriera de una tienda y una bolsa de compras',
+    },
+    ideaBurbuja: {
+        src: '/3d/ecommerce/idea-burbuja.webp',
+        w: 479,
+        h: 512,
+        alt: 'Globo de diálogo con una lamparita encendida',
+    },
+    power: {
+        src: '/3d/ecommerce/power.webp',
+        w: 504,
+        h: 512,
+        alt: 'Botón de encendido iluminado',
+    },
+    /**
+     * Render ancho con el 56% superior izquierdo completamente vacío
+     * (medido sobre el canal alfa: 0% de píxeles con contenido ahí).
+     * Ese hueco no es decorativo, es el lienzo donde va el copy del cierre.
+     */
+    slabCarrito: {
+        src: '/3d/ecommerce/slab-carrito.webp',
+        w: 1024,
+        h: 715,
+        alt: 'Teléfono apoyado con un carrito de compras recibiendo paquetes',
+    },
 } satisfies Record<string, Art>
 
 /**
@@ -103,6 +132,35 @@ function Float({
         >
             {children}
         </motion.div>
+    )
+}
+
+/**
+ * Anillos que se expanden desde el centro, tipo ping de radar.
+ * Se usa detrás del botón de encendido: comunica "esto está prendido y
+ * escuchando" mejor que cualquier texto al lado.
+ */
+function Ripple({ count = 2 }: { count?: number }) {
+    const reduce = useReducedMotion()
+    if (reduce) return null
+    return (
+        <>
+            {Array.from({ length: count }).map((_, i) => (
+                <motion.span
+                    key={i}
+                    aria-hidden
+                    className="absolute inset-0 rounded-full border border-[#C84214]"
+                    initial={{ scale: 0.9, opacity: 0.55 }}
+                    animate={{ scale: 2.1, opacity: 0 }}
+                    transition={{
+                        duration: 2.8,
+                        delay: i * 1.4,
+                        repeat: Infinity,
+                        ease: 'easeOut',
+                    }}
+                />
+            ))}
+        </>
     )
 }
 
@@ -336,9 +394,23 @@ function ChannelStrip() {
     return (
         <section className="relative border-y border-white/5 bg-[#0B0D0E] py-8">
             <div className="max-w-6xl mx-auto px-6">
-                <p className="text-center text-xs uppercase tracking-[0.2em] text-[#B7B3B0] mb-6">
-                    Se conecta con donde ya vendés
-                </p>
+                <div className="flex items-center justify-center gap-3 mb-6">
+                    <span className="relative inline-flex w-9 h-9 shrink-0 items-center justify-center">
+                        <Ripple />
+                        <Image
+                            src={ART.power.src}
+                            alt={ART.power.alt}
+                            width={ART.power.w}
+                            height={ART.power.h}
+                            quality={95}
+                            sizes="96px"
+                            className="relative w-9 h-9 object-contain drop-shadow-[0_0_14px_rgba(200,66,20,0.5)]"
+                        />
+                    </span>
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#B7B3B0]">
+                        Se conecta con donde ya vendés
+                    </p>
+                </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                     {CHANNELS.map((c) => (
                         <div
@@ -534,6 +606,7 @@ function CapabilityCard({ cap, delay = 0 }: { cap: Capability; delay?: number })
 /* ---------- Deep-dive del módulo estrella ---------- */
 
 function StarSpotlight() {
+    const reduce = useReducedMotion()
     const points = [
         'Una sola bandeja para Mercado Libre, Tiendanube, Shopify, WhatsApp e Instagram.',
         'Una conversación por cliente: la IA reconoce el mismo comprador aunque escriba por dos canales.',
@@ -568,22 +641,28 @@ function StarSpotlight() {
                     </ul>
                 </div>
 
-                {/* Visual: el render del módulo estrella + los canales convergiendo.
-                    Es el mismo asset que usa la tarjeta de "Centro multicanal" en la
-                    grilla de arriba: la repetición es deliberada, funciona como
-                    reconocimiento entre la tarjeta y su desarrollo. */}
+                {/* Visual: la tienda como un solo lugar + los canales convergiendo.
+                    Cada render aparece una sola vez en toda la página; el de la
+                    tarjeta de "Centro multicanal" no se repite acá. */}
                 <div className="relative rounded-2xl border border-[#3E3D3A] bg-[#121312]/80 p-8">
                     <div className="relative flex justify-center pb-8">
-                        <div
+                        {/* Halo que respira: refuerza que el núcleo está activo */}
+                        <motion.div
                             aria-hidden
                             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-[#C84214]/25 blur-3xl"
+                            animate={
+                                reduce
+                                    ? undefined
+                                    : { opacity: [0.55, 1, 0.55], scale: [0.92, 1.06, 0.92] }
+                            }
+                            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
                         />
                         <Float distance={10} duration={6}>
                             <Image
-                                src={ART.multicanal.src}
-                                alt={ART.multicanal.alt}
-                                width={ART.multicanal.w}
-                                height={ART.multicanal.h}
+                                src={ART.tiendaPhone.src}
+                                alt={ART.tiendaPhone.alt}
+                                width={ART.tiendaPhone.w}
+                                height={ART.tiendaPhone.h}
                                 quality={95}
                                 sizes="512px"
                                 className="relative h-44 sm:h-56 w-auto object-contain drop-shadow-[0_28px_55px_rgba(200,66,20,0.35)]"
@@ -653,9 +732,35 @@ function FAQ() {
     return (
         <section id="faq" className="relative py-24 border-t border-white/5">
             <div className="max-w-3xl mx-auto px-6">
-                <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E5DE] text-center mb-12 text-balance">
-                    Preguntas frecuentes
-                </h2>
+                {/* La lamparita se enciende cuando hay una pregunta abierta:
+                    el ícono responde a lo que hace la persona en vez de ser adorno. */}
+                <div className="flex flex-col items-center mb-12">
+                    <div className="relative mb-4">
+                        <motion.div
+                            aria-hidden
+                            className="absolute inset-0 -m-1 rounded-full bg-[#C84214] blur-xl"
+                            animate={{ opacity: open !== null ? 0.5 : 0.14 }}
+                            transition={{ duration: 0.5 }}
+                        />
+                        <motion.div
+                            animate={{ scale: open !== null ? 1.06 : 1, y: open !== null ? -3 : 0 }}
+                            transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+                        >
+                            <Image
+                                src={ART.ideaBurbuja.src}
+                                alt={ART.ideaBurbuja.alt}
+                                width={ART.ideaBurbuja.w}
+                                height={ART.ideaBurbuja.h}
+                                quality={95}
+                                sizes="192px"
+                                className="relative h-16 sm:h-20 w-auto object-contain"
+                            />
+                        </motion.div>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E5DE] text-center text-balance">
+                        Preguntas frecuentes
+                    </h2>
+                </div>
                 <div className="space-y-3">
                     {FAQS.map((f, i) => {
                         const isOpen = open === i
@@ -696,30 +801,69 @@ function FAQ() {
 /* ---------- CTA final ---------- */
 
 function FinalCTA() {
+    const reduce = useReducedMotion()
     return (
-        <section className="relative py-24 border-t border-white/5">
+        <section className="relative py-24 border-t border-white/5 overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#C84214]/10 via-transparent to-transparent pointer-events-none" />
-            <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-                <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E5DE] leading-tight text-balance">
-                    Dejá de contestar lo mismo cien veces al día
-                </h2>
-                <p className="mt-4 text-[#B7B3B0] leading-relaxed text-pretty">
-                    Empezá por el diagnóstico gratuito y descubrí qué parte de tu atención puede funcionar sola.
-                </p>
-                <div className="mt-8 flex flex-wrap justify-center gap-3">
-                    <Link
-                        href="/diagnostico?origen=ecommerce"
-                        className="group inline-flex items-center gap-2 px-7 py-4 bg-[#C84214] text-white font-bold rounded-xl shadow-lg shadow-[#C84214]/25 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
+
+            {/* El copy y el render comparten un mismo contenedor de proporción fija.
+                En desktop el texto se posiciona en porcentajes sobre el hueco vacío
+                del render, así que acompaña la imagen a cualquier ancho. En mobile
+                el mismo bloque vuelve al flujo normal, arriba de la imagen. */}
+            <div className="relative z-10 max-w-5xl mx-auto px-6">
+                <div className="relative">
+                    <div className="md:absolute md:left-[3%] md:top-[7%] md:w-[52%] mb-10 md:mb-0">
+                        <h2 className="text-3xl md:text-[1.75rem] lg:text-4xl font-bold text-[#E8E5DE] leading-tight text-balance">
+                            Dejá de contestar lo mismo cien veces al día
+                        </h2>
+                        <p className="mt-3 lg:mt-4 text-sm lg:text-base text-[#B7B3B0] leading-relaxed text-pretty">
+                            Empezá por el diagnóstico gratuito y descubrí qué parte de tu
+                            atención puede funcionar sola.
+                        </p>
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <Link
+                                href="/diagnostico?origen=ecommerce"
+                                className="group inline-flex items-center gap-2 px-6 py-3.5 bg-[#C84214] text-white font-bold rounded-xl shadow-lg shadow-[#C84214]/25 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
+                            >
+                                Hacer el diagnóstico gratis
+                                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </Link>
+                            <a
+                                href="mailto:individratec@gmail.com"
+                                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-[#3E3D3A] text-[#E8E5DE] font-semibold hover:border-[#C84214]/50 hover:bg-white/5 transition-all duration-200"
+                            >
+                                Hablar con el equipo
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Resplandor bajo el carrito, del lado donde caen los paquetes */}
+                    <motion.div
+                        aria-hidden
+                        className="absolute right-[12%] bottom-[6%] w-1/3 h-1/4 rounded-full bg-[#C84214]/30 blur-3xl pointer-events-none"
+                        animate={reduce ? undefined : { opacity: [0.4, 0.85, 0.4] }}
+                        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+
+                    {/* Entra con un rebote corto: los paquetes leen como que aterrizan */}
+                    <motion.div
+                        initial={reduce ? undefined : { opacity: 0, y: 44 }}
+                        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ type: 'spring', stiffness: 90, damping: 13 }}
                     >
-                        Hacer el diagnóstico gratis
-                        <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </Link>
-                    <a
-                        href="mailto:individratec@gmail.com"
-                        className="inline-flex items-center gap-2 px-7 py-4 rounded-xl border border-[#3E3D3A] text-[#E8E5DE] font-semibold hover:border-[#C84214]/50 hover:bg-white/5 transition-all duration-200"
-                    >
-                        Hablar con el equipo
-                    </a>
+                        <Float distance={7} duration={5.5}>
+                            <Image
+                                src={ART.slabCarrito.src}
+                                alt={ART.slabCarrito.alt}
+                                width={ART.slabCarrito.w}
+                                height={ART.slabCarrito.h}
+                                quality={95}
+                                sizes="(max-width: 768px) 100vw, 900px"
+                                className="relative w-full h-auto object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.55)]"
+                            />
+                        </Float>
+                    </motion.div>
                 </div>
             </div>
         </section>
