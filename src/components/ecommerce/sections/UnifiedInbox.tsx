@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { MessagesSquare, Sparkles, Check } from 'lucide-react'
+import { MessagesSquare, Sparkles, Check, Zap } from 'lucide-react'
 import { ART } from '../constants/assets'
 import { CHANNELS } from '../constants/channels'
 import { Float } from '../motion'
@@ -109,6 +109,15 @@ export function UnifiedInbox() {
                     <p className="text-[#E8E5DE] text-sm leading-snug">
                         Talle L: queda 1 en stock. Pedido #4821: en camino, llega mañana. Cambio de color: iniciado.
                     </p>
+                    {/* Sin esto, quien tiene 100+ SKUs desconfía: "¿de dónde saca que
+                        queda 1?". La etiqueta deja claro que lee el catálogo real,
+                        no que inventa disponibilidad. */}
+                    <div className="mt-2 pt-2 border-t border-[#C84214]/20 flex items-center gap-1.5">
+                        <Zap className="w-3 h-3 text-[#E8A07E]" />
+                        <span className="text-[10px] text-[#E8A07E]">
+                            Sincronizado en tiempo real con tu catálogo / ERP
+                        </span>
+                    </div>
                 </div>
                 <span className="mt-0.5 w-6 h-6 shrink-0 rounded-full bg-[#C84214] flex items-center justify-center">
                     <Check className="w-3.5 h-3.5 text-white" />
