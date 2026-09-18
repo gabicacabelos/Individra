@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 
 /**
- * Recibe el autodiagnóstico de envíos de Mercado Libre.
+ * Recibe el autodiagnóstico de atención y envíos (Mercado Libre, o tienda
+ * propia / multicanal — ver DiagnosticoEnvios.tsx).
  *
  * El objetivo de este endpoint no es solo capturar el lead: las respuestas son
  * la entrevista de validación que no pudimos hacer a mano (volumen, tasa de
@@ -33,10 +34,17 @@ export async function POST(req: Request) {
             // De dónde vino: 'ecommerce' (landing) o 'directo' (link compartido).
             // Las dos fuentes miden cosas distintas, no hay que mezclarlas.
             origen: data.origen || 'directo',
+            // Qué cuestionario respondió: 'meli' (envíos) u 'otros' (tienda
+            // propia / multicanal). Determina también el "source" para no
+            // mezclar ambas cohortes en el análisis.
+            plataforma: data.plataforma || 'meli',
             // Respuestas crudas: esto es la data de validación
             respuestas: data.respuestas || {},
             timestamp: new Date().toISOString(),
-            source: 'autodiagnostico-envios-ml',
+            source:
+                data.plataforma === 'otros'
+                    ? 'autodiagnostico-atencion-multicanal'
+                    : 'autodiagnostico-envios-ml',
         }
 
         // Webhook de n8n — no crítico, con timeout corto para no bloquear la respuesta
