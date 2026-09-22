@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://individratec.com/sitemap.xml
+Sitemap: https://www.individratec.com/sitemap.xml
