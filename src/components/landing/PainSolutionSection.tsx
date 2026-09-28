@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
     Phone,
     FileWarning,
@@ -14,6 +15,7 @@ import {
     Brain,
     UserCheck,
     ArrowDown,
+    ArrowRight,
 } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ChatStatusDemo, OcrDemo, NotifyDemo, MemoryContextDemo, HandoffDemo } from '@/components/ui/micro-demos'
@@ -289,6 +291,22 @@ export function PainSolutionSection() {
                         )
                     })}
                 </div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 }}
+                    className="mt-14 flex flex-col items-center text-center"
+                >
+                    <Link
+                        href="/diagnostico"
+                        className="group inline-flex items-center gap-2.5 px-8 py-4 bg-[#C84214] text-white text-base sm:text-lg font-bold rounded-full shadow-lg shadow-[#C84214]/25 hover:bg-[#B3390F] hover:shadow-[#C84214]/40 active:scale-[0.98] transition-all duration-200"
+                    >
+                        Hacer el autodiagnóstico en 2 minutos
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                    </Link>
+                </motion.div>
             </div>
         </section>
     )

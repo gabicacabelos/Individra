@@ -11,9 +11,6 @@ const ProcessWorkflowSection = dynamic(() =>
 const PainSolutionSection = dynamic(() =>
     import('@/components/landing/PainSolutionSection').then((m) => m.PainSolutionSection)
 )
-const DiagnosticHookSection = dynamic(() =>
-    import('@/components/landing/DiagnosticHookSection').then((m) => m.DiagnosticHookSection)
-)
 const ServicesSection = dynamic(() =>
     import('@/components/landing/ServicesSection').then((m) => m.ServicesSection)
 )
@@ -50,7 +47,6 @@ export default function Home() {
             <IntegrationsBar />
             <ProcessWorkflowSection />
             <PainSolutionSection />
-            <DiagnosticHookSection />
             <ServicesSection />
             <CatalogSection />
             <DifferentiatorsSection />
