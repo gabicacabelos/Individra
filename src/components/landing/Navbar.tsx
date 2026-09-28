@@ -45,6 +45,7 @@ export function Navbar() {
         { href: '#servicios', label: 'Servicios' },
         { href: '#proceso-operativo', label: 'Proceso' },
         { href: '/logistica', label: 'Logística' },
+        { href: '/diagnostico', label: 'Autodiagnóstico', highlight: true },
         { href: '#soluciones', label: 'Soluciones' },
         { href: '#faq', label: 'FAQ' },
     ]
@@ -76,14 +77,21 @@ export function Navbar() {
                     </a>
 
                     {/* Desktop Links */}
-                    <div className="hidden md:flex items-center gap-6 lg:gap-8">
+                    <div className="hidden md:flex items-center gap-5 lg:gap-7">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
                                 onClick={(e) => handleNavClick(e, link.href)}
-                                className="text-neutral-400 hover:text-[#E8E5DE] transition-colors duration-200 text-sm font-medium flex items-center h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full"
+                                className={`transition-colors duration-200 text-sm font-medium flex items-center gap-1.5 h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full ${
+                                    link.highlight
+                                        ? 'text-[#E8E5DE] hover:text-white font-semibold'
+                                        : 'text-neutral-400 hover:text-[#E8E5DE]'
+                                }`}
                             >
+                                {link.highlight && (
+                                    <span className="h-1.5 w-1.5 rounded-full bg-[#C84214]" />
+                                )}
                                 {link.label}
                             </a>
                         ))}
@@ -121,8 +129,13 @@ export function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
-                                    className="text-neutral-300 hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer"
+                                    className={`hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer flex items-center gap-2 ${
+                                        link.highlight ? 'text-[#E8E5DE] font-semibold' : 'text-neutral-300'
+                                    }`}
                                 >
+                                    {link.highlight && (
+                                        <span className="h-2 w-2 rounded-full bg-[#C84214]" />
+                                    )}
                                     {link.label}
                                 </a>
                             ))}

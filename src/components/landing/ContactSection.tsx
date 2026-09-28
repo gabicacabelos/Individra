@@ -117,21 +117,6 @@ export function ContactSection() {
                     >
                         Elegí un horario en el calendario. En 30 minutos revisamos cómo entran tus pedidos, dónde se traban las entregas o la administración, y qué fugas de capital podés tapar primero sin cambiar tu sistema actual.
                     </motion.p>
-                    <motion.div
-                        initial={{ opacity: 0, y: 14 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-5"
-                    >
-                        <a
-                            href="/diagnostico"
-                            className="inline-flex items-center gap-2 rounded-full border border-[#3E3D3A] bg-[#151719] px-4 py-2 text-xs sm:text-sm font-medium text-[#E8E5DE] hover:border-[#C84214] hover:text-white transition-colors"
-                        >
-                            <span className="h-2 w-2 rounded-full bg-[#C84214]" />
-                            ¿Preferís calcular primero cuánto te cuestan las entregas fallidas? Hacé el autodiagnóstico en 2 minutos →
-                        </a>
-                    </motion.div>
                 </motion.div>
 
                 {/* Contact Form */}

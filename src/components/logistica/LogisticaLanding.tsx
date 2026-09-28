@@ -169,14 +169,23 @@ export function LogisticaLanding() {
                             <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={640} height={125} quality={95} sizes="(max-width: 640px) 200px, 260px" className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
                         </Link>
                     </div>
-                    <a
-                        href={WHATSAPP_HREF}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs sm:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-lg hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
-                    >
-                        Diagnóstico gratuito
-                    </a>
+                    <div className="flex items-center gap-3 sm:gap-5">
+                        <Link
+                            href="/diagnostico?origen=logistica"
+                            className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#E8E5DE] hover:text-white transition-colors"
+                        >
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#C84214]" />
+                            Autodiagnóstico (2 min)
+                        </Link>
+                        <a
+                            href={WHATSAPP_HREF}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs sm:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-lg hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap"
+                        >
+                            Diagnóstico gratuito
+                        </a>
+                    </div>
                 </div>
             </motion.header>
 

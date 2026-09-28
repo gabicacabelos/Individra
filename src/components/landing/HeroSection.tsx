@@ -116,10 +116,11 @@ export function HeroSection() {
                                     <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Pedí tu diagnóstico gratuito</span>
                                 </a>
                                 <a
-                                    href="#servicios"
-                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-[#B7B3B0]/40 text-[#E8E5DE] text-sm sm:text-base font-semibold rounded-full hover:bg-[#B7B3B0]/10 hover:border-[#E8E5DE] active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center"
+                                    href="/diagnostico?origen=home_hero"
+                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-[#C84214]/50 bg-[#151719]/80 text-[#E8E5DE] text-sm sm:text-base font-semibold rounded-full hover:bg-[#C84214]/15 hover:border-[#C84214] hover:text-white active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2"
                                 >
-                                    Ver servicios
+                                    <span className="h-2 w-2 rounded-full bg-[#C84214]" />
+                                    Autodiagnóstico en 2 min
                                 </a>
                             </div>
                         </motion.div>

@@ -836,6 +836,12 @@ export function DiagnosticoEnvios() {
             if (paramOrigen === 'logistica') {
                 setPlataforma('logistica')
                 setPaso('intro')
+            } else if (paramOrigen === 'home_meli') {
+                setPlataforma('meli')
+                setPaso('intro')
+            } else if (paramOrigen === 'home_tienda') {
+                setPlataforma('otros')
+                setPaso('intro')
             }
         }
     }, [])

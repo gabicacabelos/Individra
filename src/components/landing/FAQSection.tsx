@@ -20,7 +20,7 @@ const faqs = [
     {
         id: 3,
         question: '¿Qué pasa cuando un destinatario hace un reclamo complejo o el bot no puede resolverlo?',
-        answer: 'El sistema nunca encierra al cliente en un bucle. Si una persona escribe por tercera vez sobre el mismo envío, no se resuelve en tres intercambios o menciona palabras críticas (como extravío, robo o denuncia), el asistente se corre en el acto y deriva el caso a tu equipo por Telegram con todo el historial resumido para que tome el control una persona.',
+        answer: 'El sistema nunca encierra al cliente en un bucle. Si una persona escribe por tercera vez sobre el mismo envío, no se resuelve en tres intercambios o menciona palabras críticas (como extravío, robo o denuncia), el asistente se silencia en el acto y pasa la conversación a la bandeja de atención de tu equipo con el resumen de lo que marcó el chofer y lo que reclama el destinatario, para que un operador humano siga hablando desde el mismo WhatsApp.',
     },
     {
         id: 4,
