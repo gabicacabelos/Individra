@@ -271,14 +271,7 @@ export function CatalogSection() {
                         className="relative p-6 sm:p-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] overflow-hidden"
                     >
                         {/* Ambient background */}
-                        <motion.div
-                            animate={{
-                                x: [0, 100, 0],
-                                opacity: [0.06, 0.12, 0.06],
-                            }}
-                            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute top-0 right-0 w-64 h-64 bg-[#C84214] rounded-full blur-[100px] opacity-10"
-                        />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C84214] rounded-full blur-[100px] opacity-10 animate-[catalog-glow_8s_ease-in-out_infinite]" />
 
                         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-4">

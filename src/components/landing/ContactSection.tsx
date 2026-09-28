@@ -128,18 +128,7 @@ export function ContactSection() {
                 >
                     <div className="relative">
                         {/* Animated glow */}
-                        <motion.div
-                            animate={{
-                                opacity: [0.2, 0.4, 0.2],
-                                scale: [1, 1.02, 1]
-                            }}
-                            transition={{
-                                duration: 4,
-                                repeat: Infinity,
-                                ease: 'easeInOut'
-                            }}
-                            className="absolute inset-0 bg-gradient-to-r from-[#C84214]/15 to-[#3E3D3A]/20 rounded-2xl sm:rounded-3xl blur-xl"
-                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#C84214]/15 to-[#3E3D3A]/20 rounded-2xl sm:rounded-3xl blur-xl animate-[contact-glow_4s_ease-in-out_infinite]" />
                         <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#3E3D3A] bg-[#222120]/95 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex flex-col items-center justify-center calendly-container">
                             {shouldLoadCalendly ? (
                                 <InlineWidget

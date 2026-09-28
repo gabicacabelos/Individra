@@ -4,6 +4,7 @@ import './globals.css'
 import { PostHogProvider } from '@/providers/PostHogProvider'
 import { CookieConsent } from '@/components/CookieConsent'
 import { CustomCursor } from '@/components/ui/CustomCursor'
+import { OffscreenAnimationPauser } from '@/components/OffscreenAnimationPauser'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -138,6 +139,7 @@ export default function RootLayout({
                     <CustomCursor />
                     {children}
                     <CookieConsent />
+                    <OffscreenAnimationPauser />
                 </PostHogProvider>
             </body>
         </html>

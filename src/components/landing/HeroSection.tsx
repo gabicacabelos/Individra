@@ -59,20 +59,11 @@ export function HeroSection() {
                         style={{ y: textY, scale }}
                         className="flex-1 text-center lg:text-left"
                     >
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, ease: 'easeOut' }}
-                        >
+                        <div className="hero-intro">
                             {/* Eyebrow — limpio, técnico y sin cartelito de IA slop */}
-                            <motion.p
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-xs sm:text-sm font-mono font-medium tracking-[0.2em] uppercase text-[#B7B3B0] mb-4"
-                            >
+                            <p className="hero-eyebrow text-xs sm:text-sm font-mono font-medium tracking-[0.2em] uppercase text-[#B7B3B0] mb-4">
                                 Ingeniería de Software & IA B2B
-                            </motion.p>
+                            </p>
 
                             {/* Title */}
                             <h1 className="text-[1.7rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}>
@@ -123,7 +114,7 @@ export function HeroSection() {
                                     Autodiagnóstico en 2 min
                                 </a>
                             </div>
-                        </motion.div>
+                        </div>
                     </motion.div>
 
                     {/* Right Content - Free-floating 3D Emblem in space */}
@@ -135,16 +126,8 @@ export function HeroSection() {
                         className="hidden lg:flex flex-1 justify-center items-center relative w-full h-[580px]"
                     >
                         {/* Free-Floating 3D Emblem Container - Levitación suave y pura sin efectos de luz */}
-                        <motion.div
-                            animate={{
-                                y: [0, -14, 0],
-                            }}
-                            transition={{
-                                duration: 4.5,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                            }}
-                            className="relative z-20 w-[490px] h-[490px] xl:w-[540px] xl:h-[540px] flex items-center justify-center pointer-events-none"
+                        <div
+                            className="anim-float-y [--float-y:-14px] [--float-dur:4.5s] relative z-20 w-[490px] h-[490px] xl:w-[540px] xl:h-[540px] flex items-center justify-center pointer-events-none"
                         >
                             {/* Emblema 3D levitando, completo como antes y sin emisiones de luz */}
                             <div className="relative w-[460px] h-[460px] xl:w-[510px] xl:h-[510px]">
@@ -158,7 +141,7 @@ export function HeroSection() {
                                     priority
                                 />
                             </div>
-                        </motion.div>
+                        </div>
                     </motion.div>
                 </div>
             </div>
@@ -171,14 +154,10 @@ export function HeroSection() {
                 transition={{ delay: 1.5 }}
                 className="absolute bottom-8 left-1/2 -translate-x-1/2"
             >
-                <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="flex flex-col items-center gap-2 text-neutral-500"
-                >
+                <div className="anim-float-y [--float-y:10px] [--float-dur:2s] flex flex-col items-center gap-2 text-neutral-500">
                     <span className="text-xs uppercase tracking-widest">Scroll</span>
                     <ChevronDown size={20} />
-                </motion.div>
+                </div>
             </motion.div>
         </section>
     )

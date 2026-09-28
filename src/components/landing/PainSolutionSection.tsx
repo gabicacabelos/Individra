@@ -81,19 +81,15 @@ export function PainSolutionSection() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#C84214]/10 via-transparent to-transparent pointer-events-none" />
             {!isMobile && (
                 <>
-                    <motion.div
+                    <div
                         aria-hidden
-                        className="absolute top-24 -left-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none"
+                        className="absolute top-24 -left-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none animate-[pain-blob-a_20s_ease-in-out_infinite]"
                         style={{ background: 'radial-gradient(circle, rgba(110,108,106,0.22) 0%, rgba(62,61,58,0.12) 50%, transparent 70%)' }}
-                        animate={{ x: [0, 50, 0], y: [0, 40, 0] }}
-                        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
                     />
-                    <motion.div
+                    <div
                         aria-hidden
-                        className="absolute bottom-24 -right-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none"
+                        className="absolute bottom-24 -right-24 w-[28rem] h-[28rem] rounded-full blur-[130px] pointer-events-none animate-[pain-blob-b_24s_ease-in-out_infinite]"
                         style={{ background: 'radial-gradient(circle, rgba(200,66,20,0.15) 0%, transparent 70%)' }}
-                        animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
-                        transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
                     />
                 </>
             )}
@@ -194,9 +190,9 @@ export function PainSolutionSection() {
                     transition={{ delay: 0.4, type: 'spring', stiffness: 200, damping: 14 }}
                     className="relative flex items-center justify-center w-9 h-9 rounded-full border border-[#B7B3B0]/30 bg-[#262523] backdrop-blur-sm"
                 >
-                    <motion.div animate={{ y: [0, 3, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
+                    <div className="anim-float-y [--float-y:3px] [--float-dur:1.6s]">
                         <ArrowDown className="w-4 h-4 text-[#B7B3B0]" />
-                    </motion.div>
+                    </div>
                 </motion.div>
             </div>
 

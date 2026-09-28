@@ -345,3 +345,70 @@
         cursor: none !important;
     }
 }
+
+/* ============================================================
+   Loops decorativos y entrada del hero, en CSS en vez de framer-motion.
+   Mismas curvas y duraciones que tenian con framer (su easeInOut es
+   exactamente el ease-in-out de CSS). En CSS corren en el compositor:
+   no hay JS por frame y los elementos con blur no se re-rasterizan.
+   ============================================================ */
+
+/* Entrada del hero: visible desde el primer paint, sin esperar a la
+   hidratacion (antes el texto quedaba en opacity:0 hasta cargar el JS). */
+@keyframes hero-intro {
+    from { opacity: 0; transform: translateX(-50px); }
+}
+
+.hero-intro {
+    animation: hero-intro 0.8s ease-out both;
+}
+
+@keyframes hero-eyebrow-fade {
+    from { opacity: 0; }
+}
+
+@keyframes hero-eyebrow-rise {
+    from { transform: translateY(15px); }
+}
+
+/* El rise replica el spring por defecto de framer (stiffness 500, damping 25). */
+.hero-eyebrow {
+    animation:
+        hero-eyebrow-fade 0.3s cubic-bezier(0.25, 0.1, 0.35, 1) 0.2s both,
+        hero-eyebrow-rise 0.43s linear(0, 0.069, 0.231, 0.433, 0.635, 0.81, 0.946, 1.04, 1.095, 1.118, 1.118, 1.102, 1.079, 1.055, 1.032, 1.013, 1, 0.991, 0.987, 0.986, 0.987, 0.989, 0.992, 0.995, 1) 0.2s both;
+}
+
+/* Flotacion vertical: --float-y es el desplazamiento en el punto medio. */
+@keyframes float-y {
+    50% { transform: translateY(var(--float-y)); }
+}
+
+.anim-float-y {
+    animation: float-y var(--float-dur) ease-in-out infinite;
+}
+
+@keyframes pain-blob-a {
+    50% { transform: translate(50px, 40px); }
+}
+
+@keyframes pain-blob-b {
+    50% { transform: translate(-50px, -30px); }
+}
+
+@keyframes catalog-glow {
+    0%, 100% { transform: translateX(0); opacity: 0.06; }
+    50% { transform: translateX(100px); opacity: 0.12; }
+}
+
+@keyframes contact-glow {
+    0%, 100% { transform: scale(1); opacity: 0.2; }
+    50% { transform: scale(1.02); opacity: 0.4; }
+}
+
+/* Secciones fuera de pantalla: se congelan sus animaciones CSS (ver
+   OffscreenAnimationPauser). Nadie las ve, asi que no cambia nada visible. */
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+    animation-play-state: paused !important;
+}
