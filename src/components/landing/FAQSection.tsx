@@ -9,28 +9,28 @@ import { MobileFAQBackground } from '@/components/ui/MobileBackgroundEffects'
 const faqs = [
     {
         id: 1,
-        question: '¿Qué tipo de empresas pueden beneficiarse de la IA?',
-        answer: 'Cualquier empresa que maneje procesos repetitivos, atención al cliente, gestión de datos o quiera escalar sus operaciones. Desde startups hasta grandes corporaciones, la IA se adapta a las necesidades específicas de cada negocio.',
+        question: '¿Tengo que cambiar mi sistema actual o dejar de usar mis planillas de Excel?',
+        answer: 'No. Nos montamos sobre lo que ya usás hoy: si armás el reparto en una planilla de Excel o Google Sheets, la leemos automáticamente cada día; si tenés un ERP o sistema de gestión propio, nos conectamos sin interrumpir la operatoria. Tu administración sigue cargando los datos donde siempre.',
     },
     {
         id: 2,
-        question: '¿Cuánto tiempo toma implementar una solución de IA?',
-        answer: 'Depende del alcance: no es un chatbot genérico, es un sistema diseñado para tu operación. Arrancamos con el diagnóstico gratuito para entender tu proceso real, documentamos el sistema antes de tocar código, y lo activamos módulo por módulo, así ves resultados sin esperar a que todo esté terminado.',
+        question: '¿Los choferes o fleteros tienen que instalar alguna aplicación en el celular?',
+        answer: 'No hay que instalar ninguna app ni comprar hardware. Sabemos que el fletero tercerizado rechaza cualquier aplicación que le consuma batería, datos o lo rastree todo el día. Todo corre por Telegram o mediante un link web diario que abre en el navegador con un toque, sin usuario ni contraseña.',
     },
     {
         id: 3,
-        question: '¿Necesito conocimientos técnicos para usar las soluciones?',
-        answer: 'No. Diseñamos interfaces intuitivas y proporcionamos capacitación completa. Nuestras soluciones están pensadas para que cualquier miembro de tu equipo pueda usarlas sin necesidad de conocimientos de programación.',
+        question: '¿Qué pasa cuando un destinatario hace un reclamo complejo o el bot no puede resolverlo?',
+        answer: 'El sistema nunca encierra al cliente en un bucle. Si una persona escribe por tercera vez sobre el mismo envío, no se resuelve en tres intercambios o menciona palabras críticas (como extravío, robo o denuncia), el asistente se corre en el acto y deriva el caso a tu equipo por Telegram con todo el historial resumido para que tome el control una persona.',
     },
     {
         id: 4,
-        question: '¿Cómo se integra con mis sistemas actuales?',
-        answer: 'Trabajamos con APIs y conectores para integrar nuestras soluciones con tu CRM, ERP, WhatsApp Business, email, bases de datos y cualquier otro sistema que utilices. La integración es transparente y sin interrupciones en tu operación.',
+        question: '¿Dónde se guardan los datos de mis clientes, mis rutas y mis precios?',
+        answer: 'En un servidor dedicado y aislado exclusivamente para tu empresa en Hetzner (Alemania), bajo normativa europea GDPR y Ley 25.326 de Protección de Datos Personales. No mezclamos bases de datos entre clientes ni usamos tu información para entrenar modelos externos. Los datos son 100% tuyos y podés exportarlos cuando quieras.',
     },
     {
         id: 5,
-        question: '¿Qué soporte ofrecen después de la implementación?',
-        answer: 'Ofrecemos soporte continuo, monitoreo de rendimiento y actualizaciones periódicas. Nuestro equipo está disponible para resolver cualquier inconveniente y optimizar las soluciones según evolucionen tus necesidades.',
+        question: '¿Cuánto tarda en estar funcionando en la calle y hay contrato de permanencia?',
+        answer: 'Entre 2 y 3 semanas desde el diagnóstico inicial. Antes de abrir el sistema a toda la flota, salimos en "Modo Espejo" sobre una sola ruta piloto: durante los primeros días aprobás cada aviso desde tu celular hasta comprobar que todo sale exacto. Trabajamos mes a mes, sin contratos de permanencia ni penalidades de salida.',
     },
 ]
 
@@ -114,7 +114,7 @@ export function FAQSection() {
                         transition={{ delay: 0.4 }}
                         className="mt-6 text-neutral-400 text-lg max-w-2xl mx-auto"
                     >
-                        Respondemos las consultas más comunes sobre nuestros servicios de IA y desarrollo.
+                        Respuestas directas a las preguntas que siempre aparecen antes de conectar una operación real.
                     </motion.p>
                 </motion.div>
 

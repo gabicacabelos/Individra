@@ -213,15 +213,23 @@ export function LogisticaLanding() {
                             </motion.p>
 
                             <motion.div {...reveal} transition={{ delay: 0.15 }} className="mt-9">
-                                <a
-                                    href={WHATSAPP_HREF}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#C84214] text-white font-semibold shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
-                                >
-                                    Pedí un diagnóstico gratuito de 30 minutos
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
-                                </a>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <a
+                                        href={WHATSAPP_HREF}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#C84214] text-white font-semibold shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+                                    >
+                                        Pedí un diagnóstico gratuito de 30 minutos
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                                    </a>
+                                    <Link
+                                        href="/diagnostico?origen=logistica"
+                                        className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl border border-[#3E3D3A] bg-[#151719] text-neutral-200 text-sm sm:text-base font-medium hover:border-[#C84214] hover:text-white transition-all duration-200"
+                                    >
+                                        Calcular costo de entregas fallidas (2 min)
+                                    </Link>
+                                </div>
                                 <p className="mt-3 text-neutral-500 text-sm">
                                     Sin permanencia. Mes a mes. Infraestructura propia y aislada (GDPR).
                                 </p>

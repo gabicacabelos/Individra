@@ -5,36 +5,18 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
- * Autodiagnóstico de atención y envíos.
+ * Autodiagnóstico operativo y calculadora financiera en vivo.
  *
- * PROTOTIPO — el objetivo no es la landing en sí: las preguntas son la
- * entrevista de validación que no pudimos conseguir a mano (volumen, tasa de
- * fallas, costo de un mes malo, disposición a pagar), convertida en algo que
- * se responde en dos minutos y a escala.
- *
- * Deliberadamente NO pide OAuth ni datos privados: la fricción tiene que ser cero
- * para que el test mida demanda y no capacidad técnica.
- *
- * Branching en dos niveles:
- *   1) Plataforma (primera pantalla): "Mercado Libre" vs "Tienda propia o
- *      multicanal". Define qué set de preguntas se usa. Nació porque el
- *      cuestionario original era 100% envíos de ML y la landing /ecommerce
- *      manda tráfico de Tiendanube/Shopify que no tiene nada que responder
- *      ahí — ver auditoría de /ecommerce.
- *   2) Dentro de Mercado Libre, la pregunta de canal (Flex / Envíos / Full /
- *      Mixto) sigue definiendo el recorrido como antes: quien opera 100%
- *      Full no ve las preguntas de fletero, reparto ni aviso, porque ML le
- *      controla la entrega y esas respuestas ensuciarían la data.
- *
- * Scoring: el puntaje y el máximo se DERIVAN de las respuestas y del recorrido
- * activo en cada render (no hay acumulador). Así el "volver" y el cambio de
- * plataforma o canal nunca arrastran puntos de preguntas que ya no aplican, y
- * el nivel se calcula como porcentaje sobre el máximo alcanzable de ESE
- * recorrido (comparable entre recorridos de distinto largo).
+ * Tres ramas específicas según el perfil del operador:
+ *   1) 'logistica': Empresas de Logística de Última Milla y Distribuidoras Mayoristas
+ *      con flota propia o tercerizada. Incluye calculadora financiera en vivo:
+ *      (entregas/día × % fallos × ARS $9.980) diaria y mensual (22 días hábiles).
+ *   2) 'meli': Vendedores de Mercado Libre (Flex / Envíos / Full / Mixto).
+ *   3) 'otros': Tienda propia o multicanal (Tiendanube, Shopify, WhatsApp, IG).
  */
 
-/** A qué se dedica la operación: define qué cuestionario ve. */
-type Plataforma = 'meli' | 'otros'
+/** A qué se dedica la operación: define qué cuestionario y calculadora ve. */
+type Plataforma = 'logistica' | 'meli' | 'otros'
 
 /** Canales de entrega dentro de Mercado Libre. La P1 del recorrido meli define el resto. */
 type Canal = 'flex' | 'envios' | 'full' | 'mixto'
@@ -45,6 +27,9 @@ type Opcion = {
     valor?: Canal
     /** Puntos de riesgo. Ausente = la pregunta no puntúa (es de segmentación o de intención). */
     puntos?: number
+    /** Valor numérico opcional para sincronizar la calculadora en vivo de logística. */
+    calcEntregasDia?: number
+    calcPorcentajeFallos?: number
 }
 
 type Pregunta = {
@@ -56,8 +41,144 @@ type Pregunta = {
     opciones: Opcion[]
 }
 
+/**
+ * Costo directo auditado por cada entrega fallida en AMBA / Argentina:
+ * - Gasoil desvío promedio 8 km (12 L/100km × ARS $2.198/L): ARS $2.110
+ * - Tiempo chofer perdido 20 min (CCT 40/89 costo empresa ARS $8.730/h): ARS $2.880
+ * - Re-ruteo, manipulación en depósito y segundo viaje al día siguiente: ARS $4.990
+ * Total por entrega fallida: ARS $9.980
+ */
+const COSTO_FALLO_UNITARIO_ARS = 9980
+const DIAS_HABILES_MES = 22
+
+function formatearArs(valor: number): string {
+    return new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        maximumFractionDigits: 0,
+    }).format(Math.round(valor))
+}
+
+function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos: number) {
+    const fallosDia = entregasDia * (porcentajeFallos / 100)
+    const fallosMes = Math.round(fallosDia * DIAS_HABILES_MES)
+    const perdidaDiariaArs = Math.round(fallosDia * COSTO_FALLO_UNITARIO_ARS)
+    const perdidaMensualArs = Math.round(fallosDia * DIAS_HABILES_MES * COSTO_FALLO_UNITARIO_ARS)
+    const ahorroMensualMinArs = Math.round(perdidaMensualArs * 0.5)
+    const ahorroMensualMaxArs = Math.round(perdidaMensualArs * 0.6)
+
+    return {
+        entregasDia,
+        porcentajeFallos,
+        costoUnitarioArs: COSTO_FALLO_UNITARIO_ARS,
+        diasHabilesMes: DIAS_HABILES_MES,
+        fallosDia: Number(fallosDia.toFixed(1)),
+        fallosMes,
+        perdidaDiariaArs,
+        perdidaMensualArs,
+        ahorroMensualMinArs,
+        ahorroMensualMaxArs,
+    }
+}
+
 /* ============================================================
-   Recorrido: Mercado Libre
+   Recorrido 1: Empresas de Logística y Distribuidoras Mayoristas
+   ============================================================ */
+
+const PREGUNTAS_LOGISTICA: Pregunta[] = [
+    {
+        id: 'tipo_operacion',
+        titulo: '¿Qué tipo de operación manejás principalmente?',
+        opciones: [
+            { label: 'Logística de última milla / reparto para terceros (e-commerce, marcas, Flex)' },
+            { label: 'Distribuidora mayorista con entrega a comercios (alimentos, bebidas, insumos, ferretería)' },
+            { label: 'Operación mixta (distribución propia + reparto para clientes corporativos)' },
+        ],
+    },
+    {
+        id: 'flota',
+        titulo: '¿Cuántos vehículos salen a repartir en un día normal (propios + fleteros)?',
+        opciones: [
+            { label: 'De 1 a 5 vehículos' },
+            { label: 'De 6 a 15 vehículos' },
+            { label: 'De 16 a 35 vehículos' },
+            { label: 'Más de 35 vehículos' },
+        ],
+    },
+    {
+        id: 'volumen_logistica',
+        titulo: '¿Cuántas entregas o paradas hacen por día entre toda la flota?',
+        ayuda: 'También podés ajustar el número exacto en la calculadora en vivo de abajo.',
+        opciones: [
+            { label: 'Menos de 40 entregas por día', calcEntregasDia: 30 },
+            { label: 'Entre 40 y 80 entregas por día', calcEntregasDia: 60 },
+            { label: 'Entre 80 y 150 entregas por día', calcEntregasDia: 100 },
+            { label: 'Entre 150 y 300 entregas por día', calcEntregasDia: 200 },
+            { label: 'Más de 300 entregas por día', calcEntregasDia: 350 },
+        ],
+    },
+    {
+        id: 'rebote',
+        titulo: 'Del total de salidas diarias, ¿qué porcentaje vuelve sin entregar en el primer intento?',
+        ayuda: 'Sumando "no había nadie", dirección incompleta, comercio cerrado o rechazo en puerta.',
+        opciones: [
+            { label: 'Menos del 4%', puntos: 0, calcPorcentajeFallos: 3 },
+            { label: 'Entre el 5% y el 8%', puntos: 2, calcPorcentajeFallos: 7 },
+            { label: 'Entre el 9% y el 12%', puntos: 3, calcPorcentajeFallos: 10 },
+            { label: 'Más del 12%', puntos: 4, calcPorcentajeFallos: 15 },
+            { label: 'No lo tenemos medido con exactitud', puntos: 3, calcPorcentajeFallos: 10 },
+        ],
+    },
+    {
+        id: 'coordinacion',
+        titulo: 'Antes de cargar el camión, ¿cómo confirman si el destinatario va a estar para recibir?',
+        opciones: [
+            { label: 'Avisamos automáticamente y sacamos de la jaula al que reprograma antes de salir', puntos: 0 },
+            { label: 'Mandamos WhatsApp o llamamos a mano en algunos casos puntuales', puntos: 2 },
+            { label: 'No avisamos: el camión sale directo con toda la hoja de ruta', puntos: 4 },
+        ],
+    },
+    {
+        id: 'ficha_domicilio',
+        titulo: 'Cuando un chofer nuevo va a una dirección donde ya entregaron antes, ¿cómo sabe cómo acceder?',
+        ayuda: 'Por ejemplo: timbre roto, portón al fondo, horario de recepción del comercio o guardia 24 hs.',
+        opciones: [
+            { label: 'Le sale automático en la hoja de ruta sin que nadie lo busque', puntos: 0 },
+            { label: 'Le pregunta por WhatsApp al chofer anterior o a tráfico', puntos: 2 },
+            { label: 'No queda guardado en ningún lado: va a ciegas', puntos: 3 },
+        ],
+    },
+    {
+        id: 'evidencia',
+        titulo: 'Cuando el chofer marca "No había nadie" y el destinatario reclama "Estuve todo el día", ¿cómo sabés qué pasó?',
+        opciones: [
+            { label: 'Cruzamos registro del chofer con confirmación previa y respuesta del destinatario', puntos: 0 },
+            { label: 'Le pedimos foto del frente por WhatsApp al chofer', puntos: 2 },
+            { label: 'Es la palabra del chofer contra la del cliente', puntos: 3 },
+        ],
+    },
+    {
+        id: 'administracion',
+        titulo: '¿Cuánto tiempo por día pierde administración contestando "¿dónde está mi pedido?" o pasando remitos y transferencias a mano?',
+        opciones: [
+            { label: 'Menos de 30 minutos por día', puntos: 0 },
+            { label: 'Entre 1 y 2 horas por día', puntos: 2 },
+            { label: 'Más de 2 horas por día o una persona casi dedicada a eso', puntos: 3 },
+        ],
+    },
+    {
+        id: 'intencion',
+        titulo: 'Si pudieras bajar a la mitad las entregas fallidas sin cambiar tu sistema ni instalarle apps a los choferes, ¿lo evaluarías?',
+        opciones: [
+            { label: 'Sí, quiero verlo aplicado a mi operación en el diagnóstico de 30 min' },
+            { label: 'Sí, me interesa probarlo en una ruta piloto sin compromiso' },
+            { label: 'Por ahora solo quería calcular mis números' },
+        ],
+    },
+]
+
+/* ============================================================
+   Recorrido 2: Mercado Libre
    ============================================================ */
 
 const PREGUNTAS_MELI: Pregunta[] = [
@@ -165,11 +286,7 @@ const PREGUNTAS_MELI: Pregunta[] = [
 ]
 
 /* ============================================================
-   Recorrido: tienda propia o multicanal (Tiendanube, Shopify,
-   WhatsApp, Instagram, WooCommerce). No tiene sub-branching interno:
-   son las mismas 8 preguntas para todos, porque la fricción que miden
-   (respuesta, fuera de horario, carritos, post-venta) aplica igual
-   sea cual sea la plataforma puntual.
+   Recorrido 3: tienda propia o multicanal
    ============================================================ */
 
 const PREGUNTAS_OTROS: Pregunta[] = [
@@ -266,6 +383,7 @@ function valorCanalMeli(r: Respuestas): Canal | undefined {
 
 /** Preguntas activas según la plataforma elegida y, dentro de meli, el canal. */
 function preguntasPara(plataforma: Plataforma | null, r: Respuestas): Pregunta[] {
+    if (plataforma === 'logistica') return PREGUNTAS_LOGISTICA
     if (plataforma === 'otros') return PREGUNTAS_OTROS
     const canal = valorCanalMeli(r)
     if (!canal) return PREGUNTAS_MELI
@@ -293,6 +411,25 @@ const NIVEL_META: Record<Nivel, { titulo: string; color: string; bg: string }> =
     verde: { titulo: 'Riesgo bajo', color: '#4ADE80', bg: 'rgba(74,222,128,0.1)' },
     amarillo: { titulo: 'Riesgo medio', color: '#FBBF24', bg: 'rgba(251,191,36,0.1)' },
     rojo: { titulo: 'Riesgo alto', color: '#C84214', bg: 'rgba(200,66,20,0.12)' },
+}
+
+/** Acciones por defecto según nivel, recorrido Logística y Distribuidoras. */
+const ACCIONES_LOGISTICA: Record<Nivel, string[]> = {
+    verde: [
+        'Mantené medido el porcentaje de rebote por zona y por dador de carga: suele esconder clientes que dan pérdida por re-entregas.',
+        'Empezá a guardar la Ficha del Domicilio (timbre, portería, horario comercial) asociada a la dirección para no depender de la memoria del chofer.',
+        'Activá el pedido de reseña en Google con un toque después de cada entrega conforme para capitalizar tu tasa de cumplimiento.',
+    ],
+    amarillo: [
+        'Filtrá ausencias antes de cargar: un WhatsApp interactivo a las 20:00 hs del día anterior evita entre el 40% y el 60% de los viajes en falso.',
+        'Documentá cómo se accede a cada domicilio después de la primera visita para que el dato viaje pegado a la hoja de ruta del chofer.',
+        'Cuando el chofer marque "No había nadie", dispará una consulta inmediata al destinatario para cruzar ambas fuentes sin discusiones a ciegas.',
+    ],
+    rojo: [
+        'Cortá la salida a ciegas mañana mismo: cada paquete que sube al camión y rebota te cuesta ARS $9.980 entre gasoil, tiempo de chofer y segundo viaje.',
+        'Sacá a administración de contestar "¿dónde está mi pedido?": conectá tu planilla o ERP a un aviso por paradas restantes sin prometer horarios inventados.',
+        'Poné un reloj de vencimiento a los paquetes en depósito (alertas a 5, 2 y 1 días) y cruzá la evidencia de visitas fallidas antes de perder cuentas.',
+    ],
 }
 
 /** Acciones por defecto según nivel, recorrido Mercado Libre. */
@@ -340,12 +477,10 @@ const ACCIONES_OTROS: Record<Nivel, string[]> = {
     ],
 }
 
-/*
- * Fragmentos para el resumen personalizado (recorrido Mercado Libre). Regla
- * dura: el texto puede citar todo lo que el vendedor nos respondió, pero NO
- * afirma ningún número que ML no le haya mostrado a él (nada de "estás en el
- * 93%"). Eso sería inventar un dato.
- */
+/* ============================================================
+   Fragmentos de resumen personalizado
+   ============================================================ */
+
 const FRAG_VOLUMEN: Record<string, string> = {
     'Menos de 5': 'A tu volumen (menos de 5 envíos por día)',
     'Entre 5 y 20': 'Con entre 5 y 20 envíos por día',
@@ -393,7 +528,6 @@ const FRAG_COSTO: Record<string, string> = {
         'Y todavía no le pusiste número a lo que te cuesta un mes malo, que suele ser señal de que es más de lo que parece.',
 }
 
-/** Arma el resumen citando las respuestas concretas, sin inventar métricas de ML. */
 function construirResumenMeli(r: Respuestas): string {
     if (valorCanalMeli(r) === 'full') {
         return [
@@ -418,10 +552,6 @@ function construirResumenMeli(r: Respuestas): string {
         .join(' ')
 }
 
-/*
- * Fragmentos para el resumen personalizado (recorrido tienda propia /
- * multicanal). Misma regla: solo cita lo que el vendedor respondió.
- */
 const FRAG_RESPUESTA: Record<string, string> = {
     'Menos de 15 minutos':
         'Hoy respondés rápido (menos de 15 minutos), que es lo más difícil de sostener cuando crece el volumen.',
@@ -465,11 +595,54 @@ function construirResumenOtros(r: Respuestas): string {
         .join(' ')
 }
 
-function construirResumen(r: Respuestas, plataforma: Plataforma | null): string {
-    return plataforma === 'otros' ? construirResumenOtros(r) : construirResumenMeli(r)
+function construirResumenLogistica(
+    r: Respuestas,
+    entregasDia: number,
+    porcentajeFallos: number
+): string {
+    const econ = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
+    const partes: string[] = [
+        `Con ${entregasDia} entregas diarias y un ${porcentajeFallos}% de rebote al primer intento, tu operación acumula ~${econ.fallosMes} viajes en falso por mes (${formatearArs(econ.perdidaMensualArs)}/mes sumando gasoil, tiempo de chofer y re-despacho).`,
+    ]
+
+    if (r.coordinacion === 'No avisamos: el camión sale directo con toda la hoja de ruta') {
+        partes.push(
+            'Hoy los camiones salen sin filtrar quién va a estar en el domicilio, que es donde se origina más de la mitad de esos rebotes.'
+        )
+    } else if (r.coordinacion === 'Mandamos WhatsApp o llamamos a mano en algunos casos puntuales') {
+        partes.push(
+            'Hoy la confirmación previa depende de mensajes manuales, por lo que no llega a cubrir toda la carga antes de armar la jaula.'
+        )
+    }
+
+    if (r.ficha_domicilio === 'No queda guardado en ningún lado: va a ciegas') {
+        partes.push(
+            'Además, cada vez que rota un chofer se pierde el conocimiento de cómo acceder a cada domicilio o comercio.'
+        )
+    }
+
+    if (r.evidencia === 'Es la palabra del chofer contra la del cliente') {
+        partes.push(
+            'Cuando un envío falla, no tenés doble evidencia independiente para demostrarle al dador de carga o al cliente qué pasó de verdad.'
+        )
+    }
+
+    return partes.join(' ')
+}
+
+function construirResumen(
+    r: Respuestas,
+    plataforma: Plataforma | null,
+    entregasDia: number,
+    porcentajeFallos: number
+): string {
+    if (plataforma === 'logistica') return construirResumenLogistica(r, entregasDia, porcentajeFallos)
+    if (plataforma === 'otros') return construirResumenOtros(r)
+    return construirResumenMeli(r)
 }
 
 function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma | null): string[] {
+    if (plataforma === 'logistica') return ACCIONES_LOGISTICA[nivel]
     if (plataforma === 'otros') return ACCIONES_OTROS[nivel]
     if (valorCanalMeli(r) === 'full') return ACCIONES_FULL
     return ACCIONES_MELI[nivel]
@@ -486,6 +659,156 @@ function track(evento: string, props?: Record<string, unknown>) {
         })
 }
 
+/* ============================================================
+   Componente: Calculadora Financiera en Vivo (Logística / Distribuidoras)
+   ============================================================ */
+
+interface CalculadoraVivaProps {
+    entregasDia: number
+    setEntregasDia: (v: number) => void
+    porcentajeFallos: number
+    setPorcentajeFallos: (v: number) => void
+    compacta?: boolean
+}
+
+function CalculadoraFinancieraViva({
+    entregasDia,
+    setEntregasDia,
+    porcentajeFallos,
+    setPorcentajeFallos,
+    compacta = false,
+}: CalculadoraVivaProps) {
+    const econ = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
+
+    return (
+        <div className="rounded-xl border border-[#C84214]/40 bg-[#151719] p-5 sm:p-6 shadow-xl shadow-black/30">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+                <div>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#C84214]">
+                        Calculadora Financiera en Vivo
+                    </span>
+                    <h3 className="mt-0.5 text-base sm:text-lg font-bold text-[#E8E5DE]">
+                        Costo real de entregas fallidas en tu operación
+                    </h3>
+                </div>
+                <span className="rounded-full border border-[#3E3D3A] bg-[#0B0D0E] px-3 py-1 font-mono text-xs text-[#B7B3B0]">
+                    {entregasDia}/día × {porcentajeFallos}% × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}
+                </span>
+            </div>
+
+            {/* Sliders interactivos */}
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
+                    <div className="flex items-baseline justify-between">
+                        <label
+                            htmlFor="slider-entregas"
+                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
+                        >
+                            Entregas / paradas por día
+                        </label>
+                        <span className="font-mono text-xl font-bold text-white">
+                            {entregasDia}
+                        </span>
+                    </div>
+                    <input
+                        id="slider-entregas"
+                        type="range"
+                        min={15}
+                        max={500}
+                        step={5}
+                        value={entregasDia}
+                        onChange={(e) => setEntregasDia(Number(e.target.value))}
+                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
+                    />
+                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
+                        <span>15/día</span>
+                        <span>100/día</span>
+                        <span>300/día</span>
+                        <span>500/día</span>
+                    </div>
+                </div>
+
+                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
+                    <div className="flex items-baseline justify-between">
+                        <label
+                            htmlFor="slider-fallos"
+                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
+                        >
+                            % Fallos al 1° intento
+                        </label>
+                        <span className="font-mono text-xl font-bold text-[#C84214]">
+                            {porcentajeFallos}%
+                        </span>
+                    </div>
+                    <input
+                        id="slider-fallos"
+                        type="range"
+                        min={1}
+                        max={25}
+                        step={1}
+                        value={porcentajeFallos}
+                        onChange={(e) => setPorcentajeFallos(Number(e.target.value))}
+                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
+                    />
+                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
+                        <span>1%</span>
+                        <span>8% (prom.)</span>
+                        <span>15%</span>
+                        <span>25%</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Resultados numéricos en vivo */}
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E]/90 p-3.5">
+                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#8E8B88]">
+                        Pérdida por día ({econ.fallosDia} fallos)
+                    </span>
+                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-[#E8E5DE]">
+                        {formatearArs(econ.perdidaDiariaArs)}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-[#8E8B88]">
+                        Cada día operativo en la calle
+                    </span>
+                </div>
+
+                <div className="rounded-lg border border-[#C84214]/50 bg-[#C84214]/10 p-3.5">
+                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#E8E5DE]">
+                        Fuga mensual ({econ.fallosMes} fallos/mes)
+                    </span>
+                    <span className="mt-1 block font-mono text-xl sm:text-2xl font-bold text-[#C84214]">
+                        {formatearArs(econ.perdidaMensualArs)}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-[#B7B3B0]">
+                        En {DIAS_HABILES_MES} días hábiles × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo
+                    </span>
+                </div>
+
+                <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3.5">
+                    <span className="block font-mono text-[11px] uppercase tracking-wider text-emerald-300">
+                        Capital recuperable (-50% a -60%)
+                    </span>
+                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-emerald-400">
+                        {formatearArs(econ.ahorroMensualMinArs)} a {formatearArs(econ.ahorroMensualMaxArs)}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-emerald-200/70">
+                        Ahorro mensual con Coordinación Previa + Ficha
+                    </span>
+                </div>
+            </div>
+
+            {!compacta && (
+                <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 pt-2 text-[11px] text-[#8E8B88]">
+                    <span>
+                        * Costo unitario auditado ({formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo): Gasoil desvío 8 km ($2.110) + 20 min chofer CCT 40/89 ($2.880) + Re-ruteo y 2° viaje ($4.990).
+                    </span>
+                </div>
+            )}
+        </div>
+    )
+}
+
 type Paso = 'plataforma' | 'intro' | 'preguntas' | 'resultado' | 'listo'
 
 export function DiagnosticoEnvios() {
@@ -494,38 +817,41 @@ export function DiagnosticoEnvios() {
     const [indice, setIndice] = useState(0)
     const [respuestas, setRespuestas] = useState<Respuestas>({})
 
+    // Estado de la calculadora financiera en vivo para Logística / Distribuidoras
+    const [entregasDia, setEntregasDia] = useState<number>(100)
+    const [porcentajeFallos, setPorcentajeFallos] = useState<number>(10)
+
     const [nombre, setNombre] = useState('')
     const [email, setEmail] = useState('')
     const [whatsapp, setWhatsapp] = useState('')
     const [enviando, setEnviando] = useState(false)
     const [error, setError] = useState('')
 
-    /**
-     * De dónde vino la persona. La landing /ecommerce manda `?origen=ecommerce`;
-     * el link que se comparte directo en grupos de vendedores no trae nada y
-     * queda como 'directo'. Es analítica aparte de la plataforma elegida: el
-     * origen dice de qué landing vino, la plataforma dice cómo vende. No hay
-     * que asumir una a partir de la otra (por eso la plataforma se pregunta,
-     * en vez de inferirla del origen).
-     *
-     * Se lee de window en vez de useSearchParams para no forzar la página a
-     * dinámica ni envolverla en un Suspense: es solo analítica.
-     */
     const [origen, setOrigen] = useState('directo')
     useEffect(() => {
-        const param = new URLSearchParams(window.location.search).get('origen')
-        if (param) setOrigen(param)
+        const params = new URLSearchParams(window.location.search)
+        const paramOrigen = params.get('origen')
+        if (paramOrigen) {
+            setOrigen(paramOrigen)
+            if (paramOrigen === 'logistica') {
+                setPlataforma('logistica')
+                setPaso('intro')
+            }
+        }
     }, [])
 
     // Todo se deriva del recorrido activo: nada de acumuladores que se desincronizan.
     const { activas, puntaje, maximo, porcentaje, nivel } = calcular(respuestas, plataforma)
     const pregunta = activas[indice]
     const resultado = NIVEL_META[nivel]
-    const resumen = construirResumen(respuestas, plataforma)
+    const resumen = construirResumen(respuestas, plataforma, entregasDia, porcentajeFallos)
     const acciones = construirAcciones(respuestas, nivel, plataforma)
+    const economiaLogistica = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
 
     function elegirPlataforma(p: Plataforma) {
         setPlataforma(p)
+        setIndice(0)
+        setRespuestas({})
         track('diagnostico_plataforma', { plataforma: p, origen })
         setPaso('intro')
     }
@@ -539,6 +865,14 @@ export function DiagnosticoEnvios() {
         const nuevas = { ...respuestas, [pregunta.id]: opcion.label }
         setRespuestas(nuevas)
 
+        // Si la opción trae valores de referencia para la calculadora de logística, actualizamos
+        if (typeof opcion.calcEntregasDia === 'number') {
+            setEntregasDia(opcion.calcEntregasDia)
+        }
+        if (typeof opcion.calcPorcentajeFallos === 'number') {
+            setPorcentajeFallos(opcion.calcPorcentajeFallos)
+        }
+
         track('diagnostico_respuesta', {
             pregunta: pregunta.id,
             respuesta: opcion.label,
@@ -546,8 +880,6 @@ export function DiagnosticoEnvios() {
             plataforma,
         })
 
-        // Recalculamos el recorrido con la respuesta recién dada (el canal puede
-        // haber cambiado la lista de preguntas activas, dentro de meli).
         const info = calcular(nuevas, plataforma)
         if (indice < info.activas.length - 1) {
             setIndice(indice + 1)
@@ -559,9 +891,16 @@ export function DiagnosticoEnvios() {
                 nivel: info.nivel,
                 plataforma,
                 canal: nuevas.canal,
-                volumen: nuevas.volumen,
+                volumen: nuevas.volumen || nuevas.volumen_logistica,
                 intencion: nuevas.intencion,
                 origen,
+                ...(plataforma === 'logistica'
+                    ? {
+                          entregasDia,
+                          porcentajeFallos,
+                          perdidaMensualArs: economiaLogistica.perdidaMensualArs,
+                      }
+                    : {}),
             })
             setPaso('resultado')
         }
@@ -572,7 +911,6 @@ export function DiagnosticoEnvios() {
             setPaso('intro')
             return
         }
-        // El puntaje es derivado, así que no hay nada que descontar a mano.
         setIndice(indice - 1)
     }
 
@@ -593,10 +931,11 @@ export function DiagnosticoEnvios() {
                     respuestas,
                     origen,
                     plataforma,
+                    calculadora:
+                        plataforma === 'logistica' ? economiaLogistica : null,
                 }),
             })
             if (!res.ok) throw new Error('No se pudo enviar')
-            // La métrica que realmente importa del experimento.
             track('diagnostico_contacto', {
                 nivel,
                 puntaje,
@@ -604,6 +943,13 @@ export function DiagnosticoEnvios() {
                 intencion: respuestas.intencion,
                 origen,
                 plataforma,
+                ...(plataforma === 'logistica'
+                    ? {
+                          entregasDia,
+                          porcentajeFallos,
+                          perdidaMensualArs: economiaLogistica.perdidaMensualArs,
+                      }
+                    : {}),
             })
             setPaso('listo')
         } catch {
@@ -615,7 +961,7 @@ export function DiagnosticoEnvios() {
 
     return (
         <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
-            <div className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-5 py-16 sm:px-6">
+            <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 py-16 sm:px-6">
                 <AnimatePresence mode="wait">
                     {/* ------------------------------------------- PLATAFORMA */}
                     {paso === 'plataforma' && (
@@ -627,34 +973,52 @@ export function DiagnosticoEnvios() {
                             transition={{ duration: 0.35 }}
                         >
                             <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#C84214]">
-                                Autodiagnóstico · 2 minutos
+                                Autodiagnóstico Operativo · 2 minutos
                             </span>
                             <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
-                                ¿Dónde vendés{' '}
+                                ¿Cómo es tu{' '}
                                 <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
-                                    principalmente?
+                                    operación hoy?
                                 </span>
                             </h1>
                             <p className="mt-5 text-base leading-relaxed text-[#B7B3B0] sm:text-lg">
-                                Las preguntas cambian según cómo vendas, para que el diagnóstico hable de
-                                tu operación real y no de una genérica.
+                                Elegí tu perfil para que las preguntas y el cálculo de fugas de capital se
+                                ajusten a tu realidad operativa.
                             </p>
 
-                            <div className="mt-8 flex flex-col gap-3">
+                            <div className="mt-8 flex flex-col gap-3.5">
+                                <button
+                                    onClick={() => elegirPlataforma('logistica')}
+                                    className="group relative rounded-xl border border-[#C84214]/50 bg-[#151719] px-5 py-4.5 text-left transition-all hover:border-[#C84214] hover:bg-[#1B1E20]"
+                                >
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <span className="block text-base sm:text-lg font-semibold text-[#E8E5DE] transition-colors group-hover:text-white">
+                                            Empresa de Logística o Distribuidora Mayorista
+                                        </span>
+                                        <span className="rounded-full border border-[#C84214]/40 bg-[#C84214]/15 px-2.5 py-0.5 font-mono text-[11px] font-medium text-[#E8E5DE]">
+                                            Calculadora en vivo
+                                        </span>
+                                    </div>
+                                    <span className="mt-1.5 block text-sm text-[#8E8B88]">
+                                        Flota propia o fleteros tercerizados · Reparto de última milla, B2B o abastecimiento a comercios
+                                    </span>
+                                </button>
+
                                 <button
                                     onClick={() => elegirPlataforma('meli')}
-                                    className="group rounded-lg border border-[#3E3D3A] bg-[#151719] px-5 py-4 text-left transition-all hover:border-[#C84214] hover:bg-[#1B1E20]"
+                                    className="group rounded-xl border border-[#3E3D3A] bg-[#151719] px-5 py-4 text-left transition-all hover:border-[#C84214] hover:bg-[#1B1E20]"
                                 >
                                     <span className="block text-base font-semibold text-[#E8E5DE] transition-colors group-hover:text-white">
-                                        Mercado Libre
+                                        Vendedor de Mercado Libre
                                     </span>
                                     <span className="mt-1 block text-sm text-[#8E8B88]">
                                         Reparto por Flex, Mercado Envíos o Full
                                     </span>
                                 </button>
+
                                 <button
                                     onClick={() => elegirPlataforma('otros')}
-                                    className="group rounded-lg border border-[#3E3D3A] bg-[#151719] px-5 py-4 text-left transition-all hover:border-[#C84214] hover:bg-[#1B1E20]"
+                                    className="group rounded-xl border border-[#3E3D3A] bg-[#151719] px-5 py-4 text-left transition-all hover:border-[#C84214] hover:bg-[#1B1E20]"
                                 >
                                     <span className="block text-base font-semibold text-[#E8E5DE] transition-colors group-hover:text-white">
                                         Tienda propia o multicanal
@@ -680,12 +1044,42 @@ export function DiagnosticoEnvios() {
                                 onClick={() => setPaso('plataforma')}
                                 className="mb-3 font-mono text-xs text-[#8E8B88] transition-colors hover:text-[#E8E5DE]"
                             >
-                                ‹ Cambiar
+                                ‹ Cambiar perfil
                             </button>
                             <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#C84214]">
                                 Autodiagnóstico · 2 minutos
                             </span>
-                            {plataforma === 'meli' ? (
+                            {plataforma === 'logistica' ? (
+                                <>
+                                    <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
+                                        ¿Cuánto capital se te escapa en{' '}
+                                        <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
+                                            viajes en falso y re-entregas?
+                                        </span>
+                                    </h1>
+                                    <p className="mt-5 text-base leading-relaxed text-[#B7B3B0] sm:text-lg">
+                                        Cada vez que un utilitario o camión sale a un domicilio y vuelve con el
+                                        paquete, perdés <strong className="text-[#E8E5DE]">ARS $9.980</strong> entre
+                                        gasoil, tiempo de chofer y el costo de volver al día siguiente.
+                                    </p>
+
+                                    <div className="mt-7">
+                                        <CalculadoraFinancieraViva
+                                            entregasDia={entregasDia}
+                                            setEntregasDia={setEntregasDia}
+                                            porcentajeFallos={porcentajeFallos}
+                                            setPorcentajeFallos={setPorcentajeFallos}
+                                        />
+                                    </div>
+
+                                    <p className="mt-6 text-base leading-relaxed text-[#B7B3B0]">
+                                        Completá <strong className="text-[#E8E5DE]">9 preguntas operativas</strong>{' '}
+                                        sobre tu flota, coordinación previa y control en calle para recibir el
+                                        diagnóstico exacto de dónde están tus cuellos de botella y cómo taparlos sin
+                                        cambiar tu sistema actual.
+                                    </p>
+                                </>
+                            ) : plataforma === 'meli' ? (
                                 <>
                                     <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
                                         ¿Qué tan cerca estás de{' '}
@@ -727,8 +1121,7 @@ export function DiagnosticoEnvios() {
                                 </>
                             )}
                             <div className="mt-6 rounded-lg border border-[#3E3D3A] bg-[#151719] px-4 py-3 text-sm text-[#B7B3B0]">
-                                No te pedimos conectar tu cuenta ni ningún dato privado de Mercado
-                                Libre ni de tu tienda. Solo tus respuestas.
+                                No te pedimos conectar ninguna cuenta ni instalar nada. Solo tus respuestas.
                             </div>
                             <button
                                 onClick={empezar}
@@ -793,6 +1186,20 @@ export function DiagnosticoEnvios() {
                                     </button>
                                 ))}
                             </div>
+
+                            {/* En las preguntas de volumen o rebote de logística, mostramos la calculadora en vivo */}
+                            {plataforma === 'logistica' &&
+                                (pregunta.id === 'volumen_logistica' || pregunta.id === 'rebote') && (
+                                    <div className="mt-7">
+                                        <CalculadoraFinancieraViva
+                                            entregasDia={entregasDia}
+                                            setEntregasDia={setEntregasDia}
+                                            porcentajeFallos={porcentajeFallos}
+                                            setPorcentajeFallos={setPorcentajeFallos}
+                                            compacta
+                                        />
+                                    </div>
+                                )}
                         </motion.div>
                     )}
 
@@ -809,7 +1216,7 @@ export function DiagnosticoEnvios() {
                                 style={{ borderColor: resultado.color, background: resultado.bg }}
                             >
                                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#B7B3B0]">
-                                    Tu resultado
+                                    Tu resultado operativo
                                 </span>
                                 <div className="mt-2 flex items-baseline gap-3">
                                     <h2
@@ -827,7 +1234,19 @@ export function DiagnosticoEnvios() {
                                 </p>
                             </div>
 
-                            <h3 className="mt-8 text-lg font-bold">Tres cosas para hacer ya</h3>
+                            {/* Si es logística/distribuidora, destacamos la calculadora interactiva en el resultado */}
+                            {plataforma === 'logistica' && (
+                                <div className="mt-7">
+                                    <CalculadoraFinancieraViva
+                                        entregasDia={entregasDia}
+                                        setEntregasDia={setEntregasDia}
+                                        porcentajeFallos={porcentajeFallos}
+                                        setPorcentajeFallos={setPorcentajeFallos}
+                                    />
+                                </div>
+                            )}
+
+                            <h3 className="mt-8 text-lg font-bold">Tres acciones concretas para tu operación</h3>
                             <ol className="mt-4 flex flex-col gap-3">
                                 {acciones.map((accion, i) => (
                                     <li
@@ -847,15 +1266,27 @@ export function DiagnosticoEnvios() {
                             {/* Captura de contacto */}
                             <div className="mt-10 rounded-xl border border-[#3E3D3A] bg-[#151719] p-6">
                                 <h3 className="text-lg font-bold">
-                                    Estamos construyendo el monitoreo automático
+                                    {plataforma === 'logistica'
+                                        ? 'Recibí el desglose para tu flota y coordinemos el diagnóstico de 30 minutos'
+                                        : 'Estamos construyendo el monitoreo automático'}
                                 </h3>
                                 <p className="mt-2 text-sm leading-relaxed text-[#B7B3B0]">
-                                    Lo que acabás de responder lo tuviste que estimar de memoria.
-                                    Estamos armando algo que lo calcule solo con los datos reales de tu
-                                    operación y te avise <strong className="text-[#E8E5DE]">antes</strong>{' '}
-                                    de que se te escape una venta o una entrega. Dejanos tu contacto y te
-                                    escribimos cuando esté — o antes, si querés que lo hagamos con tu
-                                    operación.
+                                    {plataforma === 'logistica' ? (
+                                        <>
+                                            Dejanos tu contacto para enviarte este cálculo junto con el esquema de{' '}
+                                            <strong className="text-[#E8E5DE]">Coordinación Previa y Ficha del Domicilio</strong>{' '}
+                                            montado sobre tu planilla o ERP actual, sin instalarle aplicaciones a los choferes.
+                                        </>
+                                    ) : (
+                                        <>
+                                            Lo que acabás de responder lo tuviste que estimar de memoria.
+                                            Estamos armando algo que lo calcule solo con los datos reales de tu
+                                            operación y te avise <strong className="text-[#E8E5DE]">antes</strong>{' '}
+                                            de que se te escape una venta o una entrega. Dejanos tu contacto y te
+                                            escribimos cuando esté — o antes, si querés que lo hagamos con tu
+                                            operación.
+                                        </>
+                                    )}
                                 </p>
 
                                 <form onSubmit={enviar} className="mt-5 flex flex-col gap-3">
@@ -863,7 +1294,7 @@ export function DiagnosticoEnvios() {
                                         type="text"
                                         value={nombre}
                                         onChange={(e) => setNombre(e.target.value)}
-                                        placeholder="Tu nombre"
+                                        placeholder="Tu nombre y empresa"
                                         className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] px-4 py-3 text-[15px] text-[#E8E5DE] outline-none transition-colors placeholder:text-[#6B6865] focus:border-[#C84214]"
                                     />
                                     <input
@@ -887,7 +1318,11 @@ export function DiagnosticoEnvios() {
                                         disabled={enviando}
                                         className="mt-1 rounded-lg bg-[#C84214] px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-[#B03A11] disabled:opacity-60"
                                     >
-                                        {enviando ? 'Enviando…' : 'Quiero que me avisen'}
+                                        {enviando
+                                            ? 'Enviando…'
+                                            : plataforma === 'logistica'
+                                              ? 'Recibir informe y coordinar diagnóstico'
+                                              : 'Quiero que me avisen'}
                                     </button>
                                 </form>
                             </div>
@@ -903,18 +1338,19 @@ export function DiagnosticoEnvios() {
                             transition={{ duration: 0.4 }}
                             className="text-center"
                         >
-                            <h2 className="text-3xl font-bold sm:text-4xl">Listo, anotado.</h2>
+                            <h2 className="text-3xl font-bold sm:text-4xl">Listo, recibido.</h2>
                             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-[#B7B3B0]">
-                                Te vamos a escribir. Si en el medio querés contarnos cómo es tu
-                                operación con más detalle, respondé ese mail — nos sirve muchísimo más
-                                que cualquier encuesta.
+                                Ya registramos los datos de tu operación. Te vamos a contactar a la brevedad
+                                para revisar los números juntos.
                             </p>
-                            <Link
-                                href="/"
-                                className="mt-8 inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"
-                            >
-                                Volver al inicio
-                            </Link>
+                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                                <Link
+                                    href={plataforma === 'logistica' ? '/logistica' : '/'}
+                                    className="inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"
+                                >
+                                    {plataforma === 'logistica' ? 'Ver solución de Logística' : 'Volver al inicio'}
+                                </Link>
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>

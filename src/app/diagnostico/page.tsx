@@ -2,16 +2,16 @@ import type { Metadata } from 'next'
 import { DiagnosticoEnvios } from '@/components/diagnostico/DiagnosticoEnvios'
 
 export const metadata: Metadata = {
-    title: 'Autodiagnóstico de atención y envíos | INDIVIDRA',
+    title: 'Autodiagnóstico Operativo y Calculadora de Entregas | INDIVIDRA',
     description:
-        'Pocas preguntas, 2 minutos. Descubrí qué tan cerca está tu operación de perder ventas por atención lenta o envíos que se caen, vendas en Mercado Libre o en tu propia tienda, y tres acciones concretas para bajar el riesgo.',
+        'Calculá en 2 minutos cuánto te cuestan las entregas fallidas (entregas/día × % fallos × ARS $9.980) y qué cuellos de botella podés eliminar en tu logística, distribuidora o e-commerce.',
     alternates: {
         canonical: '/diagnostico',
     },
     openGraph: {
-        title: 'Autodiagnóstico de atención y envíos | INDIVIDRA',
+        title: 'Autodiagnóstico Operativo y Calculadora de Entregas | INDIVIDRA',
         description:
-            '¿Cuánto se te está escapando por atención lenta o envíos que se caen? Diagnóstico gratuito para vendedores de Mercado Libre, Tiendanube, Shopify y multicanal.',
+            'Calculadora en vivo de costos por entregas fallidas y diagnóstico operativo para empresas de logística, distribuidoras mayoristas y e-commerce.',
         url: 'https://www.individratec.com/diagnostico',
         siteName: 'INDIVIDRA',
         locale: 'es_AR',

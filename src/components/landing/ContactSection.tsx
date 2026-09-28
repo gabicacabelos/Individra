@@ -115,8 +115,23 @@ export function ContactSection() {
                         transition={{ delay: 0.4 }}
                         className="mt-6 text-[#B7B3B0] text-lg max-w-xl mx-auto"
                     >
-                        Elegí un horario en nuestro calendario. En 30 minutos analizaremos tus cuellos de botella y te propondremos un sistema para escalar sin fricción.
+                        Elegí un horario en el calendario. En 30 minutos revisamos cómo entran tus pedidos, dónde se traban las entregas o la administración, y qué fugas de capital podés tapar primero sin cambiar tu sistema actual.
                     </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-5"
+                    >
+                        <a
+                            href="/diagnostico"
+                            className="inline-flex items-center gap-2 rounded-full border border-[#3E3D3A] bg-[#151719] px-4 py-2 text-xs sm:text-sm font-medium text-[#E8E5DE] hover:border-[#C84214] hover:text-white transition-colors"
+                        >
+                            <span className="h-2 w-2 rounded-full bg-[#C84214]" />
+                            ¿Preferís calcular primero cuánto te cuestan las entregas fallidas? Hacé el autodiagnóstico en 2 minutos →
+                        </a>
+                    </motion.div>
                 </motion.div>
 
                 {/* Contact Form */}
@@ -163,9 +178,9 @@ export function ContactSection() {
 
                             {/* Fallback visible si el calendario no carga */}
                             <p className="mt-4 text-sm text-neutral-500 text-center px-6">
-                                ¿El calendario no carga?{' '}
+                                ¿El calendario no carga o preferís hablar directo?{' '}
                                 <a
-                                    href="https://wa.me/5491160152435"
+                                    href="https://wa.me/5491160152435?text=Hola%20Individra%2C%20quiero%20coordinar%20el%20diagn%C3%B3stico%20gratuito%20de%2030%20minutos."
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#C84214] hover:text-[#D44A17] underline underline-offset-2 transition-colors"

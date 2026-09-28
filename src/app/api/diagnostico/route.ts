@@ -34,17 +34,19 @@ export async function POST(req: Request) {
             // De dónde vino: 'ecommerce' (landing) o 'directo' (link compartido).
             // Las dos fuentes miden cosas distintas, no hay que mezclarlas.
             origen: data.origen || 'directo',
-            // Qué cuestionario respondió: 'meli' (envíos) u 'otros' (tienda
-            // propia / multicanal). Determina también el "source" para no
-            // mezclar ambas cohortes en el análisis.
-            plataforma: data.plataforma || 'meli',
+            // Qué cuestionario respondió: 'logistica', 'meli' u 'otros'.
+            plataforma: data.plataforma || 'logistica',
+            // Datos de la calculadora financiera en vivo (cuando plataforma === 'logistica')
+            calculadora: data.calculadora || null,
             // Respuestas crudas: esto es la data de validación
             respuestas: data.respuestas || {},
             timestamp: new Date().toISOString(),
             source:
-                data.plataforma === 'otros'
-                    ? 'autodiagnostico-atencion-multicanal'
-                    : 'autodiagnostico-envios-ml',
+                data.plataforma === 'logistica'
+                    ? 'autodiagnostico-logistica-distribuidoras'
+                    : data.plataforma === 'otros'
+                      ? 'autodiagnostico-atencion-multicanal'
+                      : 'autodiagnostico-envios-ml',
         }
 
         // Webhook de n8n — no crítico, con timeout corto para no bloquear la respuesta
