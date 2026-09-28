@@ -131,6 +131,7 @@ export function PainSolutionSection() {
                         width={512}
                         height={349}
                         quality={95}
+                        sizes="(max-width: 640px) 224px, 256px"
                         className="w-56 sm:w-64 h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
                     />
                 </motion.div>
@@ -212,6 +213,7 @@ export function PainSolutionSection() {
                         width={429}
                         height={512}
                         quality={95}
+                        sizes="64px"
                         className="mb-3 h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                     />
                     <span className="text-[#C84214] text-xs sm:text-sm font-mono font-medium uppercase tracking-[0.2em]">

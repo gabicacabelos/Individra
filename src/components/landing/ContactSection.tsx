@@ -18,10 +18,22 @@ export function ContactSection() {
     const orb1X = useTransform(scrollYProgress, [0, 1], [0, 50])
     const orb2X = useTransform(scrollYProgress, [0, 1], [0, -50])
 
-    const [isMounted, setIsMounted] = useState(false)
+    const [shouldLoadCalendly, setShouldLoadCalendly] = useState(false)
 
     useEffect(() => {
-        setIsMounted(true)
+        const el = sectionRef.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShouldLoadCalendly(true)
+                    observer.disconnect()
+                }
+            },
+            { rootMargin: '600px' }
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
     }, [])
 
     return (
@@ -71,6 +83,7 @@ export function ContactSection() {
                             aria-hidden
                             width={295}
                             height={310}
+                            sizes="80px"
                             className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-20"
                         />
                     </motion.div>
@@ -128,7 +141,7 @@ export function ContactSection() {
                             className="absolute inset-0 bg-gradient-to-r from-[#C84214]/15 to-[#3E3D3A]/20 rounded-2xl sm:rounded-3xl blur-xl"
                         />
                         <div className="relative p-0 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#3E3D3A] bg-[#222120]/95 backdrop-blur-xl overflow-hidden min-h-[700px] sm:min-h-[600px] flex flex-col items-center justify-center calendly-container">
-                            {isMounted ? (
+                            {shouldLoadCalendly ? (
                                 <InlineWidget
                                     url="https://calendly.com/individratec/30min?hide_gdpr_banner=1&locale=es-ES"
                                     styles={{ height: '700px', width: '100%', overflow: 'hidden' }}

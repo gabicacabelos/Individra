@@ -51,6 +51,7 @@ export function DifferentiatorsSection() {
                         width={509}
                         height={512}
                         quality={95}
+                        sizes="64px"
                         className="mb-3 h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                     />
                     <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-[#B7B3B0] sm:text-sm">

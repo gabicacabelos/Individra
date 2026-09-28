@@ -9,14 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
-    "@splinetool/react-spline": "^4.1.0",
-    "@splinetool/runtime": "^1.12.50",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.31.0",
-    "lottie-react": "^2.4.1",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "posthog-js": "^1.369.3",
@@ -24,8 +19,7 @@
     "react": "19.2.3",
     "react-calendly": "^4.4.0",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0",
-    "three": "^0.183.1"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

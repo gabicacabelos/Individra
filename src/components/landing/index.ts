@@ -1,7 +1,6 @@
 export { Navbar } from './Navbar'
 export { HeroSection } from './HeroSection'
 export { ServicesSection } from './ServicesSection'
-export { ConnectionSection } from './ConnectionSection'
 export { CatalogSection } from './CatalogSection'
 export { FAQSection } from './FAQSection'
 export { ContactSection } from './ContactSection'

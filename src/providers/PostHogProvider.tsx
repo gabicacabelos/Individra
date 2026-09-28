@@ -1,7 +1,5 @@
 'use client'
 
-import posthog from 'posthog-js'
-import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type ConsentState = 'accepted' | 'rejected' | null
@@ -27,10 +25,12 @@ let posthogInitialized = false
 function initPostHog() {
     if (posthogInitialized) return
     posthogInitialized = true
-    posthog.init(POSTHOG_KEY, {
-        api_host: 'https://us.i.posthog.com',
-        capture_pageview: true,
-        capture_pageleave: true,
+    import('posthog-js').then(({ default: posthog }) => {
+        posthog.init(POSTHOG_KEY, {
+            api_host: 'https://us.i.posthog.com',
+            capture_pageview: true,
+            capture_pageleave: true,
+        })
     })
 }
 
@@ -60,9 +60,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <ConsentContext.Provider value={{ consent, accept, reject }}>
-            <PHProvider client={posthog}>
-                {children}
-            </PHProvider>
+            {children}
         </ConsentContext.Provider>
     )
 }

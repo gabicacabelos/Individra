@@ -69,6 +69,7 @@ export function Footer({
                                 alt="INDIVIDRA - Inteligencia Operativa"
                                 width={260}
                                 height={48}
+                                sizes="260px"
                                 className="h-10 sm:h-12 w-auto object-contain"
                             />
                         </motion.a>

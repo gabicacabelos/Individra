@@ -86,6 +86,7 @@ export function CatalogSection() {
                             width={512}
                             height={447}
                             quality={95}
+                            sizes="96px"
                             className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
                     </motion.div>

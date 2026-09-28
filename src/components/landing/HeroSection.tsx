@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
 import { MorphingText } from '@/components/ui/morphing-text'
@@ -153,6 +152,7 @@ export function HeroSection() {
                                     alt="Emblema 3D de INDIVIDRA"
                                     width={900}
                                     height={900}
+                                    sizes="(max-width: 640px) 250px, (max-width: 1024px) 290px, 510px"
                                     className="w-full h-full object-contain"
                                     priority
                                 />

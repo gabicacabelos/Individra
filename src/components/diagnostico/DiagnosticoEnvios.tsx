@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import posthog from 'posthog-js'
 
 /**
  * Autodiagnóstico de atención y envíos.
@@ -478,11 +477,13 @@ function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma |
 
 /** PostHog solo está inicializado si el usuario aceptó cookies; esto lo hace inofensivo si no. */
 function track(evento: string, props?: Record<string, unknown>) {
-    try {
-        posthog.capture(evento, props)
-    } catch {
-        /* noop */
-    }
+    import('posthog-js')
+        .then(({ default: posthog }) => {
+            posthog.capture(evento, props)
+        })
+        .catch(() => {
+            /* noop */
+        })
 }
 
 type Paso = 'plataforma' | 'intro' | 'preguntas' | 'resultado' | 'listo'

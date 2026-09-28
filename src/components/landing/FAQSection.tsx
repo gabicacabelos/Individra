@@ -81,6 +81,7 @@ export function FAQSection() {
                             aria-hidden
                             width={308}
                             height={291}
+                            sizes="80px"
                             className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-20"
                         />
                     </motion.div>

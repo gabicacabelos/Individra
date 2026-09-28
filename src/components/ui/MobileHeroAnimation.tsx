@@ -23,10 +23,11 @@ export function MobileHeroAnimation() {
                     <Image
                         src="/individra-3d-floating.png"
                         alt="Emblema 3D de INDIVIDRA"
-                        width={600}
-                        height={600}
+                        width={900}
+                        height={900}
+                        sizes="(max-width: 640px) 250px, (max-width: 1024px) 290px, 510px"
                         className="w-full h-full object-contain"
-                        priority
+                        loading="eager"
                     />
                 </div>
             </motion.div>
