@@ -270,40 +270,45 @@ export function CatalogSection() {
                         whileHover={{ scale: 1.01 }}
                         className="relative p-6 sm:p-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] overflow-hidden"
                     >
-                        {/* Ambient background */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C84214] rounded-full blur-[100px] opacity-10 animate-[catalog-glow_8s_ease-in-out_infinite]" />
-
                         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-4">
-                                {/* Lamparita que se enciende gradualmente al entrar en pantalla:
-                                    crossfade apagada -> encendida + glow cálido que crece. */}
+                                {/* Lamparita que se enciende gradualmente al entrar en pantalla sin halo de fondo */}
                                 <div className="relative flex items-center justify-center w-14 h-16 shrink-0">
-                                    <motion.div
-                                        aria-hidden
-                                        className="absolute inset-0 rounded-full blur-xl"
-                                        style={{ background: 'radial-gradient(circle, rgba(255,170,60,0.75), transparent 70%)' }}
-                                        initial={{ opacity: 0, scale: 0.6 }}
-                                        whileInView={{ opacity: [0, 0, 0.9], scale: [0.6, 0.8, 1.2] }}
-                                        viewport={{ once: true, margin: '-80px' }}
-                                        transition={{ duration: 1.3, times: [0, 0.4, 1], ease: 'easeOut' }}
-                                    />
                                     <motion.div
                                         className="absolute inset-0 flex items-center justify-center"
                                         initial={{ opacity: 1 }}
-                                        whileInView={{ opacity: 0 }}
+                                        whileInView={{ opacity: [1, 1, 0] }}
                                         viewport={{ once: true, margin: '-80px' }}
-                                        transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
+                                        transition={{ duration: 1.2, delay: 0.2, times: [0, 0.85, 1], ease: 'easeInOut' }}
                                     >
-                                        <Image src="/3d/lampara-off.png" alt="" aria-hidden width={306} height={512} quality={95} sizes="256px" className="h-16 w-auto object-contain" />
+                                        <Image
+                                            src="/3d/lampara-off.png"
+                                            alt=""
+                                            aria-hidden
+                                            width={306}
+                                            height={512}
+                                            quality={100}
+                                            unoptimized
+                                            className="h-16 w-auto object-contain select-none"
+                                        />
                                     </motion.div>
                                     <motion.div
                                         className="absolute inset-0 flex items-center justify-center"
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
                                         viewport={{ once: true, margin: '-80px' }}
-                                        transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
+                                        transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                                     >
-                                        <Image src="/3d/lampara-on.png" alt="" aria-hidden width={306} height={512} quality={95} sizes="256px" className="h-16 w-auto object-contain drop-shadow-[0_0_16px_rgba(255,170,60,0.65)]" />
+                                        <Image
+                                            src="/3d/lampara-on.png"
+                                            alt=""
+                                            aria-hidden
+                                            width={306}
+                                            height={512}
+                                            quality={100}
+                                            unoptimized
+                                            className="h-16 w-auto object-contain select-none"
+                                        />
                                     </motion.div>
                                 </div>
                                 <div>

@@ -122,12 +122,6 @@ export function ProcessWorkflowSection() {
             id="proceso-operativo"
             className="relative overflow-hidden border-t border-[#3E3D3A]/40 bg-[#0E1012] py-16 sm:py-24"
         >
-            {/* Background subtle atmospheric gradient */}
-            <div
-                aria-hidden
-                className="pointer-events-none absolute -right-40 top-24 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle_at_center,rgba(200,66,20,0.08)_0%,transparent_70%)] blur-3xl"
-            />
-
             <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
                 {/* Header de la sección */}
                 <div className="mb-10 sm:mb-14">
@@ -179,11 +173,11 @@ export function ProcessWorkflowSection() {
                         <Image
                             src="/logistics_hub_3d.png"
                             alt="Hub de distribución inteligente de INDIVIDRA"
-                            width={560}
-                            height={543}
+                            width={1024}
+                            height={993}
                             quality={95}
-                            sizes="(max-width: 1024px) 384px, 560px"
-                            className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.28)]"
+                            unoptimized
+                            className="w-full max-w-[280px] object-contain"
                         />
                         <div className="mt-4 max-w-[340px] border-l-2 border-[#C84214]/60 pl-4 text-left">
                             <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">
@@ -213,11 +207,11 @@ export function ProcessWorkflowSection() {
                             <Image
                                 src="/logistics_hub_3d.png"
                                 alt="Hub de distribución inteligente de INDIVIDRA"
-                                width={560}
-                                height={543}
+                                width={1024}
+                                height={993}
                                 quality={95}
-                                sizes="(max-width: 1024px) 384px, 560px"
-                                className="w-full max-w-[420px] object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
+                                unoptimized
+                                className="w-full max-w-[420px] object-contain"
                             />
                             <div className="mt-4 max-w-[380px] border-l-2 border-[#C84214]/60 pl-4">
                                 <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">

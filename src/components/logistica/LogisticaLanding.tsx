@@ -704,8 +704,8 @@ export function LogisticaLanding() {
                         width={512}
                         height={479}
                         quality={95}
-                        sizes="256px"
-                        className="h-24 w-auto object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.3)] sm:h-28"
+                        unoptimized
+                        className="h-24 w-auto object-contain sm:h-28"
                     />
                     <p className="mt-4 max-w-md text-sm sm:text-base text-neutral-400 leading-relaxed">
                         Cada entrega, con estándar de calidad. Eso es lo que

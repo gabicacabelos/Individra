@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { Spotlight } from '@/components/ui/spotlight'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
 import { MorphingText } from '@/components/ui/morphing-text'
 
@@ -36,14 +35,6 @@ export function HeroSection() {
             <motion.div
                 style={{ opacity }}
                 className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/10 via-[#0B0D0E] to-[#0B0D0E] pointer-events-none"
-            />
-            <Spotlight
-                className="-top-40 left-0 md:left-60 md:-top-20"
-                fill="rgba(200, 66, 20, 0.12)"
-            />
-            <Spotlight
-                className="top-20 right-0 md:-right-20"
-                fill="rgba(183, 179, 176, 0.08)"
             />
 
             {/* Grid Pattern with parallax */}
