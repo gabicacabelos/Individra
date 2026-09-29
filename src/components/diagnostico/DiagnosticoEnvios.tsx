@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
@@ -812,6 +815,7 @@ function CalculadoraFinancieraViva({
 type Paso = 'plataforma' | 'intro' | 'preguntas' | 'resultado' | 'listo'
 
 export function DiagnosticoEnvios() {
+    const router = useRouter()
     const [paso, setPaso] = useState<Paso>('plataforma')
     const [plataforma, setPlataforma] = useState<Plataforma | null>(null)
     const [indice, setIndice] = useState(0)
@@ -845,6 +849,19 @@ export function DiagnosticoEnvios() {
             }
         }
     }, [])
+
+    function salirHaciaAtras() {
+        if (
+            typeof window !== 'undefined' &&
+            window.history.length > 1 &&
+            document.referrer &&
+            document.referrer.includes(window.location.host)
+        ) {
+            router.back()
+            return
+        }
+        router.push(origen === 'logistica' ? '/logistica' : '/')
+    }
 
     // Todo se deriva del recorrido activo: nada de acumuladores que se desincronizan.
     const { activas, puntaje, maximo, porcentaje, nivel } = calcular(respuestas, plataforma)
@@ -967,7 +984,34 @@ export function DiagnosticoEnvios() {
 
     return (
         <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
-            <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 py-16 sm:px-6">
+            {/* Barra superior con botón para volver hacia atrás */}
+            <header className="fixed top-4 left-4 right-4 z-[100] rounded-2xl bg-black/75 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
+                    <button
+                        type="button"
+                        onClick={salirHaciaAtras}
+                        className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-[#E8E5DE] hover:border-[#C84214] hover:bg-white/[0.08] hover:text-white transition-all"
+                    >
+                        <ArrowLeft className="w-4 h-4 text-[#C84214] group-hover:-translate-x-0.5 transition-transform" />
+                        <span>Volver atrás</span>
+                    </button>
+
+                    <Link href="/" className="flex items-center py-0.5" aria-label="Volver al inicio">
+                        <Image
+                            src="/logo-individra-rebrand.png"
+                            alt="INDIVIDRA - Inteligencia Operativa"
+                            width={640}
+                            height={125}
+                            quality={95}
+                            sizes="(max-width: 640px) 200px, 320px"
+                            className="h-8 sm:h-10 w-auto object-contain"
+                            priority
+                        />
+                    </Link>
+                </div>
+            </header>
+
+            <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 pt-28 pb-16 sm:px-6">
                 <AnimatePresence mode="wait">
                     {/* ------------------------------------------- PLATAFORMA */}
                     {paso === 'plataforma' && (
@@ -1217,6 +1261,13 @@ export function DiagnosticoEnvios() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
                         >
+                            <button
+                                type="button"
+                                onClick={() => setPaso('preguntas')}
+                                className="mb-4 inline-flex items-center gap-1.5 font-mono text-xs text-[#8E8B88] transition-colors hover:text-[#E8E5DE]"
+                            >
+                                ← Volver a las preguntas
+                            </button>
                             <div
                                 className="rounded-xl border p-6 sm:p-7"
                                 style={{ borderColor: resultado.color, background: resultado.bg }}
