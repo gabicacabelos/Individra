@@ -138,6 +138,7 @@ export function ProcessWorkflowSection() {
                         width={512}
                         height={478}
                         quality={95}
+                        sizes="256px"
                         className="mb-3 h-14 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.28)] sm:h-16"
                     />
                     <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-[#C84214] sm:text-sm">
@@ -180,7 +181,8 @@ export function ProcessWorkflowSection() {
                             alt="Hub de distribución inteligente de INDIVIDRA"
                             width={560}
                             height={543}
-                            sizes="(max-width: 1024px) 280px, 420px"
+                            quality={95}
+                            sizes="(max-width: 1024px) 384px, 560px"
                             className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.28)]"
                         />
                         <div className="mt-4 max-w-[340px] border-l-2 border-[#C84214]/60 pl-4 text-left">
@@ -213,7 +215,8 @@ export function ProcessWorkflowSection() {
                                 alt="Hub de distribución inteligente de INDIVIDRA"
                                 width={560}
                                 height={543}
-                                sizes="(max-width: 1024px) 280px, 420px"
+                                quality={95}
+                                sizes="(max-width: 1024px) 384px, 560px"
                                 className="w-full max-w-[420px] object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
                             />
                             <div className="mt-4 max-w-[380px] border-l-2 border-[#C84214]/60 pl-4">

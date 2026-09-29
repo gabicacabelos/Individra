@@ -166,7 +166,7 @@ export function LogisticaLanding() {
                             <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
                         </Link>
                         <Link href="/" className="flex items-center py-1" aria-label="Volver al inicio">
-                            <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={640} height={125} quality={95} sizes="(max-width: 640px) 200px, 260px" className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
+                            <Image src="/logo-individra-rebrand.png" alt="INDIVIDRA - Inteligencia Operativa" width={640} height={125} quality={95} sizes="(max-width: 640px) 256px, 384px" className="h-9 sm:h-11 lg:h-12 w-auto object-contain" priority />
                         </Link>
                     </div>
                     <div className="flex items-center gap-3 sm:gap-5">
@@ -286,7 +286,7 @@ export function LogisticaLanding() {
                                         width={s.w}
                                         height={s.h}
                                         quality={95}
-                                        sizes="72px"
+                                        sizes="256px"
                                         className="h-16 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.28)] sm:h-[72px]"
                                     />
                                     <span className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#C84214]">
@@ -323,7 +323,7 @@ export function LogisticaLanding() {
                             width={529}
                             height={560}
                             quality={95}
-                            sizes="(max-width: 640px) 192px, 224px"
+                            sizes="384px"
                             className="w-48 sm:w-56 h-auto object-contain drop-shadow-[0_18px_40px_rgba(200,66,20,0.28)]"
                         />
                     </motion.div>
@@ -367,7 +367,7 @@ export function LogisticaLanding() {
                             width={512}
                             height={376}
                             quality={95}
-                            sizes="88px"
+                            sizes="256px"
                             className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                         />
                     </motion.div>
@@ -425,7 +425,7 @@ export function LogisticaLanding() {
                                                     width={m.iw}
                                                     height={m.ih}
                                                     quality={95}
-                                                    sizes="64px"
+                                                    sizes="256px"
                                                     className="h-12 w-auto object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
                                                 />
                                             </motion.div>
@@ -437,7 +437,7 @@ export function LogisticaLanding() {
                                                 width={m.iw}
                                                 height={m.ih}
                                                 quality={95}
-                                                sizes="64px"
+                                                sizes="256px"
                                                 className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
                                             />
                                         )}
@@ -479,7 +479,7 @@ export function LogisticaLanding() {
                                         width={344}
                                         height={512}
                                         quality={95}
-                                        sizes="48px"
+                                        sizes="256px"
                                         className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] sm:h-12"
                                     />
                                     <h3 className="text-xl sm:text-2xl font-bold text-white">
@@ -546,7 +546,7 @@ export function LogisticaLanding() {
                                         width={512}
                                         height={494}
                                         quality={95}
-                                        sizes="56px"
+                                        sizes="256px"
                                         className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(183,179,176,0.28)] sm:h-12"
                                     />
                                     <h3 className="text-xl sm:text-2xl font-bold text-white">
@@ -619,7 +619,7 @@ export function LogisticaLanding() {
                                             width={512}
                                             height={507}
                                             quality={95}
-                                            sizes="64px"
+                                            sizes="256px"
                                             className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105 sm:h-14"
                                         />
                                         <h3 className="text-xl sm:text-2xl font-bold text-white">
@@ -704,7 +704,7 @@ export function LogisticaLanding() {
                         width={512}
                         height={479}
                         quality={95}
-                        sizes="120px"
+                        sizes="256px"
                         className="h-24 w-auto object-contain drop-shadow-[0_20px_44px_rgba(200,66,20,0.3)] sm:h-28"
                     />
                     <p className="mt-4 max-w-md text-sm sm:text-base text-neutral-400 leading-relaxed">
@@ -788,7 +788,7 @@ function DesktopPainCarousel({ pains }: { pains: string[] }) {
                         width={900}
                         height={522}
                         quality={95}
-                        sizes="(max-width: 1280px) 440px, 500px"
+                        sizes="(max-width: 1280px) 640px, 900px"
                         className="relative w-[440px] xl:w-[500px] h-auto object-contain drop-shadow-[0_24px_50px_rgba(200,66,20,0.28)]"
                     />
                 </motion.div>

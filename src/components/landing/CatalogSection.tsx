@@ -86,7 +86,7 @@ export function CatalogSection() {
                             width={512}
                             height={447}
                             quality={95}
-                            sizes="96px"
+                            sizes="256px"
                             className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
                     </motion.div>
@@ -294,7 +294,7 @@ export function CatalogSection() {
                                         viewport={{ once: true, margin: '-80px' }}
                                         transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
                                     >
-                                        <Image src="/3d/lampara-off.png" alt="" aria-hidden width={306} height={512} className="h-16 w-auto object-contain" />
+                                        <Image src="/3d/lampara-off.png" alt="" aria-hidden width={306} height={512} quality={95} sizes="256px" className="h-16 w-auto object-contain" />
                                     </motion.div>
                                     <motion.div
                                         className="absolute inset-0 flex items-center justify-center"
@@ -303,7 +303,7 @@ export function CatalogSection() {
                                         viewport={{ once: true, margin: '-80px' }}
                                         transition={{ duration: 1, delay: 0.3, ease: 'easeInOut' }}
                                     >
-                                        <Image src="/3d/lampara-on.png" alt="" aria-hidden width={306} height={512} className="h-16 w-auto object-contain drop-shadow-[0_0_16px_rgba(255,170,60,0.65)]" />
+                                        <Image src="/3d/lampara-on.png" alt="" aria-hidden width={306} height={512} quality={95} sizes="256px" className="h-16 w-auto object-contain drop-shadow-[0_0_16px_rgba(255,170,60,0.65)]" />
                                     </motion.div>
                                 </div>
                                 <div>

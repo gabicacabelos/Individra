@@ -70,7 +70,7 @@ export function Navbar() {
                             width={640}
                             height={125}
                             quality={95}
-                            sizes="(max-width: 640px) 200px, 260px"
+                            sizes="(max-width: 640px) 256px, 384px"
                             className="h-9 sm:h-11 lg:h-12 w-auto object-contain"
                             priority
                         />

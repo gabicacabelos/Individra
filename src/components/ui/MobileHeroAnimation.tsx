@@ -16,7 +16,8 @@ export function MobileHeroAnimation() {
                         alt="Emblema 3D de INDIVIDRA"
                         width={900}
                         height={900}
-                        sizes="(max-width: 640px) 250px, (max-width: 1024px) 290px, 510px"
+                        quality={95}
+                        sizes="(max-width: 640px) 384px, 512px"
                         className="w-full h-full object-contain"
                         loading="eager"
                     />

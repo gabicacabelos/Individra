@@ -69,6 +69,7 @@ export function Footer({
                                 alt="INDIVIDRA - Inteligencia Operativa"
                                 width={260}
                                 height={48}
+                                quality={95}
                                 sizes="260px"
                                 className="h-10 sm:h-12 w-auto object-contain"
                             />
@@ -217,6 +218,8 @@ export function Footer({
                                 alt="INDIVIDRA Logo Icon"
                                 width={80}
                                 height={80}
+                                quality={95}
+                                sizes="128px"
                                 className="h-14 sm:h-16 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300 object-contain"
                             />
                         </motion.div>

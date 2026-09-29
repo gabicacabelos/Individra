@@ -67,7 +67,8 @@ export function ComparativeSection() {
                             aria-hidden
                             width={224}
                             height={224}
-                            sizes="72px"
+                            quality={95}
+                            sizes="224px"
                             className="h-16 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-[72px]"
                         />
                     </motion.div>

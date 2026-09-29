@@ -14,7 +14,7 @@ interface IntegrationItem {
     badge: string
     connectionType: string
     /** Logos oficiales sin fondo (public/logos) */
-    logos: { src: string; alt: string }[]
+    logos: { src: string; alt: string; width: number; height: number }[]
     logoHeight?: number
 }
 
@@ -35,7 +35,8 @@ const integrations: IntegrationItem[] = [
         description: 'Notificaciones oficiales con tilde verde y respuestas 24/7 sin bloqueos de cuenta.',
         badge: 'Oficial Meta',
         connectionType: 'Webhooks & Cloud API',
-        logos: [{ src: '/logos/whatsapp.svg', alt: 'WhatsApp' }],
+        logos: [{ src: '/logos/whatsapp.svg', alt: 'WhatsApp', width: 96, height: 96 }],
+        logoHeight: 30,
     },
     {
         id: 'tango',
@@ -45,8 +46,8 @@ const integrations: IntegrationItem[] = [
         description: 'Sincronización bidireccional de remitos, hojas de ruta y actualización de stock en tiempo real.',
         badge: 'ERP Industrial',
         connectionType: 'Conexión Directa / API',
-        logos: [{ src: '/logos/tango-gestion.png', alt: 'Tango Gestión' }],
-        logoHeight: 30,
+        logos: [{ src: '/logos/tango-gestion.png', alt: 'Tango Gestión', width: 572, height: 340 }],
+        logoHeight: 34,
     },
     {
         id: 'tiendanube',
@@ -56,7 +57,8 @@ const integrations: IntegrationItem[] = [
         description: 'Despacho automático de órdenes y tracking proactivo por WhatsApp directo a los compradores.',
         badge: 'Plataforma Líder',
         connectionType: 'App Partner API',
-        logos: [{ src: '/logos/tiendanube.png', alt: 'Tiendanube' }],
+        logos: [{ src: '/logos/tiendanube.png', alt: 'Tiendanube', width: 948, height: 162 }],
+        logoHeight: 28,
     },
     {
         id: 'mercadolibre',
@@ -66,7 +68,8 @@ const integrations: IntegrationItem[] = [
         description: 'Lectura instantánea de órdenes Flex y mensajes post-venta en tiempo real sin demoras.',
         badge: 'Flex & Envíos',
         connectionType: 'OAuth 2.0 API',
-        logos: [{ src: '/logos/mercadolibre-isotipo.svg', alt: 'MercadoLibre' }],
+        logos: [{ src: '/logos/mercadolibre-isotipo.svg', alt: 'MercadoLibre', width: 300, height: 208 }],
+        logoHeight: 30,
     },
     {
         id: 'bejerman',
@@ -76,7 +79,8 @@ const integrations: IntegrationItem[] = [
         description: 'Validación de facturación, remitos triplicados y asientos contables sin intervención humana.',
         badge: 'ERP Corporativo',
         connectionType: 'Integración Segura',
-        logos: [{ src: '/logos/bejerman.png', alt: 'Sistemas Bejerman' }],
+        logos: [{ src: '/logos/bejerman.png', alt: 'Sistemas Bejerman', width: 1016, height: 92 }],
+        logoHeight: 16,
     },
     {
         id: 'woocommerce',
@@ -86,8 +90,8 @@ const integrations: IntegrationItem[] = [
         description: 'Integración vía webhooks nativos para sincronizar despachos y estados de pedidos.',
         badge: 'Open Source',
         connectionType: 'REST API & Webhooks',
-        logos: [{ src: '/logos/woocommerce-icon.svg', alt: 'WooCommerce' }],
-        logoHeight: 30,
+        logos: [{ src: '/logos/woocommerce-icon.svg', alt: 'WooCommerce', width: 256, height: 153 }],
+        logoHeight: 32,
     },
     {
         id: 'spreadsheets',
@@ -98,9 +102,10 @@ const integrations: IntegrationItem[] = [
         badge: 'Cero Fricción',
         connectionType: 'Cloud Sync 24/7',
         logos: [
-            { src: '/logos/excel.svg', alt: 'Microsoft Excel' },
-            { src: '/logos/googlesheets.svg', alt: 'Google Sheets' },
+            { src: '/logos/excel.svg', alt: 'Microsoft Excel', width: 486, height: 500 },
+            { src: '/logos/googlesheets.svg', alt: 'Google Sheets', width: 96, height: 96 },
         ],
+        logoHeight: 30,
     },
     {
         id: 'maps',
@@ -110,7 +115,8 @@ const integrations: IntegrationItem[] = [
         description: 'Validación de direcciones y cálculo de rutas antes del despacho para evitar viajes fallidos.',
         badge: 'Geocodificación',
         connectionType: 'Routes & Places API',
-        logos: [{ src: '/logos/googlemaps.svg', alt: 'Google Maps Platform' }],
+        logos: [{ src: '/logos/googlemaps.svg', alt: 'Google Maps Platform', width: 96, height: 96 }],
+        logoHeight: 30,
     },
     {
         id: 'telegram',
@@ -120,24 +126,26 @@ const integrations: IntegrationItem[] = [
         description: 'Alertas en tiempo real a choferes y canal secundario para supervisión de flota en calle.',
         badge: 'Alertas Fleet',
         connectionType: 'Bot API Instantánea',
-        logos: [{ src: '/logos/telegram.svg', alt: 'Telegram' }],
+        logos: [{ src: '/logos/telegram.svg', alt: 'Telegram', width: 96, height: 96 }],
+        logoHeight: 30,
     },
 ]
 
 function LogoRow({ item }: { item: IntegrationItem }) {
-    const h = item.logoHeight ?? 26
+    const h = item.logoHeight ?? 30
     return (
-        <div className="flex items-center gap-2" style={{ minHeight: 32 }}>
+        <div className="flex items-center gap-2.5" style={{ minHeight: 36 }}>
             {item.logos.map((logo) => (
                 <Image
                     key={logo.src}
                     src={logo.src}
                     alt={logo.alt}
-                    width={h * 2}
-                    height={h * 2}
+                    width={logo.width}
+                    height={logo.height}
+                    quality={95}
                     unoptimized
                     style={{ height: h, width: 'auto' }}
-                    className="max-h-[30px] max-w-[120px] object-contain"
+                    className="max-h-[36px] max-w-[175px] object-contain"
                 />
             ))}
         </div>

@@ -151,7 +151,7 @@ export function ServicesSection() {
                             width={512}
                             height={498}
                             quality={95}
-                            sizes="96px"
+                            sizes="256px"
                             className="h-20 w-auto object-contain drop-shadow-[0_14px_30px_rgba(200,66,20,0.32)] sm:h-24"
                         />
                     </div>
