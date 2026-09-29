@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
@@ -984,34 +983,16 @@ export function DiagnosticoEnvios() {
 
     return (
         <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
-            {/* Barra superior con botón para volver hacia atrás */}
-            <header className="fixed top-4 left-4 right-4 z-[100] rounded-2xl bg-black/75 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
-                    <button
-                        type="button"
-                        onClick={salirHaciaAtras}
-                        className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-[#E8E5DE] hover:border-[#C84214] hover:bg-white/[0.08] hover:text-white transition-all"
-                    >
-                        <ArrowLeft className="w-4 h-4 text-[#C84214] group-hover:-translate-x-0.5 transition-transform" />
-                        <span>Volver atrás</span>
-                    </button>
+            <button
+                type="button"
+                onClick={salirHaciaAtras}
+                className="fixed top-6 left-6 z-[100] flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
+                aria-label="Volver atrás"
+            >
+                <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
+            </button>
 
-                    <Link href="/" className="flex items-center py-0.5" aria-label="Volver al inicio">
-                        <Image
-                            src="/logo-individra-rebrand.png"
-                            alt="INDIVIDRA - Inteligencia Operativa"
-                            width={640}
-                            height={125}
-                            quality={95}
-                            sizes="(max-width: 640px) 200px, 320px"
-                            className="h-8 sm:h-10 w-auto object-contain"
-                            priority
-                        />
-                    </Link>
-                </div>
-            </header>
-
-            <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 pt-28 pb-16 sm:px-6">
+            <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 py-16 sm:px-6">
                 <AnimatePresence mode="wait">
                     {/* ------------------------------------------- PLATAFORMA */}
                     {paso === 'plataforma' && (
