@@ -84,7 +84,7 @@ export function MargenColorCalculator() {
                                 Ventas en el período que evalúa ML
                             </label>
                             <p className="text-xs text-neutral-400 mt-1 mb-3">
-                                Si tuviste 50 ventas o más en los últimos 60 días, cargá esos 60 días. Si tuviste menos, ML mira tus últimos 365 días.
+                                Si tuviste 101 ventas o más en los últimos 60 días, cargá esos 60 días. Si tuviste menos, ML mira tus últimos 365 días.
                             </p>
                             <input
                                 id="calc-ventas"

@@ -13,19 +13,22 @@ export async function POST(req: Request) {
     try {
         const data = await req.json()
 
-        if (!data.contacto?.email) {
-            return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
+        // En el celular el canal natural es WhatsApp: alcanza con uno de los dos
+        const email: string = (data.contacto?.email || '').trim()
+        const whatsapp: string = (data.contacto?.whatsapp || '').trim()
+        if (!email && whatsapp.replace(/\D/g, '').length < 8) {
+            return NextResponse.json({ error: 'WhatsApp o email requerido' }, { status: 400 })
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(data.contacto.email)) {
+        if (email && !emailRegex.test(email)) {
             return NextResponse.json({ error: 'Email inválido' }, { status: 400 })
         }
 
         const payload = {
-            email: data.contacto.email,
-            nombre: data.contacto.nombre || '',
-            whatsapp: data.contacto.whatsapp || '',
+            email,
+            nombre: data.contacto?.nombre || '',
+            whatsapp,
             // Resultado del diagnóstico
             puntaje: data.puntaje ?? null,
             puntajeMaximo: data.puntajeMaximo ?? null,

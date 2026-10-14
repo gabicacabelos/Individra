@@ -134,7 +134,7 @@ export function MobileCalculator() {
                         ¿De dónde saco estos números?
                     </summary>
                     <p className="mt-2 leading-relaxed">
-                        Están en la sección Reputación de tu cuenta de Mercado Libre. Si tuviste menos de 50 ventas en 60 días, ML
+                        Están en la sección Reputación de tu cuenta de Mercado Libre. Si tuviste menos de 101 ventas en 60 días, ML
                         mira los últimos 365 días. Usamos los límites publicados por ML para Argentina; en el piloto lo
                         recalculamos todos los días con tu cuenta real.
                     </p>

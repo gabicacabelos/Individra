@@ -42,7 +42,7 @@ function ars(valor: number): string {
     )
 }
 
-type Hallazgo = { problema?: string; solucion: string }
+type Hallazgo = { problema?: string; solucion: string; tema?: string }
 
 type Oferta = {
     plan: Plan
@@ -58,6 +58,8 @@ type Contexto = {
     puntos: Record<string, number>
     reputacion: DatosReputacion | null
     perdidaLogisticaMensual: number
+    /** Lo que el vendedor dijo que más le complica: ese hallazgo va primero. */
+    foco?: string
 }
 
 const PASOS_TIENDA = (plan: Plan) => [
@@ -72,22 +74,17 @@ const PASOS_TIENDA = (plan: Plan) => [
     },
 ]
 
+// Atados a los labels de DiagnosticoEnvios: si cambia un texto allá, cambia acá.
 const RANGO_COSTO_MELI: Record<string, { texto: string; base: number | null }> = {
-    'Menos de $800.000 ARS': { texto: 'menos de $800.000', base: null },
-    'Entre $800.000 y $3.000.000 ARS entre pérdida de exposición y reclamos': {
-        texto: 'entre $800.000 y $3.000.000',
-        base: 800000,
-    },
-    'Más de $3.000.000 ARS (la caída de ventas en los listados es inmediata y brutal)': {
-        texto: 'más de $3.000.000',
-        base: 3000000,
-    },
+    'Menos de $800.000': { texto: 'menos de $800.000', base: null },
+    'Entre $800.000 y $3.000.000': { texto: 'entre $800.000 y $3.000.000', base: 800000 },
+    'Más de $3.000.000': { texto: 'más de $3.000.000', base: 3000000 },
 }
 
 const HORAS_ADMIN: Record<string, number> = {
-    'Menos de 45 minutos por día': 0.75,
-    'Entre 1 y 2 horas por día repartidas entre el dueño y depósito': 1.5,
-    'Más de 2 horas y media por día (equivale a casi medio sueldo administrativo al mes)': 2.5,
+    'Menos de 45 minutos': 0.75,
+    'Entre 1 y 2 horas': 1.5,
+    'Más de 2 horas y media': 2.5,
 }
 
 export function construirOferta(ctx: Contexto): Oferta {
@@ -169,7 +166,7 @@ export function construirOferta(ctx: Contexto): Oferta {
     }
 
     // Mercado Libre
-    const volumenAlto = r.volumen === 'Entre 30 y 70 paquetes por día' || r.volumen === 'Más de 70 paquetes por día'
+    const volumenAlto = r.volumen === 'Entre 600 y 1.500' || r.volumen === 'Más de 1.500'
     const fleteConProblemas = (p.control_fleteros ?? 0) >= 3
     const plan = volumenAlto || fleteConProblemas ? PLAN_2 : PLAN_1
 
@@ -179,26 +176,55 @@ export function construirOferta(ctx: Contexto): Oferta {
 
     const hallazgos: Hallazgo[] = [
         {
+            tema: 'plazo',
             problema: (p.reclamos_plazo ?? 0) >= 2 ? 'Te enterás de los reclamos tarde, o revisando el panel a mano.' : undefined,
             solucion: 'Te llega un WhatsApp apenas entra cada reclamo, con el plazo exacto que fija Mercado Libre y la cuenta regresiva.',
         },
         {
+            tema: 'margen',
             problema: margen
                 ? `Hoy: ${margen.titular.toLowerCase()}${margen.masAjustada.margen > 0 ? ' antes de bajar de color' : ''}.`
                 : 'No sabés cuántos reclamos te quedan antes de bajar de color.',
             solucion: 'Te calculamos todos los días cuántos reclamos, cancelaciones y demoras te quedan antes de perder el verde.',
         },
     ]
-    if ((p.evidencia_controversias ?? 0) >= 2)
+    if ((p.sin_stock ?? 0) >= 2)
         hallazgos.push({
-            problema: 'Cuando hay una controversia, juntar pruebas te lleva horas o no las tenés.',
-            solucion: 'Armamos un expediente por venta con la foto del empaque y el remito, listo para responder la mediación a tiempo.',
+            tema: 'stock',
+            problema: 'Cuando te falta stock, terminás demorando, cancelando o arreglando por fuera.',
+            solucion: 'Con Venta Blindada el stock se descuenta en todos tus canales en el momento, para no vender lo que no tenés.',
+        })
+    if ((p.liquidaciones ?? 0) >= 3)
+        hallazgos.push({
+            tema: 'liquidacion',
+            problema: 'No sabés cuánto te queda limpio de cada venta.',
+            solucion: 'Cruzamos cada venta con lo que acreditó Mercado Pago y te mostramos el margen real por producto.',
         })
     if ((p.control_fleteros ?? 0) >= 2)
         hallazgos.push({
+            tema: 'flex',
             problema: 'No auditás paquete por paquete lo que te factura el fletero.',
             solucion: `Cruzamos la liquidación del fletero contra las entregas reales de Mercado Libre${plan === PLAN_2 ? '' : ' (en el Plan 2)'}.`,
         })
+
+    // Lo que más le complica, primero (si quedó afuera por sus respuestas, lo sumamos igual)
+    if (ctx.foco === 'stock' && !hallazgos.some((h) => h.tema === 'stock'))
+        hallazgos.push({
+            tema: 'stock',
+            solucion: 'Con Venta Blindada el stock se descuenta en todos tus canales en el momento, para no vender lo que no tenés.',
+        })
+    if (ctx.foco === 'liquidacion' && !hallazgos.some((h) => h.tema === 'liquidacion'))
+        hallazgos.push({
+            tema: 'liquidacion',
+            solucion: 'Cruzamos cada venta con lo que acreditó Mercado Pago y te mostramos el margen real por producto.',
+        })
+    if (ctx.foco === 'devoluciones')
+        hallazgos.push({
+            tema: 'devoluciones',
+            problema: 'Las devoluciones por falla o producto distinto cuentan como reclamo.',
+            solucion: 'Te avisamos cada devolución apenas se abre, con su plazo, para revisarla cuando llega y pedir la revisión a tiempo si vuelve distinta.',
+        })
+    if (ctx.foco) hallazgos.sort((a, b) => Number(b.tema === ctx.foco) - Number(a.tema === ctx.foco))
 
     const rango = RANGO_COSTO_MELI[r.costo_reputacion]
     let roi: string | undefined
@@ -222,60 +248,58 @@ export function construirOferta(ctx: Contexto): Oferta {
    Bloques visuales
    ============================================================ */
 
-export function OfertaRecomendada({ oferta }: { oferta: Oferta }) {
+/** Lo que encontramos (problema → cómo lo resolvemos). */
+export function HallazgosLista({ oferta }: { oferta: Oferta }) {
     return (
-        <div className="mt-10">
-            <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-white tracking-tight">
-                Lo que encontramos y cómo lo resolvemos
-            </h3>
-            <ul className="mt-4 flex flex-col gap-3">
-                {oferta.hallazgos.map((h, i) => (
-                    <li key={i} className="rounded-xl border border-white/[0.08] bg-[#151719] p-4">
-                        {h.problema && <p className="text-sm text-neutral-400 font-sans">{h.problema}</p>}
-                        <p className="mt-1 flex items-start gap-2.5 text-[15px] leading-relaxed text-neutral-100 font-sans">
-                            <CheckCircle2 className="w-4 h-4 text-[#FF5520] shrink-0 mt-1" />
-                            <span>{h.solucion}</span>
-                        </p>
+        <ul className="mt-4 flex flex-col gap-2.5">
+            {oferta.hallazgos.map((h, i) => (
+                <li key={i} className="rounded-2xl border border-white/[0.08] bg-[#151719] p-4">
+                    {h.problema && <p className="text-sm text-neutral-400">{h.problema}</p>}
+                    <p className="mt-1 flex items-start gap-2.5 text-[15px] leading-relaxed text-neutral-100">
+                        <CheckCircle2 className="w-4 h-4 text-[#FF5520] shrink-0 mt-1" />
+                        <span>{h.solucion}</span>
+                    </p>
+                </li>
+            ))}
+        </ul>
+    )
+}
+
+/** Plan recomendado, cuánto cuesta frente a lo que cuesta hoy y cómo se arranca. */
+export function PlanRecomendado({ oferta }: { oferta: Oferta }) {
+    return (
+        <div className="rounded-3xl border border-[#FF5520]/40 bg-gradient-to-b from-[#1C100C] via-[#141014] to-[#0A0D10] p-5 sm:p-8">
+            <span className="font-mono text-[11px] uppercase tracking-widest text-[#FFA380] font-bold">
+                Recomendado para tu operación
+            </span>
+            <h4 className="mt-2 text-lg sm:text-2xl font-bold font-heading text-white">{oferta.plan.nombre}</h4>
+            <p className="mt-1 font-mono text-lg font-bold text-white">
+                {oferta.plan.desde ? 'desde ' : ''}
+                {ars(oferta.plan.precio)}
+                <span className="text-sm text-neutral-400 font-normal">/mes + IVA · {oferta.plan.detalle}</span>
+            </p>
+
+            {oferta.roi && (
+                <p className="mt-4 rounded-xl border border-[#FF5520]/30 bg-[#FF5520]/10 p-4 text-sm leading-relaxed text-neutral-100">
+                    {oferta.roi}
+                </p>
+            )}
+
+            <ol className="mt-5 flex flex-col gap-4">
+                {oferta.pasos.map((paso, i) => (
+                    <li key={paso.titulo} className="flex gap-3.5">
+                        <span className="font-mono text-sm font-bold text-[#FFA380] bg-[#FF5520]/15 border border-[#FF5520]/30 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
+                            {i + 1}
+                        </span>
+                        <div>
+                            <p className="font-semibold text-white">{paso.titulo}</p>
+                            <p className="mt-0.5 text-sm text-neutral-400 leading-relaxed">{paso.detalle}</p>
+                        </div>
                     </li>
                 ))}
-            </ul>
+            </ol>
 
-            <div className="mt-8 rounded-3xl border border-[#FF5520]/40 bg-gradient-to-b from-[#1C100C] via-[#141014] to-[#0A0D10] p-6 sm:p-8">
-                <span className="font-mono text-[11px] uppercase tracking-widest text-[#FFA380] font-bold">
-                    Recomendado para tu operación
-                </span>
-                <div className="mt-2 flex flex-wrap items-baseline justify-between gap-3">
-                    <h4 className="text-xl sm:text-2xl font-bold font-heading text-white">{oferta.plan.nombre}</h4>
-                    <span className="font-mono text-lg font-bold text-white">
-                        {oferta.plan.desde ? 'desde ' : ''}
-                        {ars(oferta.plan.precio)}
-                        <span className="text-sm text-neutral-400 font-normal">/mes + IVA</span>
-                    </span>
-                </div>
-                <p className="mt-1 text-xs font-mono text-neutral-400">{oferta.plan.detalle}</p>
-
-                {oferta.roi && (
-                    <p className="mt-5 rounded-xl border border-[#FF5520]/30 bg-[#FF5520]/10 p-4 text-sm leading-relaxed text-neutral-100">
-                        {oferta.roi}
-                    </p>
-                )}
-
-                <ol className="mt-6 flex flex-col gap-4">
-                    {oferta.pasos.map((paso, i) => (
-                        <li key={paso.titulo} className="flex gap-3.5">
-                            <span className="font-mono text-sm font-bold text-[#FFA380] bg-[#FF5520]/15 border border-[#FF5520]/30 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
-                                {i + 1}
-                            </span>
-                            <div>
-                                <p className="font-semibold text-white">{paso.titulo}</p>
-                                <p className="mt-0.5 text-sm text-neutral-400 leading-relaxed">{paso.detalle}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ol>
-
-                {oferta.cupo && <p className="mt-6 text-xs font-mono text-[#FFA380]">{oferta.cupo}</p>}
-            </div>
+            {oferta.cupo && <p className="mt-5 text-xs font-mono text-[#FFA380]">{oferta.cupo}</p>}
         </div>
     )
 }
@@ -301,10 +325,10 @@ export function MargenResultado({ datos }: { datos: DatosReputacion }) {
                 </span>
             </div>
             <p className="mt-3 text-2xl sm:text-3xl font-black font-heading text-white">{titular}</p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
                 {filas.map((f) => (
-                    <div key={f.id} className="rounded-xl border border-white/[0.08] bg-black/40 p-3">
-                        <p className="text-xs font-semibold capitalize text-neutral-200">{f.plural}</p>
+                    <div key={f.id} className="rounded-xl border border-white/[0.08] bg-black/40 p-2 sm:p-3">
+                        <p className="text-[10px] sm:text-xs font-semibold capitalize tracking-tight text-neutral-200">{f.plural}</p>
                         <p className="mt-1 font-mono text-xs text-neutral-400">
                             {porcentaje(f.tasa)} de {porcentaje(f.limite)}
                         </p>
@@ -340,13 +364,13 @@ export function PasoReputacion({
         'w-full px-3 py-2.5 rounded-xl bg-black/60 border border-white/10 font-mono text-base font-bold text-[#FFA380] focus:outline-none focus:border-[#FF5520]/60'
 
     return (
-        <div className="mt-6 flex flex-col gap-5">
+        <div className="mt-5 sm:mt-6 flex flex-col gap-4 sm:gap-5">
             <div>
                 <label htmlFor="rep-ventas" className="text-sm font-semibold text-white">
                     Ventas en el período que evalúa ML
                 </label>
                 <p className="mt-1 mb-2 text-xs text-neutral-400">
-                    Últimos 60 días si tuviste 50 ventas o más; si no, últimos 365 días.
+                    Si tuviste 101 ventas o más en los últimos 60 días, cargá esos 60 días. Si no, ML mira los últimos 365.
                 </p>
                 <input
                     id="rep-ventas"
@@ -359,11 +383,11 @@ export function PasoReputacion({
                     className={campo}
                 />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
                 {METRICAS.map((m) => (
                     <div key={m.id}>
-                        <label htmlFor={`rep-${m.id}`} className="text-sm font-semibold text-white">
-                            {m.label}
+                        <label htmlFor={`rep-${m.id}`} className="text-xs sm:text-sm font-semibold text-white capitalize">
+                            {m.plural}
                         </label>
                         <input
                             id={`rep-${m.id}`}
