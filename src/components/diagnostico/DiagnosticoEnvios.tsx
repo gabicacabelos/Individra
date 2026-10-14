@@ -208,7 +208,7 @@ const PREGUNTAS_MELI: Pregunta[] = [
         titulo: '¿Qué es lo que más te complica hoy?',
         ayuda: 'Elegí el que más te pasa.',
         opciones: [
-            { label: 'Que se me pase el plazo de un reclamo', tema: 'plazo' },
+            { label: 'Enterarme tarde de un reclamo y tener que resolverlo antes de las 14 h', tema: 'plazo' },
             { label: 'No saber cuántos reclamos me quedan antes de bajar de color', tema: 'margen' },
             { label: 'Envíos Flex que se complican y terminan en reclamo', tema: 'flex' },
             { label: 'Vender lo mismo en dos canales y quedarme sin stock', tema: 'stock' },
@@ -517,7 +517,7 @@ const ACCIONES_OTROS: Record<Nivel, string[]> = {
 
 const FRAG_MELI: Record<string, (string | null)[]> = {
     dolor: [
-        'Lo que más te complica es que se te pase el plazo de un reclamo.',
+        'Lo que más te complica es enterarte tarde de un reclamo, con el plazo de las 14 h encima.',
         'Lo que más te complica es no saber cuántos reclamos te quedan antes de bajar de color.',
         'Lo que más te complica son los envíos Flex que terminan en reclamo.',
         'Lo que más te complica es vender lo mismo en dos canales y quedarte sin stock.',
