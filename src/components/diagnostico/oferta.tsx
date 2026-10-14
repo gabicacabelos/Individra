@@ -218,6 +218,12 @@ export function construirOferta(ctx: Contexto): Oferta {
             tema: 'liquidacion',
             solucion: 'Cruzamos cada venta con lo que acreditó Mercado Pago y te mostramos el margen real por producto.',
         })
+    if (ctx.foco === 'devoluciones')
+        hallazgos.push({
+            tema: 'devoluciones',
+            problema: 'Las devoluciones por falla o producto distinto cuentan como reclamo.',
+            solucion: 'Te avisamos cada devolución apenas se abre, con su plazo, para revisarla cuando llega y pedir la revisión a tiempo si vuelve distinta.',
+        })
     if (ctx.foco) hallazgos.sort((a, b) => Number(b.tema === ctx.foco) - Number(a.tema === ctx.foco))
 
     const rango = RANGO_COSTO_MELI[r.costo_reputacion]

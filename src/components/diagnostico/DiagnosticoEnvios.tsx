@@ -214,6 +214,7 @@ const PREGUNTAS_MELI: Pregunta[] = [
             { label: 'Vender lo mismo en dos canales y quedarme sin stock', tema: 'stock' },
             { label: 'Que lo que me acreditan no coincide con lo que vendí', tema: 'liquidacion' },
             { label: 'Perseguir comprobantes de transferencia y bajar el stock a mano', tema: 'stock' },
+            { label: 'Devoluciones que vuelven cambiadas, usadas o vacías', tema: 'devoluciones' },
         ],
     },
     {
@@ -294,7 +295,7 @@ const PREGUNTAS_MELI: Pregunta[] = [
     {
         id: 'liquidaciones',
         titulo: '¿Sabés cuánto te queda limpio de cada venta?',
-        ayuda: 'Después de comisión, envío, retenciones y percepciones (por ejemplo, IIBB).',
+        ayuda: 'Después de comisión, envío y retenciones. Desde septiembre, el costo por unidad cambia según el precio y el peso del paquete.',
         opciones: [
             { label: 'Sí, lo tengo calculado por producto', puntos: 0 },
             { label: 'Más o menos, con una planilla', puntos: 1 },
@@ -523,6 +524,7 @@ const FRAG_MELI: Record<string, (string | null)[]> = {
         'Lo que más te complica es vender lo mismo en dos canales y quedarte sin stock.',
         'Lo que más te complica es que lo acreditado no coincide con lo que vendiste.',
         'Lo que más te complica es perseguir comprobantes y bajar el stock a mano.',
+        'Lo que más te complica son las devoluciones que vuelven distintas a lo que mandaste: además, cuando son por falla o producto distinto, cuentan como reclamo.',
     ],
     volumen: [
         'Con menos de 50 ventas por mes, ML mide tu reputación sobre los últimos 365 días: cada reclamo te pesa durante un año.',
@@ -651,6 +653,8 @@ function accionesPuntualesMeli(r: Respuestas): string[] {
         a.push('Si te falta stock, no mandes otra cosa: es preferible demorar y avisar por la mensajería de ML.')
     if (opcionElegida(PREGUNTAS_MELI, 'liquidaciones', r) === 3)
         a.push('Mirá Facturación > Tarifas y pagos > Impuestos: si no estás inscripto en IIBB (por ejemplo, en AGIP) te pueden aplicar percepciones más altas. Consultalo con tu contador.')
+    if ([2, 3].includes(opcionElegida(PREGUNTAS_MELI, 'liquidaciones', r)))
+        a.push('Revisá los precios que quedan justo arriba de un corte (por ejemplo $15.000): un peso más puede duplicar el costo por unidad que te cobra ML.')
     if (opcionElegida(PREGUNTAS_MELI, 'despacho', r) === 2)
         a.push('Revisá el horario de tu colecta cada semana: ML lo viene cambiando y en algunas zonas suma una segunda.')
     return a
