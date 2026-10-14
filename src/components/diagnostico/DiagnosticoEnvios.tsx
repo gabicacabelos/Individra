@@ -4,15 +4,17 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, CheckCircle2, Truck, ShoppingBag, ArrowLeft, ChevronRight } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
     construirOferta,
+    HallazgosLista,
     MargenResultado,
-    OfertaRecomendada,
     PasoReputacion,
+    PlanRecomendado,
     type DatosReputacion,
 } from './oferta'
+import { calcularMargen } from '@/lib/reputacionML'
 
 /**
  * Autodiagnóstico operativo y calculadora financiera en vivo.
@@ -100,234 +102,261 @@ function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos: number
 const PREGUNTAS_LOGISTICA: Pregunta[] = [
     {
         id: 'tipo_operacion',
-        titulo: '¿Qué tipo de operación manejás principalmente?',
+        titulo: '¿Qué tipo de operación tenés?',
         opciones: [
-            { label: 'Logística de última milla / reparto para terceros (e-commerce, marcas, Flex)' },
-            { label: 'Distribuidora mayorista con entrega a comercios (alimentos, bebidas, insumos, ferretería)' },
-            { label: 'Operación mixta (distribución propia + reparto para clientes corporativos)' },
+            { label: 'Última milla para terceros (e-commerce, marcas, Flex)' },
+            { label: 'Distribuidora mayorista que entrega a comercios' },
+            { label: 'Mixta: distribución propia y reparto para terceros' },
         ],
     },
     {
         id: 'flota',
-        titulo: '¿Cuántos vehículos salen a repartir en un día normal (propios + fleteros)?',
+        titulo: '¿Cuántos vehículos salen a repartir por día?',
+        ayuda: 'Propios y fleteros.',
         opciones: [
-            { label: 'De 1 a 5 vehículos' },
-            { label: 'De 6 a 15 vehículos' },
-            { label: 'De 16 a 35 vehículos' },
-            { label: 'Más de 35 vehículos' },
+            { label: 'De 1 a 5' },
+            { label: 'De 6 a 15' },
+            { label: 'De 16 a 35' },
+            { label: 'Más de 35' },
         ],
     },
     {
         id: 'volumen_logistica',
-        titulo: '¿Cuántas entregas o paradas hacen por día entre toda la flota?',
-        ayuda: 'También podés ajustar el número exacto en la calculadora en vivo de abajo.',
+        titulo: '¿Cuántas entregas hacen por día entre toda la flota?',
+        ayuda: 'Después podés ajustar el número exacto en la calculadora.',
         opciones: [
-            { label: 'Menos de 40 entregas por día', calcEntregasDia: 30 },
-            { label: 'Entre 40 y 80 entregas por día', calcEntregasDia: 60 },
-            { label: 'Entre 80 y 150 entregas por día', calcEntregasDia: 100 },
-            { label: 'Entre 150 y 300 entregas por día', calcEntregasDia: 200 },
-            { label: 'Más de 300 entregas por día', calcEntregasDia: 350 },
+            { label: 'Menos de 40', calcEntregasDia: 30 },
+            { label: 'Entre 40 y 80', calcEntregasDia: 60 },
+            { label: 'Entre 80 y 150', calcEntregasDia: 100 },
+            { label: 'Entre 150 y 300', calcEntregasDia: 200 },
+            { label: 'Más de 300', calcEntregasDia: 350 },
         ],
     },
     {
         id: 'rebote',
-        titulo: 'Del total de salidas diarias, ¿qué porcentaje vuelve sin entregar en el primer intento?',
-        ayuda: 'Sumando ausentes, timbre roto, comercio cerrado o rechazo en puerta ($9.980 ARS por parada fallida).',
+        titulo: '¿Qué porcentaje vuelve sin entregar en el primer intento?',
+        ayuda: 'Ausentes, timbre roto, comercio cerrado o rechazo en puerta.',
         opciones: [
             { label: 'Menos del 4%', puntos: 0, calcPorcentajeFallos: 3 },
             { label: 'Entre el 5% y el 8%', puntos: 2, calcPorcentajeFallos: 7 },
             { label: 'Entre el 9% y el 12%', puntos: 3, calcPorcentajeFallos: 10 },
             { label: 'Más del 12%', puntos: 4, calcPorcentajeFallos: 15 },
-            { label: 'No lo tenemos medido con exactitud', puntos: 3, calcPorcentajeFallos: 10 },
+            { label: 'No lo tenemos medido', puntos: 3, calcPorcentajeFallos: 10 },
         ],
     },
     {
         id: 'coordinacion',
-        titulo: 'Antes de cargar el camión, ¿cómo confirman si el destinatario va a estar para recibir?',
+        titulo: 'Antes de cargar, ¿cómo confirman que el destinatario va a estar?',
         opciones: [
-            { label: 'Avisamos automáticamente y sacamos de la jaula al que reprograma antes de salir', puntos: 0 },
-            { label: 'Mandamos WhatsApp o llamamos a mano en algunos casos puntuales', puntos: 2 },
-            { label: 'No avisamos: el camión sale directo con toda la hoja de ruta a ciegas', puntos: 4 },
+            { label: 'Aviso automático y sacamos de la carga al que no puede', puntos: 0 },
+            { label: 'WhatsApp o llamado a mano, solo a algunos', puntos: 2 },
+            { label: 'No confirmamos: sale con toda la hoja de ruta', puntos: 4 },
         ],
     },
     {
         id: 'evidencia_conflicto',
-        titulo: 'Cuando el chofer marca "Ausente" y el cliente reclama "Estuve todo el día", ¿cómo zanjás la discusión?',
+        titulo: 'El chofer marca "ausente" y el cliente dice "estuve todo el día". ¿Cómo lo resolvés?',
         opciones: [
-            { label: 'Cruzamos registro geolocalizado del intento con confirmación previa del destinatario', puntos: 0 },
-            { label: 'Le pedimos foto del frente de la casa por WhatsApp al chofer', puntos: 2 },
-            { label: 'Es la palabra del chofer contra la del cliente: solemos asumir el segundo viaje', puntos: 4 },
+            { label: 'Tengo la ubicación del intento y la confirmación previa', puntos: 0 },
+            { label: 'Le pido una foto al chofer por WhatsApp', puntos: 2 },
+            { label: 'Es su palabra contra la del cliente: volvemos a ir', puntos: 4 },
         ],
     },
     {
         id: 'remitos_rendicion',
-        titulo: '¿Cómo gestionan los remitos firmados y la rendición de los choferes al regresar al depósito?',
+        titulo: '¿Cómo te rinden los choferes los remitos firmados?',
         opciones: [
-            { label: 'Bot en Telegram/WhatsApp donde el chofer rinde el remito firmado en 1 toque al entregar', puntos: 0 },
-            { label: 'Mandan fotos sueltas por grupos de WhatsApp que quedan perdidas en la galería', puntos: 3 },
-            { label: 'En papel físico: se acumulan remitos que administración tarda 24–48 hs en procesar', puntos: 4 },
+            { label: 'Los mandan por un bot apenas entregan', puntos: 0 },
+            { label: 'Fotos sueltas en grupos de WhatsApp', puntos: 3 },
+            { label: 'En papel: administración tarda 1 o 2 días en procesarlos', puntos: 4 },
         ],
     },
     {
         id: 'intencion',
-        titulo: 'Si pudieras reducir los viajes en falso filtrando ausencias antes de salir, sin instalar apps pesadas a los choferes, ¿lo evaluarías?',
+        titulo: '¿Te interesaría filtrar ausencias antes de salir, sin apps nuevas para los choferes?',
         opciones: [
-            { label: 'Sí, quiero ver el protocolo aplicado a mi flota en una reunión de 20 minutos' },
-            { label: 'Sí, me interesa probarlo en una sola ruta piloto sin compromiso' },
-            { label: 'Por ahora solo quería calcular mis costos de rebote' },
+            { label: 'Sí, quiero verlo aplicado a mi flota (20 min)' },
+            { label: 'Sí, probándolo en una sola ruta' },
+            { label: 'Por ahora solo quería calcular el costo' },
         ],
     },
 ]
 
 /* ============================================================
    Recorrido 2: Mercado Libre
+   Validado con lo que repiten los vendedores en grupos (oct. 2026):
+   ventas sin stock (cancelar vs. demorar vs. arreglar por fuera),
+   despacho fuera de horario y cargos de ML cada vez más difíciles de seguir.
    ============================================================ */
 
 const PREGUNTAS_MELI: Pregunta[] = [
     {
         id: 'canal',
-        titulo: '¿Cómo despachás el grueso de tus ventas en Mercado Libre?',
+        titulo: '¿Cómo despachás la mayoría de tus ventas?',
         opciones: [
-            { label: 'Flex — reparto yo o fleteros tercerizados en el día', valor: 'flex' },
-            { label: 'Mercado Envíos Colecta — pasa el correo o camión de ML a retirar', valor: 'envios' },
-            { label: 'Full — mi stock está en el depósito de Mercado Libre', valor: 'full' },
-            { label: 'Mixto: Colecta + Envíos Flex para entregas rápidas en AMBA', valor: 'mixto' },
+            { label: 'Flex: reparto yo o un fletero', valor: 'flex' },
+            { label: 'Colecta: pasa Mercado Libre a retirar', valor: 'envios' },
+            { label: 'Full: mi stock está en el depósito de ML', valor: 'full' },
+            { label: 'Combino Colecta y Flex', valor: 'mixto' },
         ],
     },
     {
         id: 'volumen',
-        titulo: '¿Cuántos paquetes despachás por día en promedio en Mercado Libre?',
+        titulo: '¿Cuántas ventas hacés por mes en Mercado Libre?',
         opciones: [
-            { label: 'Menos de 10 paquetes por día' },
-            { label: 'Entre 10 y 30 paquetes por día' },
-            { label: 'Entre 30 y 70 paquetes por día' },
-            { label: 'Más de 70 paquetes por día' },
+            { label: 'Menos de 50' },
+            { label: 'Entre 50 y 150' },
+            { label: 'Entre 150 y 600' },
+            { label: 'Entre 600 y 1.500' },
+            { label: 'Más de 1.500' },
         ],
     },
     {
         id: 'reclamos_plazo',
-        titulo: 'Cuando un comprador abre un reclamo o mediación en ML con plazo de vencimiento, ¿cómo te enterás y cómo sabés cuánto te falta para bajar de color?',
-        canales: ['flex', 'envios', 'mixto'],
+        titulo: 'Cuando entra un reclamo, ¿cómo te enterás?',
+        ayuda: 'Si el asistente de ML te deriva el reclamo, tenés hasta las 14 h del día hábil siguiente para resolverlo.',
         opciones: [
-            { label: 'Tengo alertas inmediatas con el plazo exacto y sé cuántos incidentes me faltan para bajar de color', puntos: 0 },
-            { label: 'Reviso manualmente el panel de reclamos y reputación de ML varias veces por día', puntos: 2 },
-            { label: 'Suelo enterarme sobre la hora porque el aviso queda tapado entre decenas de notificaciones', puntos: 4 },
-            { label: 'Me enteré cuando ya había vencido el plazo: ML le devolvió el dinero al comprador y golpeó mi métrica', puntos: 4 },
-        ],
-    },
-    {
-        id: 'evidencia_controversias',
-        titulo: 'Cuando el comprador alega "caja vacía" o hay un paquete en controversia, ¿con qué evidencia defendés el caso?',
-        canales: ['flex', 'envios', 'mixto'],
-        opciones: [
-            { label: 'Tengo un expediente digital ordenado por paquete con foto de pesaje y remito', puntos: 0 },
-            { label: 'Tengo un remito o registro firmado pero desordenado en papel', puntos: 2 },
-            { label: 'Busco fotos del empaque en chats o cámaras de seguridad del depósito (tardo horas)', puntos: 3 },
-            { label: 'Es mi palabra contra la del comprador: casi siempre termino perdiendo el costo del producto', puntos: 4 },
-        ],
-    },
-    {
-        id: 'control_fleteros',
-        titulo: 'Si operás con Envíos Flex, ¿cómo auditás la planilla que te factura la logística o fletero a fin de mes?',
-        canales: ['flex', 'mixto'],
-        opciones: [
-            { label: 'No opero Flex o tengo choferes propios con sueldo fijo', puntos: 0 },
-            { label: 'Cruzo a mano una por una las etiquetas de ML contra la liquidación del fletero', puntos: 2 },
-            { label: 'Confío en lo que me pasan: no cruzo paquete por paquete porque me llevaría días', puntos: 3 },
-            { label: 'Ya detecté que me cobraron paquetes cancelados, reintentos inexistentes o zonas equivocadas', puntos: 4 },
-        ],
-    },
-    {
-        id: 'costo_reputacion',
-        titulo: 'Si por cancelaciones o demoras caés de Verde a Amarillo en Mercado Libre, ¿cuánto estimás que pierde tu negocio en facturación ese mes?',
-        ayuda: 'Considerando caída en exposición de listados, pérdida de Buy Box y comisiones de mediaciones.',
-        opciones: [
-            { label: 'Menos de $800.000 ARS', puntos: 1 },
-            { label: 'Entre $800.000 y $3.000.000 ARS entre pérdida de exposición y reclamos', puntos: 3 },
-            { label: 'Más de $3.000.000 ARS (la caída de ventas en los listados es inmediata y brutal)', puntos: 4 },
-            { label: 'Nunca caí de verde / No lo tengo medido', puntos: 2 },
+            { label: 'Me llega una alerta con el plazo exacto', puntos: 0 },
+            { label: 'Reviso el panel de ML varias veces por día', puntos: 2 },
+            { label: 'Tarde: el aviso se pierde entre notificaciones', puntos: 4 },
+            { label: 'Ya se me venció alguno y lo perdí', puntos: 4 },
         ],
     },
     {
         id: 'numeros_reputacion',
         tipo: 'reputacion',
-        titulo: 'Último dato: cargá tus números de reputación y te calculamos cuántos reclamos te quedan antes de bajar de color',
-        ayuda: 'Los ves en la sección Reputación de tu cuenta de Mercado Libre. Si no los tenés a mano, podés seguir sin cargarlos.',
+        titulo: '¿Cuántos reclamos te quedan antes de bajar de color?',
+        ayuda: 'Cargá los números de la sección Reputación de tu cuenta. Si no los tenés a mano, seguí sin cargarlos.',
         opciones: [],
     },
     {
-        id: 'intencion',
-        titulo: 'Si tuvieras un sistema que te avise apenas entra un reclamo con el plazo exacto y te diga cuánto te falta para bajar de color, ¿lo evaluarías?',
+        id: 'sin_stock',
+        titulo: 'Si vendés algo que no tenés en stock, ¿qué hacés?',
+        canales: ['flex', 'envios', 'mixto'],
         opciones: [
-            { label: 'Sí, quiero coordinar los 20 minutos de diagnóstico para blindar mi termómetro en un piloto' },
-            { label: 'Me interesa probarlo si hay un periodo de prueba acotado sin permanencia' },
-            { label: 'Por ahora no es mi prioridad' },
+            { label: 'No me pasa: el stock está sincronizado', puntos: 0 },
+            { label: 'Demoro el envío hasta conseguirlo', puntos: 2 },
+            { label: 'Cancelo la venta', puntos: 4 },
+            { label: 'Mando algo parecido y lo arreglo con el comprador', puntos: 4 },
+        ],
+    },
+    {
+        id: 'despacho',
+        titulo: '¿Llegás a despachar dentro del horario que te da ML?',
+        canales: ['flex', 'envios', 'mixto'],
+        opciones: [
+            { label: 'Siempre, con margen', puntos: 0 },
+            { label: 'Casi siempre, a veces sobre la hora', puntos: 1 },
+            { label: 'Seguido despacho tarde', puntos: 3 },
+            { label: 'No sé cuántas demoras tengo', puntos: 2 },
+        ],
+    },
+    {
+        id: 'control_fleteros',
+        titulo: '¿Controlás lo que te factura el fletero cada mes?',
+        canales: ['flex', 'mixto'],
+        opciones: [
+            { label: 'No tengo fletero o tengo choferes propios', puntos: 0 },
+            { label: 'Sí, cruzo envío por envío a mano', puntos: 2 },
+            { label: 'No, confío en lo que me pasa', puntos: 3 },
+            { label: 'Ya me cobró envíos cancelados o de más', puntos: 4 },
+        ],
+    },
+    {
+        id: 'liquidaciones',
+        titulo: '¿Sabés cuánto te queda limpio de cada venta?',
+        ayuda: 'Después de comisión, envío y retenciones.',
+        opciones: [
+            { label: 'Sí, lo tengo calculado por producto', puntos: 0 },
+            { label: 'Más o menos, con una planilla', puntos: 1 },
+            { label: 'No, miro lo que entra a Mercado Pago', puntos: 3 },
+            { label: 'Con los cambios en los cargos de ML ya no lo sigo', puntos: 3 },
+        ],
+    },
+    {
+        id: 'costo_reputacion',
+        titulo: 'Si bajás de verde a amarillo, ¿cuánto dejarías de vender en un mes?',
+        ayuda: 'Una estimación: bajar de color reduce la exposición de tus publicaciones.',
+        opciones: [
+            { label: 'Menos de $800.000', puntos: 1 },
+            { label: 'Entre $800.000 y $3.000.000', puntos: 3 },
+            { label: 'Más de $3.000.000', puntos: 4 },
+            { label: 'No lo sé', puntos: 2 },
+        ],
+    },
+    {
+        id: 'intencion',
+        titulo: 'Si te avisáramos cada reclamo con su plazo y tu margen de color, ¿lo probarías?',
+        opciones: [
+            { label: 'Sí, quiero verlo en mi cuenta (30 min)' },
+            { label: 'Sí, si hay una prueba sin permanencia' },
+            { label: 'Por ahora no es prioridad' },
         ],
     },
 ]
 
 /* ============================================================
-   Recorrido 3: E-Commerce Multicanal (Tiendanube + ML + WhatsApp/IG)
+   Recorrido 3: Cobro por WhatsApp + stock multicanal (Venta Blindada)
    ============================================================ */
 
 const PREGUNTAS_OTROS: Pregunta[] = [
     {
         id: 'mezcla_canales',
-        titulo: 'De cada 10 ventas que cerrás en una semana normal, ¿cuántas se cobran por transferencia en WhatsApp o Instagram y cuántas salen por ML / Tiendanube?',
+        titulo: 'De cada 10 ventas, ¿cuántas cobrás por transferencia en WhatsApp o Instagram?',
         opciones: [
-            { label: 'Más del 40% las cierro por WhatsApp/IG con transferencia bancaria directa', puntos: 4 },
-            { label: 'Entre un 15% y un 40% entran por WhatsApp con transferencia, el resto automáticas', puntos: 3 },
-            { label: 'Menos del 15%: casi todo entra directo por Tiendanube o Mercado Libre con pasarela', puntos: 1 },
-            { label: 'Vendo 100% por Mercado Libre', puntos: 0 },
+            { label: 'Más de 4', puntos: 4 },
+            { label: 'Entre 2 y 4', puntos: 3 },
+            { label: 'Menos de 2', puntos: 1 },
+            { label: 'Ninguna: vendo todo por ML o Tiendanube', puntos: 0 },
         ],
     },
     {
         id: 'sobreventa_stock',
-        titulo: 'Cuando vendés una unidad por WhatsApp con transferencia, ¿en qué momento se descuenta ese stock en Mercado Libre y Tiendanube?',
+        titulo: 'Cuando vendés por WhatsApp, ¿cuándo bajás ese stock en ML y Tiendanube?',
         opciones: [
-            { label: 'Tenemos un sincronizador que ya contempla las ventas cerradas por WhatsApp al instante', puntos: 0 },
-            { label: 'Dejamos stock de seguridad guardado sin publicar para no correr riesgo de sobreventa', puntos: 2 },
-            { label: 'Alguien del equipo entra a las apuradas a editar la publicación apenas mandan comprobante', puntos: 3 },
-            { label: 'Lo bajamos a mano al final del día o al día siguiente (ya nos pasó que se vendió en ML en el medio)', puntos: 4 },
+            { label: 'Al instante, con un sincronizador', puntos: 0 },
+            { label: 'Guardo stock de seguridad sin publicar', puntos: 2 },
+            { label: 'Alguien lo edita a mano apenas pagan', puntos: 3 },
+            { label: 'Al final del día (ya se vendió dos veces)', puntos: 4 },
         ],
     },
     {
         id: 'validacion_comprobantes',
-        titulo: 'Son las 16:30 hs, la moto de Flex o la colecta está en la puerta y entra un pedido por WhatsApp. ¿Cómo confirmás que la transferencia es real antes de despachar?',
+        titulo: 'Llega un comprobante y la colecta está en la puerta. ¿Cómo lo validás?',
         opciones: [
-            { label: 'Si no impactó en cuenta en el momento, el paquete no sale (aunque el cliente se enoje)', puntos: 1 },
-            { label: 'Chequeamos que el ID de operación no esté repetido en una planilla de Excel', puntos: 2 },
-            { label: 'Entramos al homebanking o Mercado Pago a buscar el dinero en cuenta (perdemos 10-20 min por pedido)', puntos: 3 },
-            { label: 'Miramos la captura que mandó el cliente por WhatsApp y confiamos para no demorar el despacho', puntos: 4 },
+            { label: 'Si no veo la plata en la cuenta, no sale', puntos: 1 },
+            { label: 'Chequeo que el número de operación no esté repetido', puntos: 2 },
+            { label: 'Entro al banco o a Mercado Pago a buscarla', puntos: 3 },
+            { label: 'Miro la captura y confío', puntos: 4 },
         ],
     },
     {
         id: 'horas_administracion',
-        titulo: '¿Cuánto tiempo por día le dedica tu equipo a conciliar pagos, bajar stock a mano entre pestañas y pasar números de guía?',
+        titulo: '¿Cuánto tiempo por día le dedican a validar pagos y bajar stock a mano?',
         opciones: [
-            { label: 'Cero tiempo: el proceso está 100% automatizado sin intervención manual', puntos: 0 },
-            { label: 'Menos de 45 minutos por día', puntos: 1 },
-            { label: 'Entre 1 y 2 horas por día repartidas entre el dueño y depósito', puntos: 3 },
-            { label: 'Más de 2 horas y media por día (equivale a casi medio sueldo administrativo al mes)', puntos: 4 },
+            { label: 'Nada, está automatizado', puntos: 0 },
+            { label: 'Menos de 45 minutos', puntos: 1 },
+            { label: 'Entre 1 y 2 horas', puntos: 3 },
+            { label: 'Más de 2 horas y media', puntos: 4 },
         ],
     },
     {
         id: 'reputacion_cancelaciones',
-        titulo: 'En los últimos 90 días, ¿tuviste que cancelar alguna venta en Mercado Libre o comerte un reclamo porque no tenías stock o no encontraste el comprobante a tiempo?',
+        titulo: 'En los últimos 3 meses, ¿cancelaste ventas en ML por falta de stock?',
         opciones: [
-            { label: 'Cero cancelaciones ni problemas de stock en los últimos 3 meses', puntos: 0 },
-            { label: 'No cancelé, pero tuve que salir corriendo a comprar mercadería más cara a un colega', puntos: 2 },
-            { label: 'Sí, 1 o 2 cancelaciones que me dejaron al límite del porcentaje permitido por ML', puntos: 3 },
-            { label: 'Sí, me costó perder el color verde del termómetro y bajaron mis visitas drásticamente', puntos: 4 },
+            { label: 'No, ninguna', puntos: 0 },
+            { label: 'No, pero tuve que conseguir mercadería a las apuradas', puntos: 2 },
+            { label: 'Sí, 1 o 2, y quedé al límite', puntos: 3 },
+            { label: 'Sí, y perdí el verde', puntos: 4 },
         ],
     },
     {
         id: 'intencion',
-        titulo: 'Si con 1 solo clic en una pantalla pudieras verificar el comprobante, evitar duplicados y descontar el stock en ML y Tiendanube al instante, ¿evaluarías medirlo durante 30 días?',
+        titulo: 'Si con 1 clic validaras el pago y bajaras el stock en todos tus canales, ¿lo probarías 30 días?',
         opciones: [
-            { label: 'Sí, quiero coordinar 20 minutos para ver cómo se aplica a mi catálogo en un piloto de 30 días' },
-            { label: 'Sí, pero solo si la configuración no interrumpe mis ventas actuales' },
-            { label: 'Por ahora solo quería auditar mis costos operativos' },
+            { label: 'Sí, quiero verlo con mi catálogo (20 min)' },
+            { label: 'Sí, si no interrumpe mis ventas' },
+            { label: 'Por ahora solo quería medir mis costos' },
         ],
     },
 ]
@@ -352,19 +381,35 @@ function preguntasPara(plataforma: Plataforma | null, r: Respuestas): Pregunta[]
     return PREGUNTAS_MELI.filter((p) => !p.canales || p.canales.includes(canal))
 }
 
-/** Puntaje, máximo alcanzable y nivel, derivados del recorrido activo. */
-function calcular(r: Respuestas, plataforma: Plataforma | null) {
+/** Índice de la opción elegida en una pregunta (-1 si no la respondió). Evita atar los textos a los labels. */
+function opcionElegida(preguntas: Pregunta[], id: string, r: Respuestas): number {
+    const p = preguntas.find((q) => q.id === id)
+    return p ? p.opciones.findIndex((o) => o.label === r[id]) : -1
+}
+
+const ORDEN_NIVEL: Nivel[] = ['verde', 'amarillo', 'rojo']
+
+/**
+ * Puntaje, máximo alcanzable y nivel, derivados del recorrido activo.
+ * Si el vendedor cargó sus números de reputación, mandan sobre las respuestas:
+ * con 1 o 2 reclamos de margen no puede salir "riesgo bajo".
+ */
+function calcular(r: Respuestas, plataforma: Plataforma | null, reputacion: DatosReputacion | null = null) {
     const activas = preguntasPara(plataforma, r)
     const puntaje = activas.reduce((acc, p) => {
         const op = p.opciones.find((o) => o.label === r[p.id])
         return acc + (op?.puntos ?? 0)
     }, 0)
-    const maximo = activas.reduce(
-        (acc, p) => acc + Math.max(0, ...p.opciones.map((o) => o.puntos ?? 0)),
-        0
-    )
+    const maximo = activas.reduce((acc, p) => acc + Math.max(0, ...p.opciones.map((o) => o.puntos ?? 0)), 0)
     const porcentaje = maximo > 0 ? Math.round((puntaje / maximo) * 100) : 0
-    const nivel: Nivel = porcentaje < 30 ? 'verde' : porcentaje <= 60 ? 'amarillo' : 'rojo'
+    let nivel: Nivel = porcentaje < 30 ? 'verde' : porcentaje <= 60 ? 'amarillo' : 'rojo'
+
+    if (plataforma === 'meli' && reputacion && reputacion.ventas > 0) {
+        const m = calcularMargen(reputacion.ventas, reputacion.conteos, reputacion.esLider)
+        const porMargen: Nivel =
+            m.colorActual !== 'verde' || m.masAjustada.margen <= 0 ? 'rojo' : m.masAjustada.margen <= 2 ? 'amarillo' : 'verde'
+        if (ORDEN_NIVEL.indexOf(porMargen) > ORDEN_NIVEL.indexOf(nivel)) nivel = porMargen
+    }
     return { activas, puntaje, maximo, porcentaje, nivel }
 }
 
@@ -372,236 +417,181 @@ function calcular(r: Respuestas, plataforma: Plataforma | null) {
 const NIVEL_META: Record<Nivel, { titulo: string; color: string; bg: string }> = {
     verde: { titulo: 'Riesgo bajo', color: '#4ADE80', bg: 'rgba(74,222,128,0.1)' },
     amarillo: { titulo: 'Riesgo medio', color: '#FBBF24', bg: 'rgba(251,191,36,0.1)' },
-    rojo: { titulo: 'Riesgo alto', color: '#C84214', bg: 'rgba(200,66,20,0.12)' },
+    rojo: { titulo: 'Riesgo alto', color: '#FF5520', bg: 'rgba(255,85,32,0.12)' },
 }
 
-/** Acciones por defecto según nivel, recorrido Logística y Distribuidoras. */
+/** Lo que puede hacer por su cuenta, sin contratar nada. */
 const ACCIONES_LOGISTICA: Record<Nivel, string[]> = {
     verde: [
-        'Mantené medido el porcentaje de rebote por zona y por dador de carga: suele esconder clientes que dan pérdida por re-entregas.',
-        'Empezá a guardar la Ficha del Domicilio (timbre, portería, horario comercial) asociada a la dirección para no depender de la memoria del chofer.',
-        'Activá el pedido de reseña en Google con un toque después de cada entrega conforme para capitalizar tu tasa de cumplimiento.',
+        'Medí el rebote por zona y por cliente: suele esconder cuentas que te dan pérdida por re-entregas.',
+        'Guardá cómo se accede a cada domicilio (timbre, portería, horario) para no depender de la memoria del chofer.',
+        'Pedí una reseña en Google después de cada entrega conforme.',
     ],
     amarillo: [
-        'Filtrá ausencias antes de cargar: un WhatsApp interactivo a las 20:00 hs del día anterior permite reprogramar antes de subir el paquete al vehículo.',
-        'Documentá cómo se accede a cada domicilio después de la primera visita para que el dato viaje pegado a la hoja de ruta del chofer.',
-        'Cuando el chofer marque "No había nadie", dispará una consulta inmediata al destinatario para cruzar ambas fuentes sin discusiones a ciegas.',
+        'Confirmá la visita la noche anterior por WhatsApp y sacá de la carga al que no puede.',
+        'Guardá cómo se accede a cada domicilio para que el dato viaje con la hoja de ruta.',
+        'Cuando el chofer marque "ausente", consultá al destinatario en el momento para tener las dos versiones.',
     ],
     rojo: [
-        'Cortá la salida a ciegas mañana mismo: cada paquete que sube al camión y rebota te cuesta ARS $9.980 entre gasoil, tiempo de chofer y segundo viaje.',
-        'Sacá a administración de contestar "¿dónde está mi pedido?": conectá tu planilla o ERP a un aviso por paradas restantes sin prometer horarios inventados.',
-        'Poné un reloj de vencimiento a los paquetes en depósito (alertas a 5, 2 y 1 días) y cruzá la evidencia de visitas fallidas antes de perder cuentas.',
+        'Dejá de salir sin confirmar: cada entrega que vuelve te cuesta ARS $9.980 entre gasoil, chofer y segundo viaje.',
+        'Sacá a administración de contestar "¿dónde está mi pedido?" con un aviso de paradas restantes.',
+        'Avisá al destinatario a los 5, 2 y 1 días antes de devolver un paquete.',
     ],
 }
 
-/** Acciones por defecto según nivel, recorrido Mercado Libre. */
 const ACCIONES_MELI: Record<Nivel, string[]> = {
     verde: [
-        'Auditá una vez por semana tu porcentaje de cancelaciones y demoras Flex: mantenerse en verde exige no relajarse con las horas de corte.',
-        'Tené siempre medido cuántos reclamos o cancelaciones te separan del umbral para bajar de color.',
-        'Mantené los expedientes con fotos de empaque y pesaje ordenados para responder mediaciones antes del vencimiento.',
+        'Revisá una vez por semana tus cancelaciones y demoras: el margen se pierde rápido.',
+        'Tené anotado cuántos reclamos te separan del límite para bajar de color.',
+        'Si vendés en varios canales, sincronizá el stock para no tener que cancelar.',
     ],
     amarillo: [
-        'Activá alertas inmediatas apenas entra un reclamo con su plazo exacto: la mayoría de las mediaciones se pierden porque el aviso queda tapado.',
-        'Monitoreá en vivo cuántas operaciones de margen te quedan antes de bajar de color en el termómetro.',
-        'Auditá la facturación de Envíos Flex cruzando paquete por paquete contra los códigos de entrega confirmada.',
+        'Revisá los reclamos todos los días antes de las 12: los que deriva el asistente vencen a las 14 h del día hábil siguiente.',
+        'Si te falta stock, no mandes otra cosa: demorar suma a demoras (10% de límite), cancelar a cancelaciones (1%).',
+        'Calculá cuánto te queda limpio por venta: los cargos de ML cambian seguido.',
     ],
     rojo: [
-        'Alerta roja de reputación: caer a amarillo o rojo en Mercado Libre reduce drásticamente la exposición orgánica de tu catálogo.',
-        'Centralizá avisos inmediatos de reclamos con cuenta regresiva del plazo exacto y expediente de empaque para responder a tiempo.',
-        'Control estricto de entregas Flex: si el chofer no entrega a tiempo o cobra zonas erróneas, el costo económico y la sanción recaen sobre tu cuenta.',
+        'Estás cerca de bajar de color: respondé cada reclamo apenas entra, aunque sea para pedir más datos.',
+        'Pausá las publicaciones sin stock real antes de que se vendan: una cancelación pesa más que una demora.',
+        'No saques ventas de Mercado Libre para arreglar con el comprador: puede terminar en reclamo o sanción de la cuenta.',
     ],
 }
 
-/** Acciones específicas para quien opera 100% Full (el resto no le aplica). */
+/** Para quien opera 100% Full (el despacho lo hace ML). */
 const ACCIONES_FULL = [
-    'Mirá tu porcentaje de despachos a tiempo al depósito de Full: es la parte de la cadena que sigue en tus manos.',
-    'Vigilá los quiebres de stock en el depósito; quedarte sin stock en Full también te baja exposición.',
-    'Si además vendés por Flex o Envíos, repetí este diagnóstico pensando en ese canal: ahí es donde más te aplica.',
+    'Mirá tus reclamos todos los días: en Full siguen pesando sobre tu reputación.',
+    'Vigilá los quiebres de stock en el depósito: quedarte sin stock en Full también te baja exposición.',
+    'Si además vendés por Flex o Colecta, repetí el diagnóstico pensando en ese canal.',
 ]
 
-/** Acciones por defecto según nivel, recorrido E-Commerce Multicanal ("Venta Blindada"). */
 const ACCIONES_OTROS: Record<Nivel, string[]> = {
     verde: [
-        'Mantené auditado semanalmente el cruce entre pagos de WhatsApp y cancelaciones en ML: cuando el volumen crece, es el primer punto en quebrarse.',
-        'Definí un límite de reserva de stock para transferencias (ej. 15 minutos) para no tener mercadería congelada que podría venderse en Tiendanube.',
-        'Guardá registro de los IDs de comprobante bancario para blindarte ante compradores que reenvían comprobantes antiguos.',
+        'Revisá cada semana el cruce entre pagos de WhatsApp y ventas de ML: es lo primero que se rompe cuando crecés.',
+        'Reservá la unidad un tiempo fijo (por ejemplo 15 minutos) mientras esperás la transferencia.',
+        'Guardá los números de operación de los comprobantes para detectar repetidos.',
     ],
     amarillo: [
-        'Eliminá la bajada manual de stock al final del día: si vendés la última unidad por WhatsApp a la tarde, una hora después puede venderse en Mercado Libre.',
-        'Dejá de chequear comprobantes abriendo homebanking en pleno despacho: un lector con deduplicación de ID te ahorra minutos críticos por orden.',
-        'Armá un expediente único de orden (chat + comprobante + remito de despacho) para responder reclamos de Mercado Libre a tiempo.',
+        'No bajes el stock al final del día: en esas horas se te puede vender lo mismo en ML.',
+        'Validá contra la cuenta, no contra la captura: los comprobantes editados existen.',
+        'Juntá en un solo lugar el chat, el comprobante y el envío de cada venta.',
     ],
     rojo: [
-        'Blindaje de stock urgente: cada cancelación forzada en Mercado Libre por sobreventa en WhatsApp te acerca al límite de degradación del termómetro.',
-        'Cortá el despacho a ciegas por captura de WhatsApp: validá siempre la acreditación real y que el ID de operación no esté duplicado.',
-        'Liberá al equipo de saltar entre 5 pestañas: centralizá la aprobación de pagos y la baja simultánea de stock en una consola unificada en 1 clic.',
+        'Cada cancelación por sobreventa te acerca al límite de ML (1% para seguir en verde).',
+        'No despaches por la captura de WhatsApp: esperá ver la plata y que el comprobante no esté repetido.',
+        'Centralizá la aprobación del pago y la baja de stock en un solo paso.',
     ],
 }
 
 /* ============================================================
-   Fragmentos de resumen personalizado
+   Resumen personalizado (por índice de opción, no por texto)
    ============================================================ */
 
-const FRAG_VOLUMEN_MELI: Record<string, string> = {
-    'Menos de 10 paquetes por día': 'Con un volumen inicial (menos de 10 paquetes/día)',
-    'Entre 10 y 30 paquetes por día': 'Con un volumen medio (10 a 30 paquetes/día)',
-    'Entre 30 y 70 paquetes por día': 'Con volumen consolidado (30 a 70 paquetes/día)',
-    'Más de 70 paquetes por día': 'Con alto volumen de despacho (>70 paquetes/día)',
+const FRAG_MELI: Record<string, (string | null)[]> = {
+    volumen: [
+        'Con menos de 50 ventas por mes, ML mide tu reputación sobre los últimos 365 días: cada reclamo te pesa durante un año.',
+        'Con 50 a 150 ventas por mes, ML mide tu reputación sobre 60 o 365 días según llegues a 101 ventas en 60 días.',
+        'Con 150 a 600 ventas por mes, ML mide tu reputación sobre los últimos 60 días: un par de reclamos seguidos te mueven el color.',
+        'Con 600 a 1.500 ventas por mes, ML mide tu reputación sobre los últimos 60 días y cada día entran reclamos nuevos.',
+        'Con más de 1.500 ventas por mes, ML mide tu reputación sobre los últimos 60 días y el volumen de reclamos es diario.',
+    ],
+    reclamos_plazo: [
+        'Ya tenés alertas con el plazo exacto.',
+        'Revisás el panel de reclamos a mano varias veces por día: funciona, pero te come tiempo.',
+        'Te enterás tarde de los reclamos porque el aviso se pierde, y los plazos son cortos.',
+        'Ya perdiste reclamos por plazo vencido, y eso pegó en tu reputación.',
+    ],
+    sin_stock: [
+        null,
+        'Cuando te falta stock demorás el envío: suma a tus demoras (el límite para seguir en verde es 10%).',
+        'Cuando te falta stock cancelás: es la métrica más estricta (1% para seguir en verde).',
+        'Arreglar por fuera con el comprador es riesgoso: puede terminar en reclamo, y ML sanciona sacar la venta de la plataforma.',
+    ],
+    despacho: [null, null, 'Despachar tarde seguido suma demoras y te puede bajar exposición.', 'No tenés medidas tus demoras de despacho.'],
+    control_fleteros: [
+        null,
+        null,
+        'No controlás lo que te factura el fletero envío por envío.',
+        'Ya te cobraron envíos cancelados o de más.',
+    ],
+    liquidaciones: [
+        null,
+        null,
+        'No sabés cuánto te queda limpio por venta.',
+        'Con los cambios en cómo ML muestra los cargos, ya no seguís cuánto te queda limpio por venta.',
+    ],
+    costo_reputacion: [
+        'Estimás que bajar de color te costaría menos de $800.000 por mes.',
+        'Estimás que bajar de color te costaría entre $800.000 y $3.000.000 por mes.',
+        'Estimás que bajar de color te costaría más de $3.000.000 por mes.',
+        'Todavía no le pusiste número a lo que te costaría bajar de color.',
+    ],
 }
-const FRAG_RECLAMOS_PLAZO: Record<string, string> = {
-    'Suelo enterarme sobre la hora porque el aviso queda tapado entre decenas de notificaciones':
-        'Hoy te enterás de los reclamos sobre la hora porque el aviso queda tapado entre notificaciones de ventas y preguntas, con riesgo alto de perder mediaciones por plazo vencido.',
-    'Reviso manualmente el panel de reclamos y reputación de ML varias veces por día':
-        'Revisar el panel de reclamos a mano varias veces al día evita sorpresas pero desgasta tiempo crítico del equipo.',
-    'Me enteré cuando ya había vencido el plazo: ML le devolvió el dinero al comprador y golpeó mi métrica':
-        'Ya perdiste mediaciones por vencimiento del plazo de respuesta, lo que impactó directamente en tu termómetro de reputación.',
-    'Tengo alertas inmediatas con el plazo exacto y sé cuántos incidentes me faltan para bajar de color':
-        'Contás con un sistema de alerta temprana que te da margen para responder mediaciones y controlar el termómetro.',
+
+const FRAG_OTROS: Record<string, (string | null)[]> = {
+    mezcla_canales: [
+        'Cobrás más de 4 de cada 10 ventas por transferencia: el riesgo de vender dos veces lo mismo es alto.',
+        'Una parte importante de tus ventas se cobra por transferencia.',
+        'La mayoría de tus ventas entra por canales con pago integrado.',
+        null,
+    ],
+    sobreventa_stock: [
+        null,
+        'Guardar stock sin publicar te evita sobreventas, pero vendés menos.',
+        'Editar las publicaciones a mano con cada pago no aguanta los picos de venta.',
+        'Bajar el stock al final del día te deja horas en las que se vende lo mismo en ML.',
+    ],
+    validacion_comprobantes: [
+        null,
+        'Chequear repetidos a mano funciona, pero lleva tiempo.',
+        'Entrar al banco por cada pedido te frena en plena hora de despacho.',
+        'Despachar por la captura te expone a comprobantes editados o que nunca se acreditaron.',
+    ],
+    reputacion_cancelaciones: [
+        null,
+        'Conseguir mercadería a las apuradas te come el margen de la venta.',
+        'Quedaste al límite de cancelaciones: una más te puede bajar de color.',
+        'Ya perdiste el verde por cancelaciones.',
+    ],
 }
-const FRAG_EVIDENCIA: Record<string, string> = {
-    'Es mi palabra contra la del comprador: casi siempre termino perdiendo el costo del producto':
-        'Ante controversias de paquetes terminás asumiendo el costo por falta de expediente con evidencia fotográfica y de pesaje.',
-    'Busco fotos del empaque en chats o cámaras de seguridad del depósito (tardo horas)':
-        'Recuperar evidencia desde chats o cámaras te lleva horas de búsqueda manual ante cada reclamo.',
-    'Tengo un remito o registro firmado pero desordenado en papel':
-        'Tener remitos físicos sin digitalizar dificulta apelar mediaciones en tiempo y forma.',
-    'Tengo un expediente digital ordenado por paquete con foto de pesaje y remito':
-        'Tenés un expediente ordenado para defender mediaciones en ML.',
-}
-const FRAG_FLETEROS: Record<string, string> = {
-    'Confío en lo que me pasan: no cruzo paquete por paquete porque me llevaría días':
-        'No auditar la liquidación del fletero paquete por paquete suele esconder cobros de reintentos o cancelaciones indebidas.',
-    'Ya detecté que me cobraron paquetes cancelados, reintentos inexistentes o zonas equivocadas':
-        'Ya comprobaste fugas de dinero por liquidaciones de Envíos Flex mal calculadas.',
-    'Cruzo a mano una por una las etiquetas de ML contra la liquidación del fletero':
-        'Cruzar etiquetas contra fleteros a mano te protege pero se rompe apenas aumenta el volumen.',
-}
-const FRAG_COSTO_MELI: Record<string, string> = {
-    'Más de $3.000.000 ARS (la caída de ventas en los listados es inmediata y brutal)':
-        'Estimás que una caída de reputación le cuesta a tu negocio más de $3.000.000 ARS en ventas perdidas.',
-    'Entre $800.000 y $3.000.000 ARS entre pérdida de exposición y reclamos':
-        'Estimás un impacto de entre $800.000 y $3.000.000 ARS por degradación de termómetro.',
-    'Menos de $800.000 ARS':
-        'Estimás el impacto en menos de $800.000 ARS.',
-    'Nunca caí de verde / No lo tengo medido':
-        'Todavía no le pusiste número a lo que te cuesta caer de verde en Mercado Libre.',
+
+function construirResumenDesde(frag: Record<string, (string | null)[]>, preguntas: Pregunta[], r: Respuestas) {
+    return Object.keys(frag)
+        .map((id) => frag[id][opcionElegida(preguntas, id, r)] ?? null)
+        .filter(Boolean)
+        .join(' ')
 }
 
 function construirResumenMeli(r: Respuestas): string {
     if (valorCanalMeli(r) === 'full') {
         return [
-            'Operás principalmente con Full, donde ML gestiona el despacho directo.',
-            FRAG_COSTO_MELI[r.costo_reputacion] ?? '',
-            'Tu riesgo crítico se concentra en no quebrar stock en el depósito y evitar cancelaciones pre-despacho.',
+            'Operás con Full: el despacho lo hace Mercado Libre, pero los reclamos y la falta de stock siguen pesando sobre tu reputación.',
+            FRAG_MELI.reclamos_plazo[opcionElegida(PREGUNTAS_MELI, 'reclamos_plazo', r)] ?? '',
+            FRAG_MELI.costo_reputacion[opcionElegida(PREGUNTAS_MELI, 'costo_reputacion', r)] ?? '',
         ]
             .filter(Boolean)
             .join(' ')
     }
-
-    const cabeza = FRAG_VOLUMEN_MELI[r.volumen] ?? ''
-    return [
-        cabeza ? `${cabeza},` : '',
-        FRAG_RECLAMOS_PLAZO[r.reclamos_plazo] ?? '',
-        FRAG_EVIDENCIA[r.evidencia_controversias] ?? '',
-        FRAG_FLETEROS[r.control_fleteros] ?? '',
-        FRAG_COSTO_MELI[r.costo_reputacion] ?? '',
-    ]
-        .filter(Boolean)
-        .join(' ')
+    return construirResumenDesde(FRAG_MELI, PREGUNTAS_MELI, r)
 }
 
-const FRAG_MEZCLA: Record<string, string> = {
-    'Más del 40% las cierro por WhatsApp/IG con transferencia bancaria directa':
-        'Manejás un volumen alto de cobro manual por transferencia (>40%), donde el riesgo de sobreventa cruzada es crítico.',
-    'Entre un 15% y un 40% entran por WhatsApp con transferencia, el resto automáticas':
-        'Tenés una mezcla activa entre canal directo y plataformas automáticas.',
-    'Menos del 15%: casi todo entra directo por Tiendanube o Mercado Libre con pasarela':
-        'La mayoría de tus ventas ingresa por canales integrados.',
-}
-const FRAG_SOBREVENTA: Record<string, string> = {
-    'Lo bajamos a mano al final del día o al día siguiente (ya nos pasó que se vendió en ML en el medio)':
-        'Bajar stock a mano al final del día te deja una ventana de varias horas donde se pueden duplicar ventas en ML.',
-    'Alguien del equipo entra a las apuradas a editar la publicación apenas mandan comprobante':
-        'Editar publicaciones a mano ante cada pago consume atención crítica y no escala ante picos de demanda.',
-    'Dejamos stock de seguridad guardado sin publicar para no correr riesgo de sobreventa':
-        'Guardar stock de seguridad sin publicar reduce tu volumen de ventas visibles y congela capital de trabajo.',
-    'Tenemos un sincronizador que ya contempla las ventas cerradas por WhatsApp al instante':
-        'Ya contás con descuento inmediato de stock entre canales.',
-}
-const FRAG_COMPROBANTES: Record<string, string> = {
-    'Miramos la captura que mandó el cliente por WhatsApp y confiamos para no demorar el despacho':
-        'Despachar confiando en la captura de WhatsApp te expone a comprobantes editados o transferencias no acreditadas.',
-    'Entramos al homebanking o Mercado Pago a buscar el dinero en cuenta (perdemos 10-20 min por pedido)':
-        'Entrar al homebanking por cada pedido genera un cuello de botella administrativo en plena hora de despacho.',
-    'Chequeamos que el ID de operación no esté repetido en una planilla de Excel':
-        'Chequear IDs de operación a mano en Excel evita duplicados pero quema horas valiosas de tu equipo.',
-}
-const FRAG_CANCELACIONES: Record<string, string> = {
-    'Sí, me costó perder el color verde del termómetro y bajaron mis visitas drásticamente':
-        'Ya sufriste una caída de termómetro en Mercado Libre por cancelaciones, con impacto directo en tu facturación.',
-    'Sí, 1 o 2 cancelaciones que me dejaron al límite del porcentaje permitido por ML':
-        'Estás al límite de cancelaciones toleradas por Mercado Libre: un nuevo quiebre de stock puede degradar tu cuenta.',
-    'No cancelé, pero tuve que salir corriendo a comprar mercadería más cara a un colega':
-        'Comprar mercadería a las apuradas para tapar quiebres de stock te erosiona el margen neto de cada venta.',
-    'Cero cancelaciones ni problemas de stock en los últimos 3 meses':
-        'Mantenés cero cancelaciones en el último trimestre, que es el objetivo a preservar.',
-}
-
-function construirResumenOtros(r: Respuestas): string {
-    return [
-        FRAG_MEZCLA[r.mezcla_canales] ?? '',
-        FRAG_SOBREVENTA[r.sobreventa_stock] ?? '',
-        FRAG_COMPROBANTES[r.validacion_comprobantes] ?? '',
-        FRAG_CANCELACIONES[r.reputacion_cancelaciones] ?? '',
-    ]
-        .filter(Boolean)
-        .join(' ')
-}
-
-function construirResumenLogistica(
-    r: Respuestas,
-    entregasDia: number,
-    porcentajeFallos: number
-): string {
+function construirResumenLogistica(r: Respuestas, entregasDia: number, porcentajeFallos: number): string {
     const econ = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
     const partes: string[] = [
-        `Con ${entregasDia} paradas diarias y un ${porcentajeFallos}% de rebote al primer intento, tu operación acumula ~${econ.fallosMes} viajes en falso por mes (${formatearArs(econ.perdidaMensualArs)}/mes sumando gasoil, tiempo de chofer y re-despacho a $9.980/parada).`,
+        `Con ${entregasDia} entregas por día y ${porcentajeFallos}% que vuelve al primer intento, son ~${econ.fallosMes} viajes en falso por mes: ${formatearArs(econ.perdidaMensualArs)}.`,
     ]
-
-    if (r.coordinacion === 'No avisamos: el camión sale directo con toda la hoja de ruta a ciegas') {
-        partes.push(
-            'Hoy los vehículos salen sin filtrar quién va a estar en el domicilio, que es donde se origina más de la mitad de esos rebotes.'
-        )
-    } else if (r.coordinacion === 'Mandamos WhatsApp o llamamos a mano en algunos casos puntuales') {
-        partes.push(
-            'La confirmación previa depende de llamados o mensajes manuales que no logran cubrir toda la jaula antes de salir.'
-        )
-    }
-
-    if (r.evidencia_conflicto === 'Es la palabra del chofer contra la del cliente: solemos asumir el segundo viaje') {
-        partes.push(
-            'Cuando un destinatario alega que estuvo todo el día y el chofer marcó ausente, no contás con evidencia geolocalizada para sostener el cobro del segundo intento.'
-        )
-    }
-
-    if (r.remitos_rendicion === 'En papel físico: se acumulan remitos que administración tarda 24–48 hs en procesar') {
-        partes.push(
-            'Rendir remitos en papel físico retrasa la facturación y la rendición ante dadores de carga hasta 48 horas.'
-        )
-    }
-
+    const coord = opcionElegida(PREGUNTAS_LOGISTICA, 'coordinacion', r)
+    if (coord === 2) partes.push('Los vehículos salen sin confirmar quién va a estar, que es donde se origina la mayoría de los rebotes.')
+    if (coord === 1) partes.push('La confirmación depende de mensajes a mano que no llegan a cubrir toda la carga.')
+    if (opcionElegida(PREGUNTAS_LOGISTICA, 'evidencia_conflicto', r) === 2)
+        partes.push('Ante un "estuve todo el día" no tenés cómo probar la visita, y terminás volviendo a ir.')
+    if (opcionElegida(PREGUNTAS_LOGISTICA, 'remitos_rendicion', r) === 2)
+        partes.push('Los remitos en papel te atrasan la facturación hasta 2 días.')
     return partes.join(' ')
 }
 
-function construirResumen(
-    r: Respuestas,
-    plataforma: Plataforma | null,
-    entregasDia: number,
-    porcentajeFallos: number
-): string {
+function construirResumen(r: Respuestas, plataforma: Plataforma | null, entregasDia: number, porcentajeFallos: number): string {
     if (plataforma === 'logistica') return construirResumenLogistica(r, entregasDia, porcentajeFallos)
-    if (plataforma === 'otros') return construirResumenOtros(r)
+    if (plataforma === 'otros') return construirResumenDesde(FRAG_OTROS, PREGUNTAS_OTROS, r)
     return construirResumenMeli(r)
 }
 
@@ -827,7 +817,7 @@ export function DiagnosticoEnvios() {
     }
 
     // Todo se deriva del recorrido activo: nada de acumuladores que se desincronizan.
-    const { activas, puntaje, maximo, porcentaje, nivel } = calcular(respuestas, plataforma)
+    const { activas, puntaje, maximo, porcentaje, nivel } = calcular(respuestas, plataforma, reputacion)
     const pregunta = activas[indice]
     const resultado = NIVEL_META[nivel]
     const resumen = construirResumen(respuestas, plataforma, entregasDia, porcentajeFallos)
@@ -852,6 +842,12 @@ export function DiagnosticoEnvios() {
         setRespuestas({})
         setReputacion(null)
         track('diagnostico_plataforma', { plataforma: p, origen })
+        // En el celular vamos directo a la primera pregunta: la intro es una pantalla más para leer
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            track('diagnostico_iniciado', { origen, plataforma: p, sinIntro: true })
+            setPaso('preguntas')
+            return
+        }
         setPaso('intro')
     }
 
@@ -893,11 +889,11 @@ export function DiagnosticoEnvios() {
             plataforma,
             ...(datos ? { ventas: datos.ventas, ...datos.conteos, esLider: datos.esLider } : {}),
         })
-        avanzar(nuevas)
+        avanzar(nuevas, datos)
     }
 
-    function avanzar(nuevas: Respuestas) {
-        const info = calcular(nuevas, plataforma)
+    function avanzar(nuevas: Respuestas, rep: DatosReputacion | null = reputacion) {
+        const info = calcular(nuevas, plataforma, rep)
         if (indice < info.activas.length - 1) {
             setIndice(indice + 1)
         } else {
@@ -925,7 +921,8 @@ export function DiagnosticoEnvios() {
 
     function volver() {
         if (indice === 0) {
-            setPaso('intro')
+            // En el celular no hay intro: volvemos a la elección de perfil
+            setPaso(window.matchMedia('(max-width: 767px)').matches ? 'plataforma' : 'intro')
             return
         }
         setIndice(indice - 1)
@@ -934,6 +931,11 @@ export function DiagnosticoEnvios() {
     async function enviar(e: React.FormEvent) {
         e.preventDefault()
         setError('')
+        const digitos = whatsapp.replace(/\D/g, '')
+        if (!email.trim() && digitos.length < 8) {
+            setError('Dejanos tu WhatsApp o tu email para mandarte el informe.')
+            return
+        }
         setEnviando(true)
         try {
             const res = await fetch('/api/diagnostico', {
@@ -980,16 +982,18 @@ export function DiagnosticoEnvios() {
 
     return (
         <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
+            {(paso === 'plataforma' || paso === 'intro') && (
             <button
                 type="button"
                 onClick={salirHaciaAtras}
-                className="fixed top-6 left-6 z-[100] flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
+                className="fixed top-5 left-5 md:top-6 md:left-6 z-[100] flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
                 aria-label="Volver atrás"
             >
                 <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
             </button>
+            )}
 
-            <div className="mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-5 py-16 sm:px-6">
+            <div className="mx-auto flex min-h-screen max-w-4xl flex-col justify-start md:justify-center px-5 pt-5 pb-12 md:py-16 sm:px-6">
                 <AnimatePresence mode="wait">
                     {/* ------------------------------------------- PLATAFORMA */}
                     {paso === 'plataforma' && (
@@ -1001,7 +1005,73 @@ export function DiagnosticoEnvios() {
                             transition={{ duration: 0.35 }}
                             className="w-full"
                         >
-                            <div className="text-center sm:text-left">
+                            {/* Celular: tres opciones de un toque */}
+                            <div className="md:hidden pt-12">
+                                <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#FFA380]">
+                                    Autodiagnóstico gratis · 2 minutos
+                                </p>
+                                <h1 className="mt-2 text-[1.75rem] font-heading font-extrabold text-white leading-[1.15] tracking-tight">
+                                    ¿Qué querés revisar?
+                                </h1>
+                                <p className="mt-2 text-sm text-neutral-400">
+                                    Sin conectar tu cuenta. Al final ves tu resultado y qué hacer.
+                                </p>
+                                <div className="mt-6 space-y-3">
+                                    {(
+                                        [
+                                            {
+                                                id: 'meli',
+                                                titulo: 'Vendo en Mercado Libre',
+                                                detalle: 'Reclamos, reputación y envíos',
+                                                img: { src: '/3d/icono-velocimetro.png', w: 560, h: 382 },
+                                                sugerido: origen === 'home_meli' || origen === 'directo',
+                                            },
+                                            {
+                                                id: 'otros',
+                                                titulo: 'Cobro por WhatsApp con transferencia',
+                                                detalle: 'Comprobantes y stock entre canales',
+                                                img: { src: '/3d/ecommerce/pago-check.webp', w: 512, h: 501 },
+                                                sugerido: origen === 'home_tienda' || origen === 'ecommerce',
+                                            },
+                                            {
+                                                id: 'logistica',
+                                                titulo: 'Tengo una logística o reparto',
+                                                detalle: 'Entregas fallidas y avisos al cliente',
+                                                img: { src: '/3d/ilustracion-reparto.png', w: 900, h: 522 },
+                                                sugerido: origen === 'logistica',
+                                            },
+                                        ] as const
+                                    ).map((o) => (
+                                        <button
+                                            key={o.id}
+                                            type="button"
+                                            onClick={() => elegirPlataforma(o.id)}
+                                            className={`w-full flex items-center gap-4 rounded-2xl border p-4 text-left active:scale-[0.99] transition ${
+                                                o.sugerido
+                                                    ? 'border-[#FF5520]/70 bg-[#FF5520]/[0.08]'
+                                                    : 'border-white/10 bg-white/[0.03]'
+                                            }`}
+                                        >
+                                            <Image
+                                                src={o.img.src}
+                                                alt=""
+                                                aria-hidden
+                                                width={o.img.w}
+                                                height={o.img.h}
+                                                sizes="64px"
+                                                className="w-14 h-14 shrink-0 object-contain"
+                                            />
+                                            <span className="flex-1">
+                                                <span className="block font-heading font-bold text-white leading-snug">{o.titulo}</span>
+                                                <span className="block mt-0.5 text-sm text-neutral-400">{o.detalle}</span>
+                                            </span>
+                                            <ChevronRight className="w-5 h-5 shrink-0 text-[#FF5520]" />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="hidden md:block text-center sm:text-left">
                                 <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF5520]/10 border border-[#FF5520]/30 text-[#FFA380] text-xs font-mono uppercase tracking-[0.18em]">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#FF5520] animate-ping" />
                                     Paso 1 de 2 · Selección de Perfil Operativo
@@ -1017,7 +1087,7 @@ export function DiagnosticoEnvios() {
                                 </p>
                             </div>
 
-                            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="mt-8 hidden md:grid md:grid-cols-2 gap-6">
                                 {/* CARD 1: VENDEDOR E-COMMERCE & MULTICANAL */}
                                 <div
                                     className={`relative flex flex-col justify-between p-6 sm:p-8 rounded-3xl border transition-all duration-300 card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] ${
@@ -1293,47 +1363,47 @@ export function DiagnosticoEnvios() {
                             transition={{ duration: 0.25 }}
                         >
                             {/* Progreso */}
-                            <div className="mb-8">
-                                <div className="mb-2 flex items-center justify-between font-mono text-xs text-[#8E8B88]">
+                            <div className="mb-6 md:mb-8">
+                                <div className="mb-2.5 flex items-center justify-between gap-3 font-mono text-xs text-[#8E8B88]">
+                                    <button
+                                        type="button"
+                                        onClick={volver}
+                                        aria-label="Volver"
+                                        className="flex items-center gap-1.5 -ml-1 py-1.5 pr-2 text-neutral-300 transition-colors hover:text-white"
+                                    >
+                                        <ArrowRight className="w-4 h-4 rotate-180" />
+                                        <span>Volver</span>
+                                    </button>
                                     <span>
                                         {indice + 1} de {activas.length}
                                     </span>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => setPaso('plataforma')}
-                                            className="transition-colors hover:text-[#FFA380] text-[#8E8B88]"
-                                        >
-                                            ‹ Cambiar perfil
-                                        </button>
-                                        <span className="text-[#3E3D3A]">|</span>
-                                        <button
-                                            type="button"
-                                            onClick={volver}
-                                            className="transition-colors hover:text-[#E8E5DE]"
-                                        >
-                                            ← Volver
-                                        </button>
-                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPaso('plataforma')}
+                                        className="hidden md:inline transition-colors hover:text-[#FFA380]"
+                                    >
+                                        Cambiar perfil
+                                    </button>
                                 </div>
-                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10 shadow-inner">
+                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                                     <motion.div
                                         className="h-full bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-emerald-400"
                                         initial={false}
-                                        animate={{
-                                            width: `${((indice + 1) / activas.length) * 100}%`,
-                                        }}
+                                        animate={{ width: `${((indice + 1) / activas.length) * 100}%` }}
                                         transition={{ duration: 0.3 }}
                                     />
                                 </div>
                             </div>
 
-                            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white leading-snug tracking-tight">
+                            {indice === 0 && (
+                                <p className="mb-2 text-[11px] font-mono uppercase tracking-[0.16em] text-[#FFA380]">
+                                    2 minutos · sin conectar tu cuenta
+                                </p>
+                            )}
+                            <h2 className="font-heading text-[1.4rem] md:text-3xl font-extrabold text-white leading-snug tracking-tight">
                                 {pregunta.titulo}
                             </h2>
-                            {pregunta.ayuda && (
-                                <p className="mt-2 text-sm text-neutral-400 font-sans">{pregunta.ayuda}</p>
-                            )}
+                            {pregunta.ayuda && <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{pregunta.ayuda}</p>}
 
                             {pregunta.tipo === 'reputacion' ? (
                                 <PasoReputacion
@@ -1341,14 +1411,14 @@ export function DiagnosticoEnvios() {
                                     onSaltear={() => responderReputacion(null)}
                                 />
                             ) : (
-                            <div className="mt-6 flex flex-col gap-3">
+                            <div className="mt-5 md:mt-6 flex flex-col gap-2.5 md:gap-3">
                                 {pregunta.opciones.map((opcion, optIdx) => {
                                     const letters = ['A', 'B', 'C', 'D', 'E', 'F']
                                     return (
                                         <button
                                             key={opcion.label}
                                             onClick={() => responder(opcion)}
-                                            className="group relative flex items-center justify-between gap-4 rounded-2xl border border-white/[0.10] card-obsidian sheen-top bg-gradient-to-r from-[#14161A] via-[#111316] to-[#0D0F12] px-5 py-4.5 text-left text-[15px] leading-snug transition-all duration-200 hover:border-[#FF5520]/60 hover:from-[#1A1D23] hover:to-[#14161A] hover:shadow-[0_4px_25px_-5px_rgba(255,85,32,0.25)] cursor-pointer active:scale-[0.99]"
+                                            className="group relative flex items-center justify-between gap-3 md:gap-4 rounded-2xl border border-white/[0.10] card-obsidian sheen-top bg-gradient-to-r from-[#14161A] via-[#111316] to-[#0D0F12] px-4 py-3.5 md:px-5 md:py-4.5 min-h-[56px] text-left text-[15px] leading-snug transition-all duration-200 hover:border-[#FF5520]/60 hover:from-[#1A1D23] hover:to-[#14161A] hover:shadow-[0_4px_25px_-5px_rgba(255,85,32,0.25)] cursor-pointer active:scale-[0.99]"
                                         >
                                             <div className="flex items-start gap-3.5">
                                                 <span className="shrink-0 w-6 h-6 rounded-md bg-white/[0.06] border border-white/10 font-mono text-xs font-bold text-neutral-400 group-hover:text-white group-hover:bg-[#FF5520] group-hover:border-[#FF5520] flex items-center justify-center transition-colors">
@@ -1392,128 +1462,155 @@ export function DiagnosticoEnvios() {
                             <button
                                 type="button"
                                 onClick={() => setPaso('preguntas')}
-                                className="mb-4 inline-flex items-center gap-1.5 font-mono text-xs text-[#8E8B88] transition-colors hover:text-[#E8E5DE]"
+                                className="mb-4 inline-flex items-center gap-1.5 py-1.5 font-mono text-xs text-neutral-300 transition-colors hover:text-white"
                             >
-                                ← Volver a las preguntas
+                                <ArrowRight className="w-4 h-4 rotate-180" />
+                                Volver a las preguntas
                             </button>
+
+                            {/* 1. Veredicto */}
                             <div
-                                className="rounded-3xl border card-obsidian sheen-top p-6 sm:p-8 shadow-2xl relative overflow-hidden"
-                                style={{ borderColor: resultado.color, background: resultado.bg }}
+                                className="rounded-3xl border p-5 sm:p-8"
+                                style={{ borderColor: `${resultado.color}88`, background: resultado.bg }}
                             >
-                                <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#FFA380] font-bold">
+                                <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-300">
                                     Tu diagnóstico
                                 </span>
-                                <div className="mt-2 flex items-baseline gap-3">
-                                    <h2
-                                        className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight"
-                                        style={{ color: resultado.color }}
-                                    >
-                                        {resultado.titulo}
-                                    </h2>
-                                    <span className="font-mono text-sm text-neutral-300 bg-black/60 px-2.5 py-0.5 rounded-md border border-white/10">
-                                        {puntaje}/{maximo} puntos
-                                    </span>
+                                <h2
+                                    className="mt-1 font-heading text-3xl sm:text-4xl font-extrabold tracking-tight"
+                                    style={{ color: resultado.color }}
+                                >
+                                    {resultado.titulo}
+                                </h2>
+                                <div className="mt-3 h-2 rounded-full bg-black/40 overflow-hidden" aria-hidden>
+                                    <div
+                                        className="h-full rounded-full"
+                                        style={{ width: `${Math.max(6, porcentaje)}%`, backgroundColor: resultado.color }}
+                                    />
                                 </div>
-                                <p className="mt-4 text-[15px] leading-relaxed text-neutral-200 font-sans">
-                                    {resumen}
-                                </p>
+                                {resumen && (
+                                    <p className="mt-4 text-[15px] leading-relaxed text-neutral-100">{resumen}</p>
+                                )}
                             </div>
 
+                            {/* 2. Los números reales mandan */}
                             {plataforma === 'meli' && reputacion && <MargenResultado datos={reputacion} />}
 
-                            {/* Si es logística/distribuidora, destacamos la calculadora interactiva en el resultado */}
                             {plataforma === 'logistica' && (
-                                <div className="mt-7">
+                                <div className="mt-6">
                                     <CalculadoraFinancieraViva
                                         entregasDia={entregasDia}
                                         setEntregasDia={setEntregasDia}
                                         porcentajeFallos={porcentajeFallos}
                                         setPorcentajeFallos={setPorcentajeFallos}
+                                        compacta
                                     />
                                 </div>
                             )}
 
-                            <h3 className="mt-8 text-xl font-extrabold font-heading text-white tracking-tight">
-                                Tres acciones concretas para tu operación
-                            </h3>
-                            <ol className="mt-4 flex flex-col gap-3">
-                                {acciones.map((accion, i) => (
-                                    <li
-                                        key={i}
-                                        className="flex gap-4 rounded-2xl border border-white/[0.10] card-obsidian bg-gradient-to-r from-[#14161A] to-[#0E1013] p-4.5"
-                                    >
-                                        <span className="font-mono text-sm font-bold text-[#FFA380] bg-[#FF5520]/15 border border-[#FF5520]/30 px-2 py-0.5 rounded-md shrink-0 h-fit">
-                                            {String(i + 1).padStart(2, '0')}
-                                        </span>
-                                        <span className="text-[15px] leading-relaxed text-neutral-200 font-sans">
-                                            {accion}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ol>
+                            {/* 3. Qué encontramos y cómo se resuelve */}
+                            {oferta && (
+                                <>
+                                    <h3 className="mt-8 text-xl font-extrabold font-heading text-white tracking-tight">
+                                        Lo que encontramos
+                                    </h3>
+                                    <HallazgosLista oferta={oferta} />
+                                </>
+                            )}
 
-                            {oferta && <OfertaRecomendada oferta={oferta} />}
-
-                            {/* Captura de contacto */}
-                            <div className="mt-10 rounded-3xl border border-white/[0.12] card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] p-6 sm:p-8 shadow-2xl">
-                                <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-white tracking-tight">
+                            {/* 4. Contacto: WhatsApp primero, email opcional */}
+                            <div className="mt-8 rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] p-5 sm:p-8 shadow-2xl">
+                                <div className="flex items-center gap-3">
+                                    <Image
+                                        src="/gabriel-cacabelos.jpg"
+                                        alt="Gabriel Cacabelos"
+                                        width={480}
+                                        height={480}
+                                        sizes="48px"
+                                        className="w-12 h-12 rounded-full object-cover border-2 border-[#FF5520]/50"
+                                    />
+                                    <div>
+                                        <h3 className="text-lg sm:text-2xl font-extrabold font-heading text-white leading-tight tracking-tight">
+                                            ¿Lo revisamos juntos?
+                                        </h3>
+                                        <p className="text-xs text-neutral-400">Te escribe Gabriel, el fundador. No es un bot.</p>
+                                    </div>
+                                </div>
+                                <p className="mt-4 text-sm leading-relaxed text-neutral-300">
                                     {plataforma === 'logistica'
-                                        ? 'Recibí el desglose para tu flota y coordinemos el diagnóstico de 30 minutos'
-                                        : 'Reservá tu diagnóstico gratis de 30 minutos'}
-                                </h3>
-                                <p className="mt-2 text-sm leading-relaxed text-neutral-300 font-sans">
-                                    {plataforma === 'logistica' ? (
-                                        <>
-                                            Dejanos tu contacto para enviarte este cálculo junto con el esquema de{' '}
-                                            <strong className="text-white">Coordinación Previa y Ficha del Domicilio</strong>{' '}
-                                            montado sobre tu planilla o ERP actual, sin instalarle aplicaciones a los choferes.
-                                        </>
-                                    ) : (
-                                        <>
-                                            Dejanos tus datos y te escribimos por WhatsApp para coordinar. En la
-                                            llamada revisamos tu reputación con vos, te mostramos cómo te llegarían
-                                            las alertas y, si te sirve, reservamos tu lugar en el{' '}
-                                            <strong className="text-white">piloto de 30 días</strong>. Sin compromiso.
-                                        </>
-                                    )}
+                                        ? 'Te mando este cálculo y coordinamos 30 minutos para ver cómo filtrar ausencias en tu operación, sin apps para los choferes.'
+                                        : 'Te mando este informe y coordinamos 30 minutos para mirar tu cuenta con vos. Sin compromiso.'}
                                 </p>
 
-                                <form onSubmit={enviar} className="mt-6 flex flex-col gap-3.5">
+                                <form onSubmit={enviar} className="mt-5 flex flex-col gap-3">
                                     <input
                                         type="text"
+                                        autoComplete="name"
                                         value={nombre}
                                         onChange={(e) => setNombre(e.target.value)}
-                                        placeholder="Tu nombre y empresa"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-[15px] text-white outline-none transition-colors placeholder:text-neutral-500 focus:border-[#FF5520] focus:ring-1 focus:ring-[#FF5520]"
-                                    />
-                                    <input
-                                        type="email"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Tu email *"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-[15px] text-white outline-none transition-colors placeholder:text-neutral-500 focus:border-[#FF5520] focus:ring-1 focus:ring-[#FF5520]"
+                                        placeholder="Tu nombre"
+                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
                                     />
                                     <input
                                         type="tel"
+                                        inputMode="tel"
+                                        autoComplete="tel"
                                         value={whatsapp}
                                         onChange={(e) => setWhatsapp(e.target.value)}
-                                        placeholder="WhatsApp (para coordinar más rápido)"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-[15px] text-white outline-none transition-colors placeholder:text-neutral-500 focus:border-[#FF5520] focus:ring-1 focus:ring-[#FF5520]"
+                                        placeholder="Tu WhatsApp (ej: 11 2345 6789)"
+                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
                                     />
-                                    {error && <p className="text-sm text-red-400 font-mono">{error}</p>}
+                                    <input
+                                        type="email"
+                                        autoComplete="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Tu email (opcional)"
+                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
+                                    />
+                                    {error && <p className="text-sm text-red-400">{error}</p>}
                                     <button
                                         type="submit"
                                         disabled={enviando}
-                                        className="mt-2 rounded-2xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 px-6 py-4 text-base font-bold font-heading text-white transition-all shadow-[0_4px_25px_rgba(255,85,32,0.4)] disabled:opacity-60 cursor-pointer"
+                                        className="mt-1 rounded-2xl bg-[#FF5520] hover:brightness-110 px-6 py-4 text-base font-bold font-heading text-white shadow-[0_4px_25px_rgba(255,85,32,0.35)] disabled:opacity-60"
                                     >
-                                        {enviando
-                                            ? 'Enviando…'
-                                            : plataforma === 'logistica'
-                                              ? 'Recibir informe y coordinar diagnóstico'
-                                              : 'Quiero mi diagnóstico gratis'}
+                                        {enviando ? 'Enviando…' : 'Quiero que me escriban'}
                                     </button>
+                                    <p className="text-[11px] text-neutral-500 text-center">
+                                        Usamos tus datos solo para contactarte por este diagnóstico.
+                                    </p>
                                 </form>
+                            </div>
+
+                            {/* 5. Más detalle, para el que lo quiera */}
+                            <div className="mt-6 space-y-3">
+                                {oferta && (
+                                    <details className="group rounded-2xl border border-white/10 bg-white/[0.03]">
+                                        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 font-semibold text-white">
+                                            Cómo seguiría y cuánto cuesta
+                                            <ChevronRight className="w-4 h-4 text-[#FF5520] transition-transform group-open:rotate-90" />
+                                        </summary>
+                                        <div className="px-3 pb-3 sm:px-4 sm:pb-4">
+                                            <PlanRecomendado oferta={oferta} />
+                                        </div>
+                                    </details>
+                                )}
+                                <details className="group rounded-2xl border border-white/10 bg-white/[0.03]">
+                                    <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 font-semibold text-white">
+                                        3 cosas que podés hacer hoy, por tu cuenta
+                                        <ChevronRight className="w-4 h-4 text-[#FF5520] transition-transform group-open:rotate-90" />
+                                    </summary>
+                                    <ol className="px-4 pb-4 flex flex-col gap-3">
+                                        {acciones.map((accion, i) => (
+                                            <li key={i} className="flex gap-3">
+                                                <span className="font-mono text-xs font-bold text-[#FFA380] bg-[#FF5520]/15 border border-[#FF5520]/30 px-1.5 py-0.5 rounded-md shrink-0 h-fit">
+                                                    {String(i + 1).padStart(2, '0')}
+                                                </span>
+                                                <span className="text-sm leading-relaxed text-neutral-200">{accion}</span>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </details>
                             </div>
                         </motion.div>
                     )}
@@ -1527,34 +1624,34 @@ export function DiagnosticoEnvios() {
                             transition={{ duration: 0.4 }}
                             className="text-center"
                         >
-                            <h2 className="text-3xl font-bold sm:text-4xl">Listo, recibido.</h2>
+                            <h2 className="pt-16 md:pt-0 text-3xl font-bold sm:text-4xl">Listo, recibido.</h2>
                             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-[#B7B3B0]">
-                                Ya registramos los datos de tu operación. Te escribimos a la brevedad para
-                                revisar los números juntos. Si querés, elegí el horario ahora mismo:
+                                Te escribimos a la brevedad para revisar los números juntos. Si no querés esperar,
+                                escribinos ahora o elegí un horario:
                             </p>
-                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                                <a
-                                    href="https://calendly.com/individratec/30min"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 px-6 py-3 text-sm font-bold font-heading text-white shadow-[0_4px_25px_rgba(255,85,32,0.4)]"
-                                >
-                                    Elegir horario (30 min)
-                                    <ArrowRight className="w-4 h-4" />
-                                </a>
+                            <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-4">
                                 <a
                                     href={`https://wa.me/5491160152435?text=${encodeURIComponent(
                                         `Hola Gabriel, terminé el autodiagnóstico de INDIVIDRA${oferta ? ` (me recomendó el ${oferta.plan.nombre})` : ''} y quiero coordinar el diagnóstico de 30 minutos.`
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-bold font-heading text-[#0B0D0E]"
                                 >
                                     Escribir por WhatsApp
                                 </a>
+                                <a
+                                    href="https://calendly.com/individratec/30min"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5520] px-6 py-3.5 text-sm font-bold font-heading text-white"
+                                >
+                                    Elegir horario (30 min)
+                                    <ArrowRight className="w-4 h-4" />
+                                </a>
                                 <Link
                                     href={plataforma === 'logistica' ? '/logistica' : '/'}
-                                    className="inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"
+                                    className="inline-flex items-center justify-center rounded-xl border border-[#3E3D3A] px-6 py-3.5 text-sm font-semibold transition-colors hover:border-[#C84214]"
                                 >
                                     {plataforma === 'logistica' ? 'Ver solución de Logística' : 'Volver al inicio'}
                                 </Link>
