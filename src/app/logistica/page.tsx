@@ -17,6 +17,10 @@ export const metadata: Metadata = {
         locale: 'es_AR',
         type: 'website',
     },
+    robots: {
+        index: true,
+        follow: true,
+    },
 }
 
 export default function LogisticaPage() {

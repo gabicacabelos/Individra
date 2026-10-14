@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 110" fill="none" role="img">
+  <title>Tango Gestión</title>
+  <!-- T -->
+  <path fill="#FFFFFF" d="M22 14h46v11H53v33H37V25H22V14Z"/>
+  <!-- A (solid geometric triangle with Tango lower-left step) -->
+  <path fill="#FFFFFF" d="M88 12L65 58h35l3-6h8v6h12L99 12H88Z"/>
+  <!-- N -->
+  <path fill="#FFFFFF" d="M124 14h14l22 26V14h14v44h-13l-23-26v26h-14V14Z"/>
+  <!-- G (geometric circle with top-right quadrant cutout) -->
+  <path fill="#FFFFFF" d="M203 13c-13.255 0-24 10.297-24 23s10.745 23 24 23c12.42 0 22.634-9.04 23.875-20.6H203V27h11V13.4C210.55 13.13 206.82 13 203 13Z"/>
+  <!-- O (solid geometric circle) -->
+  <circle cx="242" cy="36" r="17" fill="#FFFFFF"/>
+  <!-- "gestión" thin geometric wordmark -->
+  <text x="132" y="96" fill="#E8E5DE" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="42" font-weight="300" letter-spacing="1.5" text-anchor="middle">gestión</text>
+</svg>

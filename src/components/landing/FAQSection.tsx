@@ -9,28 +9,48 @@ import { MobileFAQBackground } from '@/components/ui/MobileBackgroundEffects'
 const faqs = [
     {
         id: 1,
-        question: '¿Tengo que cambiar mi sistema actual o dejar de usar mis planillas de Excel?',
-        answer: 'No. Nos montamos sobre lo que ya usás hoy: si armás el reparto en una planilla de Excel o Google Sheets, la leemos automáticamente cada día; si tenés un ERP o sistema de gestión propio, nos conectamos sin interrumpir la operatoria. Tu administración sigue cargando los datos donde siempre.',
+        question: '¿Mi equipo tiene que cambiar de WhatsApp o dejar de usar Mercado Libre y Tiendanube?',
+        answer: 'No. Tu equipo puede seguir chateando donde siempre. Nuestra consola funciona como un panel de decisiones críticas: filtra el ruido por detrás y te muestra ordenadas por urgencia solo las tarjetas donde apretar un botón aprueba un comprobante, descuenta el stock en Mercado Libre y Tiendanube al mismo tiempo o frena un despacho.',
     },
     {
         id: 2,
-        question: '¿Los choferes o fleteros tienen que instalar alguna aplicación en el celular?',
-        answer: 'No hay que instalar ninguna app ni comprar hardware. Sabemos que el fletero tercerizado rechaza cualquier aplicación que le consuma batería, datos o lo rastree todo el día. Todo corre por Telegram o mediante un link web diario que abre en el navegador con un toque, sin usuario ni contraseña.',
+        question: '¿Qué pasa si ya uso herramientas como Producteca o Multivende para sincronizar stock?',
+        answer: 'Operamos en perfecta armonía. Si ya tenés un sincronizador de catálogo activo (como Producteca, Multivende o similares), INDIVIDRA activa el Modo Coexistencia: al validar un pago por WhatsApp, descuenta la unidad en el canal origen (Tiendanube) y deja que tu integrador replique el stock a Mercado Libre, evitando descuentos dobles. Y si el producto vendido por WhatsApp solo estaba publicado en Mercado Libre, la baja se aplica directo en ML.',
     },
     {
         id: 3,
-        question: '¿Qué pasa cuando un destinatario hace un reclamo complejo o el bot no puede resolverlo?',
-        answer: 'El sistema nunca encierra al cliente en un bucle. Si una persona escribe por tercera vez sobre el mismo envío, no se resuelve en tres intercambios o menciona palabras críticas (como extravío, robo o denuncia), el asistente se silencia en el acto y pasa la conversación a la bandeja de atención de tu equipo con el resumen de lo que marcó el chofer y lo que reclama el destinatario, para que un operador humano siga hablando desde el mismo WhatsApp.',
+        question: '¿El sistema le dice al comprador de Mercado Libre cómo devolver o que no abra reclamos?',
+        answer: 'Rotundamente no. Las políticas de Mercado Libre sancionan a los vendedores que intentan guiar devoluciones por fuera o persuadir al comprador de evitar reclamos formales. INDIVIDRA protege tu cuenta reteniendo físicamente el paquete en mesa de empaque para no despachar mercadería equivocada, y prepara respuestas estrictamente neutrales que remiten a los canales oficiales de ayuda de Mercado Libre, siempre con supervisión y aprobación humana obligatoria.',
     },
     {
         id: 4,
-        question: '¿Dónde se guardan los datos de mis clientes, mis rutas y mis precios?',
-        answer: 'En un servidor dedicado y aislado exclusivamente para tu empresa en Hetzner (Alemania), bajo normativa europea GDPR y Ley 25.326 de Protección de Datos Personales. No mezclamos bases de datos entre clientes ni usamos tu información para entrenar modelos externos. Los datos son 100% tuyos y podés exportarlos cuando quieras.',
+        question: '¿Cómo evita el sistema que me pasen un comprobante trucho, duplicado o viejo?',
+        answer: 'Cuando entra un comprobante (PDF o imagen) por WhatsApp, el motor OCR extrae de inmediato el monto, fecha, CUIT y número de operación, y valida que no figure ya en tu base histórica. Para prevenir comprobantes editados o truchos, la unidad queda reservada provisoriamente durante 15 minutos, pero el stock solo se descuenta definitivamente en tus canales cuando un operador humano coteja el impacto real en tu cuenta bancaria o Mercado Pago y lo aprueba en 1 clic.',
     },
     {
         id: 5,
-        question: '¿Cuánto tarda en estar funcionando en la calle y hay contrato de permanencia?',
-        answer: 'Entre 2 y 3 semanas desde el diagnóstico inicial. Antes de abrir el sistema a toda la flota, salimos en "Modo Espejo" sobre una sola ruta piloto: durante los primeros días aprobás cada aviso desde tu celular hasta comprobar que todo sale exacto. Trabajamos mes a mes, sin contratos de permanencia ni penalidades de salida.',
+        question: '¿Cómo se pagan los mensajes de WhatsApp y qué costo tienen?',
+        answer: 'La infraestructura de mensajería utiliza la WhatsApp Cloud API oficial. Los costos de conversación son facturados directamente por Meta a la tarjeta de tu empresa según tu consumo real, sin ningún sobreprecio por parte de INDIVIDRA.',
+    },
+    {
+        id: 6,
+        question: '¿En qué consiste el diagnóstico gratuito de 30 minutos?',
+        answer: 'Es una auditoría técnica y comercial 1 a 1 por videollamada. Sin pedirte contraseñas ni permisos invasivos, revisamos juntos en pantalla compartida el termómetro de reputación de tu cuenta, las publicaciones con stock crítico (1 a 3 unidades) y calculamos con números reales de tu tienda cuánto capital y comisiones protegés.',
+    },
+    {
+        id: 7,
+        question: '¿Dónde se guardan los datos de mis ventas y hay algún contrato de permanencia?',
+        answer: 'Tu operación corre en una instancia dedicada y aislada bajo estrictas normas de privacidad y la Ley 25.326 de Protección de Datos Personales. No mezclamos datos entre clientes y podés exportar toda tu base cuando quieras. Trabajamos mes a mes sin permanencia.',
+    },
+    {
+        id: 8,
+        question: '¿Cómo funciona la Conciliación de Liquidaciones y qué hace con mi contador?',
+        answer: 'No calculamos impuestos ni tocamos ARCA. Lo que hace el motor es cruzar con SQL determinístico cada orden contra lo efectivamente acreditado en Mercado Pago y tu banco: descuenta comisiones de publicación, costo real de envíos Flex y retenciones impositivas (IIBB, IVA, Ganancias). Te muestra el margen neto real por producto y genera un archivo CSV limpio y normalizado para que tu contador no pierda horas cruzando planillas a ciegas.',
+    },
+    {
+        id: 9,
+        question: '¿Cómo me protege el Expediente de Evidencia ante devoluciones dudosas o fraudulentas?',
+        answer: 'La frase que más repite el soporte de Mercado Libre ante un reclamo es "no tengo evidencia adicional para confirmarlo". INDIVIDRA genera esa evidencia antes de que surja el problema: asocia el registro de balanza en empaque (peso con foto y timestamp) y remito de colecta. Si el comprador devuelve una caja vacía o aduce un faltante, el sistema compila la discrepancia de peso y deja listo el texto formal con los artículos de políticas de la plataforma para que un operador humano lo pegue en mediación en 1 clic.',
     },
 ]
 
@@ -67,7 +87,6 @@ export function FAQSection() {
                     transition={{ duration: 0.8, ease: 'easeOut' }}
                     className="text-center mb-16"
                 >
-                    {/* Icono 3D on-brand, sin fondo: reemplaza al icono plano sobre el título */}
                     <motion.div
                         initial={{ opacity: 0, y: 14, scale: 0.9 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -103,9 +122,9 @@ export function FAQSection() {
                         transition={{ delay: 0.3 }}
                         className="mt-4 text-4xl sm:text-5xl font-bold text-white"
                     >
-                        ¿Tenés{' '}
+                        Dudas habituales antes de{' '}
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] to-[#B7B3B0]">
-                            dudas?
+                            conectar tu tienda
                         </span>
                     </motion.h2>
                     <motion.p
@@ -115,7 +134,7 @@ export function FAQSection() {
                         transition={{ delay: 0.4 }}
                         className="mt-6 text-neutral-400 text-lg max-w-2xl mx-auto"
                     >
-                        Respuestas directas a las preguntas que siempre aparecen antes de conectar una operación real.
+                        Respuestas directas sobre seguridad de tus cuentas, validación de comprobantes y cómo medimos el piloto de 30 días.
                     </motion.p>
                 </motion.div>
 
@@ -141,12 +160,11 @@ export function FAQSection() {
                             >
                                 <div
                                     className={`relative rounded-2xl border backdrop-blur-sm transition-all duration-300 overflow-hidden ${
-                                         isActive
-                                             ? 'border-[#C84214]/50 bg-[#262523] shadow-lg shadow-[#C84214]/10'
-                                             : 'border-[#3E3D3A] bg-[#222120] hover:border-[#3E3D3A]/80 hover:bg-[#262523]'
-                                     }`}
+                                        isActive
+                                            ? 'border-[#C84214]/50 bg-[#262523] shadow-lg shadow-[#C84214]/10'
+                                            : 'border-[#3E3D3A] bg-[#222120] hover:border-[#3E3D3A]/80 hover:bg-[#262523]'
+                                    }`}
                                 >
-                                    {/* Glow effect when active */}
                                     {isActive && (
                                         <motion.div
                                             layoutId="faq-glow"
@@ -158,17 +176,23 @@ export function FAQSection() {
                                     {/* Question */}
                                     <button
                                         onClick={() => toggleFAQ(index)}
-                                        className="relative w-full p-6 flex items-center justify-between gap-4 text-left"
+                                        className="relative w-full p-6 flex items-center justify-between gap-4 text-left cursor-pointer"
                                     >
                                         <div className="flex items-center gap-4">
-                                            <span className={`text-sm font-mono transition-colors duration-300 ${
-                                                isActive ? 'text-[#C84214]' : 'text-neutral-600'
-                                            }`}>
+                                            <span
+                                                className={`text-sm font-mono transition-colors duration-300 ${
+                                                    isActive ? 'text-[#C84214]' : 'text-neutral-600'
+                                                }`}
+                                            >
                                                 0{index + 1}
                                             </span>
-                                            <h3 className={`text-lg font-semibold transition-colors duration-300 ${
-                                                isActive ? 'text-white' : 'text-neutral-300 group-hover:text-white'
-                                            }`}>
+                                            <h3
+                                                className={`text-lg font-semibold transition-colors duration-300 ${
+                                                    isActive
+                                                        ? 'text-white'
+                                                        : 'text-neutral-300 group-hover:text-white'
+                                                }`}
+                                            >
                                                 {faq.question}
                                             </h3>
                                         </div>
@@ -233,12 +257,12 @@ export function FAQSection() {
                     transition={{ delay: 0.5 }}
                     className="mt-16 text-center"
                 >
-                    <p className="text-neutral-500 mb-4">¿No encontrás tu respuesta?</p>
+                    <p className="text-neutral-500 mb-4">¿Tenés una casuística particular con tu stock?</p>
                     <a
                         href="#contacto"
-                        className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-[#C84214] text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap"
+                        className="group inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-[#C84214] text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap cursor-pointer"
                     >
-                        Contactanos
+                        Hablemos de tu operación
                         <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-200" />
                     </a>
                 </motion.div>

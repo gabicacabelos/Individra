@@ -5,26 +5,17 @@ import { HeroSection } from '@/components/landing/HeroSection'
 const IntegrationsBar = dynamic(() =>
     import('@/components/landing/IntegrationsBar').then((m) => m.IntegrationsBar)
 )
-const ProcessWorkflowSection = dynamic(() =>
-    import('@/components/landing/ProcessWorkflowSection').then((m) => m.ProcessWorkflowSection)
-)
 const PainSolutionSection = dynamic(() =>
     import('@/components/landing/PainSolutionSection').then((m) => m.PainSolutionSection)
 )
-const ServicesSection = dynamic(() =>
-    import('@/components/landing/ServicesSection').then((m) => m.ServicesSection)
-)
-const CatalogSection = dynamic(() =>
-    import('@/components/landing/CatalogSection').then((m) => m.CatalogSection)
-)
-const DifferentiatorsSection = dynamic(() =>
-    import('@/components/landing/DifferentiatorsSection').then((m) => m.DifferentiatorsSection)
-)
-const ComparativeSection = dynamic(() =>
-    import('@/components/landing/ComparativeSection').then((m) => m.ComparativeSection)
+const VentaBlindadaCalculator = dynamic(() =>
+    import('@/components/landing/VentaBlindadaCalculator').then((m) => m.VentaBlindadaCalculator)
 )
 const PropuestaComercialSection = dynamic(() =>
     import('@/components/landing/PropuestaComercialSection').then((m) => m.PropuestaComercialSection)
+)
+const LogisticaBridgeSection = dynamic(() =>
+    import('@/components/landing/LogisticaBridgeSection').then((m) => m.LogisticaBridgeSection)
 )
 const FAQSection = dynamic(() =>
     import('@/components/landing/FAQSection').then((m) => m.FAQSection)
@@ -45,13 +36,10 @@ export default function Home() {
             <Navbar />
             <HeroSection />
             <IntegrationsBar />
-            <ProcessWorkflowSection />
             <PainSolutionSection />
-            <ServicesSection />
-            <CatalogSection />
-            <DifferentiatorsSection />
-            <ComparativeSection />
+            <VentaBlindadaCalculator />
             <PropuestaComercialSection />
+            <LogisticaBridgeSection />
             <FAQSection />
             <ContactSection />
             <Footer />

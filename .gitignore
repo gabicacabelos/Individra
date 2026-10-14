@@ -55,3 +55,6 @@ scratch_artifact.json
 /src/components/_removed/
 # Fotos de perfil personales: public/ se sirve publicamente
 /public/perfil_linkedin/
+
+# Notas privadas de prospección y discovery
+discovery_leads_log.md

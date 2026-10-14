@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { motion, animate } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { trackEvent } from '@/lib/analytics'
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -31,7 +33,7 @@ export function Navbar() {
                 animate(window.scrollY, y, {
                     duration: 0.8,
                     ease: [0.16, 1, 0.3, 1],
-                    onUpdate: (latest) => window.scrollTo(0, latest)
+                    onUpdate: (latest) => window.scrollTo(0, latest),
                 })
 
                 window.history.pushState(null, '', href)
@@ -39,14 +41,13 @@ export function Navbar() {
         }
     }
 
-
     const navLinks = [
         { href: '#inicio', label: 'Inicio' },
-        { href: '#servicios', label: 'Servicios' },
-        { href: '#proceso-operativo', label: 'Proceso' },
-        { href: '/logistica', label: 'Logística' },
-        { href: '/diagnostico', label: 'Autodiagnóstico', highlight: true },
-        { href: '#soluciones', label: 'Soluciones' },
+        { href: '#consola-operativa', label: 'Consola 1-Clic' },
+        { href: '/diagnostico', label: 'Autodiagnóstico', isRoute: true, highlight: true },
+        { href: '#calculadora', label: 'Calculadora' },
+        { href: '#piloto', label: 'Precios & Piloto' },
+        { href: '/logistica', label: 'Para Logísticas', isRoute: true },
         { href: '#faq', label: 'FAQ' },
     ]
 
@@ -55,15 +56,20 @@ export function Navbar() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className={`fixed top-4 left-4 right-4 z-[100] transition-all duration-500 rounded-2xl ${isScrolled || isMobileMenuOpen
-                ? 'bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20'
-                : 'bg-black/20 backdrop-blur-sm border border-white/5'
-                }`}
+            className={`fixed top-4 left-4 right-4 z-[100] transition-all duration-500 rounded-2xl ${
+                isScrolled || isMobileMenuOpen
+                    ? 'bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20'
+                    : 'bg-black/20 backdrop-blur-sm border border-white/5'
+            }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <a href="#inicio" onClick={(e) => handleNavClick(e, '#inicio')} className="flex items-center cursor-pointer py-1">
+                    <a
+                        href="#inicio"
+                        onClick={(e) => handleNavClick(e, '#inicio')}
+                        className="flex items-center cursor-pointer py-1"
+                    >
                         <Image
                             src="/logo-individra-rebrand.png"
                             alt="INDIVIDRA - Inteligencia Operativa"
@@ -77,30 +83,50 @@ export function Navbar() {
                     </a>
 
                     {/* Desktop Links */}
-                    <div className="hidden md:flex items-center gap-5 lg:gap-7">
-                        {navLinks.map((link) => (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                onClick={(e) => handleNavClick(e, link.href)}
-                                className={`transition-colors duration-200 text-sm font-medium flex items-center gap-1.5 h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full ${
-                                    link.highlight
-                                        ? 'text-[#E8E5DE] hover:text-white font-semibold'
-                                        : 'text-neutral-400 hover:text-[#E8E5DE]'
-                                }`}
-                            >
-                                {link.highlight && (
-                                    <span className="h-1.5 w-1.5 rounded-full bg-[#C84214]" />
-                                )}
-                                {link.label}
-                            </a>
-                        ))}
+                    <div className="hidden md:flex items-center gap-3.5 lg:gap-5 xl:gap-6">
+                        {navLinks.map((link) =>
+                            link.isRoute ? (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={() => {
+                                        trackEvent('nav_route_clicked', { href: link.href, source: 'navbar_desktop' })
+                                    }}
+                                    className={`transition-colors duration-200 text-xs lg:text-sm font-medium flex items-center gap-1.5 h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full ${
+                                        link.highlight
+                                            ? 'text-[#E8E5DE] hover:text-white font-semibold'
+                                            : 'text-neutral-400 hover:text-[#E8E5DE]'
+                                    }`}
+                                >
+                                    {link.highlight && (
+                                        <span className="h-1.5 w-1.5 rounded-full bg-[#C84214]" />
+                                    )}
+                                    {link.label}
+                                </Link>
+                            ) : (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
+                                    className={`transition-colors duration-200 text-xs lg:text-sm font-medium flex items-center gap-1.5 h-10 cursor-pointer relative after:absolute after:bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-[#C84214] after:transition-all after:duration-300 hover:after:w-full ${
+                                        link.highlight
+                                            ? 'text-[#E8E5DE] hover:text-white font-semibold'
+                                            : 'text-neutral-400 hover:text-[#E8E5DE]'
+                                    }`}
+                                >
+                                    {link.highlight && (
+                                        <span className="h-1.5 w-1.5 rounded-full bg-[#C84214]" />
+                                    )}
+                                    {link.label}
+                                </a>
+                            )
+                        )}
                         <a
                             href="#contacto"
                             onClick={(e) => handleNavClick(e, '#contacto')}
-                            className="px-4 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs lg:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-md hover:shadow-[#C84214]/25 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
+                            className="px-3.5 py-2 lg:px-5 lg:py-2.5 bg-[#C84214] text-white text-xs lg:text-sm font-bold rounded-full hover:bg-[#B3390F] hover:shadow-md hover:shadow-[#C84214]/25 active:scale-95 transition-all duration-200 whitespace-nowrap flex items-center h-10 cursor-pointer"
                         >
-                            Diagnóstico gratuito
+                            Agendar diagnóstico (30 min)
                         </a>
                     </div>
 
@@ -124,28 +150,51 @@ export function Navbar() {
                         className="md:hidden mt-2 pb-4 border-t border-white/10 pt-4"
                     >
                         <div className="flex flex-col gap-1">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={(e) => handleNavClick(e, link.href)}
-                                    className={`hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer flex items-center gap-2 ${
-                                        link.highlight ? 'text-[#E8E5DE] font-semibold' : 'text-neutral-300'
-                                    }`}
-                                >
-                                    {link.highlight && (
-                                        <span className="h-2 w-2 rounded-full bg-[#C84214]" />
-                                    )}
-                                    {link.label}
-                                </a>
-                            ))}
+                            {navLinks.map((link) =>
+                                link.isRoute ? (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => {
+                                            setIsMobileMenuOpen(false)
+                                            trackEvent('nav_route_clicked', { href: link.href, source: 'navbar_mobile' })
+                                        }}
+                                        className={`hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer flex items-center gap-2 ${
+                                            link.highlight
+                                                ? 'text-[#E8E5DE] font-semibold'
+                                                : 'text-neutral-300'
+                                        }`}
+                                    >
+                                        {link.highlight && (
+                                            <span className="h-2 w-2 rounded-full bg-[#C84214]" />
+                                        )}
+                                        {link.label}
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={(e) => handleNavClick(e, link.href)}
+                                        className={`hover:text-white hover:bg-white/10 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl cursor-pointer flex items-center gap-2 ${
+                                            link.highlight
+                                                ? 'text-[#E8E5DE] font-semibold'
+                                                : 'text-neutral-300'
+                                        }`}
+                                    >
+                                        {link.highlight && (
+                                            <span className="h-2 w-2 rounded-full bg-[#C84214]" />
+                                        )}
+                                        {link.label}
+                                    </a>
+                                )
+                            )}
                             <a
-                                 href="#contacto"
-                                 onClick={(e) => handleNavClick(e, '#contacto')}
-                                 className="mt-3 px-5 py-3 bg-[#C84214] text-white text-base font-bold rounded-xl hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 text-center cursor-pointer shadow-md shadow-[#C84214]/25"
-                             >
-                                 Diagnóstico gratuito
-                             </a>
+                                href="#contacto"
+                                onClick={(e) => handleNavClick(e, '#contacto')}
+                                className="mt-3 px-5 py-3 bg-[#C84214] text-white text-base font-bold rounded-xl hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 text-center cursor-pointer shadow-md shadow-[#C84214]/25"
+                            >
+                                Agendar diagnóstico (30 min)
+                            </a>
                         </div>
                     </motion.div>
                 )}

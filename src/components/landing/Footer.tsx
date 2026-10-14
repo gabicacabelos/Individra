@@ -4,21 +4,20 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Mail, MapPin, ArrowUpRight, MessageCircle } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const navigation = {
-    main: [
-        { name: 'Inicio', href: '/#inicio' },
-        { name: 'Servicios', href: '/#servicios' },
-        { name: 'Soluciones', href: '/#soluciones' },
-        { name: 'Proceso', href: '/#proceso-operativo' },
-        { name: 'FAQ', href: '/#faq' },
-        { name: 'Contacto', href: '/#contacto' },
+    ecommerce: [
+        { name: 'Reclamos & Termómetro ML', href: '/#inicio' },
+        { name: 'Consola 1-Clic', href: '/#consola-operativa' },
+        { name: 'Módulo Venta Blindada', href: '/#calculadora' },
+        { name: 'Precios & Piloto 30 Días', href: '/#piloto' },
+        { name: 'Preguntas Frecuentes', href: '/#faq' },
     ],
-    services: [
-        { name: 'Automatización IA', href: '/#servicios' },
-        { name: 'Agentes Virtuales', href: '/#servicios' },
-        { name: 'Desarrollo Web', href: '/#servicios' },
-        { name: 'Consultoría Tech', href: '/#contacto' },
+    logistica: [
+        { name: 'Módulo de Entrega', href: '/logistica' },
+        { name: 'Parte del Dador', href: '/logistica#dador' },
+        { name: 'Autodiagnóstico Operativo', href: '/diagnostico' },
     ],
     legal: [
         { name: 'Política de Privacidad', href: '/legal#privacidad' },
@@ -75,7 +74,7 @@ export function Footer({
                             />
                         </motion.a>
                         <p className="mt-4 text-[#B7B3B0] text-sm leading-relaxed">
-                            Transformamos negocios con inteligencia artificial y desarrollo de software a medida.
+                            Te aviso apenas entra un reclamo, con el plazo exacto, y te digo cuánto te falta para bajar de color en Mercado Libre. Incluye módulo secundario Venta Blindada.
                         </p>
 
                         {/* Social Links */}
@@ -109,11 +108,11 @@ export function Footer({
                         </div>
                     </div>
 
-                    {/* Navigation */}
+                    {/* E-Commerce Column */}
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Navegación</h4>
+                        <h4 className="text-white font-semibold mb-4">E-Commerce & Venta</h4>
                         <ul className="space-y-3">
-                            {navigation.main.map((item) => (
+                            {navigation.ecommerce.map((item) => (
                                 <li key={item.name}>
                                     <a
                                         href={item.href}
@@ -127,19 +126,22 @@ export function Footer({
                         </ul>
                     </div>
 
-                    {/* Services */}
+                    {/* Logística & Legal Column */}
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Servicios</h4>
+                        <h4 className="text-white font-semibold mb-4">Logística de Última Milla</h4>
                         <ul className="space-y-3">
-                            {navigation.services.map((item) => (
+                            {navigation.logistica.map((item) => (
                                 <li key={item.name}>
-                                    <a
+                                    <Link
                                         href={item.href}
-                                        className="text-neutral-400 hover:text-white transition-colors text-sm inline-flex items-center gap-1 group"
+                                        onClick={() => {
+                                            trackEvent('logistica_footer_clicked', { link: item.href })
+                                        }}
+                                        className="text-neutral-400 hover:text-[#FFA380] transition-colors text-sm inline-flex items-center gap-1 group"
                                     >
                                         {item.name}
                                         <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" />
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -196,7 +198,7 @@ export function Footer({
                             href={ctaHref}
                             className="group mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#C84214] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#C84214]/20 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200"
                         >
-                            Diagnóstico gratuito
+                            Agendar diagnóstico (30 min)
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                         </a>
                     </div>

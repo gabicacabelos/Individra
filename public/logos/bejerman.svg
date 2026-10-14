@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 64" fill="none" role="img">
+  <title>Sistemas Bejerman</title>
+  <!-- Isotipo corporativo Bejerman / Thomson Reuters kinetic mark -->
+  <circle cx="28" cy="32" r="18" stroke="#FF6B00" stroke-width="4.5"/>
+  <circle cx="28" cy="32" r="7" fill="#FF6B00"/>
+  <!-- Wordmark vectorial de alta nitidez sin recuadro gris -->
+  <text x="58" y="27" fill="#B7B3B0" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="3.2">SISTEMAS</text>
+  <text x="58" y="51" fill="#FFFFFF" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="27" font-weight="800" letter-spacing="1.2">BEJERMAN</text>
+</svg>

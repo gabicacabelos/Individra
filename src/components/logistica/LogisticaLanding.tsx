@@ -24,7 +24,7 @@ import {
 
 const WHATSAPP_HREF =
     'https://wa.me/5491160152435?text=' +
-    encodeURIComponent('Hola Individra, quiero coordinar el diagnostico gratuito de 30 minutos para logistica.')
+    encodeURIComponent('Hola Gabriel, quiero coordinar el diagnóstico gratuito de 30 minutos para logística.')
 
 const H1_TEXT = 'Tu administración se pasa el día contestando "¿dónde está mi pedido?".'
 
@@ -47,9 +47,9 @@ const modules = [
         context: 'Al coordinar la entrega',
         quote: 'Me imponen el día y nunca preguntan si voy a estar.',
         name: 'Coordinación previa',
-        desc: 'La noche anterior, cada destinatario recibe un mensaje: ¿vas a estar mañana? El que no puede, se saca de la carga antes de cargar el camión. Es el primer filtro del circuito: casi todas las entregas fallidas se evitan antes de que el camión salga. Sin cambiar cómo armás tu ruta; y si después querés ofrecer franjas horarias, se activa sin tocar nada.',
+        desc: 'La noche anterior, cada destinatario de canal propio (con opt-in previo) recibe un mensaje: ¿vas a estar mañana? El que no puede, se saca de la carga antes de cargar el camión. Es el primer filtro del circuito: casi todas las entregas fallidas se evitan antes de que el camión salga. (En envíos Flex de ML opera bajo protocolos autorizados de la plataforma).',
         img: '/3d/icono-campana.png', iw: 473, ih: 512, anim: 'ring' as const,
-        descShort: 'La noche anterior, cada destinatario confirma si va a estar. El que no puede, se saca de la carga antes de salir. Es el primer filtro: la mayoría de los fallos se evitan acá.',
+        descShort: 'La noche anterior, cada destinatario confirma si va a estar (canal propio con opt-in). El que no puede, se saca antes de salir.',
         Demo: PriorNoticeDemo,
     },
     {
@@ -67,9 +67,9 @@ const modules = [
         context: 'Durante la entrega',
         quote: 'Estuve de 9 a 18 esperando y nunca vinieron. Perdí el día entero.',
         name: 'Aviso por posición',
-        desc: 'El chofer comparte su ubicación en vivo desde el bot de Telegram: sin app propia que instalar, sin hardware que comprar. A medida que avanza en la ruta, el destinatario recibe cuántas paradas faltan: la última chance de que reaccione antes de que el chofer toque el timbre. Sin horarios inventados: si faltan 2 paradas, dice 2 paradas.',
+        desc: 'El chofer comparte su ubicación en vivo desde el bot de Telegram: sin app propia que instalar, sin hardware que comprar. En entregas de canal propio con opt-in, el destinatario recibe cuántas paradas faltan: la última chance de que reaccione antes del timbre. Sin horarios inventados.',
         img: '/3d/icono-pin-oro.png', iw: 425, ih: 512,
-        descShort: 'El chofer comparte ubicación en vivo por Telegram y el destinatario recibe cuántas paradas faltan: la última chance de reaccionar antes del timbre. Sin horarios inventados.',
+        descShort: 'El chofer comparte ubicación por Telegram y el destinatario recibe cuántas paradas faltan (canal propio con opt-in). Sin horarios inventados.',
         Demo: PositionAlertDemo,
     },
     {
@@ -77,7 +77,7 @@ const modules = [
         context: 'Si algo falla',
         quote: 'Hoy era el último día de plazo. Nadie me avisó y lo devolvieron al remitente.',
         name: 'Reloj de vencimiento',
-        desc: 'Cuenta los días que un paquete lleva sin entregarse. Avisa al destinatario a los 5, 2 y 1 día antes de que se devuelva. Y le manda al dueño la lista de paquetes en riesgo cada mañana.',
+        desc: 'Cuenta los días que un paquete lleva sin entregarse. Avisa al destinatario a los 5, 2 y 1 día antes de que se devuelva (en pedidos de canal propio). Y le envía al dueño la lista de paquetes en riesgo cada mañana.',
         img: '/3d/icono-reloj-vto.png', iw: 457, ih: 512,
         descShort: 'Cuenta los días sin entrega y avisa al destinatario antes de la devolución. Al dueño le manda la lista de riesgo cada mañana.',
         Demo: ExpirationClockDemo,
@@ -87,9 +87,9 @@ const modules = [
         context: 'Después de la entrega',
         quote: 'Una empresa espectacular pero nadie te pide que dejes reseña. Los únicos que escriben son los enojados.',
         name: 'Escudo de reputación',
-        desc: 'Después de cada entrega exitosa, el destinatario recibe un mini-formulario de satisfacción. Si está contento, se le ofrece dejar una reseña en Google con un solo tap. Si tiene un reclamo, se captura de forma privada antes de que llegue a las redes. Cero fricción para el chofer: corre solo.',
+        desc: 'Después de cada entrega exitosa, el destinatario recibe una invitación transparente para calificar en Google. En paralelo, se ofrece un canal directo y prioritario por WhatsApp para resolver cualquier reclamo en el acto. Cumple 100% con las políticas de Google (sin filtrado desleal) y da solución inmediata.',
         img: '/3d/icono-escudo.png', iw: 439, ih: 512,
-        descShort: 'Si el destinatario está contento, un tap lo lleva a Google. Si tiene un reclamo, se captura privado. Cero fricción para el chofer.',
+        descShort: 'Invita a calificar en Google y ofrece en paralelo un canal directo por WhatsApp para resolver reclamos en el acto.',
         Demo: ReputationShieldDemo,
     },
     {
@@ -101,6 +101,24 @@ const modules = [
         img: '/3d/icono-lupa.png', iw: 512, ih: 498,
         descShort: 'Si confirmó que iba a estar y aun así no estaba, es una anomalía: queda registrada con hora y ubicación, cruzada con su confirmación de Coordinación previa. La prueba de qué pasó de verdad.',
         Demo: AnomalyLogDemo,
+    },
+    {
+        step: 7,
+        context: 'Retención de dadores clave',
+        quote: 'Un vendedor grande nos bajó los paquetes a cero de un día para el otro porque ML le pasó publicaciones a Full y ni nos enteramos.',
+        name: 'Radar de Dadores (Alertas Flex)',
+        desc: 'Monitorea el volumen diario de paquetes entregados por cada tienda o dador. Si una cuenta cae más del 50% de volumen respecto de su promedio habitual, el sistema dispara una alerta proactiva por Telegram a la dirección para comunicarse con el cliente antes de perder la cuenta definitivamente.',
+        img: '/3d/icono-comparativa.png', iw: 512, ih: 512,
+        descShort: 'Monitorea el volumen diario por vendedor. Alerta si un dador cae >50% para retenerlo antes de que se pase a Full.',
+    },
+    {
+        step: 8,
+        context: 'Cumplimiento normativo y métricas ML',
+        quote: 'Se me pinchó una goma a las 18:00, le pedí al comprador pasar mañana y Mercado Libre nos penalizó a todos por reprogramar.',
+        name: 'Protocolo de Incidente en Ruta (Política de Envíos Flex de Mercado Libre)',
+        desc: 'Ante las políticas de Envíos Flex de Mercado Libre (Octubre), reprogramar entregas impacta las métricas del vendedor y la logística. Cuando un chofer sufre una avería, choque o siniestro imprevisto, el bot de Telegram captura fotos y GPS en tiempo real para armar el respaldo probatorio necesario para solicitar la exención ante ML, sin comprometer al comprador.',
+        img: '/3d/icono-escudo-lock.png', iw: 433, ih: 512,
+        descShort: 'Ante averías mecánicas o siniestros, documenta fotos y GPS por Telegram para respaldar la solicitud de exención de métricas en ML.',
     },
 ]
 
@@ -240,7 +258,7 @@ export function LogisticaLanding() {
                                     </Link>
                                 </div>
                                 <p className="mt-3 text-neutral-500 text-sm">
-                                    Sin permanencia. Mes a mes. Infraestructura propia y aislada (GDPR).
+                                    Sin permanencia. Mes a mes. Infraestructura propia y aislada bajo Ley 25.326 de Protección de Datos Personales. Planes para logísticas desde $160.000/mes + IVA según volumen.
                                 </p>
                             </motion.div>
                         </div>
@@ -371,11 +389,11 @@ export function LogisticaLanding() {
                             className="h-14 w-auto object-contain drop-shadow-[0_12px_26px_rgba(200,66,20,0.3)] sm:h-16"
                         />
                     </motion.div>
-                    <motion.h2 {...reveal} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white max-w-3xl">
-                        Esto dicen los clientes de las logísticas en Google. Todos los días.
+                    <motion.h2 {...reveal} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-heading text-white max-w-4xl tracking-tight">
+                        Esto dicen clientes, choferes y dueños del rubro logístico.
                     </motion.h2>
-                    <motion.p {...reveal} transition={{ delay: 0.05 }} className="mt-5 text-neutral-400 text-base sm:text-lg max-w-3xl leading-relaxed">
-                        Son reseñas reales, públicas, de empresas del rubro. Cada una es una tarea que hoy depende de que una
+                    <motion.p {...reveal} transition={{ delay: 0.05 }} className="mt-5 text-neutral-300 text-base sm:text-lg max-w-3xl leading-relaxed">
+                        Son testimonios y situaciones reales de operaciones de distribución y paquetería. Cada una es una tarea que hoy depende de que una
                         persona se acuerde, llame o tipee. Cada una se automatiza.
                     </motion.p>
 
@@ -389,66 +407,69 @@ export function LogisticaLanding() {
                                 {...reveal}
                                 transition={{ delay: i * 0.08 }}
                                 whileHover={{ y: -4 }}
-                                className="group relative flex flex-col p-6 lg:p-7 rounded-2xl border border-[#3E3D3A] bg-[#222120] overflow-hidden transition-colors duration-300 hover:border-[#C84214]/50"
+                                className="group relative flex flex-col p-6 lg:p-7 rounded-2xl border border-white/[0.10] card-obsidian sheen-top bg-gradient-to-br from-[#14161A] via-[#101215] to-[#0A0C0E] overflow-hidden transition-all duration-300 hover:border-[#FF5520]/60 hover:shadow-[0_12px_40px_-10px_rgba(255,85,32,0.25)]"
                             >
-                                {/* hover glow — solo desktop: en mobile no hay hover y el blur
-                                    igual crea una capa de composición por card. */}
-                                <div aria-hidden className="hidden lg:block pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full blur-[60px] bg-[#C84214]/0 group-hover:bg-[#C84214]/10 transition-colors duration-500" />
+                                {/* hover glow — solo desktop */}
+                                <div aria-hidden className="hidden lg:block pointer-events-none absolute -right-8 -top-8 w-44 h-44 rounded-full blur-[60px] bg-[#FF5520]/0 group-hover:bg-[#FF5520]/15 transition-colors duration-500" />
 
-                                {/* Quote */}
-                                <div className="relative border-l-2 border-[#C84214] pl-4">
-                                    <Quote className="absolute -left-1 -top-1 w-5 h-5 text-[#C84214]/40" aria-hidden />
-                                    <p className="pl-4 text-neutral-400 italic leading-relaxed">{m.quote}</p>
+                                {/* Quote in authentic dispatch tag */}
+                                <div className="relative border-l-2 border-[#FF5520] bg-black/60 border border-white/[0.08] backdrop-blur-md p-3.5 rounded-xl">
+                                    <Quote className="w-4 h-4 text-[#FFA380] mb-1 opacity-80" aria-hidden />
+                                    <p className="text-neutral-200 text-xs sm:text-sm italic leading-relaxed">{m.quote}</p>
                                 </div>
 
                                 {/* Module */}
-                                <div className="mt-6">
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-[#C84214]/40 bg-[#C84214]/15 text-[11px] font-bold text-[#B7B3B0]">{m.step}</span>
-                                        <span className="text-[11px] uppercase tracking-widest text-[#C84214] font-medium">{m.context}</span>
-                                        <span className="h-px flex-1 bg-white/10" />
+                                <div className="mt-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#FF5520]/40 bg-[#FF5520]/15 text-[11px] font-mono font-bold text-[#FFA380]">{m.step}</span>
+                                            <span className="text-[11px] font-mono uppercase tracking-widest text-[#FF5520] font-bold">{m.context}</span>
+                                            <span className="h-px flex-1 bg-white/10" />
+                                        </div>
+                                        <div className="mt-3 flex items-center gap-3.5">
+                                            {ring ? (
+                                                <motion.div
+                                                    className="shrink-0 w-14 h-14 rounded-xl bg-white/[0.04] border border-white/10 p-1.5 flex items-center justify-center shadow-inner"
+                                                    style={{ transformOrigin: 'top center' }}
+                                                    initial={{ rotate: 0 }}
+                                                    whileInView={{ rotate: [0, -16, 13, -9, 6, -3, 0] }}
+                                                    viewport={{ once: true, margin: '-60px' }}
+                                                    transition={{ duration: 1.1, delay: 0.15, ease: 'easeInOut' }}
+                                                >
+                                                    <Image
+                                                        src={m.img}
+                                                        alt=""
+                                                        aria-hidden
+                                                        width={m.iw}
+                                                        height={m.ih}
+                                                        quality={95}
+                                                        sizes="256px"
+                                                        className="h-full w-auto object-contain drop-shadow-[0_8px_18px_rgba(255,85,32,0.3)] transition-transform duration-300 group-hover:scale-105"
+                                                    />
+                                                </motion.div>
+                                            ) : (
+                                                <div className="shrink-0 w-14 h-14 rounded-xl bg-white/[0.04] border border-white/10 p-1.5 flex items-center justify-center shadow-inner">
+                                                    <Image
+                                                        src={m.img}
+                                                        alt=""
+                                                        aria-hidden
+                                                        width={m.iw}
+                                                        height={m.ih}
+                                                        quality={95}
+                                                        sizes="256px"
+                                                        className="h-full w-auto object-contain drop-shadow-[0_8px_18px_rgba(255,85,32,0.3)] transition-transform duration-300 group-hover:scale-105"
+                                                    />
+                                                </div>
+                                            )}
+                                            <h3 className="text-lg sm:text-xl font-bold font-heading text-white tracking-tight">{m.name}</h3>
+                                        </div>
+                                        <p className="mt-3 text-neutral-300 text-xs sm:text-sm leading-relaxed lg:hidden">{m.descShort}</p>
+                                        <p className="mt-3 text-neutral-300 text-xs sm:text-sm leading-relaxed hidden lg:block">{m.desc}</p>
                                     </div>
-                                    <div className="mt-2 flex items-center gap-3">
-                                        {ring ? (
-                                            <motion.div
-                                                className="shrink-0"
-                                                style={{ transformOrigin: 'top center' }}
-                                                initial={{ rotate: 0 }}
-                                                whileInView={{ rotate: [0, -16, 13, -9, 6, -3, 0] }}
-                                                viewport={{ once: true, margin: '-60px' }}
-                                                transition={{ duration: 1.1, delay: 0.15, ease: 'easeInOut' }}
-                                            >
-                                                <Image
-                                                    src={m.img}
-                                                    alt=""
-                                                    aria-hidden
-                                                    width={m.iw}
-                                                    height={m.ih}
-                                                    quality={95}
-                                                    sizes="256px"
-                                                    className="h-12 w-auto object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
-                                                />
-                                            </motion.div>
-                                        ) : (
-                                            <Image
-                                                src={m.img}
-                                                alt=""
-                                                aria-hidden
-                                                width={m.iw}
-                                                height={m.ih}
-                                                quality={95}
-                                                sizes="256px"
-                                                className="h-12 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] transition-transform duration-300 group-hover:scale-105"
-                                            />
-                                        )}
-                                        <h3 className="text-lg font-bold text-white">{m.name}</h3>
-                                    </div>
-                                    <p className="mt-3 text-neutral-300 text-sm leading-relaxed lg:hidden">{m.descShort}</p>
-                                    <p className="mt-3 text-neutral-300 text-sm leading-relaxed hidden lg:block">{m.desc}</p>
 
                                     {/* Micro-demo del módulo */}
                                     {Demo && (
-                                        <div className="mt-4">
+                                        <div className="mt-5 pt-4 border-t border-white/[0.08]">
                                             <Demo />
                                         </div>
                                     )}
@@ -461,13 +482,13 @@ export function LogisticaLanding() {
                     {/* Módulo Especial: Admisión y Onboarding de Choferes / Flota */}
                     <motion.div
                         {...reveal}
-                        className="mt-8 rounded-2xl border border-[#3E3D3A] bg-gradient-to-br from-[#262523] via-[#1E1D1C] to-[#161514] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
+                        className="mt-8 rounded-3xl border border-white/[0.12] card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#121417] to-[#0A0C0E] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
                     >
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#C84214]/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF5520]/15 rounded-full blur-3xl pointer-events-none" />
                         
                         <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
                             <div className="lg:col-span-7 space-y-4">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#C84214]/30 bg-[#C84214]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF5520]/30 bg-[#FF5520]/10 text-xs font-mono font-bold text-[#FFA380] uppercase tracking-wider">
                                     Módulo de Flota & Operación Interna
                                 </div>
                                 
@@ -480,37 +501,37 @@ export function LogisticaLanding() {
                                         height={512}
                                         quality={95}
                                         sizes="256px"
-                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(200,66,20,0.3)] sm:h-12"
+                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(255,85,32,0.3)] sm:h-12"
                                     />
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                    <h3 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
                                         Admisión Inteligente de Choferes
                                     </h3>
                                 </div>
 
-                                <div className="border-l-2 border-[#C84214]/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                <div className="border-l-2 border-[#FF5520] bg-black/60 border border-white/[0.08] backdrop-blur-md p-3.5 rounded-xl text-xs sm:text-sm text-neutral-200 italic">
                                     &ldquo;Perdemos días pidiendo fotos de cédulas, seguros y VTVs por WhatsApp mientras los camiones quedan parados o salen con papeles vencidos.&rdquo;
                                 </div>
 
-                                <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
+                                <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans">
                                     Screening documental en <strong>2 capas</strong>: la validación es instantánea, para que tráfico solo tenga que llamar a los que ya calificaron. Cada decisión queda con motivo documentado. Al que no califica se le avisa con el motivo específico y una vía para reclamar.
                                 </p>
 
                                 <div className="grid sm:grid-cols-2 gap-3 pt-1">
-                                    <div className="p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                        <div className="text-xs font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                    <div className="p-4 rounded-2xl border border-white/[0.10] bg-black/50">
+                                        <div className="text-xs font-bold font-mono text-emerald-400 mb-1 flex items-center gap-1.5">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-400" />
                                             Capa 1: Validación Inmediata
                                         </div>
-                                        <p className="text-xs text-neutral-400 leading-relaxed">
+                                        <p className="text-xs text-neutral-400 leading-relaxed font-sans">
                                             El chofer carga 4 documentos (Licencia, Cédula, VTV, Seguro) vía web. El OCR extrae vencimientos en segundos y valida al instante.
                                         </p>
                                     </div>
-                                    <div className="p-3.5 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                                        <div className="text-xs font-bold text-[#B7B3B0] mb-1 flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#C84214]" />
+                                    <div className="p-4 rounded-2xl border border-white/[0.10] bg-black/50">
+                                        <div className="text-xs font-bold font-mono text-[#FFA380] mb-1 flex items-center gap-1.5">
+                                            <span className="w-2 h-2 rounded-full bg-[#FF5520]" />
                                             Capa 2: Digest para Tráfico
                                         </div>
-                                        <p className="text-xs text-neutral-400 leading-relaxed">
+                                        <p className="text-xs text-neutral-400 leading-relaxed font-sans">
                                             Tráfico/RRHH recibe un resumen agrupado por zona y tipo de vehículo, listo para contactar y coordinar turnos sin leer papeles a mano.
                                         </p>
                                     </div>
@@ -526,14 +547,14 @@ export function LogisticaLanding() {
                     {/* Módulo en construcción: Parte del dador (relación logística ↔ vendedor Flex) */}
                     <motion.div
                         {...reveal}
-                        className="mt-6 rounded-2xl border border-[#B7B3B0]/20 bg-gradient-to-br from-[#161514] via-[#0F1315] to-[#0B0D0E] p-6 sm:p-8 relative overflow-hidden"
+                        className="mt-6 rounded-3xl border border-white/[0.12] card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#121417] to-[#0A0C0E] p-6 sm:p-8 relative overflow-hidden shadow-2xl"
                     >
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#B7B3B0]/[0.06] rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-white/[0.08] to-transparent rounded-full blur-3xl pointer-events-none" />
 
                         <div className="relative z-10 grid lg:grid-cols-12 gap-6 items-start">
                             <div className="lg:col-span-8 space-y-4">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#B7B3B0]/30 bg-[#B7B3B0]/10 text-xs font-semibold text-[#B7B3B0] uppercase tracking-wider">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/[0.05] text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider">
                                         Módulo para logísticas de e-commerce
                                     </div>
                                 </div>
@@ -547,22 +568,22 @@ export function LogisticaLanding() {
                                         height={494}
                                         quality={95}
                                         sizes="256px"
-                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(183,179,176,0.28)] sm:h-12"
+                                        className="h-11 w-auto shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(255,255,255,0.2)] sm:h-12"
                                     />
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white">
+                                    <h3 className="text-2xl sm:text-3xl font-extrabold font-heading text-white tracking-tight">
                                         Parte del dador
                                     </h3>
                                 </div>
 
-                                <div className="border-l-2 border-[#B7B3B0]/50 pl-4 py-1 text-sm text-neutral-400 italic">
+                                <div className="border-l-2 border-[#FF5520] bg-black/60 border border-white/[0.08] backdrop-blur-md p-3.5 rounded-xl text-xs sm:text-sm text-neutral-200 italic">
                                     &ldquo;Uno vende bien, la logística entrega mal, y el cliente le pega mala reseña al vendedor. Perdés cuentas por lo que hizo o dejó de hacer otro.&rdquo;
                                 </div>
 
                                 <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
-                                    Cuando entregás para vendedores de Mercado Libre Flex u otro e-commerce, cada entrega queda con evidencia de dos fuentes: registro del chofer + confirmación del destinatario. Al vendedor le llega un parte periódico mostrando qué pasó realmente con sus paquetes, para que puedas demostrarle que hiciste bien tu trabajo y no perder la cuenta.
+                                    Cuando repartís para vendedores de e-commerce o distribución directa, cada visita cuenta con doble evidencia: registro georreferenciado del chofer + confirmación del destinatario (con avisos proactivos por WhatsApp en pedidos de canal propio con opt-in). Al dador de carga le enviás un parte periódico transparente: un registro neutral que respalda tanto a la logística como al vendedor frente a reclamos o extravíos, brindando evidencia transparente para ambas partes.
                                 </p>
                                 <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed pt-1">
-                                    Distinto de <strong className="text-neutral-300">Escudo de reputación</strong>, que mira al comprador final. Este mira al vendedor que te contrató.
+                                    Distinto de <strong className="text-neutral-300">Escudo de reputación</strong>, que mide la satisfacción del destinatario final. Este es un registro neutral que respalda a ambas partes: a la logística y al vendedor que contrató el flete.
                                 </p>
                             </div>
 
@@ -687,7 +708,7 @@ export function LogisticaLanding() {
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
                         </a>
                         <p className="text-neutral-500 text-sm">
-                            Sin permanencia. Mes a mes. Infraestructura propia y aislada (GDPR).
+                            Sin permanencia. Mes a mes. Infraestructura propia y aislada bajo Ley 25.326 de Protección de Datos Personales. Planes para logísticas desde $160.000/mes + IVA según volumen de guías.
                         </p>
                     </motion.div>
                 </div>

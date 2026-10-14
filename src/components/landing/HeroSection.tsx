@@ -4,40 +4,42 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
 import { MobileHeroAnimation } from '@/components/ui/MobileHeroAnimation'
 import { MorphingText } from '@/components/ui/morphing-text'
-
-// A nivel de módulo: identidad estable entre renders.
-const RHYTHM_PHRASES = [
-    'Menos carga manual.',
-    'Menos teléfonos sonando.',
-    'Menos depender de que alguien se acuerde.',
-]
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ArrowRight, Layers } from 'lucide-react'
 import { useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+
+const RHYTHM_PHRASES = [
+    'Alerta inmediata apenas entra un reclamo, con la cuenta regresiva del plazo exacto.',
+    'Termómetro bajo control: sabé en todo momento cuánto margen te falta para bajar de color.',
+    'Módulo secundario Venta Blindada: 1 clic valida transferencias y descuenta stock multicanal.',
+]
 
 export function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null)
     const isMobile = useIsMobile()
     const { scrollYProgress } = useScroll({
         target: sectionRef,
-        offset: ['start start', 'end start']
+        offset: ['start start', 'end start'],
     })
 
-    // Parallax effects
     const textY = useTransform(scrollYProgress, [0, 1], [0, 150])
     const robotY = useTransform(scrollYProgress, [0, 1], [0, -100])
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
     const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95])
 
     return (
-        <section ref={sectionRef} id="inicio" className="relative min-h-screen flex items-center overflow-hidden bg-[#0B0D0E]">
-            {/* Background Effects - all pointer-events-none */}
+        <section
+            ref={sectionRef}
+            id="inicio"
+            className="relative min-h-screen flex items-center overflow-hidden bg-[#0B0D0E]"
+        >
+            {/* Background Effects */}
             <motion.div
                 style={{ opacity }}
                 className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#C84214]/10 via-[#0B0D0E] to-[#0B0D0E] pointer-events-none"
             />
 
-            {/* Grid Pattern with parallax */}
+            {/* Grid Pattern */}
             <motion.div
                 style={{ opacity }}
                 className="absolute inset-0 bg-[linear-gradient(rgba(183,179,176,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(183,179,176,0.03)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none"
@@ -45,64 +47,68 @@ export function HeroSection() {
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
                 <div className="flex flex-col lg:flex-row items-center min-h-screen pt-32 pb-20 lg:pt-28 lg:pb-0 gap-8">
-                    {/* Left Content with parallax */}
+                    {/* Left Content */}
                     <motion.div
                         style={{ y: textY, scale }}
                         className="flex-1 text-center lg:text-left"
                     >
                         <div className="hero-intro">
-                            {/* Eyebrow — limpio, técnico y sin cartelito de IA slop */}
-                            <p className="hero-eyebrow text-xs sm:text-sm font-mono font-medium tracking-[0.2em] uppercase text-[#B7B3B0] mb-4">
-                                Ingeniería de Software & IA B2B
+                            {/* Specific ICP Eyebrow */}
+                            <p className="hero-eyebrow text-xs sm:text-sm font-mono font-medium tracking-[0.16em] uppercase text-[#FFA380] mb-4">
+                                Protección de Reputación y Reclamos en Mercado Libre (+ Tiendanube y WhatsApp)
                             </p>
 
                             {/* Title */}
-                            <h1 className="text-[1.7rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight" style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}>
-                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-300">
-                                    Tu operación
+                            <h1
+                                className="text-[1.75rem] sm:text-5xl lg:text-[3.25rem] xl:text-[3.65rem] font-heading font-extrabold leading-[1.12] tracking-tight"
+                                style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}
+                            >
+                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-200">
+                                    Te aviso apenas entra un reclamo, con el plazo exacto,
                                 </span>
                                 <br />
-                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#C84214] via-[#D44A17] to-[#B7B3B0]">
-                                    no puede tomarse vacaciones.
+                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF5520] via-[#FF7A4D] to-[#FFA380]">
+                                    y te digo cuánto te falta para bajar de color.
                                 </span>
                             </h1>
 
-                            {/* Mobile Animation - Between title and subtitle */}
+                            {/* Mobile Animation */}
                             <div className="lg:hidden my-6">
                                 <MobileHeroAnimation />
                             </div>
 
                             {/* Subtitle */}
-                            <p className="mt-4 sm:mt-6 lg:mt-6 text-[#B7B3B0] text-base sm:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                                Si tu PyME se frena cuando la persona que sabe todo se toma una semana, tenés un
-                                <span className="text-[#E8E5DE] font-semibold"> problema de ingeniería, no de personal.</span>{' '}
-                                Construimos los sistemas que hoy viven en la cabeza de tu equipo.
+                            <p className="mt-4 sm:mt-6 lg:mt-6 text-neutral-300 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed font-sans">
+                                En Mercado Libre un reclamo que queda tapado entre notificaciones o una cancelación de más te baja el termómetro a amarillo y derrumba tu exposición. Te avisamos por WhatsApp en el segundo en que entra un reclamo, con la{' '}
+                                <span className="text-white font-semibold underline decoration-[#FF5520]/50 underline-offset-4">
+                                    cuenta regresiva del plazo exacto y el margen real de tu termómetro
+                                </span>
+                                . Y como módulo secundario, activás <strong className="text-white">Venta Blindada</strong> para aprobar transferencias de WhatsApp y descontar stock en 1 clic.
                             </p>
 
-                            {/* Rhythm line — transiciona entre las tres frases */}
+                            {/* Rhythm line */}
                             <MorphingText
                                 texts={RHYTHM_PHRASES}
                                 srText={RHYTHM_PHRASES.join(' ')}
                                 className="mt-4 h-12 sm:h-10 max-w-2xl mx-auto lg:mx-0"
-                                textClassName="justify-center lg:justify-start text-base sm:text-lg lg:text-xl font-semibold text-[#C84214]"
+                                textClassName="justify-center lg:justify-start text-sm sm:text-base lg:text-lg font-mono font-bold text-[#FF5520]"
                             />
 
                             {/* CTA Buttons */}
                             <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
-                                    href="https://wa.me/5491160152435?text=%C2%A1Hola%20Individra!%20Me%20interesa%20agendar%20una%20auditor%C3%ADa%20gratuita."
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 bg-[#C84214] text-white text-sm sm:text-base font-bold rounded-full overflow-hidden shadow-lg shadow-[#C84214]/25 hover:shadow-[#C84214]/40 hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center"
+                                    href="/diagnostico?origen=meli"
+                                    className="group relative px-7 py-4 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white text-base font-heading font-bold rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(255,85,32,0.4)] active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2.5 cursor-pointer"
                                 >
-                                    <span className="relative z-10 transition-transform duration-300 group-hover:scale-[1.02] inline-block">Pedí tu diagnóstico gratuito</span>
+                                    <span>Evaluar el riesgo de mi termómetro (2 min)</span>
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
                                 </a>
                                 <a
-                                    href="/diagnostico?origen=home_hero"
-                                    className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 border border-[#C84214]/50 bg-[#151719]/80 text-[#E8E5DE] text-sm sm:text-base font-semibold rounded-full hover:bg-[#C84214]/15 hover:border-[#C84214] hover:text-white active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2"
+                                    href="#consola-operativa"
+                                    className="px-6 py-4 border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-neutral-200 hover:text-white text-base font-mono font-medium rounded-2xl active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2 cursor-pointer"
                                 >
-                                    <span className="h-2 w-2 rounded-full bg-[#C84214]" />
-                                    Autodiagnóstico en 2 min
+                                    <Layers className="w-4 h-4 text-[#FF5520]" />
+                                    Ver consola de alertas y 1 clic
                                 </a>
                             </div>
                         </div>
@@ -116,11 +122,7 @@ export function HeroSection() {
                         transition={{ duration: 1.2, delay: 0.2 }}
                         className="hidden lg:flex flex-1 justify-center items-center relative w-full h-[580px]"
                     >
-                        {/* Free-Floating 3D Emblem Container - Levitación suave y pura sin efectos de luz */}
-                        <div
-                            className="anim-float-y [--float-y:-14px] [--float-dur:4.5s] relative z-20 w-[490px] h-[490px] xl:w-[540px] xl:h-[540px] flex items-center justify-center pointer-events-none"
-                        >
-                            {/* Emblema 3D levitando, completo como antes y sin emisiones de luz */}
+                        <div className="anim-float-y [--float-y:-14px] [--float-dur:4.5s] relative z-20 w-[490px] h-[490px] xl:w-[540px] xl:h-[540px] flex items-center justify-center pointer-events-none">
                             <div className="relative w-[460px] h-[460px] xl:w-[510px] xl:h-[510px]">
                                 <Image
                                     src="/individra-3d-floating.png"

@@ -12,6 +12,15 @@ const nextConfig: NextConfig = {
     // degradados suaves de los renders.
     qualities: [75, 95],
   },
+  async redirects() {
+    return [
+      {
+        source: '/ecommerce',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

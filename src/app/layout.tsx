@@ -17,18 +17,16 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: 'INDIVIDRA | Inteligencia Operativa y Automatización con IA',
+    title: 'INDIVIDRA | Alertas de Reclamos con Plazo Exacto y Control de Color en Mercado Libre',
     description:
-        'Construimos los sistemas que automatizan la operación de tu PyME: logística, atención y procesos. Inteligencia operativa e IA a medida en Buenos Aires, Argentina.',
+        'Te aviso apenas entra un reclamo, con el plazo exacto, y te digo cuánto te falta para bajar de color en Mercado Libre. Incluye módulo secundario Venta Blindada (cobro por WhatsApp + stock sincronizado en 1 clic).',
     keywords: [
-        'automatización con IA',
-        'inteligencia artificial para empresas',
-        'chatbot whatsapp',
-        'desarrollo de software',
-        'agentes IA',
-        'automatización de procesos',
-        'desarrollo web argentina',
-        'n8n automatización',
+        'alertas reclamos mercado libre plazo exacto',
+        'cuanto me falta para bajar de color mercado libre',
+        'reputación mercado libre reclamos cancelaciones',
+        'sincronizar stock mercado libre tiendanube whatsapp',
+        'validar comprobantes transferencia whatsapp',
+        'individra consola operativa',
     ],
     authors: [{ name: 'Individra' }],
     creator: 'Individra',
@@ -51,9 +49,9 @@ export const metadata: Metadata = {
         shortcut: '/favicon.ico',
     },
     openGraph: {
-        title: 'INDIVIDRA | Inteligencia Operativa y Automatización con IA',
+        title: 'Te aviso apenas entra un reclamo, con el plazo exacto, y te digo cuánto te falta para bajar de color | INDIVIDRA',
         description:
-            'Sistemas que automatizan la operación de tu PyME: logística, atención y procesos. Para que tu empresa no dependa de una sola persona.',
+            'Protegé el color de tu termómetro en Mercado Libre con alertas inmediatas de reclamos, cuenta regresiva de vencimiento y cálculo en vivo de tu margen de reputación. Incluye módulo secundario Venta Blindada.',
         url: 'https://www.individratec.com',
         siteName: 'INDIVIDRA',
         locale: 'es_AR',
@@ -63,14 +61,15 @@ export const metadata: Metadata = {
                 url: '/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'INDIVIDRA - Inteligencia Operativa',
+                alt: 'INDIVIDRA - Control de Reclamos y Termómetro de Reputación en Mercado Libre',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'INDIVIDRA | Inteligencia Operativa',
-        description: 'Sistemas que automatizan la operación de tu PyME, con IA a medida.',
+        title: 'INDIVIDRA | Alertas de Reclamos y Termómetro de Color en Mercado Libre',
+        description:
+            'Te aviso apenas entra un reclamo, con el plazo exacto, y te digo cuánto te falta para bajar de color. Más módulo secundario Venta Blindada.',
         images: ['/og-image.png'],
     },
     robots: {
@@ -91,8 +90,9 @@ const jsonLd = {
     '@type': 'Organization',
     name: 'INDIVIDRA',
     alternateName: 'Individra',
-    slogan: 'Inteligencia Operativa',
-    description: 'Inteligencia operativa: sistemas de automatización e IA a medida para la operación de PyMEs en Argentina.',
+    slogan: 'Control de Reclamos y Termómetro de Reputación para E-Commerce',
+    description:
+        'Te avisa apenas entra un reclamo con el plazo exacto y te dice cuánto te falta para bajar de color en Mercado Libre. Incluye módulo secundario Venta Blindada para WhatsApp y Tiendanube.',
     url: 'https://www.individratec.com',
     logo: 'https://www.individratec.com/logo-individra-icon.png',
     email: 'individratec@gmail.com',
@@ -101,14 +101,11 @@ const jsonLd = {
         addressLocality: 'Buenos Aires',
         addressCountry: 'AR',
     },
-    sameAs: [
-        'https://www.linkedin.com/company/individra',
-    ],
+    sameAs: ['https://www.linkedin.com/company/individra'],
     serviceType: [
-        'Automatización con IA',
-        'Desarrollo de Software',
-        'Chatbots WhatsApp',
-        'Agentes de Inteligencia Artificial',
+        'Alertas de Reclamos con Plazo Exacto y Control de Reputación en Mercado Libre',
+        'Sincronización de Stock Mercado Libre Tiendanube WhatsApp',
+        'Validación de Comprobantes de Transferencia por WhatsApp',
     ],
 }
 

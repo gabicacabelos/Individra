@@ -1,29 +1,23 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Timer, Moon, TrendingDown } from 'lucide-react'
-
-/* ---------- Cintillo de métricas ----------
-   Valores estimativos y conservadores a partir de operaciones similares:
-   no son un compromiso contractual, son el orden de magnitud esperable.
-   Se muestran como "típico/estimado" a propósito, para no prometer un
-   número puntual que no podemos sostener caso por caso. */
+import { MousePointerClick, ShieldCheck, CalendarCheck2 } from 'lucide-react'
 
 const STATS = [
     {
-        icon: Timer,
-        value: '< 60s',
-        label: 'Tiempo promedio de primera respuesta',
+        icon: MousePointerClick,
+        value: '1 Clic',
+        label: 'Aprueba el comprobante, descuenta stock en ML y Tiendanube y avisa al cliente',
     },
     {
-        icon: Moon,
-        value: '24/7',
-        label: 'Cobertura activa, incluidas noches y fines de semana',
+        icon: ShieldCheck,
+        value: '0 Duplicados',
+        label: 'Control automático de ID de operación, monto y CUIT antes de despachar',
     },
     {
-        icon: TrendingDown,
-        value: '-30%',
-        label: 'Reducción típica de reclamos escalados a mediación',
+        icon: CalendarCheck2,
+        value: '30 Días',
+        label: 'Piloto medido contra tu línea base real de la Semana 1, sin permanencia',
     },
 ]
 
@@ -52,7 +46,7 @@ export function Metrics() {
                     ))}
                 </div>
                 <p className="mt-4 text-center text-[11px] text-[#6B6865]">
-                    Estimado a partir de operaciones similares con Individra.
+                    Medimos el impacto real sobre tus propias órdenes durante los primeros 30 días.
                 </p>
             </div>
         </section>

@@ -8,7 +8,7 @@ export function FloatingChatbot() {
     const cookieBannerVisible = consent === null
 
     const phoneNumber = "5491160152435"
-    const message = encodeURIComponent("¡Hola Individra! Quiero saber más sobre cómo automatizar mi negocio.")
+    const message = encodeURIComponent("Hola Gabriel, vendo por Mercado Libre, Tiendanube y WhatsApp y quiero consultar por el Piloto de 30 días.")
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
 
     return (
@@ -28,7 +28,7 @@ export function FloatingChatbot() {
                 transition={{ delay: 1.5, duration: 0.5 }}
                 className="hidden sm:flex px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium shadow-xl whitespace-nowrap"
             >
-                ¿Dudas? Hablá con un experto ahora
+                ¿Vendés en ML + Tiendanube + WA? Hablemos
             </motion.div>
 
             {/* WhatsApp Button */}

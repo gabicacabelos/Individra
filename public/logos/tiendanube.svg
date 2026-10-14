@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 68" fill="none" role="img">
+  <title>Tiendanube</title>
+  <!-- Isotipo oficial Tiendanube (dos anillos entrelazados) -->
+  <path fill="#3B82F6" d="M23 19C11.954 19 3 27.954 3 39s8.954 20 20 20c5.22 0 9.972-1.999 13.535-5.275l-5.66-5.66A11.96 11.96 0 0 1 23 51c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.29 0 11.45 4.84 11.958 11h8.02C42.452 27.39 33.71 19 23 19Z"/>
+  <path fill="#3B82F6" d="M47 9c-9.925 0-18.395 6.023-22.022 14.61a24.1 24.1 0 0 1 7.93 2.587C35.58 20.752 40.888 17 47 17c8.837 0 16 7.163 16 16s-7.163 16-16 16c-6.685 0-12.413-4.099-14.802-9.918h-8.382C26.447 49.42 35.833 57 47 57c13.255 0 24-10.745 24-24S60.255 9 47 9Z"/>
+  <!-- Wordmark nítido -->
+  <text x="82" y="48" fill="#FFFFFF" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="-0.8">tiendanube</text>
+</svg>
