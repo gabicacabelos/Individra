@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
+import { MobileHome } from '@/components/landing/mobile/MobileHome'
 
 const IntegrationsBar = dynamic(() =>
     import('@/components/landing/IntegrationsBar').then((m) => m.IntegrationsBar)
@@ -34,16 +35,20 @@ export default function Home() {
     return (
         <main id="main-content" className="bg-black min-h-screen">
             <Navbar />
-            <HeroSection />
-            <IntegrationsBar />
-            <PainSolutionSection />
-            <MargenColorCalculator />
-            <PropuestaComercialSection />
-            <LogisticaBridgeSection />
-            <FAQSection />
-            <ContactSection />
-            <Footer />
-            <FloatingChatbot />
+            {/* Celular (< 768px): home compacta. Tablet y desktop: la home completa, sin cambios */}
+            <MobileHome />
+            <div className="hidden md:block">
+                <HeroSection />
+                <IntegrationsBar />
+                <PainSolutionSection />
+                <MargenColorCalculator />
+                <PropuestaComercialSection />
+                <LogisticaBridgeSection />
+                <FAQSection />
+                <ContactSection />
+                <Footer />
+                <FloatingChatbot />
+            </div>
         </main>
     )
 }

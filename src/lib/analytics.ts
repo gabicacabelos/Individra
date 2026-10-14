@@ -19,6 +19,9 @@ type EventName =
     | 'home_calculadora_cta_clicked'
     | 'calendly_horario_elegido'
     | 'calendly_reunion_agendada'
+    // Home mobile
+    | 'mobile_bloque_visto'
+    | 'sticky_cta_clicked'
 
 export function trackEvent(
     name: EventName | string,
