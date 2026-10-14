@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Archivo, Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { PostHogProvider } from '@/providers/PostHogProvider'
 import { CookieConsent } from '@/components/CookieConsent'
@@ -14,6 +14,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
     variable: '--font-geist-mono',
     subsets: ['latin'],
+})
+
+// Titulares: Archivo en su versión expandida (eje wdth), ver .font-heading en globals.css
+const archivo = Archivo({
+    variable: '--font-archivo',
+    subsets: ['latin'],
+    axes: ['wdth'],
 })
 
 export const metadata: Metadata = {
@@ -124,7 +131,7 @@ export default function RootLayout({
             </head>
             <body
                 suppressHydrationWarning
-                className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
+                className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased bg-black`}
             >
                 <a
                     href="#main-content"

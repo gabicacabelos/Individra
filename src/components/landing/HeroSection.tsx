@@ -60,7 +60,7 @@ export function HeroSection() {
 
                             {/* Title */}
                             <h1
-                                className="text-[1.75rem] sm:text-5xl lg:text-[3.25rem] xl:text-[3.65rem] font-heading font-extrabold leading-[1.12] tracking-tight"
+                                className="text-[1.6rem] sm:text-4xl lg:text-[2.55rem] xl:text-[2.85rem] font-heading font-extrabold leading-[1.1] tracking-tight"
                                 style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}
                             >
                                 <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-200">
@@ -98,7 +98,7 @@ export function HeroSection() {
                             <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
                                     href="/diagnostico?origen=home_meli"
-                                    className="group relative px-7 py-4 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white text-base font-heading font-bold rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(255,85,32,0.4)] active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2.5 cursor-pointer"
+                                    className="group relative px-7 py-4 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white text-base font-heading font-bold rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(255,85,32,0.4)] active:scale-[0.98] transition-all duration-300 ease-out sm:whitespace-nowrap text-center inline-flex items-center justify-center gap-2.5 cursor-pointer"
                                 >
                                     <span>Ver cuántos reclamos me quedan (2 min)</span>
                                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
