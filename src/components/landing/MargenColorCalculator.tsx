@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Gauge, ArrowRight, Info, CheckCircle2 } from 'lucide-react'
 import {
@@ -10,6 +10,7 @@ import {
     porcentaje,
     type ConteosReputacion,
 } from '@/lib/reputacionML'
+import { trackEvent } from '@/lib/analytics'
 
 function aEntero(valor: string): number {
     return Math.max(0, Math.floor(Number(valor) || 0))
@@ -23,6 +24,14 @@ export function MargenColorCalculator() {
         demoras: 20,
     })
     const [esLider, setEsLider] = useState(false)
+
+    // Un evento por visita: alcanza para saber cuánta gente toca la calculadora
+    const usada = useRef(false)
+    function marcarUso(campo: string) {
+        if (usada.current) return
+        usada.current = true
+        trackEvent('home_calculadora_usada', { campo })
+    }
 
     const resultado = useMemo(() => calcularMargen(ventas, conteos, esLider), [ventas, conteos, esLider])
 
@@ -83,7 +92,10 @@ export function MargenColorCalculator() {
                                 inputMode="numeric"
                                 min={0}
                                 value={ventas}
-                                onChange={(e) => setVentas(aEntero(e.target.value))}
+                                onChange={(e) => {
+                                    marcarUso('ventas')
+                                    setVentas(aEntero(e.target.value))
+                                }}
                                 className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/10 font-mono text-lg font-bold text-[#FFA380] focus:outline-none focus:border-[#FF5520]/60"
                             />
                         </div>
@@ -101,9 +113,10 @@ export function MargenColorCalculator() {
                                         inputMode="numeric"
                                         min={0}
                                         value={conteos[m.id]}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
+                                            marcarUso(m.id)
                                             setConteos((prev) => ({ ...prev, [m.id]: aEntero(e.target.value) }))
-                                        }
+                                        }}
                                         className="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-white/10 font-mono text-base font-bold text-[#FFA380] focus:outline-none focus:border-[#FF5520]/60"
                                     />
                                 </div>
@@ -114,7 +127,10 @@ export function MargenColorCalculator() {
                             <input
                                 type="checkbox"
                                 checked={esLider}
-                                onChange={(e) => setEsLider(e.target.checked)}
+                                onChange={(e) => {
+                                    marcarUso('es_lider')
+                                    setEsLider(e.target.checked)
+                                }}
                                 className="w-4 h-4 accent-[#FF5520] cursor-pointer"
                             />
                             <span className="text-sm text-neutral-200">
@@ -205,6 +221,16 @@ export function MargenColorCalculator() {
                                 href={whatsappMessage}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() =>
+                                    trackEvent('home_calculadora_cta_clicked', {
+                                        color: colorActual,
+                                        margen: masAjustada.margen,
+                                        metrica_ajustada: masAjustada.id,
+                                        ventas,
+                                        es_lider: esLider,
+                                        usada: usada.current,
+                                    })
+                                }
                                 className="w-full py-4 px-6 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-sm sm:text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.4)] flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer active:scale-[0.99]"
                             >
                                 Quiero las alertas con plazo en mi cuenta
