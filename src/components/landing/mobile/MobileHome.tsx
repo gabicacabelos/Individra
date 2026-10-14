@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, BellRing, CalendarDays, ChevronDown, Clock, Gauge, Mail, Truck } from 'lucide-react'
+import { ArrowRight, BellRing, CalendarDays, ChevronDown, Clock, Gauge, Mail } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 import { MobileCalculator } from './MobileCalculator'
 import { CALENDLY_URL, DIAGNOSTICO_HREF, EMAIL, whatsappHref } from './contacto'
@@ -136,6 +136,7 @@ function AsiTeLlega() {
 function Calculadora() {
     return (
         <section id="m-calculadora" data-bloque="calculadora" className="scroll-mt-20 px-5 py-14 bg-[#0B0D0E] border-t border-white/5">
+            <Icono3D src="/3d/icono-velocimetro.png" w={560} h={382} className="h-16 w-auto mb-3" />
             <Eyebrow>Calculadora de margen</Eyebrow>
             <Titulo>¿Cuántos reclamos te quedan?</Titulo>
             <p className="mt-2 mb-6 text-sm text-neutral-400">Cargá los números de tu Reputación en ML.</p>
@@ -333,7 +334,7 @@ function Faq() {
 function Contacto() {
     return (
         <section id="m-contacto" data-bloque="contacto" data-contacto className="scroll-mt-20 px-5 py-14 bg-[#0B0D0E] border-t border-white/5">
-            <Icono3D src="/3d/icono-asistente-movil.png" w={560} h={550} className="h-20 w-auto mb-4" />
+            <Icono3D src="/3d/vendedor-laptop.png" w={640} h={587} className="h-32 w-auto mb-4" />
             <Titulo>¿Lo vemos en tu cuenta?</Titulo>
             <p className="mt-2 text-sm text-neutral-400">Hablás directo con Gabriel, sin vendedores de por medio.</p>
             <div className="mt-6 space-y-3">
@@ -376,7 +377,7 @@ function MobileFooter() {
                 onClick={() => trackEvent('logistica_footer_clicked', { link: '/logistica', version: 'mobile' })}
                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4"
             >
-                <Truck className="w-5 h-5 shrink-0 text-[#FF5520]" />
+                <Icono3D src="/3d/celular-cajas.png" w={547} h={640} className="h-12 w-auto shrink-0" />
                 <span className="text-sm text-neutral-200">
                     ¿Tenés logística o reparto propio? <span className="text-[#FFA380] font-semibold">Ver solución</span>
                 </span>

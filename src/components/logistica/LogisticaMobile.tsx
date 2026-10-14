@@ -77,11 +77,14 @@ function ComoFunciona() {
     return (
         <section id="m-como-funciona" data-bloque="como_funciona" className="scroll-mt-20 px-5 py-14 bg-[#0B0D0E] border-t border-white/5">
             <div className="rounded-3xl border border-[#FF5520]/30 bg-gradient-to-b from-[#1C100C] to-[#0E0F11] p-5">
-                <div className="flex items-center gap-2">
-                    <Image src="/logos/telegram.svg" alt="Telegram" width={28} height={28} className="w-7 h-7" />
-                    <Image src="/logos/whatsapp.svg" alt="WhatsApp" width={28} height={28} className="w-7 h-7" />
+                <div className="flex justify-center">
+                    <Icono3D src="/3d/chofer-volante-celular.png" w={640} h={635} className="h-40 w-auto" />
                 </div>
-                <h2 className="mt-3 font-heading font-bold text-white text-lg leading-snug">
+                <div className="mt-4 flex items-center gap-2">
+                    <Image src="/logos/telegram.svg" alt="Telegram" width={24} height={24} className="w-6 h-6" />
+                    <Image src="/logos/whatsapp.svg" alt="WhatsApp" width={24} height={24} className="w-6 h-6" />
+                </div>
+                <h2 className="mt-2 font-heading font-bold text-white text-lg leading-snug">
                     Sin app propia ni hardware para tus choferes
                 </h2>
                 <p className="mt-2 text-sm text-neutral-300 leading-relaxed">
@@ -91,6 +94,7 @@ function ComoFunciona() {
             </div>
 
             <div className="mt-12">
+                <Icono3D src="/3d/icono-cinta-escaner.png" w={560} h={544} className="h-16 w-auto mb-3" />
                 <Eyebrow>En la práctica</Eyebrow>
                 <Titulo>Así de simple se ve en tu operación</Titulo>
                 <ol className="mt-6 space-y-3">
