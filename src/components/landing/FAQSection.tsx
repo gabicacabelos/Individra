@@ -59,6 +59,17 @@ const faqs = [
     },
 ]
 
+// Datos estructurados para que Google pueda mostrar las preguntas en los resultados
+const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+}
+
 export function FAQSection() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -68,6 +79,10 @@ export function FAQSection() {
 
     return (
         <section id="faq" className="relative py-32 bg-[#0B0D0E] overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
             {/* Mobile animated background */}
             <MobileFAQBackground />
 

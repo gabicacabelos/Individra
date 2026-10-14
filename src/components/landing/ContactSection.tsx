@@ -3,7 +3,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { InlineWidget } from 'react-calendly'
+import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
+import { trackEvent } from '@/lib/analytics'
 
 export function ContactSection() {
     const sectionRef = useRef<HTMLElement>(null)
@@ -19,6 +20,12 @@ export function ContactSection() {
     const orb2X = useTransform(scrollYProgress, [0, 1], [0, -50])
 
     const [shouldLoadCalendly, setShouldLoadCalendly] = useState(false)
+
+    // El final del embudo: el widget avisa por postMessage cuando eligen horario y cuando confirman
+    useCalendlyEventListener({
+        onDateAndTimeSelected: () => trackEvent('calendly_horario_elegido', { seccion: 'contacto' }),
+        onEventScheduled: () => trackEvent('calendly_reunion_agendada', { seccion: 'contacto' }),
+    })
 
     useEffect(() => {
         const el = sectionRef.current

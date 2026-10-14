@@ -5,6 +5,7 @@ import { PostHogProvider } from '@/providers/PostHogProvider'
 import { CookieConsent } from '@/components/CookieConsent'
 import { CustomCursor } from '@/components/ui/CustomCursor'
 import { OffscreenAnimationPauser } from '@/components/OffscreenAnimationPauser'
+import { ConversionTracker } from '@/components/ConversionTracker'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -144,6 +145,7 @@ export default function RootLayout({
                     {children}
                     <CookieConsent />
                     <OffscreenAnimationPauser />
+                    <ConversionTracker />
                 </PostHogProvider>
             </body>
         </html>

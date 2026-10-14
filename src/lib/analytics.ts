@@ -8,6 +8,17 @@ type EventName =
     | 'logistica_bridge_clicked'
     | 'logistica_footer_clicked'
     | 'logistica_landing_cta_clicked'
+    // Delegados en ConversionTracker
+    | 'whatsapp_clicked'
+    | 'email_clicked'
+    | 'calendly_link_clicked'
+    | 'diagnostico_cta_clicked'
+    | 'home_hero_secundario_clicked'
+    // Home
+    | 'home_calculadora_usada'
+    | 'home_calculadora_cta_clicked'
+    | 'calendly_horario_elegido'
+    | 'calendly_reunion_agendada'
 
 export function trackEvent(
     name: EventName | string,

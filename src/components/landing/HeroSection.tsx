@@ -105,6 +105,7 @@ export function HeroSection() {
                                 </a>
                                 <a
                                     href="#consola-operativa"
+                                    data-track="home_hero_secundario_clicked"
                                     className="px-6 py-4 border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-neutral-200 hover:text-white text-base font-mono font-medium rounded-2xl active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2 cursor-pointer"
                                 >
                                     <Layers className="w-4 h-4 text-[#FF5520]" />
