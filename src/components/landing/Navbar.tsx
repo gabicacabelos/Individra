@@ -23,7 +23,11 @@ export function Navbar() {
         if (href.startsWith('#')) {
             e.preventDefault()
             const targetId = href.replace('#', '')
-            const element = document.getElementById(targetId)
+            let element = document.getElementById(targetId)
+            // En el celular la sección de desktop está oculta: usamos su versión mobile (#m-...)
+            if (element && element.offsetParent === null) {
+                element = document.getElementById(`m-${targetId}`) ?? element
+            }
 
             if (element) {
                 setIsMobileMenuOpen(false)
@@ -43,12 +47,12 @@ export function Navbar() {
 
     const navLinks = [
         { href: '#inicio', label: 'Inicio' },
-        { href: '#consola-operativa', label: 'Consola 1-Clic' },
+        { href: '#consola-operativa', label: 'Consola 1-Clic', mobileLabel: 'Cómo te llega' },
         { href: '/diagnostico', label: 'Autodiagnóstico', isRoute: true, highlight: true },
         { href: '#calculadora', label: 'Calculadora' },
         { href: '#piloto', label: 'Precios & Piloto' },
         { href: '/logistica', label: 'Para Logísticas', isRoute: true },
-        { href: '#faq', label: 'FAQ' },
+        { href: '#faq', label: 'FAQ', mobileLabel: 'Preguntas frecuentes' },
     ]
 
     return (
@@ -168,7 +172,7 @@ export function Navbar() {
                                         {link.highlight && (
                                             <span className="h-2 w-2 rounded-full bg-[#C84214]" />
                                         )}
-                                        {link.label}
+                                        {link.mobileLabel ?? link.label}
                                     </Link>
                                 ) : (
                                     <a
@@ -184,7 +188,7 @@ export function Navbar() {
                                         {link.highlight && (
                                             <span className="h-2 w-2 rounded-full bg-[#C84214]" />
                                         )}
-                                        {link.label}
+                                        {link.mobileLabel ?? link.label}
                                     </a>
                                 )
                             )}
@@ -193,7 +197,7 @@ export function Navbar() {
                                 onClick={(e) => handleNavClick(e, '#contacto')}
                                 className="mt-3 px-5 py-3 bg-[#C84214] text-white text-base font-bold rounded-xl hover:bg-[#B3390F] active:scale-[0.98] transition-all duration-200 text-center cursor-pointer shadow-md shadow-[#C84214]/25"
                             >
-                                Agendar diagnóstico (30 min)
+                                Hablar con Gabriel
                             </a>
                         </div>
                     </motion.div>
