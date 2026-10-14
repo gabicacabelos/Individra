@@ -8,8 +8,8 @@ const IntegrationsBar = dynamic(() =>
 const PainSolutionSection = dynamic(() =>
     import('@/components/landing/PainSolutionSection').then((m) => m.PainSolutionSection)
 )
-const VentaBlindadaCalculator = dynamic(() =>
-    import('@/components/landing/VentaBlindadaCalculator').then((m) => m.VentaBlindadaCalculator)
+const MargenColorCalculator = dynamic(() =>
+    import('@/components/landing/MargenColorCalculator').then((m) => m.MargenColorCalculator)
 )
 const PropuestaComercialSection = dynamic(() =>
     import('@/components/landing/PropuestaComercialSection').then((m) => m.PropuestaComercialSection)
@@ -37,7 +37,7 @@ export default function Home() {
             <HeroSection />
             <IntegrationsBar />
             <PainSolutionSection />
-            <VentaBlindadaCalculator />
+            <MargenColorCalculator />
             <PropuestaComercialSection />
             <LogisticaBridgeSection />
             <FAQSection />

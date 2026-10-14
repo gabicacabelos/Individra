@@ -10,7 +10,7 @@ const navigation = {
     ecommerce: [
         { name: 'Reclamos & Termómetro ML', href: '/#inicio' },
         { name: 'Consola 1-Clic', href: '/#consola-operativa' },
-        { name: 'Módulo Venta Blindada', href: '/#calculadora' },
+        { name: 'Calculadora de margen de color', href: '/#calculadora' },
         { name: 'Precios & Piloto 30 Días', href: '/#piloto' },
         { name: 'Preguntas Frecuentes', href: '/#faq' },
     ],

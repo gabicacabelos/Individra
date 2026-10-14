@@ -38,6 +38,9 @@ export async function POST(req: Request) {
             plataforma: data.plataforma || 'logistica',
             // Datos de la calculadora financiera en vivo (cuando plataforma === 'logistica')
             calculadora: data.calculadora || null,
+            // Números de reputación cargados por el vendedor de ML (paso opcional)
+            reputacion: data.reputacion || null,
+            planRecomendado: data.planRecomendado || null,
             // Respuestas crudas: esto es la data de validación
             respuestas: data.respuestas || {},
             timestamp: new Date().toISOString(),

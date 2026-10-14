@@ -6,6 +6,13 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, CheckCircle2, Truck, ShoppingBag, ArrowLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+    construirOferta,
+    MargenResultado,
+    OfertaRecomendada,
+    PasoReputacion,
+    type DatosReputacion,
+} from './oferta'
 
 /**
  * Autodiagnóstico operativo y calculadora financiera en vivo.
@@ -41,6 +48,8 @@ type Pregunta = {
     ayuda?: string
     /** Si está, la pregunta solo se muestra para esos canales de ML. Ausente = siempre. */
     canales?: Canal[]
+    /** 'reputacion': en vez de opciones, el vendedor carga sus números de ML (paso opcional). */
+    tipo?: 'reputacion'
     opciones: Opcion[]
 }
 
@@ -238,6 +247,13 @@ const PREGUNTAS_MELI: Pregunta[] = [
             { label: 'Más de $3.000.000 ARS (la caída de ventas en los listados es inmediata y brutal)', puntos: 4 },
             { label: 'Nunca caí de verde / No lo tengo medido', puntos: 2 },
         ],
+    },
+    {
+        id: 'numeros_reputacion',
+        tipo: 'reputacion',
+        titulo: 'Último dato: cargá tus números de reputación y te calculamos cuántos reclamos te quedan antes de bajar de color',
+        ayuda: 'Los ves en la sección Reputación de tu cuenta de Mercado Libre. Si no los tenés a mano, podés seguir sin cargarlos.',
+        opciones: [],
     },
     {
         id: 'intencion',
@@ -770,6 +786,9 @@ export function DiagnosticoEnvios() {
     const [entregasDia, setEntregasDia] = useState<number>(100)
     const [porcentajeFallos, setPorcentajeFallos] = useState<number>(10)
 
+    // Números de reputación que el vendedor de ML carga en el paso opcional
+    const [reputacion, setReputacion] = useState<DatosReputacion | null>(null)
+
     const [nombre, setNombre] = useState('')
     const [email, setEmail] = useState('')
     const [whatsapp, setWhatsapp] = useState('')
@@ -814,11 +833,24 @@ export function DiagnosticoEnvios() {
     const resumen = construirResumen(respuestas, plataforma, entregasDia, porcentajeFallos)
     const acciones = construirAcciones(respuestas, nivel, plataforma)
     const economiaLogistica = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
+    const puntosPorPregunta = Object.fromEntries(
+        activas.map((p) => [p.id, p.opciones.find((o) => o.label === respuestas[p.id])?.puntos ?? 0])
+    )
+    const oferta = plataforma
+        ? construirOferta({
+              plataforma,
+              respuestas,
+              puntos: puntosPorPregunta,
+              reputacion: plataforma === 'meli' ? reputacion : null,
+              perdidaLogisticaMensual: economiaLogistica.perdidaMensualArs,
+          })
+        : null
 
     function elegirPlataforma(p: Plataforma) {
         setPlataforma(p)
         setIndice(0)
         setRespuestas({})
+        setReputacion(null)
         track('diagnostico_plataforma', { plataforma: p, origen })
         setPaso('intro')
     }
@@ -847,6 +879,24 @@ export function DiagnosticoEnvios() {
             plataforma,
         })
 
+        avanzar(nuevas)
+    }
+
+    function responderReputacion(datos: DatosReputacion | null) {
+        const nuevas = { ...respuestas, [pregunta.id]: datos ? 'cargado' : 'salteado' }
+        setRespuestas(nuevas)
+        setReputacion(datos)
+        track('diagnostico_respuesta', {
+            pregunta: pregunta.id,
+            respuesta: datos ? 'cargado' : 'salteado',
+            paso: indice + 1,
+            plataforma,
+            ...(datos ? { ventas: datos.ventas, ...datos.conteos, esLider: datos.esLider } : {}),
+        })
+        avanzar(nuevas)
+    }
+
+    function avanzar(nuevas: Respuestas) {
         const info = calcular(nuevas, plataforma)
         if (indice < info.activas.length - 1) {
             setIndice(indice + 1)
@@ -900,6 +950,8 @@ export function DiagnosticoEnvios() {
                     plataforma,
                     calculadora:
                         plataforma === 'logistica' ? economiaLogistica : null,
+                    reputacion: plataforma === 'meli' ? reputacion : null,
+                    planRecomendado: oferta?.plan.nombre ?? null,
                 }),
             })
             if (!res.ok) throw new Error('No se pudo enviar')
@@ -987,7 +1039,7 @@ export function DiagnosticoEnvios() {
                                                     VENTA ONLINE & RETAIL
                                                 </span>
                                                 <h2 className="text-xl sm:text-2xl font-bold font-heading text-white mt-3 leading-snug tracking-tight">
-                                                    Vendedor E-Commerce Multicanal
+                                                    Vendedor de Mercado Libre y e-commerce
                                                 </h2>
                                             </div>
                                             <div className="w-14 h-14 shrink-0 rounded-2xl bg-white/[0.04] border border-white/10 p-2 flex items-center justify-center shadow-inner">
@@ -1002,7 +1054,7 @@ export function DiagnosticoEnvios() {
                                         </div>
 
                                         <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-5 font-sans">
-                                            Vendés por Tiendanube, Mercado Libre, Shopify o cobrás por transferencia bancaria en WhatsApp e Instagram.
+                                            Vendés en Mercado Libre, Tiendanube o Shopify, y quizás también cobrás por transferencia en WhatsApp e Instagram.
                                         </p>
 
                                         <div className="p-4 rounded-2xl bg-black/50 border border-white/[0.08] space-y-2.5 mb-6">
@@ -1012,15 +1064,15 @@ export function DiagnosticoEnvios() {
                                             <ul className="space-y-2 text-xs text-neutral-200 font-mono">
                                                 <li className="flex items-start gap-2">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Sobreventas cruzadas entre WhatsApp, ML y Tiendanube</span>
+                                                    <span>Cuántos reclamos te quedan antes de bajar de color</span>
                                                 </li>
                                                 <li className="flex items-start gap-2">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Validación de comprobantes de transferencia y duplicados</span>
+                                                    <span>Cómo te enterás de los reclamos y con qué pruebas los respondés</span>
                                                 </li>
                                                 <li className="flex items-start gap-2">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Blindaje de termómetro de reputación ante cancelaciones</span>
+                                                    <span>Sobreventas y comprobantes si también cobrás por WhatsApp</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -1029,24 +1081,24 @@ export function DiagnosticoEnvios() {
                                     <div className="space-y-3 pt-4 border-t border-white/[0.08]">
                                         <button
                                             type="button"
-                                            onClick={() => elegirPlataforma('otros')}
+                                            onClick={() => elegirPlataforma('meli')}
                                             className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer group shadow-[0_4px_20px_rgba(255,85,32,0.35)]"
                                         >
                                             <div className="text-left">
-                                                <div className="font-bold text-sm">E-Commerce Multicanal (TN + ML + WhatsApp)</div>
-                                                <div className="text-[10px] text-white/90 font-mono font-normal">Auditoría Venta Blindada: cobro y stock cruzado</div>
+                                                <div className="font-bold text-sm">Vendo en Mercado Libre</div>
+                                                <div className="text-[10px] text-white/90 font-mono font-normal">Reclamos, reputación y Envíos Flex</div>
                                             </div>
                                             <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
                                         </button>
 
                                         <button
                                             type="button"
-                                            onClick={() => elegirPlataforma('meli')}
+                                            onClick={() => elegirPlataforma('otros')}
                                             className="w-full py-2.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.07] text-neutral-300 hover:text-white font-medium text-xs flex items-center justify-between transition-colors cursor-pointer"
                                         >
                                             <div className="text-left">
-                                                <div className="font-semibold text-white">Mercado Libre Especializado</div>
-                                                <div className="text-[10px] text-neutral-400 font-mono">Blindaje de Reputación, Envíos Flex y Reclamos 14 hs</div>
+                                                <div className="font-semibold text-white">Cobro mucho por WhatsApp con transferencia</div>
+                                                <div className="text-[10px] text-neutral-400 font-mono">Venta Blindada: cobro y stock cruzado entre canales</div>
                                             </div>
                                             <ArrowRight className="w-3.5 h-3.5 shrink-0 opacity-70" />
                                         </button>
@@ -1193,9 +1245,9 @@ export function DiagnosticoEnvios() {
                                         en el termómetro y perder exposición orgánica en tus listados.
                                     </p>
                                     <p className="mt-4 text-base leading-relaxed text-[#B7B3B0]">
-                                        Son <strong className="text-[#E8E5DE]">6 preguntas tácticas</strong>{' '}
-                                        (enfocadas en tu canal de entrega). Al final te mostramos el nivel
-                                        de riesgo de tu termómetro y acciones directas para blindarlo.
+                                        Son <strong className="text-[#E8E5DE]">2 minutos</strong>. Al final te mostramos
+                                        cuántos reclamos te quedan antes de bajar de color (con los límites oficiales de
+                                        Mercado Libre Argentina), cuánto te puede costar y cómo blindarlo.
                                     </p>
                                 </>
                             ) : (
@@ -1283,6 +1335,12 @@ export function DiagnosticoEnvios() {
                                 <p className="mt-2 text-sm text-neutral-400 font-sans">{pregunta.ayuda}</p>
                             )}
 
+                            {pregunta.tipo === 'reputacion' ? (
+                                <PasoReputacion
+                                    onContinuar={(datos) => responderReputacion(datos)}
+                                    onSaltear={() => responderReputacion(null)}
+                                />
+                            ) : (
                             <div className="mt-6 flex flex-col gap-3">
                                 {pregunta.opciones.map((opcion, optIdx) => {
                                     const letters = ['A', 'B', 'C', 'D', 'E', 'F']
@@ -1305,6 +1363,7 @@ export function DiagnosticoEnvios() {
                                     )
                                 })}
                             </div>
+                            )}
 
                             {/* En las preguntas de volumen o rebote de logística, mostramos la calculadora en vivo */}
                             {plataforma === 'logistica' &&
@@ -1342,7 +1401,7 @@ export function DiagnosticoEnvios() {
                                 style={{ borderColor: resultado.color, background: resultado.bg }}
                             >
                                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#FFA380] font-bold">
-                                    Tu resultado operativo auditado
+                                    Tu diagnóstico
                                 </span>
                                 <div className="mt-2 flex items-baseline gap-3">
                                     <h2
@@ -1359,6 +1418,8 @@ export function DiagnosticoEnvios() {
                                     {resumen}
                                 </p>
                             </div>
+
+                            {plataforma === 'meli' && reputacion && <MargenResultado datos={reputacion} />}
 
                             {/* Si es logística/distribuidora, destacamos la calculadora interactiva en el resultado */}
                             {plataforma === 'logistica' && (
@@ -1391,12 +1452,14 @@ export function DiagnosticoEnvios() {
                                 ))}
                             </ol>
 
+                            {oferta && <OfertaRecomendada oferta={oferta} />}
+
                             {/* Captura de contacto */}
                             <div className="mt-10 rounded-3xl border border-white/[0.12] card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] p-6 sm:p-8 shadow-2xl">
                                 <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-white tracking-tight">
                                     {plataforma === 'logistica'
                                         ? 'Recibí el desglose para tu flota y coordinemos el diagnóstico de 30 minutos'
-                                        : 'Estamos construyendo el monitoreo automático'}
+                                        : 'Reservá tu diagnóstico gratis de 30 minutos'}
                                 </h3>
                                 <p className="mt-2 text-sm leading-relaxed text-neutral-300 font-sans">
                                     {plataforma === 'logistica' ? (
@@ -1407,12 +1470,10 @@ export function DiagnosticoEnvios() {
                                         </>
                                     ) : (
                                         <>
-                                            Lo que acabás de responder lo tuviste que estimar de memoria.
-                                            Estamos armando algo que lo calcule solo con los datos reales de tu
-                                            operación y te avise <strong className="text-white">antes</strong>{' '}
-                                            de que se te escape una venta o una entrega. Dejanos tu contacto y te
-                                            escribimos cuando esté — o antes, si querés que lo hagamos con tu
-                                            operación.
+                                            Dejanos tus datos y te escribimos por WhatsApp para coordinar. En la
+                                            llamada revisamos tu reputación con vos, te mostramos cómo te llegarían
+                                            las alertas y, si te sirve, reservamos tu lugar en el{' '}
+                                            <strong className="text-white">piloto de 30 días</strong>. Sin compromiso.
                                         </>
                                     )}
                                 </p>
@@ -1437,7 +1498,7 @@ export function DiagnosticoEnvios() {
                                         type="tel"
                                         value={whatsapp}
                                         onChange={(e) => setWhatsapp(e.target.value)}
-                                        placeholder="WhatsApp (opcional)"
+                                        placeholder="WhatsApp (para coordinar más rápido)"
                                         className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-[15px] text-white outline-none transition-colors placeholder:text-neutral-500 focus:border-[#FF5520] focus:ring-1 focus:ring-[#FF5520]"
                                     />
                                     {error && <p className="text-sm text-red-400 font-mono">{error}</p>}
@@ -1450,7 +1511,7 @@ export function DiagnosticoEnvios() {
                                             ? 'Enviando…'
                                             : plataforma === 'logistica'
                                               ? 'Recibir informe y coordinar diagnóstico'
-                                              : 'Quiero que me avisen'}
+                                              : 'Quiero mi diagnóstico gratis'}
                                     </button>
                                 </form>
                             </div>
@@ -1468,10 +1529,29 @@ export function DiagnosticoEnvios() {
                         >
                             <h2 className="text-3xl font-bold sm:text-4xl">Listo, recibido.</h2>
                             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-[#B7B3B0]">
-                                Ya registramos los datos de tu operación. Te vamos a contactar a la brevedad
-                                para revisar los números juntos.
+                                Ya registramos los datos de tu operación. Te escribimos a la brevedad para
+                                revisar los números juntos. Si querés, elegí el horario ahora mismo:
                             </p>
                             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                                <a
+                                    href="https://calendly.com/individratec/30min"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 px-6 py-3 text-sm font-bold font-heading text-white shadow-[0_4px_25px_rgba(255,85,32,0.4)]"
+                                >
+                                    Elegir horario (30 min)
+                                    <ArrowRight className="w-4 h-4" />
+                                </a>
+                                <a
+                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(
+                                        `Hola Gabriel, terminé el autodiagnóstico de INDIVIDRA${oferta ? ` (me recomendó el ${oferta.plan.nombre})` : ''} y quiero coordinar el diagnóstico de 30 minutos.`
+                                    )}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"
+                                >
+                                    Escribir por WhatsApp
+                                </a>
                                 <Link
                                     href={plataforma === 'logistica' ? '/logistica' : '/'}
                                     className="inline-block rounded-lg border border-[#3E3D3A] px-6 py-3 text-sm font-semibold transition-colors hover:border-[#C84214]"

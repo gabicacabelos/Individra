@@ -8,6 +8,11 @@ import { MobileFAQBackground } from '@/components/ui/MobileBackgroundEffects'
 
 const faqs = [
     {
+        id: 10,
+        question: 'Mercado Libre ya me avisa cuando entra un reclamo. ¿Para qué necesito esto?',
+        answer: 'Porque el aviso de Mercado Libre llega mezclado con decenas de notificaciones de ventas y preguntas, al que tenga la app abierta, y no te dice cuánto margen te queda. Nosotros tomamos el reclamo por la API oficial apenas se abre y se lo mandamos por WhatsApp a la persona responsable, con la fecha límite que fija Mercado Libre para responder y la cuenta regresiva. En el mismo mensaje te decimos cuántos reclamos, cancelaciones y demoras te quedan antes de salir de verde.',
+    },
+    {
         id: 1,
         question: '¿Mi equipo tiene que cambiar de WhatsApp o dejar de usar Mercado Libre y Tiendanube?',
         answer: 'No. Tu equipo puede seguir chateando donde siempre. Nuestra consola funciona como un panel de decisiones críticas: filtra el ruido por detrás y te muestra ordenadas por urgencia solo las tarjetas donde apretar un botón aprueba un comprobante, descuenta el stock en Mercado Libre y Tiendanube al mismo tiempo o frena un despacho.',
@@ -35,7 +40,7 @@ const faqs = [
     {
         id: 6,
         question: '¿En qué consiste el diagnóstico gratuito de 30 minutos?',
-        answer: 'Es una auditoría técnica y comercial 1 a 1 por videollamada. Sin pedirte contraseñas ni permisos invasivos, revisamos juntos en pantalla compartida el termómetro de reputación de tu cuenta, las publicaciones con stock crítico (1 a 3 unidades) y calculamos con números reales de tu tienda cuánto capital y comisiones protegés.',
+        answer: 'Es una videollamada 1 a 1. Sin pedirte contraseñas ni permisos invasivos, revisamos juntos en pantalla compartida tu reputación en Mercado Libre: cuántas ventas entran en la ventana que evalúa ML, cuántos reclamos, cancelaciones y demoras tenés, y cuánto margen te queda en cada una antes de bajar de color. Vemos cómo te enterás hoy de un reclamo y quién lo responde, y con eso definimos la línea base del piloto de 30 días. Si además cobrás por WhatsApp, sumamos el cruce de pagos y stock.',
     },
     {
         id: 7,
@@ -184,7 +189,7 @@ export function FAQSection() {
                                                     isActive ? 'text-[#C84214]' : 'text-neutral-600'
                                                 }`}
                                             >
-                                                0{index + 1}
+                                                {String(index + 1).padStart(2, '0')}
                                             </span>
                                             <h3
                                                 className={`text-lg font-semibold transition-colors duration-300 ${

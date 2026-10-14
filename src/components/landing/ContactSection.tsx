@@ -116,7 +116,7 @@ export function ContactSection() {
                         transition={{ delay: 0.4 }}
                         className="mt-6 text-[#B7B3B0] text-lg max-w-xl mx-auto"
                     >
-                        Elegí un horario en el calendario. En 30 minutos revisamos cómo entran hoy tus pagos por WhatsApp, cómo sincronizás el stock con Mercado Libre y Tiendanube, y definimos la línea base para el piloto de 30 días.
+                        Elegí un horario en el calendario. En 30 minutos revisamos tu reputación en Mercado Libre, cuánto margen te queda antes de bajar de color y cómo te enterás hoy de cada reclamo, y definimos la línea base para el piloto de 30 días.
                     </motion.p>
                 </motion.div>
 

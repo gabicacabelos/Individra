@@ -208,7 +208,7 @@ const SCENARIOS: ScenarioData[] = [
             sku: 'Borcego Cuero Vacuno Talle 42 · Marrón',
             operationId: 'RECLAMO ML #REC-9410',
             cuit: 'Orden vinculada: #200000849102',
-            ocrSummary: 'Termómetro en Verde (1,6% actual) · Te faltan 2 reclamos/cancelaciones para bajar a Amarillo (umbral 2,0%)',
+            ocrSummary: 'Reclamos 60 días: 5 de 400 ventas (1,25%) · Te queda 1 reclamo antes de salir de verde (límite en Argentina: 1,5%)',
         },
         evidenceDetails: {
             dossierId: 'EXP-9410-REPUTACION',
@@ -216,14 +216,14 @@ const SCENARIOS: ScenarioData[] = [
             buyerClaim: 'Disputa abierta por diferencia en recepción',
             packagingWeight: '1.420 gramos (Registro de empaque en mesa)',
             returnedWeight: '180 gramos (Control de devolución)',
-            weightDiff: 'Margen de cuenta: A 2 incidentes de bajar de color',
+            weightDiff: 'Margen de cuenta: 1 reclamo más y salís de verde',
             gpsStatus: 'Remito de despacho y trazabilidad asociados',
             dispatchProof: 'Evidencia de empaque con código de barras y hora verificada',
         },
         channels: {
             ml: {
                 title: 'Termómetro & Mediación Mercado Libre',
-                statusBefore: 'Reclamo abierto con reloj corriendo · Te quedan 2 incidentes de margen para bajar a Amarillo',
+                statusBefore: 'Reclamo abierto con reloj corriendo · 1 reclamo más y salís de verde',
                 statusAfter: 'Descargo con evidencia listo en portapapeles · Plazo controlado a tiempo',
                 badgeBefore: '⚠️ Plazo corriendo',
                 badgeAfter: '✓ Termómetro protegido',
@@ -260,7 +260,7 @@ const SCENARIOS: ScenarioData[] = [
                 stepNumber: '02',
                 channelName: 'Monitor de Reputación',
                 actionName: 'Cálculo de Margen de Color',
-                detail: 'Calcula exactamente cuántos reclamos o cancelaciones te faltan para caer de Verde a Amarillo.',
+                detail: 'Calcula por separado cuántos reclamos, cancelaciones y demoras te quedan antes de salir de verde, con los límites de Mercado Libre Argentina.',
                 doneBadge: 'Margen calculado',
             },
             {
@@ -1353,7 +1353,7 @@ export function PainSolutionSection() {
                         href="#calculadora"
                         className="group inline-flex items-center gap-3 px-8 py-4.5 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white text-base sm:text-lg font-heading font-bold rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.4)] active:scale-[0.98] transition-all duration-200 cursor-pointer"
                     >
-                        Calcular cuánto me cuesta hoy este desfase en mi tienda
+                        Calcular cuánto margen me queda antes de bajar de color
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-200" />
                     </a>
                 </motion.div>

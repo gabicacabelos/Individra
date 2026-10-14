@@ -9,9 +9,9 @@ import { useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const RHYTHM_PHRASES = [
-    'Alerta inmediata apenas entra un reclamo, con la cuenta regresiva del plazo exacto.',
-    'Termómetro bajo control: sabé en todo momento cuánto margen te falta para bajar de color.',
-    'Módulo secundario Venta Blindada: 1 clic valida transferencias y descuenta stock multicanal.',
+    'Te llega un WhatsApp apenas entra el reclamo, con el reloj corriendo.',
+    'Sabés en todo momento cuántos reclamos te quedan antes de perder el verde.',
+    '¿Cobrás por WhatsApp? Validás la transferencia y bajás el stock en todos tus canales con 1 clic.',
 ]
 
 export function HeroSection() {
@@ -55,7 +55,7 @@ export function HeroSection() {
                         <div className="hero-intro">
                             {/* Specific ICP Eyebrow */}
                             <p className="hero-eyebrow text-xs sm:text-sm font-mono font-medium tracking-[0.16em] uppercase text-[#FFA380] mb-4">
-                                Protección de Reputación y Reclamos en Mercado Libre (+ Tiendanube y WhatsApp)
+                                Para vendedores de Mercado Libre · Reclamos y reputación
                             </p>
 
                             {/* Title */}
@@ -64,11 +64,11 @@ export function HeroSection() {
                                 style={{ wordBreak: 'keep-all', overflowWrap: 'normal' }}
                             >
                                 <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-200">
-                                    Te aviso apenas entra un reclamo, con el plazo exacto,
+                                    Un reclamo que se te pasa te baja de color.
                                 </span>
                                 <br />
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF5520] via-[#FF7A4D] to-[#FFA380]">
-                                    y te digo cuánto te falta para bajar de color.
+                                    Con INDIVIDRA no se te pasa ninguno.
                                 </span>
                             </h1>
 
@@ -79,11 +79,11 @@ export function HeroSection() {
 
                             {/* Subtitle */}
                             <p className="mt-4 sm:mt-6 lg:mt-6 text-neutral-300 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed font-sans">
-                                En Mercado Libre un reclamo que queda tapado entre notificaciones o una cancelación de más te baja el termómetro a amarillo y derrumba tu exposición. Te avisamos por WhatsApp en el segundo en que entra un reclamo, con la{' '}
+                                Mercado Libre te avisa entre decenas de notificaciones. Nosotros te escribimos por WhatsApp apenas entra el reclamo, con{' '}
                                 <span className="text-white font-semibold underline decoration-[#FF5520]/50 underline-offset-4">
-                                    cuenta regresiva del plazo exacto y el margen real de tu termómetro
+                                    el plazo exacto para responder y cuántos reclamos te quedan antes de perder el verde
                                 </span>
-                                . Y como módulo secundario, activás <strong className="text-white">Venta Blindada</strong> para aprobar transferencias de WhatsApp y descontar stock en 1 clic.
+                                . Respondés a tiempo, cuidás tu exposición y seguís vendiendo. ¿Además cobrás por WhatsApp? Con <strong className="text-white">Venta Blindada</strong> validás la transferencia y bajás el stock en todos tus canales con 1 clic.
                             </p>
 
                             {/* Rhythm line */}
@@ -97,10 +97,10 @@ export function HeroSection() {
                             {/* CTA Buttons */}
                             <div className="mt-8 sm:mt-10 pb-6 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <a
-                                    href="/diagnostico?origen=meli"
+                                    href="/diagnostico?origen=home_meli"
                                     className="group relative px-7 py-4 bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white text-base font-heading font-bold rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(255,85,32,0.4)] active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2.5 cursor-pointer"
                                 >
-                                    <span>Evaluar el riesgo de mi termómetro (2 min)</span>
+                                    <span>Ver cuántos reclamos me quedan (2 min)</span>
                                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
                                 </a>
                                 <a
@@ -108,9 +108,12 @@ export function HeroSection() {
                                     className="px-6 py-4 border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-neutral-200 hover:text-white text-base font-mono font-medium rounded-2xl active:scale-[0.98] transition-all duration-200 ease-out whitespace-nowrap inline-flex items-center justify-center gap-2 cursor-pointer"
                                 >
                                     <Layers className="w-4 h-4 text-[#FF5520]" />
-                                    Ver consola de alertas y 1 clic
+                                    Ver cómo funciona
                                 </a>
                             </div>
+                            <p className="-mt-2 text-xs sm:text-sm text-neutral-400 font-mono">
+                                Piloto de 30 días · Sin permanencia · Arrancamos en modo solo lectura
+                            </p>
                         </div>
                     </motion.div>
 
