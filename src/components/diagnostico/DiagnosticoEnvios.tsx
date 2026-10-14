@@ -42,6 +42,8 @@ type Opcion = {
     /** Valor numérico opcional para sincronizar la calculadora en vivo de logística. */
     calcEntregasDia?: number
     calcPorcentajeFallos?: number
+    /** En la pregunta de dolor principal: qué hallazgo va primero en el resultado. */
+    tema?: string
 }
 
 type Pregunta = {
@@ -201,6 +203,20 @@ const PREGUNTAS_MELI: Pregunta[] = [
         ],
     },
     {
+        // Las opciones salen de la encuesta de Gabriel en grupos de vendedores (oct. 2026)
+        id: 'dolor',
+        titulo: '¿Qué es lo que más te complica hoy?',
+        ayuda: 'Elegí el que más te pasa.',
+        opciones: [
+            { label: 'Que se me pase el plazo de un reclamo', tema: 'plazo' },
+            { label: 'No saber cuántos reclamos me quedan antes de bajar de color', tema: 'margen' },
+            { label: 'Envíos Flex que se complican y terminan en reclamo', tema: 'flex' },
+            { label: 'Vender lo mismo en dos canales y quedarme sin stock', tema: 'stock' },
+            { label: 'Que lo que me acreditan no coincide con lo que vendí', tema: 'liquidacion' },
+            { label: 'Perseguir comprobantes de transferencia y bajar el stock a mano', tema: 'stock' },
+        ],
+    },
+    {
         id: 'volumen',
         titulo: '¿Cuántas ventas hacés por mes en Mercado Libre?',
         opciones: [
@@ -242,13 +258,26 @@ const PREGUNTAS_MELI: Pregunta[] = [
     },
     {
         id: 'despacho',
-        titulo: '¿Llegás a despachar dentro del horario que te da ML?',
-        canales: ['flex', 'envios', 'mixto'],
+        titulo: '¿Llegás con los paquetes listos al horario de la colecta?',
+        ayuda: 'ML viene cambiando los horarios y sumando una segunda colecta.',
+        canales: ['envios'],
         opciones: [
             { label: 'Siempre, con margen', puntos: 0 },
             { label: 'Casi siempre, a veces sobre la hora', puntos: 1 },
             { label: 'Seguido despacho tarde', puntos: 3 },
             { label: 'No sé cuántas demoras tengo', puntos: 2 },
+        ],
+    },
+    {
+        id: 'zonas_flex',
+        titulo: '¿Te suspendieron zonas de Flex en el último mes?',
+        ayuda: 'ML pide escanear los paquetes en una ubicación registrada antes de salir a repartir.',
+        canales: ['flex', 'mixto'],
+        opciones: [
+            { label: 'No', puntos: 0 },
+            { label: 'Sí, por el escaneo de los paquetes', puntos: 3 },
+            { label: 'Sí, por demoras o entregas fallidas', puntos: 3 },
+            { label: 'No sé si tengo zonas suspendidas', puntos: 2 },
         ],
     },
     {
@@ -265,12 +294,12 @@ const PREGUNTAS_MELI: Pregunta[] = [
     {
         id: 'liquidaciones',
         titulo: '¿Sabés cuánto te queda limpio de cada venta?',
-        ayuda: 'Después de comisión, envío y retenciones.',
+        ayuda: 'Después de comisión, envío, retenciones y percepciones (por ejemplo, IIBB).',
         opciones: [
             { label: 'Sí, lo tengo calculado por producto', puntos: 0 },
             { label: 'Más o menos, con una planilla', puntos: 1 },
             { label: 'No, miro lo que entra a Mercado Pago', puntos: 3 },
-            { label: 'Con los cambios en los cargos de ML ya no lo sigo', puntos: 3 },
+            { label: 'Entre cargos, retenciones e impuestos, ya no lo sigo', puntos: 3 },
         ],
     },
     {
@@ -487,6 +516,14 @@ const ACCIONES_OTROS: Record<Nivel, string[]> = {
    ============================================================ */
 
 const FRAG_MELI: Record<string, (string | null)[]> = {
+    dolor: [
+        'Lo que más te complica es que se te pase el plazo de un reclamo.',
+        'Lo que más te complica es no saber cuántos reclamos te quedan antes de bajar de color.',
+        'Lo que más te complica son los envíos Flex que terminan en reclamo.',
+        'Lo que más te complica es vender lo mismo en dos canales y quedarte sin stock.',
+        'Lo que más te complica es que lo acreditado no coincide con lo que vendiste.',
+        'Lo que más te complica es perseguir comprobantes y bajar el stock a mano.',
+    ],
     volumen: [
         'Con menos de 50 ventas por mes, ML mide tu reputación sobre los últimos 365 días: cada reclamo te pesa durante un año.',
         'Con 50 a 150 ventas por mes, ML mide tu reputación sobre 60 o 365 días según llegues a 101 ventas en 60 días.',
@@ -506,7 +543,13 @@ const FRAG_MELI: Record<string, (string | null)[]> = {
         'Cuando te falta stock cancelás: es la métrica más estricta (1% para seguir en verde).',
         'Arreglar por fuera con el comprador es riesgoso: puede terminar en reclamo, y ML sanciona sacar la venta de la plataforma.',
     ],
-    despacho: [null, null, 'Despachar tarde seguido suma demoras y te puede bajar exposición.', 'No tenés medidas tus demoras de despacho.'],
+    despacho: [null, null, 'Llegar tarde a la colecta seguido suma demoras y te puede bajar exposición.', 'No tenés medidas tus demoras de despacho.'],
+    zonas_flex: [
+        null,
+        'Te suspendieron zonas de Flex por el escaneo: cada día sin esas zonas son ventas que no entran.',
+        'Te suspendieron zonas de Flex por demoras o entregas fallidas.',
+        'No sabés si tenés zonas de Flex suspendidas: conviene revisarlo hoy.',
+    ],
     control_fleteros: [
         null,
         null,
@@ -517,7 +560,7 @@ const FRAG_MELI: Record<string, (string | null)[]> = {
         null,
         null,
         'No sabés cuánto te queda limpio por venta.',
-        'Con los cambios en cómo ML muestra los cargos, ya no seguís cuánto te queda limpio por venta.',
+        'Entre cargos, retenciones e impuestos, ya no seguís cuánto te queda limpio por venta.',
     ],
     costo_reputacion: [
         'Estimás que bajar de color te costaría menos de $800.000 por mes.',
@@ -554,11 +597,13 @@ const FRAG_OTROS: Record<string, (string | null)[]> = {
     ],
 }
 
+/** Hasta 4 frases: el resto ya aparece en "Lo que encontramos". Si sobran, la de volumen es la primera que sale. */
 function construirResumenDesde(frag: Record<string, (string | null)[]>, preguntas: Pregunta[], r: Respuestas) {
-    return Object.keys(frag)
-        .map((id) => frag[id][opcionElegida(preguntas, id, r)] ?? null)
-        .filter(Boolean)
-        .join(' ')
+    const frases = Object.keys(frag)
+        .map((id) => ({ id, texto: frag[id][opcionElegida(preguntas, id, r)] ?? null }))
+        .filter((f): f is { id: string; texto: string } => Boolean(f.texto))
+    const elegidas = frases.length > 4 ? frases.filter((f) => f.id !== 'volumen') : frases
+    return elegidas.slice(0, 4).map((f) => f.texto).join(' ')
 }
 
 function construirResumenMeli(r: Respuestas): string {
@@ -595,11 +640,28 @@ function construirResumen(r: Respuestas, plataforma: Plataforma | null, entregas
     return construirResumenMeli(r)
 }
 
+/** Consejos que dependen de una respuesta puntual: van antes que los genéricos del nivel. */
+function accionesPuntualesMeli(r: Respuestas): string[] {
+    const a: string[] = []
+    if (opcionElegida(PREGUNTAS_MELI, 'zonas_flex', r) === 1)
+        a.push('Que los cadetes escaneen todos los paquetes en la dirección que tenés cargada en Mis ubicaciones, antes de salir.')
+    if ([2, 3].includes(opcionElegida(PREGUNTAS_MELI, 'reclamos_plazo', r)))
+        a.push('Revisá los reclamos todos los días antes de las 12: los que deriva el asistente vencen a las 14 h del día hábil siguiente.')
+    if (opcionElegida(PREGUNTAS_MELI, 'sin_stock', r) === 3)
+        a.push('Si te falta stock, no mandes otra cosa: es preferible demorar y avisar por la mensajería de ML.')
+    if (opcionElegida(PREGUNTAS_MELI, 'liquidaciones', r) === 3)
+        a.push('Mirá Facturación > Tarifas y pagos > Impuestos: si no estás inscripto en IIBB (por ejemplo, en AGIP) te pueden aplicar percepciones más altas. Consultalo con tu contador.')
+    if (opcionElegida(PREGUNTAS_MELI, 'despacho', r) === 2)
+        a.push('Revisá el horario de tu colecta cada semana: ML lo viene cambiando y en algunas zonas suma una segunda.')
+    return a
+}
+
 function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma | null): string[] {
     if (plataforma === 'logistica') return ACCIONES_LOGISTICA[nivel]
     if (plataforma === 'otros') return ACCIONES_OTROS[nivel]
     if (valorCanalMeli(r) === 'full') return ACCIONES_FULL
-    return ACCIONES_MELI[nivel]
+    const puntuales = accionesPuntualesMeli(r)
+    return [...puntuales, ...ACCIONES_MELI[nivel].filter((x) => !puntuales.some((p) => p.slice(0, 30) === x.slice(0, 30)))].slice(0, 3)
 }
 
 /** PostHog solo está inicializado si el usuario aceptó cookies; esto lo hace inofensivo si no. */
@@ -833,6 +895,7 @@ export function DiagnosticoEnvios() {
               puntos: puntosPorPregunta,
               reputacion: plataforma === 'meli' ? reputacion : null,
               perdidaLogisticaMensual: economiaLogistica.perdidaMensualArs,
+              foco: PREGUNTAS_MELI.find((q) => q.id === 'dolor')?.opciones.find((o) => o.label === respuestas.dolor)?.tema,
           })
         : null
 

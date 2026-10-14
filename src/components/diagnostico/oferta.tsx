@@ -42,7 +42,7 @@ function ars(valor: number): string {
     )
 }
 
-type Hallazgo = { problema?: string; solucion: string }
+type Hallazgo = { problema?: string; solucion: string; tema?: string }
 
 type Oferta = {
     plan: Plan
@@ -58,6 +58,8 @@ type Contexto = {
     puntos: Record<string, number>
     reputacion: DatosReputacion | null
     perdidaLogisticaMensual: number
+    /** Lo que el vendedor dijo que más le complica: ese hallazgo va primero. */
+    foco?: string
 }
 
 const PASOS_TIENDA = (plan: Plan) => [
@@ -174,10 +176,12 @@ export function construirOferta(ctx: Contexto): Oferta {
 
     const hallazgos: Hallazgo[] = [
         {
+            tema: 'plazo',
             problema: (p.reclamos_plazo ?? 0) >= 2 ? 'Te enterás de los reclamos tarde, o revisando el panel a mano.' : undefined,
             solucion: 'Te llega un WhatsApp apenas entra cada reclamo, con el plazo exacto que fija Mercado Libre y la cuenta regresiva.',
         },
         {
+            tema: 'margen',
             problema: margen
                 ? `Hoy: ${margen.titular.toLowerCase()}${margen.masAjustada.margen > 0 ? ' antes de bajar de color' : ''}.`
                 : 'No sabés cuántos reclamos te quedan antes de bajar de color.',
@@ -186,19 +190,35 @@ export function construirOferta(ctx: Contexto): Oferta {
     ]
     if ((p.sin_stock ?? 0) >= 2)
         hallazgos.push({
+            tema: 'stock',
             problema: 'Cuando te falta stock, terminás demorando, cancelando o arreglando por fuera.',
             solucion: 'Con Venta Blindada el stock se descuenta en todos tus canales en el momento, para no vender lo que no tenés.',
         })
     if ((p.liquidaciones ?? 0) >= 3)
         hallazgos.push({
+            tema: 'liquidacion',
             problema: 'No sabés cuánto te queda limpio de cada venta.',
             solucion: 'Cruzamos cada venta con lo que acreditó Mercado Pago y te mostramos el margen real por producto.',
         })
     if ((p.control_fleteros ?? 0) >= 2)
         hallazgos.push({
+            tema: 'flex',
             problema: 'No auditás paquete por paquete lo que te factura el fletero.',
             solucion: `Cruzamos la liquidación del fletero contra las entregas reales de Mercado Libre${plan === PLAN_2 ? '' : ' (en el Plan 2)'}.`,
         })
+
+    // Lo que más le complica, primero (si quedó afuera por sus respuestas, lo sumamos igual)
+    if (ctx.foco === 'stock' && !hallazgos.some((h) => h.tema === 'stock'))
+        hallazgos.push({
+            tema: 'stock',
+            solucion: 'Con Venta Blindada el stock se descuenta en todos tus canales en el momento, para no vender lo que no tenés.',
+        })
+    if (ctx.foco === 'liquidacion' && !hallazgos.some((h) => h.tema === 'liquidacion'))
+        hallazgos.push({
+            tema: 'liquidacion',
+            solucion: 'Cruzamos cada venta con lo que acreditó Mercado Pago y te mostramos el margen real por producto.',
+        })
+    if (ctx.foco) hallazgos.sort((a, b) => Number(b.tema === ctx.foco) - Number(a.tema === ctx.foco))
 
     const rango = RANGO_COSTO_MELI[r.costo_reputacion]
     let roi: string | undefined
@@ -301,8 +321,8 @@ export function MargenResultado({ datos }: { datos: DatosReputacion }) {
             <p className="mt-3 text-2xl sm:text-3xl font-black font-heading text-white">{titular}</p>
             <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
                 {filas.map((f) => (
-                    <div key={f.id} className="rounded-xl border border-white/[0.08] bg-black/40 p-2.5 sm:p-3">
-                        <p className="text-[11px] sm:text-xs font-semibold capitalize text-neutral-200">{f.plural}</p>
+                    <div key={f.id} className="rounded-xl border border-white/[0.08] bg-black/40 p-2 sm:p-3">
+                        <p className="text-[10px] sm:text-xs font-semibold capitalize tracking-tight text-neutral-200">{f.plural}</p>
                         <p className="mt-1 font-mono text-xs text-neutral-400">
                             {porcentaje(f.tasa)} de {porcentaje(f.limite)}
                         </p>
