@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -8,8 +7,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-heading: var(--font-archivo), var(--font-geist-sans), sans-serif;
-  --font-sans: 'Plus Jakarta Sans', var(--font-geist-sans), sans-serif;
-  --font-mono: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
   --color-brand-ember: #FF5520;
   --color-brand-ember-hover: #E04413;
   --color-brand-ember-light: #FFA07A;
@@ -470,6 +469,11 @@
     .custom-cursor-enabled,
     .custom-cursor-enabled * {
         cursor: none !important;
+    }
+    /* En campos de texto se ve el cursor nativo: hace falta el caret para escribir */
+    .custom-cursor-enabled input:not([type=checkbox]):not([type=range]),
+    .custom-cursor-enabled textarea {
+        cursor: text !important;
     }
 }
 

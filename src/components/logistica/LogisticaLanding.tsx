@@ -34,7 +34,7 @@ export function LogisticaLanding() {
     }, [])
 
     return (
-        <main className="min-h-screen bg-[#0B0D0E] text-white antialiased">
+        <main id="main-content" className="min-h-screen bg-[#0B0D0E] text-white antialiased">
             {/* ===== Top bar: mismo estilo flotante que el Navbar del home ===== */}
             <motion.header
                 initial={{ y: -100, opacity: 0 }}

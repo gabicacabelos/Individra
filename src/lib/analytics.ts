@@ -1,9 +1,6 @@
 'use client'
 
 type EventName =
-    | 'ecommerce_hero_cta_clicked'
-    | 'ecommerce_calculator_interacted'
-    | 'ecommerce_pilot_cta_clicked'
     | 'logistica_nav_clicked'
     | 'logistica_bridge_clicked'
     | 'logistica_footer_clicked'
@@ -19,15 +16,24 @@ type EventName =
     | 'home_calculadora_cta_clicked'
     | 'calendly_horario_elegido'
     | 'calendly_reunion_agendada'
-    // Home mobile
-    | 'mobile_bloque_visto'
+    // Bloques vistos y barra fija
+    | 'bloque_visto'
     | 'sticky_cta_clicked'
+
+/** Misma clave que PostHogProvider. Sin consentimiento no se descarga PostHog (~180 KB). */
+export function hayConsentimiento(): boolean {
+    try {
+        return localStorage.getItem('individra-cookie-consent') === 'accepted'
+    } catch {
+        return false
+    }
+}
 
 export function trackEvent(
     name: EventName | string,
     properties?: Record<string, string | number | boolean | null | undefined>
 ) {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || !hayConsentimiento()) return
 
     try {
         import('posthog-js')

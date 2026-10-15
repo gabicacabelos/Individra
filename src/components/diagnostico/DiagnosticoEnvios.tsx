@@ -15,6 +15,7 @@ import {
     type DatosReputacion,
 } from './oferta'
 import { calcularMargen } from '@/lib/reputacionML'
+import { trackEvent } from '@/lib/analytics'
 
 /**
  * Autodiagnóstico operativo y calculadora financiera en vivo.
@@ -668,15 +669,9 @@ function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma |
     return [...puntuales, ...ACCIONES_MELI[nivel].filter((x) => !puntuales.some((p) => p.slice(0, 30) === x.slice(0, 30)))].slice(0, 3)
 }
 
-/** PostHog solo está inicializado si el usuario aceptó cookies; esto lo hace inofensivo si no. */
+/** Mismo envío que el resto del sitio: solo si aceptó cookies. */
 function track(evento: string, props?: Record<string, unknown>) {
-    import('posthog-js')
-        .then(({ default: posthog }) => {
-            posthog.capture(evento, props)
-        })
-        .catch(() => {
-            /* noop */
-        })
+    trackEvent(evento, props as Parameters<typeof trackEvent>[1])
 }
 
 /* ============================================================
@@ -1048,7 +1043,7 @@ export function DiagnosticoEnvios() {
     }
 
     return (
-        <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
+        <main id="main-content" className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
             {(paso === 'plataforma' || paso === 'intro') && (
             <button
                 type="button"

@@ -8,6 +8,7 @@ export function CustomCursor() {
     const [isHovered, setIsHovered] = useState(false)
     const [isClicking, setIsClicking] = useState(false)
     const [isTouchDevice, setIsTouchDevice] = useState(true)
+    const [isTyping, setIsTyping] = useState(false)
 
     const rawX = useMotionValue(-100)
     const rawY = useMotionValue(-100)
@@ -20,7 +21,10 @@ export function CustomCursor() {
     useEffect(() => {
         // Verificar si es un dispositivo táctil
         if (typeof window === 'undefined') return
-        const touch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window
+        const touch =
+            window.matchMedia('(pointer: coarse)').matches ||
+            'ontouchstart' in window ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
         setIsTouchDevice(touch)
         if (touch) return
 
@@ -35,6 +39,9 @@ export function CustomCursor() {
             // Detectar si está sobre un elemento interactivo
             const target = e.target as HTMLElement | null
             if (target) {
+                // Sobre campos de texto se oculta: ahí manda el caret nativo
+                const escribiendo = target.closest('input:not([type=checkbox]):not([type=range]), textarea')
+                setIsTyping(!!escribiendo)
                 const clickable = target.closest('a, button, [role="button"], input, select, textarea, .cursor-pointer')
                 setIsHovered(!!clickable)
             }
@@ -62,7 +69,7 @@ export function CustomCursor() {
         }
     }, [isVisible, rawX, rawY])
 
-    if (isTouchDevice || !isVisible) return null
+    if (isTouchDevice || !isVisible || isTyping) return null
 
     return (
         <motion.div

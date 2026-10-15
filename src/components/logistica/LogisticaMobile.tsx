@@ -8,7 +8,7 @@ import { PhoneChatHero } from './PhoneChatHero'
 import { PainCarousel } from './PainCarousel'
 import { DriverAdmissionDemo, MonthlyOperationsDemo } from '@/components/ui/micro-demos'
 import { WHATSAPP_HREF, H1_TEXT, pains, PAIN_CLOSE, modules, flowSteps } from './contenido'
-import { Eyebrow, FounderCard, Icono3D, StickyBar, Titulo, WhatsappIcon, useMobilePage } from '@/components/landing/mobile/shared'
+import { Eyebrow, FounderCard, Icono3D, StickyBar, Titulo, WhatsappIcon, usePagina } from '@/components/sitio/shared'
 
 /*
  * /logistica para celulares (< 768px). Se renderiza con md:hidden; la versión
@@ -365,7 +365,7 @@ function Footer() {
 
 export function LogisticaMobile() {
     const rootRef = useRef<HTMLDivElement>(null)
-    const barraVisible = useMobilePage(rootRef, 'logistica')
+    const barraVisible = usePagina(rootRef, 'logistica')
 
     return (
         <div ref={rootRef} className="md:hidden">
