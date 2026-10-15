@@ -1,10 +1,8 @@
 'use client'
 
 type EventName =
-    | 'logistica_nav_clicked'
-    | 'logistica_bridge_clicked'
+    | 'nav_route_clicked'
     | 'logistica_footer_clicked'
-    | 'logistica_landing_cta_clicked'
     // Delegados en ConversionTracker
     | 'whatsapp_clicked'
     | 'email_clicked'
@@ -16,6 +14,8 @@ type EventName =
     | 'home_calculadora_cta_clicked'
     | 'calendly_horario_elegido'
     | 'calendly_reunion_agendada'
+    // Logística
+    | 'logistica_calculadora_usada'
     // Bloques vistos y barra fija
     | 'bloque_visto'
     | 'sticky_cta_clicked'

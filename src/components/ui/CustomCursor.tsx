@@ -1,13 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
+
+const sinSuscripcion = () => () => {}
+
+/** Táctil o "reducir movimiento": se queda el cursor del sistema. En el servidor, true (no se dibuja). */
+function usarCursorDelSistema() {
+    return (
+        window.matchMedia('(pointer: coarse)').matches ||
+        'ontouchstart' in window ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+}
 
 export function CustomCursor() {
     const [isVisible, setIsVisible] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
     const [isClicking, setIsClicking] = useState(false)
-    const [isTouchDevice, setIsTouchDevice] = useState(true)
+    const isTouchDevice = useSyncExternalStore(sinSuscripcion, usarCursorDelSistema, () => true)
     const [isTyping, setIsTyping] = useState(false)
 
     const rawX = useMotionValue(-100)
@@ -19,14 +30,7 @@ export function CustomCursor() {
     const cursorY = useSpring(rawY, springConfig)
 
     useEffect(() => {
-        // Verificar si es un dispositivo táctil
-        if (typeof window === 'undefined') return
-        const touch =
-            window.matchMedia('(pointer: coarse)').matches ||
-            'ontouchstart' in window ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        setIsTouchDevice(touch)
-        if (touch) return
+        if (isTouchDevice) return
 
         // Ocultar cursor nativo en desktop
         document.documentElement.classList.add('custom-cursor-enabled')
@@ -34,7 +38,7 @@ export function CustomCursor() {
         const handleMouseMove = (e: MouseEvent) => {
             rawX.set(e.clientX)
             rawY.set(e.clientY)
-            if (!isVisible) setIsVisible(true)
+            setIsVisible(true)
 
             // Detectar si está sobre un elemento interactivo
             const target = e.target as HTMLElement | null
@@ -67,7 +71,7 @@ export function CustomCursor() {
             document.removeEventListener('mouseleave', handleMouseLeave)
             document.removeEventListener('mouseenter', handleMouseEnter)
         }
-    }, [isVisible, rawX, rawY])
+    }, [isTouchDevice, rawX, rawY])
 
     if (isTouchDevice || !isVisible || isTyping) return null
 

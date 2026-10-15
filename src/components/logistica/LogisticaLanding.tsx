@@ -164,14 +164,14 @@ function Barra() {
                         href={WHATSAPP_HREF}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="lg:hidden px-4 py-2 bg-[#FF5520] text-white text-xs sm:text-sm font-bold rounded-full whitespace-nowrap active:scale-95 transition"
+                        className="lg:hidden px-4 py-2 bg-[#D4430E] text-white text-xs sm:text-sm font-bold rounded-full whitespace-nowrap active:scale-95 transition"
                     >
                         Diagnóstico gratuito
                     </a>
                     <a
                         href="#contacto"
                         onClick={(e) => irA(e, '#contacto')}
-                        className="hidden lg:flex items-center h-10 px-5 bg-[#FF5520] hover:brightness-110 text-white text-sm font-heading font-bold rounded-full whitespace-nowrap shadow-[0_4px_20px_rgba(255,85,32,0.3)] active:scale-95 transition"
+                        className="hidden lg:flex items-center h-10 px-5 bg-[#D4430E] hover:bg-[#BF3A0B] text-white text-sm font-heading font-bold rounded-full whitespace-nowrap shadow-[0_4px_20px_rgba(255,85,32,0.3)] active:scale-95 transition"
                     >
                         Agendar diagnóstico<span className="hidden xl:inline">&nbsp;(30 min)</span>
                     </a>
@@ -207,7 +207,7 @@ function Hero() {
                             href={WHATSAPP_HREF}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="lg:hidden w-full py-4 px-5 bg-[#FF5520] text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] flex items-center justify-center gap-2"
+                            className="lg:hidden w-full py-4 px-5 bg-[#D4430E] text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] flex items-center justify-center gap-2"
                         >
                             Pedí un diagnóstico gratuito
                             <ArrowRight className="w-4 h-4" aria-hidden />
@@ -215,7 +215,7 @@ function Hero() {
                         <a
                             href="#contacto"
                             onClick={(e) => irA(e, '#contacto')}
-                            className="group hidden lg:flex items-center gap-2 whitespace-nowrap py-4 px-7 bg-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] active:scale-[0.99] transition"
+                            className="group hidden lg:flex items-center gap-2 whitespace-nowrap py-4 px-7 bg-[#D4430E] hover:bg-[#BF3A0B] text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] active:scale-[0.99] transition"
                         >
                             Pedí un diagnóstico gratuito
                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -382,10 +382,10 @@ function Modulos() {
                                 aria-controls="panel-modulos"
                                 onClick={() => setMomento(m.id)}
                                 className={`py-2.5 lg:py-3 rounded-xl text-[13px] lg:text-sm font-semibold transition-colors ${
-                                    m.id === momento ? 'bg-[#FF5520] text-white' : 'text-neutral-400 hover:text-white'
+                                    m.id === momento ? 'bg-[#D4430E] text-white' : 'text-neutral-400 hover:text-white'
                                 }`}
                             >
-                                <span className="hidden lg:inline font-mono text-xs opacity-70 mr-1.5">0{i + 1}</span>
+                                <span className="hidden lg:inline font-mono text-xs mr-1.5" aria-hidden>0{i + 1}</span>
                                 {m.label}
                             </button>
                         ))}
@@ -497,7 +497,7 @@ function Calculadora() {
                     </p>
                     <Link
                         href={DIAGNOSTICO_LOGISTICA}
-                        className="mt-5 w-full py-3.5 px-5 bg-[#FF5520] text-white font-heading font-bold rounded-2xl flex items-center justify-center gap-2"
+                        className="mt-5 w-full py-3.5 px-5 bg-[#D4430E] text-white font-heading font-bold rounded-2xl flex items-center justify-center gap-2"
                     >
                         Calcular mi costo
                         <ArrowRight className="w-4 h-4" aria-hidden />
@@ -569,7 +569,7 @@ function ParteDadorDemo() {
                     </div>
                 ))}
             </div>
-            <p className="mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] text-neutral-500">Datos ilustrativos, no de un cliente real.</p>
+            <p className="mt-3 pt-2.5 border-t border-white/[0.06] text-[10px] text-[#8C8C8C]">Datos ilustrativos, no de un cliente real.</p>
         </div>
     )
 }
@@ -721,7 +721,7 @@ function Contacto() {
                             Calcular costo de entregas fallidas (2 min)
                         </Link>
                     </div>
-                    <p className="mt-4 text-center lg:text-left text-xs text-neutral-500">
+                    <p className="mt-4 text-center lg:text-left text-xs text-[#8C8C8C]">
                         Planes desde $160.000/mes + IVA según volumen de guías.
                     </p>
                 </Reveal>
@@ -743,7 +743,7 @@ function Footer() {
                     <Link href="/legal#terminos" className="hover:text-white transition-colors">Términos</Link>
                     <a href={`mailto:${EMAIL}`} className="hidden lg:inline hover:text-white transition-colors">{EMAIL}</a>
                 </nav>
-                <p className="mt-6 lg:mt-0 text-xs text-neutral-500">© {new Date().getFullYear()} INDIVIDRA · Buenos Aires</p>
+                <p className="mt-6 lg:mt-0 text-xs text-[#8C8C8C]">© {new Date().getFullYear()} INDIVIDRA · Buenos Aires</p>
             </div>
         </footer>
     )

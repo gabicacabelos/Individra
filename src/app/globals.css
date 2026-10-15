@@ -485,13 +485,15 @@
    ============================================================ */
 
 /* Entrada del hero: visible desde el primer paint, sin esperar a la
-   hidratacion (antes el texto quedaba en opacity:0 hasta cargar el JS). */
+   hidratacion (antes el texto quedaba en opacity:0 hasta cargar el JS).
+   Arranca apenas visible (no en 0): con opacity 0 Chrome no toma el título
+   como LCP y termina midiendo otra cosa más tarde (el banner de cookies). */
 @keyframes hero-intro {
-    from { opacity: 0; transform: translateX(-50px); }
+    from { opacity: 0.12; transform: translateX(-28px); }
 }
 
 .hero-intro {
-    animation: hero-intro 0.8s ease-out both;
+    animation: hero-intro 0.7s ease-out both;
 }
 
 @keyframes hero-eyebrow-fade {

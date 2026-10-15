@@ -100,7 +100,7 @@ export function PhoneChatHero({ className }: { className?: string }) {
                             <div className="ph-anim flex justify-start" style={{ animationName: 'ph-msg-a' }}>
                                 <div className="max-w-[80%] rounded-2xl rounded-bl-md bg-white/[0.08] border border-white/10 px-3 py-2">
                                     <p className="text-[12px] leading-snug text-neutral-200">Hola, ¿dónde está mi pedido?</p>
-                                    <p className="mt-0.5 text-right text-[9px] text-neutral-500">9:41</p>
+                                    <p className="mt-0.5 text-right text-[9px] text-[#8C8C8C]">9:41</p>
                                 </div>
                             </div>
 
@@ -145,7 +145,7 @@ export function PhoneChatHero({ className }: { className?: string }) {
                         {/* Barra de entrada (decorativa) */}
                         <div className="flex items-center gap-2 px-3 py-2.5 bg-[#1E1D1C] border-t border-[#3E3D3A]">
                             <div className="flex-1 rounded-full bg-white/[0.06] px-3.5 py-2">
-                                <p className="text-[11px] text-neutral-500">Escribí un mensaje</p>
+                                <p className="text-[11px] text-[#8C8C8C]">Escribí un mensaje</p>
                             </div>
                             <span className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-[#C84214]">
                                 <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12 h13 M13 6 l6 6 -6 6"/></svg>

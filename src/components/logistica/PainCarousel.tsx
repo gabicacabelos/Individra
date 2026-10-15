@@ -172,7 +172,7 @@ export function PainCarousel({ pains }: Props) {
                         />
                     ))}
                 </div>
-                <span className="shrink-0 text-xs text-neutral-500 tabular-nums">
+                <span className="shrink-0 text-xs text-[#8C8C8C] tabular-nums">
                     {active + 1}/{total}
                 </span>
             </div>

@@ -19,7 +19,7 @@ export default function LegalPage() {
                         <ArrowLeft className="w-4 h-4" />
                         <span>Volver al inicio</span>
                     </Link>
-                    <div className="flex items-center gap-2 text-sm text-neutral-500">
+                    <div className="flex items-center gap-2 text-sm text-[#8C8C8C]">
                         <Calendar className="w-4 h-4" />
                         <span>Actualizado: {lastUpdated}</span>
                     </div>
@@ -279,10 +279,10 @@ export default function LegalPage() {
                     transition={{ delay: 0.4 }}
                     className="text-center pt-8 border-t border-white/10"
                 >
-                    <p className="text-neutral-500 text-sm">
+                    <p className="text-[#8C8C8C] text-sm">
                         © {new Date().getFullYear()} INDIVIDRA · Todos los derechos reservados.
                     </p>
-                    <p className="text-neutral-600 text-xs mt-2">
+                    <p className="text-[#8C8C8C] text-xs mt-2">
                         El Palomar, Provincia de Buenos Aires, Argentina
                     </p>
                 </motion.div>

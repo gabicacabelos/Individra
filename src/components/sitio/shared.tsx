@@ -172,7 +172,7 @@ export function StickyBar({
                         href={href}
                         tabIndex={mostrar ? 0 : -1}
                         data-track="sticky_cta_clicked"
-                        className="flex-1 py-3.5 px-4 bg-[#FF5520] text-white font-heading font-bold text-[15px] rounded-xl flex items-center justify-center gap-2"
+                        className="flex-1 py-3.5 px-4 bg-[#D4430E] text-white font-heading font-bold text-[15px] rounded-xl flex items-center justify-center gap-2"
                     >
                         {label}
                     </a>

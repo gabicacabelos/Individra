@@ -143,7 +143,7 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={(e) => irA(e, '#contacto')}
-                            className="ml-1 px-5 h-10 bg-[#FF5520] hover:brightness-110 text-white text-sm font-heading font-bold rounded-full shadow-[0_4px_20px_rgba(255,85,32,0.3)] active:scale-95 transition whitespace-nowrap flex items-center"
+                            className="ml-1 px-5 h-10 bg-[#D4430E] hover:bg-[#BF3A0B] text-white text-sm font-heading font-bold rounded-full shadow-[0_4px_20px_rgba(255,85,32,0.3)] active:scale-95 transition whitespace-nowrap flex items-center"
                         >
                             Agendar diagnóstico<span className="hidden xl:inline">&nbsp;(30 min)</span>
                         </a>
@@ -176,7 +176,7 @@ export function Navbar() {
                                 <a
                                     href="#contacto"
                                     onClick={(e) => irA(e, '#contacto')}
-                                    className="mt-3 sm:col-span-2 py-3.5 px-5 bg-[#FF5520] text-white text-base font-heading font-bold rounded-xl text-center active:scale-[0.98] transition"
+                                    className="mt-3 sm:col-span-2 py-3.5 px-5 bg-[#D4430E] text-white text-base font-heading font-bold rounded-xl text-center active:scale-[0.98] transition"
                                 >
                                     Hablar con Gabriel
                                 </a>

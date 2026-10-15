@@ -185,7 +185,7 @@ export function CalculadoraMargen() {
                         vista: vistaActual(),
                     })
                 }
-                className="lg:col-start-2 lg:row-start-2 w-full py-4 px-5 bg-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-base rounded-2xl flex items-center justify-center gap-2 active:scale-[0.99] transition shadow-[0_4px_30px_rgba(255,85,32,0.3)]"
+                className="lg:col-start-2 lg:row-start-2 w-full py-4 px-5 bg-[#D4430E] hover:bg-[#BF3A0B] text-white font-heading font-bold text-base rounded-2xl flex items-center justify-center gap-2 active:scale-[0.99] transition shadow-[0_4px_30px_rgba(255,85,32,0.3)]"
             >
                 Quiero esta alerta en mi cuenta
                 <ArrowRight className="w-4 h-4" />

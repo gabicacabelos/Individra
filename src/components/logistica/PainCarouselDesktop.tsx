@@ -125,7 +125,7 @@ export function PainCarouselDesktop({ pains }: { pains: string[] }) {
                             onClick={() => ir(i)}
                             aria-label={`Ir al problema ${i + 1}`}
                             aria-current={i === actual ? 'true' : undefined}
-                            className="group flex items-center justify-center h-6 px-1"
+                            className="group flex items-center justify-center h-6 min-w-6 px-1"
                         >
                             <span
                                 className={`block rounded-full transition-all ${

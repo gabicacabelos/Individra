@@ -424,7 +424,7 @@ export function PasoReputacion({
                     type="button"
                     disabled={!listo}
                     onClick={() => onContinuar({ ventas, conteos, esLider })}
-                    className="flex-1 py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white font-heading font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex-1 py-3.5 px-5 rounded-xl bg-[#D4430E] hover:bg-[#BF3A0B] disabled:opacity-40 disabled:cursor-not-allowed text-white font-heading font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                     Calcular mi margen y seguir
                     <ArrowRight className="w-4 h-4" />

@@ -106,7 +106,7 @@ function Hero() {
                     <div className="mt-7 lg:mt-9 lg:flex lg:items-center lg:gap-6">
                         <a
                             href={DIAGNOSTICO_HREF}
-                            className="group w-full lg:w-auto lg:whitespace-nowrap py-4 px-5 lg:px-7 bg-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] flex items-center justify-center gap-2 active:scale-[0.99] transition"
+                            className="group w-full lg:w-auto lg:whitespace-nowrap py-4 px-5 lg:px-7 bg-[#D4430E] hover:bg-[#BF3A0B] text-white font-heading font-bold text-base rounded-2xl shadow-[0_4px_30px_rgba(255,85,32,0.35)] flex items-center justify-center gap-2 active:scale-[0.99] transition"
                         >
                             Ver cuántos reclamos me quedan
                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -203,7 +203,7 @@ function AlertaWhatsApp() {
                     <p className="mt-2 text-right text-[10px] lg:text-xs text-neutral-400">09:12</p>
                 </motion.div>
             </div>
-            <p className="mt-3 text-[10px] lg:text-xs text-neutral-500 text-center">Ejemplo con datos ficticios</p>
+            <p className="mt-3 text-[10px] lg:text-xs text-[#8C8C8C] text-center">Ejemplo con datos ficticios</p>
         </div>
     )
 }
@@ -386,7 +386,7 @@ function Piloto() {
                                 href={WA_PILOTO}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-5 w-full py-3.5 px-5 bg-[#FF5520] hover:brightness-110 text-white font-heading font-bold rounded-2xl flex items-center justify-center gap-2 transition"
+                                className="mt-5 w-full py-3.5 px-5 bg-[#D4430E] hover:bg-[#BF3A0B] text-white font-heading font-bold rounded-2xl flex items-center justify-center gap-2 transition"
                             >
                                 Consultar disponibilidad
                                 <ArrowRight className="w-4 h-4" aria-hidden />
@@ -408,7 +408,7 @@ function Piloto() {
                                             <p className="mt-1 text-xs text-neutral-400 leading-relaxed">{p.detalle}</p>
                                         </div>
                                     ))}
-                                    <p className="text-[11px] text-neutral-500 leading-relaxed">{NOTA_PRECIOS}</p>
+                                    <p className="text-[11px] text-[#8C8C8C] leading-relaxed">{NOTA_PRECIOS}</p>
                                 </div>
                             </details>
                         </div>
@@ -448,7 +448,7 @@ function Piloto() {
                         </Reveal>
                     ))}
                 </div>
-                <p className="hidden lg:block mt-6 text-center text-xs text-neutral-500">{NOTA_PRECIOS}</p>
+                <p className="hidden lg:block mt-6 text-center text-xs text-[#8C8C8C]">{NOTA_PRECIOS}</p>
             </div>
         </section>
     )
@@ -717,7 +717,7 @@ function Footer() {
                         </a>
                     </div>
                 </div>
-                <p className="mt-6 lg:mt-12 lg:pt-6 lg:border-t lg:border-white/5 text-xs text-neutral-500">
+                <p className="mt-6 lg:mt-12 lg:pt-6 lg:border-t lg:border-white/5 text-xs text-[#8C8C8C]">
                     © {new Date().getFullYear()} INDIVIDRA · Buenos Aires
                 </p>
             </div>
