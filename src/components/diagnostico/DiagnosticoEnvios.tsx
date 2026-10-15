@@ -16,6 +16,11 @@ import {
 } from './oferta'
 import { calcularMargen } from '@/lib/reputacionML'
 import { trackEvent } from '@/lib/analytics'
+import {
+    CalculadoraFinancieraViva,
+    calcularEconomiaLogistica,
+    formatearArs,
+} from '@/components/logistica/CalculadoraFallas'
 
 /**
  * Autodiagnóstico operativo y calculadora financiera en vivo.
@@ -56,46 +61,6 @@ type Pregunta = {
     /** 'reputacion': en vez de opciones, el vendedor carga sus números de ML (paso opcional). */
     tipo?: 'reputacion'
     opciones: Opcion[]
-}
-
-/**
- * Costo directo auditado por cada entrega fallida en AMBA / Argentina:
- * - Gasoil desvío promedio 8 km (12 L/100km × ARS $2.198/L): ARS $2.110
- * - Tiempo chofer perdido 20 min (CCT 40/89 costo empresa ARS $8.730/h): ARS $2.880
- * - Re-ruteo, manipulación en depósito y segundo viaje al día siguiente: ARS $4.990
- * Total por entrega fallida: ARS $9.980
- */
-const COSTO_FALLO_UNITARIO_ARS = 9980
-const DIAS_HABILES_MES = 22
-
-function formatearArs(valor: number): string {
-    return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        maximumFractionDigits: 0,
-    }).format(Math.round(valor))
-}
-
-function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos: number) {
-    const fallosDia = entregasDia * (porcentajeFallos / 100)
-    const fallosMes = Math.round(fallosDia * DIAS_HABILES_MES)
-    const perdidaDiariaArs = Math.round(fallosDia * COSTO_FALLO_UNITARIO_ARS)
-    const perdidaMensualArs = Math.round(fallosDia * DIAS_HABILES_MES * COSTO_FALLO_UNITARIO_ARS)
-    const ahorroMensualMinArs = Math.round(perdidaMensualArs * 0.5)
-    const ahorroMensualMaxArs = Math.round(perdidaMensualArs * 0.6)
-
-    return {
-        entregasDia,
-        porcentajeFallos,
-        costoUnitarioArs: COSTO_FALLO_UNITARIO_ARS,
-        diasHabilesMes: DIAS_HABILES_MES,
-        fallosDia: Number(fallosDia.toFixed(1)),
-        fallosMes,
-        perdidaDiariaArs,
-        perdidaMensualArs,
-        ahorroMensualMinArs,
-        ahorroMensualMaxArs,
-    }
 }
 
 /* ============================================================
@@ -672,156 +637,6 @@ function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma |
 /** Mismo envío que el resto del sitio: solo si aceptó cookies. */
 function track(evento: string, props?: Record<string, unknown>) {
     trackEvent(evento, props as Parameters<typeof trackEvent>[1])
-}
-
-/* ============================================================
-   Componente: Calculadora Financiera en Vivo (Logística / Distribuidoras)
-   ============================================================ */
-
-interface CalculadoraVivaProps {
-    entregasDia: number
-    setEntregasDia: (v: number) => void
-    porcentajeFallos: number
-    setPorcentajeFallos: (v: number) => void
-    compacta?: boolean
-}
-
-function CalculadoraFinancieraViva({
-    entregasDia,
-    setEntregasDia,
-    porcentajeFallos,
-    setPorcentajeFallos,
-    compacta = false,
-}: CalculadoraVivaProps) {
-    const econ = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
-
-    return (
-        <div className="rounded-xl border border-[#C84214]/40 bg-[#151719] p-5 sm:p-6 shadow-xl shadow-black/30">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
-                <div>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#C84214]">
-                        Calculadora Financiera en Vivo
-                    </span>
-                    <h3 className="mt-0.5 text-base sm:text-lg font-bold text-[#E8E5DE]">
-                        Costo real de entregas fallidas en tu operación
-                    </h3>
-                </div>
-                <span className="rounded-full border border-[#3E3D3A] bg-[#0B0D0E] px-3 py-1 font-mono text-xs text-[#B7B3B0]">
-                    {entregasDia}/día × {porcentajeFallos}% × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}
-                </span>
-            </div>
-
-            {/* Sliders interactivos */}
-            <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
-                    <div className="flex items-baseline justify-between">
-                        <label
-                            htmlFor="slider-entregas"
-                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
-                        >
-                            Entregas / paradas por día
-                        </label>
-                        <span className="font-mono text-xl font-bold text-white">
-                            {entregasDia}
-                        </span>
-                    </div>
-                    <input
-                        id="slider-entregas"
-                        type="range"
-                        min={15}
-                        max={500}
-                        step={5}
-                        value={entregasDia}
-                        onChange={(e) => setEntregasDia(Number(e.target.value))}
-                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
-                    />
-                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
-                        <span>15/día</span>
-                        <span>100/día</span>
-                        <span>300/día</span>
-                        <span>500/día</span>
-                    </div>
-                </div>
-
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
-                    <div className="flex items-baseline justify-between">
-                        <label
-                            htmlFor="slider-fallos"
-                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
-                        >
-                            % Fallos al 1° intento
-                        </label>
-                        <span className="font-mono text-xl font-bold text-[#C84214]">
-                            {porcentajeFallos}%
-                        </span>
-                    </div>
-                    <input
-                        id="slider-fallos"
-                        type="range"
-                        min={1}
-                        max={25}
-                        step={1}
-                        value={porcentajeFallos}
-                        onChange={(e) => setPorcentajeFallos(Number(e.target.value))}
-                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
-                    />
-                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
-                        <span>1%</span>
-                        <span>8% (prom.)</span>
-                        <span>15%</span>
-                        <span>25%</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Resultados numéricos en vivo */}
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E]/90 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#8E8B88]">
-                        Pérdida por día ({econ.fallosDia} fallos)
-                    </span>
-                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-[#E8E5DE]">
-                        {formatearArs(econ.perdidaDiariaArs)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#8E8B88]">
-                        Cada día operativo en la calle
-                    </span>
-                </div>
-
-                <div className="rounded-lg border border-[#C84214]/50 bg-[#C84214]/10 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#E8E5DE]">
-                        Fuga mensual ({econ.fallosMes} fallos/mes)
-                    </span>
-                    <span className="mt-1 block font-mono text-xl sm:text-2xl font-bold text-[#C84214]">
-                        {formatearArs(econ.perdidaMensualArs)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#B7B3B0]">
-                        En {DIAS_HABILES_MES} días hábiles × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo
-                    </span>
-                </div>
-
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E]/90 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#FFA380]">
-                        Proyección anual (12 meses)
-                    </span>
-                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-white">
-                        {formatearArs(econ.perdidaMensualArs * 12)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#8E8B88]">
-                        Medimos cuánto recuperás en un piloto de 30 días
-                    </span>
-                </div>
-            </div>
-
-            {!compacta && (
-                <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 pt-2 text-[11px] text-[#8E8B88]">
-                    <span>
-                        * Costo unitario auditado ({formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo): Gasoil desvío 8 km ($2.110) + 20 min chofer CCT 40/89 ($2.880) + Re-ruteo y 2° viaje ($4.990).
-                    </span>
-                </div>
-            )}
-        </div>
-    )
 }
 
 type Paso = 'plataforma' | 'intro' | 'preguntas' | 'resultado' | 'listo'

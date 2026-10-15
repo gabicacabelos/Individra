@@ -12,7 +12,7 @@ const InlineWidget = dynamic(() => import('react-calendly').then((m) => m.Inline
  * está por entrar en pantalla, así no suma peso a la carga inicial ni al celular,
  * donde se usa el link directo.
  */
-export function CalendlyEmbed() {
+export function CalendlyEmbed({ seccion = 'contacto' }: { seccion?: string }) {
     const ref = useRef<HTMLDivElement>(null)
     const [montar, setMontar] = useState(false)
 
@@ -38,12 +38,12 @@ export function CalendlyEmbed() {
         const alRecibir = (e: MessageEvent) => {
             if (e.origin !== 'https://calendly.com') return
             const evento = (e.data as { event?: string } | null)?.event
-            if (evento === 'calendly.date_and_time_selected') trackEvent('calendly_horario_elegido', { seccion: 'contacto' })
-            if (evento === 'calendly.event_scheduled') trackEvent('calendly_reunion_agendada', { seccion: 'contacto' })
+            if (evento === 'calendly.date_and_time_selected') trackEvent('calendly_horario_elegido', { seccion })
+            if (evento === 'calendly.event_scheduled') trackEvent('calendly_reunion_agendada', { seccion })
         }
         window.addEventListener('message', alRecibir)
         return () => window.removeEventListener('message', alRecibir)
-    }, [montar])
+    }, [montar, seccion])
 
     return (
         <div ref={ref} className="rounded-3xl border border-white/10 bg-[#141618] overflow-hidden">
