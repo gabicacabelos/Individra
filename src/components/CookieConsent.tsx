@@ -6,18 +6,15 @@ import Link from 'next/link'
 
 export function CookieConsent() {
     const { consent, accept, reject } = useConsent()
-    const [visible, setVisible] = useState(false)
+    const [demoraCumplida, setDemoraCumplida] = useState(false)
 
+    // Aparece 800 ms después de cargar, para no tapar la primera impresión
     useEffect(() => {
-        if (consent === null) {
-            const t = setTimeout(() => setVisible(true), 800)
-            return () => clearTimeout(t)
-        } else {
-            setVisible(false)
-        }
-    }, [consent])
+        const t = setTimeout(() => setDemoraCumplida(true), 800)
+        return () => clearTimeout(t)
+    }, [])
 
-    if (!visible) return null
+    if (consent !== null || !demoraCumplida) return null
 
     return (
         <div

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -15,6 +16,12 @@ import {
     type DatosReputacion,
 } from './oferta'
 import { calcularMargen } from '@/lib/reputacionML'
+import { trackEvent } from '@/lib/analytics'
+import {
+    CalculadoraFinancieraViva,
+    calcularEconomiaLogistica,
+    formatearArs,
+} from '@/components/logistica/CalculadoraFallas'
 
 /**
  * Autodiagnóstico operativo y calculadora financiera en vivo.
@@ -55,46 +62,6 @@ type Pregunta = {
     /** 'reputacion': en vez de opciones, el vendedor carga sus números de ML (paso opcional). */
     tipo?: 'reputacion'
     opciones: Opcion[]
-}
-
-/**
- * Costo directo auditado por cada entrega fallida en AMBA / Argentina:
- * - Gasoil desvío promedio 8 km (12 L/100km × ARS $2.198/L): ARS $2.110
- * - Tiempo chofer perdido 20 min (CCT 40/89 costo empresa ARS $8.730/h): ARS $2.880
- * - Re-ruteo, manipulación en depósito y segundo viaje al día siguiente: ARS $4.990
- * Total por entrega fallida: ARS $9.980
- */
-const COSTO_FALLO_UNITARIO_ARS = 9980
-const DIAS_HABILES_MES = 22
-
-function formatearArs(valor: number): string {
-    return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        maximumFractionDigits: 0,
-    }).format(Math.round(valor))
-}
-
-function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos: number) {
-    const fallosDia = entregasDia * (porcentajeFallos / 100)
-    const fallosMes = Math.round(fallosDia * DIAS_HABILES_MES)
-    const perdidaDiariaArs = Math.round(fallosDia * COSTO_FALLO_UNITARIO_ARS)
-    const perdidaMensualArs = Math.round(fallosDia * DIAS_HABILES_MES * COSTO_FALLO_UNITARIO_ARS)
-    const ahorroMensualMinArs = Math.round(perdidaMensualArs * 0.5)
-    const ahorroMensualMaxArs = Math.round(perdidaMensualArs * 0.6)
-
-    return {
-        entregasDia,
-        porcentajeFallos,
-        costoUnitarioArs: COSTO_FALLO_UNITARIO_ARS,
-        diasHabilesMes: DIAS_HABILES_MES,
-        fallosDia: Number(fallosDia.toFixed(1)),
-        fallosMes,
-        perdidaDiariaArs,
-        perdidaMensualArs,
-        ahorroMensualMinArs,
-        ahorroMensualMaxArs,
-    }
 }
 
 /* ============================================================
@@ -668,168 +635,18 @@ function construirAcciones(r: Respuestas, nivel: Nivel, plataforma: Plataforma |
     return [...puntuales, ...ACCIONES_MELI[nivel].filter((x) => !puntuales.some((p) => p.slice(0, 30) === x.slice(0, 30)))].slice(0, 3)
 }
 
-/** PostHog solo está inicializado si el usuario aceptó cookies; esto lo hace inofensivo si no. */
+const CalendlyEmbed = dynamic(() => import('@/components/sitio/CalendlyEmbed').then((m) => m.CalendlyEmbed), {
+    ssr: false,
+})
+
+const LETRAS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+
+/** Mismo envío que el resto del sitio: solo si aceptó cookies. */
 function track(evento: string, props?: Record<string, unknown>) {
-    import('posthog-js')
-        .then(({ default: posthog }) => {
-            posthog.capture(evento, props)
-        })
-        .catch(() => {
-            /* noop */
-        })
+    trackEvent(evento, props as Parameters<typeof trackEvent>[1])
 }
 
-/* ============================================================
-   Componente: Calculadora Financiera en Vivo (Logística / Distribuidoras)
-   ============================================================ */
-
-interface CalculadoraVivaProps {
-    entregasDia: number
-    setEntregasDia: (v: number) => void
-    porcentajeFallos: number
-    setPorcentajeFallos: (v: number) => void
-    compacta?: boolean
-}
-
-function CalculadoraFinancieraViva({
-    entregasDia,
-    setEntregasDia,
-    porcentajeFallos,
-    setPorcentajeFallos,
-    compacta = false,
-}: CalculadoraVivaProps) {
-    const econ = calcularEconomiaLogistica(entregasDia, porcentajeFallos)
-
-    return (
-        <div className="rounded-xl border border-[#C84214]/40 bg-[#151719] p-5 sm:p-6 shadow-xl shadow-black/30">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
-                <div>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#C84214]">
-                        Calculadora Financiera en Vivo
-                    </span>
-                    <h3 className="mt-0.5 text-base sm:text-lg font-bold text-[#E8E5DE]">
-                        Costo real de entregas fallidas en tu operación
-                    </h3>
-                </div>
-                <span className="rounded-full border border-[#3E3D3A] bg-[#0B0D0E] px-3 py-1 font-mono text-xs text-[#B7B3B0]">
-                    {entregasDia}/día × {porcentajeFallos}% × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}
-                </span>
-            </div>
-
-            {/* Sliders interactivos */}
-            <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
-                    <div className="flex items-baseline justify-between">
-                        <label
-                            htmlFor="slider-entregas"
-                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
-                        >
-                            Entregas / paradas por día
-                        </label>
-                        <span className="font-mono text-xl font-bold text-white">
-                            {entregasDia}
-                        </span>
-                    </div>
-                    <input
-                        id="slider-entregas"
-                        type="range"
-                        min={15}
-                        max={500}
-                        step={5}
-                        value={entregasDia}
-                        onChange={(e) => setEntregasDia(Number(e.target.value))}
-                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
-                    />
-                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
-                        <span>15/día</span>
-                        <span>100/día</span>
-                        <span>300/día</span>
-                        <span>500/día</span>
-                    </div>
-                </div>
-
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E] p-4">
-                    <div className="flex items-baseline justify-between">
-                        <label
-                            htmlFor="slider-fallos"
-                            className="text-xs font-medium uppercase tracking-wider text-[#B7B3B0]"
-                        >
-                            % Fallos al 1° intento
-                        </label>
-                        <span className="font-mono text-xl font-bold text-[#C84214]">
-                            {porcentajeFallos}%
-                        </span>
-                    </div>
-                    <input
-                        id="slider-fallos"
-                        type="range"
-                        min={1}
-                        max={25}
-                        step={1}
-                        value={porcentajeFallos}
-                        onChange={(e) => setPorcentajeFallos(Number(e.target.value))}
-                        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#262523] accent-[#C84214]"
-                    />
-                    <div className="mt-1.5 flex justify-between font-mono text-[11px] text-[#8E8B88]">
-                        <span>1%</span>
-                        <span>8% (prom.)</span>
-                        <span>15%</span>
-                        <span>25%</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Resultados numéricos en vivo */}
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E]/90 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#8E8B88]">
-                        Pérdida por día ({econ.fallosDia} fallos)
-                    </span>
-                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-[#E8E5DE]">
-                        {formatearArs(econ.perdidaDiariaArs)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#8E8B88]">
-                        Cada día operativo en la calle
-                    </span>
-                </div>
-
-                <div className="rounded-lg border border-[#C84214]/50 bg-[#C84214]/10 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#E8E5DE]">
-                        Fuga mensual ({econ.fallosMes} fallos/mes)
-                    </span>
-                    <span className="mt-1 block font-mono text-xl sm:text-2xl font-bold text-[#C84214]">
-                        {formatearArs(econ.perdidaMensualArs)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#B7B3B0]">
-                        En {DIAS_HABILES_MES} días hábiles × {formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo
-                    </span>
-                </div>
-
-                <div className="rounded-lg border border-[#3E3D3A] bg-[#0B0D0E]/90 p-3.5">
-                    <span className="block font-mono text-[11px] uppercase tracking-wider text-[#FFA380]">
-                        Proyección anual (12 meses)
-                    </span>
-                    <span className="mt-1 block font-mono text-lg sm:text-xl font-bold text-white">
-                        {formatearArs(econ.perdidaMensualArs * 12)}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-[#8E8B88]">
-                        Medimos cuánto recuperás en un piloto de 30 días
-                    </span>
-                </div>
-            </div>
-
-            {!compacta && (
-                <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 pt-2 text-[11px] text-[#8E8B88]">
-                    <span>
-                        * Costo unitario auditado ({formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo): Gasoil desvío 8 km ($2.110) + 20 min chofer CCT 40/89 ($2.880) + Re-ruteo y 2° viaje ($4.990).
-                    </span>
-                </div>
-            )}
-        </div>
-    )
-}
-
-type Paso = 'plataforma' | 'intro' | 'preguntas' | 'resultado' | 'listo'
+type Paso = 'plataforma' | 'preguntas' | 'resultado' | 'listo'
 
 export function DiagnosticoEnvios() {
     const router = useRouter()
@@ -909,17 +726,8 @@ export function DiagnosticoEnvios() {
         setRespuestas({})
         setReputacion(null)
         track('diagnostico_plataforma', { plataforma: p, origen })
-        // En el celular vamos directo a la primera pregunta: la intro es una pantalla más para leer
-        if (window.matchMedia('(max-width: 767px)').matches) {
-            track('diagnostico_iniciado', { origen, plataforma: p, sinIntro: true })
-            setPaso('preguntas')
-            return
-        }
-        setPaso('intro')
-    }
-
-    function empezar() {
-        track('diagnostico_iniciado', { origen, plataforma })
+        // Directo a la primera pregunta en todos los tamaños: la intro era una pantalla más para leer
+        track('diagnostico_iniciado', { origen, plataforma: p, sinIntro: true })
         setPaso('preguntas')
     }
 
@@ -988,8 +796,7 @@ export function DiagnosticoEnvios() {
 
     function volver() {
         if (indice === 0) {
-            // En el celular no hay intro: volvemos a la elección de perfil
-            setPaso(window.matchMedia('(max-width: 767px)').matches ? 'plataforma' : 'intro')
+            setPaso('plataforma')
             return
         }
         setIndice(indice - 1)
@@ -1047,20 +854,79 @@ export function DiagnosticoEnvios() {
         }
     }
 
+    // Desktop: se puede responder con las teclas de las letras (A, B, C…)
+    useEffect(() => {
+        if (paso !== 'preguntas' || !pregunta || pregunta.tipo === 'reputacion') return
+        const alTeclear = (e: KeyboardEvent) => {
+            if (e.metaKey || e.ctrlKey || e.altKey) return
+            const destino = e.target as HTMLElement | null
+            if (destino && (destino.tagName === 'INPUT' || destino.tagName === 'TEXTAREA' || destino.isContentEditable)) return
+            const i = LETRAS.indexOf(e.key.toUpperCase())
+            if (i >= 0 && i < pregunta.opciones.length) {
+                e.preventDefault()
+                responder(pregunta.opciones[i])
+            }
+        }
+        window.addEventListener('keydown', alTeclear)
+        return () => window.removeEventListener('keydown', alTeclear)
+    })
+
+    const PERFILES = [
+        {
+            id: 'meli',
+            titulo: 'Vendo en Mercado Libre',
+            detalle: 'Reclamos, reputación y envíos',
+            img: { src: '/3d/icono-velocimetro.png', w: 560, h: 382 },
+            sugerido: origen === 'home_meli' || origen === 'directo',
+        },
+        {
+            id: 'otros',
+            titulo: 'Cobro por WhatsApp con transferencia',
+            detalle: 'Comprobantes y stock entre canales',
+            img: { src: '/3d/ecommerce/pago-check.webp', w: 512, h: 501 },
+            sugerido: origen === 'home_tienda' || origen === 'ecommerce',
+        },
+        {
+            id: 'logistica',
+            titulo: 'Tengo una logística o reparto',
+            detalle: 'Entregas fallidas y avisos al cliente',
+            img: { src: '/3d/ilustracion-reparto.png', w: 900, h: 522 },
+            sugerido: origen === 'logistica',
+        },
+    ] as const
+
+    const waListo = `https://wa.me/5491160152435?text=${encodeURIComponent(
+        `Hola Gabriel, terminé el autodiagnóstico de INDIVIDRA${oferta ? ` (me recomendó el ${oferta.plan.nombre})` : ''} y quiero coordinar el diagnóstico de 30 minutos.`
+    )}`
+
     return (
-        <main className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
-            {(paso === 'plataforma' || paso === 'intro') && (
-            <button
-                type="button"
-                onClick={salirHaciaAtras}
-                className="fixed top-5 left-5 md:top-6 md:left-6 z-[100] flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
-                aria-label="Volver atrás"
-            >
-                <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
-            </button>
+        <main id="main-content" className="min-h-screen bg-[#0B0D0E] text-[#E8E5DE]">
+            {paso === 'plataforma' && (
+                <div className="fixed top-5 left-5 lg:top-6 lg:left-8 z-[100] flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={salirHaciaAtras}
+                        className="flex items-center justify-center w-8 h-8 lg:w-9 lg:h-9 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
+                        aria-label="Volver atrás"
+                    >
+                        <ArrowRight className="w-4 h-4 text-neutral-300 rotate-180" />
+                    </button>
+                    <Image
+                        src="/logo-individra-rebrand.png"
+                        alt="INDIVIDRA"
+                        width={640}
+                        height={125}
+                        sizes="200px"
+                        className="hidden lg:block h-9 w-auto"
+                    />
+                </div>
             )}
 
-            <div className="mx-auto flex min-h-screen max-w-4xl flex-col justify-start md:justify-center px-5 pt-5 pb-12 md:py-16 sm:px-6">
+            <div
+                className={`mx-auto flex min-h-screen w-full max-w-4xl lg:max-w-6xl flex-col px-5 pt-5 pb-12 sm:px-6 lg:px-8 ${
+                    paso === 'plataforma' || paso === 'listo' ? 'lg:justify-center lg:py-20' : 'lg:pt-14 lg:pb-20'
+                }`}
+            >
                 <AnimatePresence mode="wait">
                     {/* ------------------------------------------- PLATAFORMA */}
                     {paso === 'plataforma' && (
@@ -1070,451 +936,211 @@ export function DiagnosticoEnvios() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -12 }}
                             transition={{ duration: 0.35 }}
-                            className="w-full"
+                            className="w-full pt-12 lg:pt-0"
                         >
-                            {/* Celular: tres opciones de un toque */}
-                            <div className="md:hidden pt-12">
-                                <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#FFA380]">
+                            <div className="lg:text-center lg:max-w-2xl lg:mx-auto">
+                                <p className="text-[11px] lg:text-xs font-mono uppercase tracking-[0.16em] text-[#FFA380]">
                                     Autodiagnóstico gratis · 2 minutos
                                 </p>
-                                <h1 className="mt-2 text-[1.75rem] font-heading font-extrabold text-white leading-[1.15] tracking-tight">
+                                <h1 className="mt-2 lg:mt-4 text-[1.75rem] lg:text-[3rem] font-heading font-extrabold text-white leading-[1.15] lg:leading-[1.05] tracking-tight">
                                     ¿Qué querés revisar?
                                 </h1>
-                                <p className="mt-2 text-sm text-neutral-400">
+                                <p className="mt-2 lg:mt-4 text-sm lg:text-lg text-neutral-400">
                                     Sin conectar tu cuenta. Al final ves tu resultado y qué hacer.
                                 </p>
-                                <div className="mt-6 space-y-3">
-                                    {(
-                                        [
-                                            {
-                                                id: 'meli',
-                                                titulo: 'Vendo en Mercado Libre',
-                                                detalle: 'Reclamos, reputación y envíos',
-                                                img: { src: '/3d/icono-velocimetro.png', w: 560, h: 382 },
-                                                sugerido: origen === 'home_meli' || origen === 'directo',
-                                            },
-                                            {
-                                                id: 'otros',
-                                                titulo: 'Cobro por WhatsApp con transferencia',
-                                                detalle: 'Comprobantes y stock entre canales',
-                                                img: { src: '/3d/ecommerce/pago-check.webp', w: 512, h: 501 },
-                                                sugerido: origen === 'home_tienda' || origen === 'ecommerce',
-                                            },
-                                            {
-                                                id: 'logistica',
-                                                titulo: 'Tengo una logística o reparto',
-                                                detalle: 'Entregas fallidas y avisos al cliente',
-                                                img: { src: '/3d/ilustracion-reparto.png', w: 900, h: 522 },
-                                                sugerido: origen === 'logistica',
-                                            },
-                                        ] as const
-                                    ).map((o) => (
-                                        <button
-                                            key={o.id}
-                                            type="button"
-                                            onClick={() => elegirPlataforma(o.id)}
-                                            className={`w-full flex items-center gap-4 rounded-2xl border p-4 text-left active:scale-[0.99] transition ${
-                                                o.sugerido
-                                                    ? 'border-[#FF5520]/70 bg-[#FF5520]/[0.08]'
-                                                    : 'border-white/10 bg-white/[0.03]'
-                                            }`}
-                                        >
-                                            <Image
-                                                src={o.img.src}
-                                                alt=""
-                                                aria-hidden
-                                                width={o.img.w}
-                                                height={o.img.h}
-                                                sizes="64px"
-                                                className="w-14 h-14 shrink-0 object-contain"
-                                            />
-                                            <span className="flex-1">
-                                                <span className="block font-heading font-bold text-white leading-snug">{o.titulo}</span>
-                                                <span className="block mt-0.5 text-sm text-neutral-400">{o.detalle}</span>
-                                            </span>
-                                            <ChevronRight className="w-5 h-5 shrink-0 text-[#FF5520]" />
-                                        </button>
-                                    ))}
-                                </div>
                             </div>
-
-                            <div className="hidden md:block text-center sm:text-left">
-                                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF5520]/10 border border-[#FF5520]/30 text-[#FFA380] text-xs font-mono uppercase tracking-[0.18em]">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF5520] animate-ping" />
-                                    Paso 1 de 2 · Selección de Perfil Operativo
-                                </span>
-                                <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold font-heading text-white leading-tight tracking-tight">
-                                    ¿Cuál es tu{' '}
-                                    <span className="bg-gradient-to-r from-[#FF5520] via-[#FFA380] to-white bg-clip-text text-transparent">
-                                        operación principal?
-                                    </span>
-                                </h1>
-                                <p className="mt-3 text-sm sm:text-base leading-relaxed text-neutral-300 max-w-2xl font-sans">
-                                    Para que las métricas, el cálculo de fugas financieras y las recomendaciones de auditoría se ajusten a tu realidad operativa, elegí tu vertical:
-                                </p>
-                            </div>
-
-                            <div className="mt-8 hidden md:grid md:grid-cols-2 gap-6">
-                                {/* CARD 1: VENDEDOR E-COMMERCE & MULTICANAL */}
-                                <div
-                                    className={`relative flex flex-col justify-between p-6 sm:p-8 rounded-3xl border transition-all duration-300 card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] ${
-                                        origen === 'ecommerce' || origen === 'home_meli' || origen === 'home_tienda'
-                                            ? 'border-[#FF5520] shadow-[0_0_35px_-10px_rgba(255,85,32,0.35)] ring-1 ring-[#FF5520]/60'
-                                            : 'border-white/[0.10] hover:border-[#FF5520]/60 hover:shadow-2xl'
-                                    }`}
-                                >
-                                    {(origen === 'ecommerce' || origen === 'home_meli' || origen === 'home_tienda') && (
-                                        <div className="absolute -top-3 left-6 px-3 py-0.5 rounded-full bg-[#FF5520] text-white font-mono text-[10px] font-bold tracking-wider uppercase shadow-md shadow-[#FF5520]/30">
-                                            💡 Sugerido según tu navegación
-                                        </div>
-                                    )}
-
-                                    <div>
-                                        <div className="flex items-start justify-between gap-4 mb-4">
-                                            <div>
-                                                <span className="font-mono text-[11px] font-bold tracking-wider px-3 py-1 rounded-md bg-[#FF5520]/15 border border-[#FF5520]/30 text-[#FFA380] uppercase">
-                                                    VENTA ONLINE & RETAIL
-                                                </span>
-                                                <h2 className="text-xl sm:text-2xl font-bold font-heading text-white mt-3 leading-snug tracking-tight">
-                                                    Vendedor de Mercado Libre y e-commerce
-                                                </h2>
-                                            </div>
-                                            <div className="w-14 h-14 shrink-0 rounded-2xl bg-white/[0.04] border border-white/10 p-2 flex items-center justify-center shadow-inner">
-                                                <Image
-                                                    src="/3d/icono-escudo-lock.png"
-                                                    alt="E-Commerce"
-                                                    width={96}
-                                                    height={96}
-                                                    className="w-full h-full object-contain drop-shadow-[0_6px_14px_rgba(255,85,32,0.35)]"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-5 font-sans">
-                                            Vendés en Mercado Libre, Tiendanube o Shopify, y quizás también cobrás por transferencia en WhatsApp e Instagram.
-                                        </p>
-
-                                        <div className="p-4 rounded-2xl bg-black/50 border border-white/[0.08] space-y-2.5 mb-6">
-                                            <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFA380] block font-bold">
-                                                ¿Qué evalúa este diagnóstico?
+                            <div className="mt-6 lg:mt-12 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-5">
+                                {PERFILES.map((o, i) => (
+                                    <motion.button
+                                        key={o.id}
+                                        type="button"
+                                        onClick={() => elegirPlataforma(o.id)}
+                                        initial={{ opacity: 0, y: 14 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.45, delay: 0.08 * i, ease: [0.16, 1, 0.3, 1] }}
+                                        className={`group relative w-full flex items-center gap-4 rounded-2xl lg:rounded-3xl border p-4 lg:p-7 text-left active:scale-[0.99] transition-[border-color,background-color,box-shadow,transform] lg:flex-col lg:items-start lg:gap-0 lg:hover:-translate-y-1 ${
+                                            o.sugerido
+                                                ? 'border-[#FF5520]/70 bg-[#FF5520]/[0.08] lg:shadow-[0_20px_50px_-20px_rgba(255,85,32,0.45)]'
+                                                : 'border-white/10 bg-white/[0.03] lg:hover:border-[#FF5520]/50 lg:hover:bg-white/[0.05]'
+                                        }`}
+                                    >
+                                        {o.sugerido && (
+                                            <span className="hidden lg:block absolute top-5 right-5 rounded-full bg-[#D4430E] px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-white">
+                                                Sugerido
                                             </span>
-                                            <ul className="space-y-2 text-xs text-neutral-200 font-mono">
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Cuántos reclamos te quedan antes de bajar de color</span>
-                                                </li>
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Cómo te enterás de los reclamos y con qué pruebas los respondés</span>
-                                                </li>
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Sobreventas y comprobantes si también cobrás por WhatsApp</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-3 pt-4 border-t border-white/[0.08]">
-                                        <button
-                                            type="button"
-                                            onClick={() => elegirPlataforma('meli')}
-                                            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer group shadow-[0_4px_20px_rgba(255,85,32,0.35)]"
-                                        >
-                                            <div className="text-left">
-                                                <div className="font-bold text-sm">Vendo en Mercado Libre</div>
-                                                <div className="text-[10px] text-white/90 font-mono font-normal">Reclamos, reputación y Envíos Flex</div>
-                                            </div>
-                                            <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => elegirPlataforma('otros')}
-                                            className="w-full py-2.5 px-3.5 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.07] text-neutral-300 hover:text-white font-medium text-xs flex items-center justify-between transition-colors cursor-pointer"
-                                        >
-                                            <div className="text-left">
-                                                <div className="font-semibold text-white">Cobro mucho por WhatsApp con transferencia</div>
-                                                <div className="text-[10px] text-neutral-400 font-mono">Venta Blindada: cobro y stock cruzado entre canales</div>
-                                            </div>
-                                            <ArrowRight className="w-3.5 h-3.5 shrink-0 opacity-70" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* CARD 2: LOGÍSTICA DE ÚLTIMA MILLA & FLEX */}
-                                <div
-                                    className={`relative flex flex-col justify-between p-6 sm:p-8 rounded-3xl border transition-all duration-300 card-obsidian sheen-top bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] ${
-                                        origen === 'logistica'
-                                            ? 'border-[#FF5520] shadow-[0_0_35px_-10px_rgba(255,85,32,0.35)] ring-1 ring-[#FF5520]/60'
-                                            : 'border-white/[0.10] hover:border-[#FF5520]/60 hover:shadow-2xl'
-                                    }`}
-                                >
-                                    {origen === 'logistica' && (
-                                        <div className="absolute -top-3 left-6 px-3 py-0.5 rounded-full bg-[#FF5520] text-white font-mono text-[10px] font-bold tracking-wider uppercase shadow-md shadow-[#FF5520]/30">
-                                            💡 Sugerido según tu navegación
-                                        </div>
-                                    )}
-
-                                    <div>
-                                        <div className="flex items-start justify-between gap-4 mb-4">
-                                            <div>
-                                                <span className="font-mono text-[11px] font-bold tracking-wider px-3 py-1 rounded-md bg-[#FF5520]/15 border border-[#FF5520]/30 text-[#FFA380] uppercase">
-                                                    TRANSPORTE & ÚLTIMA MILLA
-                                                </span>
-                                                <h2 className="text-xl sm:text-2xl font-bold font-heading text-white mt-3 leading-snug tracking-tight">
-                                                    Logística Flex & Distribuidoras
-                                                </h2>
-                                            </div>
-                                            <div className="w-14 h-14 shrink-0 rounded-2xl bg-white/[0.04] border border-white/10 p-2 flex items-center justify-center shadow-inner">
-                                                <Image
-                                                    src="/3d/ilustracion-reparto.png"
-                                                    alt="Logística"
-                                                    width={96}
-                                                    height={96}
-                                                    className="w-full h-full object-contain drop-shadow-[0_6px_14px_rgba(255,85,32,0.35)]"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-5 font-sans">
-                                            Operás con flota propia de utilitarios/motos o fleteros tercerizados haciendo entregas en el día o distribución mayorista.
-                                        </p>
-
-                                        <div className="p-4 rounded-2xl bg-black/50 border border-white/[0.08] space-y-2.5 mb-6">
-                                            <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFA380] block font-bold">
-                                                ¿Qué evalúa este diagnóstico?
-                                            </span>
-                                            <ul className="space-y-2 text-xs text-neutral-200 font-mono">
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Calculadora en vivo: costo de rebote ($9.980 por paquete)</span>
-                                                </li>
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Ficha de domicilio y coordinación previa de entrega</span>
-                                                </li>
-                                                <li className="flex items-start gap-2">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5520] shrink-0 mt-0.5" />
-                                                    <span>Protocolo de siniestro en ruta y Radar de Dadores 6/Oct</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div className="pt-4 border-t border-white/[0.08]">
-                                        <button
-                                            type="button"
-                                            onClick={() => elegirPlataforma('logistica')}
-                                            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-[#FF5520] hover:brightness-110 text-white font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer group shadow-[0_4px_20px_rgba(255,85,32,0.35)]"
-                                        >
-                                            <div className="text-left">
-                                                <div className="font-bold text-sm">Iniciar Diagnóstico para Logística Flex</div>
-                                                <div className="text-[10px] text-white/90 font-mono font-normal">Calculadora financiera en vivo + informe de fugas</div>
-                                            </div>
-                                            <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {/* ---------------------------------------------- INTRO */}
-                    {paso === 'intro' && (
-                        <motion.div
-                            key="intro"
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -12 }}
-                            transition={{ duration: 0.35 }}
-                        >
-                            <button
-                                onClick={() => setPaso('plataforma')}
-                                className="mb-3 font-mono text-xs text-[#8E8B88] transition-colors hover:text-[#E8E5DE]"
-                            >
-                                ‹ Cambiar perfil
-                            </button>
-                            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#C84214]">
-                                Autodiagnóstico · 2 minutos
-                            </span>
-                            {plataforma === 'logistica' ? (
-                                <>
-                                    <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
-                                        ¿Cuánto capital se te escapa en{' '}
-                                        <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
-                                            viajes en falso y re-entregas?
-                                        </span>
-                                    </h1>
-                                    <p className="mt-5 text-base leading-relaxed text-[#B7B3B0] sm:text-lg">
-                                        Cada vez que un utilitario o camión sale a un domicilio y vuelve con el
-                                        paquete, perdés <strong className="text-[#E8E5DE]">ARS $9.980</strong> entre
-                                        gasoil, tiempo de chofer y el costo de volver al día siguiente.
-                                    </p>
-
-                                    <div className="mt-7">
-                                        <CalculadoraFinancieraViva
-                                            entregasDia={entregasDia}
-                                            setEntregasDia={setEntregasDia}
-                                            porcentajeFallos={porcentajeFallos}
-                                            setPorcentajeFallos={setPorcentajeFallos}
+                                        )}
+                                        <Image
+                                            src={o.img.src}
+                                            alt=""
+                                            aria-hidden
+                                            width={o.img.w}
+                                            height={o.img.h}
+                                            sizes="(min-width: 1024px) 144px, 64px"
+                                            className="w-14 h-14 lg:w-auto lg:h-24 lg:max-w-[150px] shrink-0 object-contain lg:object-left drop-shadow-[0_12px_28px_rgba(200,66,20,0.3)] lg:transition-transform lg:duration-300 lg:group-hover:scale-105"
                                         />
-                                    </div>
-
-                                    <p className="mt-6 text-base leading-relaxed text-[#B7B3B0]">
-                                        Completá <strong className="text-[#E8E5DE]">8 preguntas operativas</strong>{' '}
-                                        sobre tu flota, coordinación previa y control en calle para recibir el
-                                        diagnóstico exacto de dónde están tus cuellos de botella y cómo taparlos sin
-                                        cambiar tu sistema actual.
-                                    </p>
-                                </>
-                            ) : plataforma === 'meli' ? (
-                                <>
-                                    <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
-                                        ¿Sabés cuánto te falta para{' '}
-                                        <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
-                                            bajar de color en Mercado Libre?
+                                        <span className="flex-1 lg:mt-6">
+                                            <span className="block font-heading font-bold text-white leading-snug lg:text-xl">{o.titulo}</span>
+                                            <span className="block mt-0.5 lg:mt-1.5 text-sm lg:text-base text-neutral-400">{o.detalle}</span>
                                         </span>
-                                    </h1>
-                                    <p className="mt-5 text-base leading-relaxed text-[#B7B3B0] sm:text-lg">
-                                        Mercado Libre penaliza cada cancelación y cada reclamo cuyo plazo vence sin
-                                        respuesta fundada. Bastan un par de incidentes seguidos para caer de categoría
-                                        en el termómetro y perder exposición orgánica en tus listados.
-                                    </p>
-                                    <p className="mt-4 text-base leading-relaxed text-[#B7B3B0]">
-                                        Son <strong className="text-[#E8E5DE]">2 minutos</strong>. Al final te mostramos
-                                        cuántos reclamos te quedan antes de bajar de color (con los límites oficiales de
-                                        Mercado Libre Argentina), cuánto te puede costar y cómo blindarlo.
-                                    </p>
-                                </>
-                            ) : (
-                                <>
-                                    <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">
-                                        ¿Cuánto arriesgás en sobreventas y cancelaciones al{' '}
-                                        <span className="bg-gradient-to-r from-[#C84214] to-[#B7B3B0] bg-clip-text text-transparent">
-                                            vender por WhatsApp?
+                                        <ChevronRight className="w-5 h-5 shrink-0 text-[#FF5520] lg:hidden" />
+                                        <span className="hidden lg:flex mt-6 items-center gap-1.5 text-sm font-semibold text-[#FFA380] group-hover:text-white transition-colors">
+                                            Empezar
+                                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden />
                                         </span>
-                                    </h1>
-                                    <p className="mt-5 text-base leading-relaxed text-[#B7B3B0] sm:text-lg">
-                                        Vender por WhatsApp con transferencia te ahorra comisiones, pero
-                                        una sobreventa cruzada te obliga a cancelar y destruye tu termómetro
-                                        en Mercado Libre. Además, conciliar capturas bancarias a mano en
-                                        pleno despacho es la puerta de entrada a comprobantes duplicados o falsos.
-                                    </p>
-                                    <p className="mt-4 text-base leading-relaxed text-[#B7B3B0]">
-                                        Son <strong className="text-[#E8E5DE]">6 preguntas tácticas</strong>.
-                                        Al final recibís la auditoría de tu circuito de cobro, stock y
-                                        tres medidas inmediatas para blindar tu operación.
-                                    </p>
-                                </>
-                            )}
-                            <div className="mt-6 rounded-lg border border-[#3E3D3A] bg-[#151719] px-4 py-3 text-sm text-[#B7B3B0]">
-                                No te pedimos conectar ninguna cuenta ni instalar nada. Solo tus respuestas.
+                                    </motion.button>
+                                ))}
                             </div>
-                            <button
-                                onClick={empezar}
-                                className="mt-8 w-full rounded-lg bg-[#C84214] px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-[#B03A11] sm:w-auto"
-                            >
-                                Empezar el diagnóstico
-                            </button>
+                            <ul className="hidden lg:flex mt-10 items-center justify-center gap-8 text-sm text-neutral-400">
+                                {['Sin registrarte', 'Sin conectar tu cuenta', 'Resultado al instante'].map((t) => (
+                                    <li key={t} className="flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4 text-[#FF5520]" aria-hidden />
+                                        {t}
+                                    </li>
+                                ))}
+                            </ul>
                         </motion.div>
                     )}
 
                     {/* ------------------------------------------ PREGUNTAS */}
                     {paso === 'preguntas' && pregunta && (
                         <motion.div
-                            key={`p-${indice}`}
-                            initial={{ opacity: 0, x: 24 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -24 }}
+                            key="preguntas"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             transition={{ duration: 0.25 }}
+                            className="w-full lg:grid lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 xl:gap-16 lg:items-start"
                         >
-                            {/* Progreso */}
-                            <div className="mb-6 md:mb-8">
-                                <div className="mb-2.5 flex items-center justify-between gap-3 font-mono text-xs text-[#8E8B88]">
-                                    <button
-                                        type="button"
-                                        onClick={volver}
-                                        aria-label="Volver"
-                                        className="flex items-center gap-1.5 -ml-1 py-1.5 pr-2 text-neutral-300 transition-colors hover:text-white"
-                                    >
-                                        <ArrowRight className="w-4 h-4 rotate-180" />
-                                        <span>Volver</span>
-                                    </button>
-                                    <span>
-                                        {indice + 1} de {activas.length}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => setPaso('plataforma')}
-                                        className="hidden md:inline transition-colors hover:text-[#FFA380]"
-                                    >
-                                        Cambiar perfil
-                                    </button>
-                                </div>
-                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                                    <motion.div
-                                        className="h-full bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-emerald-400"
-                                        initial={false}
-                                        animate={{ width: `${((indice + 1) / activas.length) * 100}%` }}
-                                        transition={{ duration: 0.3 }}
-                                    />
-                                </div>
-                            </div>
-
-                            {indice === 0 && (
-                                <p className="mb-2 text-[11px] font-mono uppercase tracking-[0.16em] text-[#FFA380]">
-                                    2 minutos · sin conectar tu cuenta
-                                </p>
-                            )}
-                            <h2 className="font-heading text-[1.4rem] md:text-3xl font-extrabold text-white leading-snug tracking-tight">
-                                {pregunta.titulo}
-                            </h2>
-                            {pregunta.ayuda && <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{pregunta.ayuda}</p>}
-
-                            {pregunta.tipo === 'reputacion' ? (
-                                <PasoReputacion
-                                    onContinuar={(datos) => responderReputacion(datos)}
-                                    onSaltear={() => responderReputacion(null)}
-                                />
-                            ) : (
-                            <div className="mt-5 md:mt-6 flex flex-col gap-2.5 md:gap-3">
-                                {pregunta.opciones.map((opcion, optIdx) => {
-                                    const letters = ['A', 'B', 'C', 'D', 'E', 'F']
-                                    return (
+                            <div className="lg:max-w-2xl">
+                                {/* Progreso */}
+                                <div className="mb-6 lg:mb-10">
+                                    <div className="mb-2.5 flex items-center justify-between gap-3 font-mono text-xs text-[#8E8B88]">
                                         <button
-                                            key={opcion.label}
-                                            onClick={() => responder(opcion)}
-                                            className="group relative flex items-center justify-between gap-3 md:gap-4 rounded-2xl border border-white/[0.10] card-obsidian sheen-top bg-gradient-to-r from-[#14161A] via-[#111316] to-[#0D0F12] px-4 py-3.5 md:px-5 md:py-4.5 min-h-[56px] text-left text-[15px] leading-snug transition-all duration-200 hover:border-[#FF5520]/60 hover:from-[#1A1D23] hover:to-[#14161A] hover:shadow-[0_4px_25px_-5px_rgba(255,85,32,0.25)] cursor-pointer active:scale-[0.99]"
+                                            type="button"
+                                            onClick={volver}
+                                            aria-label="Volver"
+                                            className="flex items-center gap-1.5 -ml-1 py-1.5 pr-2 text-neutral-300 transition-colors hover:text-white"
                                         >
-                                            <div className="flex items-start gap-3.5">
-                                                <span className="shrink-0 w-6 h-6 rounded-md bg-white/[0.06] border border-white/10 font-mono text-xs font-bold text-neutral-400 group-hover:text-white group-hover:bg-[#FF5520] group-hover:border-[#FF5520] flex items-center justify-center transition-colors">
-                                                    {letters[optIdx] || optIdx + 1}
-                                                </span>
-                                                <span className="text-neutral-200 group-hover:text-white font-medium transition-colors">
-                                                    {opcion.label}
-                                                </span>
-                                            </div>
-                                            <ChevronRight className="w-4 h-4 text-neutral-500 group-hover:text-[#FFA380] group-hover:translate-x-1 shrink-0 transition-all" />
+                                            <ArrowRight className="w-4 h-4 rotate-180" />
+                                            <span>Volver</span>
                                         </button>
-                                    )
-                                })}
-                            </div>
-                            )}
-
-                            {/* En las preguntas de volumen o rebote de logística, mostramos la calculadora en vivo */}
-                            {plataforma === 'logistica' &&
-                                (pregunta.id === 'volumen_logistica' || pregunta.id === 'rebote') && (
-                                    <div className="mt-7">
-                                        <CalculadoraFinancieraViva
-                                            entregasDia={entregasDia}
-                                            setEntregasDia={setEntregasDia}
-                                            porcentajeFallos={porcentajeFallos}
-                                            setPorcentajeFallos={setPorcentajeFallos}
-                                            compacta
+                                        <span>
+                                            {indice + 1} de {activas.length}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setPaso('plataforma')}
+                                            className="hidden lg:inline transition-colors hover:text-[#FFA380]"
+                                        >
+                                            Cambiar perfil
+                                        </button>
+                                    </div>
+                                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                                        <motion.div
+                                            className="h-full bg-gradient-to-r from-[#FF5520] via-[#FF6E40] to-emerald-400"
+                                            initial={false}
+                                            animate={{ width: `${((indice + 1) / activas.length) * 100}%` }}
+                                            transition={{ duration: 0.3 }}
                                         />
                                     </div>
-                                )}
+                                </div>
+
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={`p-${indice}`}
+                                        initial={{ opacity: 0, x: 24 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -24 }}
+                                        transition={{ duration: 0.25 }}
+                                    >
+                                        {indice === 0 && (
+                                            <p className="mb-2 text-[11px] font-mono uppercase tracking-[0.16em] text-[#FFA380]">
+                                                2 minutos · sin conectar tu cuenta
+                                            </p>
+                                        )}
+                                        <h2 className="font-heading text-[1.4rem] lg:text-[2rem] font-extrabold text-white leading-snug lg:leading-tight tracking-tight">
+                                            {pregunta.titulo}
+                                        </h2>
+                                        {pregunta.ayuda && (
+                                            <p className="mt-2 lg:mt-3 text-sm lg:text-base text-neutral-400 leading-relaxed">{pregunta.ayuda}</p>
+                                        )}
+
+                                        {pregunta.tipo === 'reputacion' ? (
+                                            <PasoReputacion
+                                                onContinuar={(datos) => responderReputacion(datos)}
+                                                onSaltear={() => responderReputacion(null)}
+                                            />
+                                        ) : (
+                                            <div className="mt-5 lg:mt-8 flex flex-col gap-2.5 lg:gap-3">
+                                                {pregunta.opciones.map((opcion, optIdx) => {
+                                                    const elegida = respuestas[pregunta.id] === opcion.label
+                                                    return (
+                                                        <button
+                                                            key={opcion.label}
+                                                            type="button"
+                                                            onClick={() => responder(opcion)}
+                                                            aria-keyshortcuts={LETRAS[optIdx]}
+                                                            className={`group relative flex items-center justify-between gap-3 lg:gap-4 rounded-2xl border card-obsidian sheen-top bg-gradient-to-r from-[#14161A] via-[#111316] to-[#0D0F12] px-4 py-3.5 lg:px-5 lg:py-4 min-h-[56px] text-left text-[15px] lg:text-base leading-snug transition-all duration-200 hover:border-[#FF5520]/60 hover:from-[#1A1D23] hover:to-[#14161A] hover:shadow-[0_4px_25px_-5px_rgba(255,85,32,0.25)] cursor-pointer active:scale-[0.99] ${
+                                                                elegida ? 'border-[#FF5520]/70' : 'border-white/[0.10]'
+                                                            }`}
+                                                        >
+                                                            <div className="flex items-start gap-3.5">
+                                                                <span
+                                                                    className={`shrink-0 w-6 h-6 lg:w-7 lg:h-7 rounded-md border font-mono text-xs font-bold flex items-center justify-center transition-colors group-hover:text-white group-hover:bg-[#D4430E] group-hover:border-[#D4430E] ${
+                                                                        elegida
+                                                                            ? 'bg-[#D4430E] border-[#D4430E] text-white'
+                                                                            : 'bg-white/[0.06] border-white/10 text-neutral-400'
+                                                                    }`}
+                                                                >
+                                                                    {LETRAS[optIdx] || optIdx + 1}
+                                                                </span>
+                                                                <span className="text-neutral-200 group-hover:text-white font-medium transition-colors lg:pt-0.5">
+                                                                    {opcion.label}
+                                                                </span>
+                                                            </div>
+                                                            <ChevronRight className="w-4 h-4 text-[#8C8C8C] group-hover:text-[#FFA380] group-hover:translate-x-1 shrink-0 transition-all" />
+                                                        </button>
+                                                    )
+                                                })}
+                                                <p className="hidden lg:block mt-2 text-xs text-[#8C8C8C]">
+                                                    Tip: también podés responder con las teclas{' '}
+                                                    {LETRAS.slice(0, pregunta.opciones.length).map((l, i) => (
+                                                        <span key={l}>
+                                                            <kbd className="mx-0.5 rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[11px] text-neutral-300">
+                                                                {l}
+                                                            </kbd>
+                                                            {i < pregunta.opciones.length - 1 ? '' : '.'}
+                                                        </span>
+                                                    ))}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {/* En las preguntas de volumen o rebote de logística, la calculadora en vivo */}
+                                        {plataforma === 'logistica' &&
+                                            (pregunta.id === 'volumen_logistica' || pregunta.id === 'rebote') && (
+                                                <div className="mt-7">
+                                                    <CalculadoraFinancieraViva
+                                                        entregasDia={entregasDia}
+                                                        setEntregasDia={setEntregasDia}
+                                                        porcentajeFallos={porcentajeFallos}
+                                                        setPorcentajeFallos={setPorcentajeFallos}
+                                                        compacta
+                                                    />
+                                                </div>
+                                            )}
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Desktop: el resultado se va armando al costado */}
+                            <PanelEnVivo
+                                activas={activas}
+                                respuestas={respuestas}
+                                indice={indice}
+                                perdidaMensual={plataforma === 'logistica' ? economiaLogistica.perdidaMensualArs : null}
+                                onIr={(i) => setIndice(i)}
+                            />
                         </motion.div>
                     )}
 
@@ -1525,46 +1151,57 @@ export function DiagnosticoEnvios() {
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
+                            className="w-full lg:grid lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-[repeat(5,auto)_1fr] lg:gap-x-12 xl:gap-x-16 lg:items-start"
                         >
                             <button
                                 type="button"
                                 onClick={() => setPaso('preguntas')}
-                                className="mb-4 inline-flex items-center gap-1.5 py-1.5 font-mono text-xs text-neutral-300 transition-colors hover:text-white"
+                                className="mb-4 lg:mb-6 inline-flex items-center gap-1.5 py-1.5 font-mono text-xs text-neutral-300 transition-colors hover:text-white lg:col-start-1 lg:justify-self-start"
                             >
                                 <ArrowRight className="w-4 h-4 rotate-180" />
                                 Volver a las preguntas
                             </button>
 
                             {/* 1. Veredicto */}
-                            <div
-                                className="rounded-3xl border p-5 sm:p-8"
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                className="rounded-3xl border p-5 sm:p-8 lg:col-start-1"
                                 style={{ borderColor: `${resultado.color}88`, background: resultado.bg }}
                             >
                                 <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-300">
                                     Tu diagnóstico
                                 </span>
                                 <h2
-                                    className="mt-1 font-heading text-3xl sm:text-4xl font-extrabold tracking-tight"
+                                    className="mt-1 font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight"
                                     style={{ color: resultado.color }}
                                 >
                                     {resultado.titulo}
                                 </h2>
-                                <div className="mt-3 h-2 rounded-full bg-black/40 overflow-hidden" aria-hidden>
-                                    <div
+                                <div className="mt-3 lg:mt-5 h-2 rounded-full bg-black/40 overflow-hidden" aria-hidden>
+                                    <motion.div
                                         className="h-full rounded-full"
-                                        style={{ width: `${Math.max(6, porcentaje)}%`, backgroundColor: resultado.color }}
+                                        initial={{ width: '0%' }}
+                                        animate={{ width: `${Math.max(6, porcentaje)}%` }}
+                                        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                        style={{ backgroundColor: resultado.color }}
                                     />
                                 </div>
                                 {resumen && (
-                                    <p className="mt-4 text-[15px] leading-relaxed text-neutral-100">{resumen}</p>
+                                    <p className="mt-4 lg:mt-5 text-[15px] lg:text-lg leading-relaxed text-neutral-100">{resumen}</p>
                                 )}
-                            </div>
+                            </motion.div>
 
                             {/* 2. Los números reales mandan */}
-                            {plataforma === 'meli' && reputacion && <MargenResultado datos={reputacion} />}
+                            {plataforma === 'meli' && reputacion && (
+                                <div className="lg:col-start-1">
+                                    <MargenResultado datos={reputacion} />
+                                </div>
+                            )}
 
                             {plataforma === 'logistica' && (
-                                <div className="mt-6">
+                                <div className="mt-6 lg:col-start-1">
                                     <CalculadoraFinancieraViva
                                         entregasDia={entregasDia}
                                         setEntregasDia={setEntregasDia}
@@ -1577,83 +1214,97 @@ export function DiagnosticoEnvios() {
 
                             {/* 3. Qué encontramos y cómo se resuelve */}
                             {oferta && (
-                                <>
-                                    <h3 className="mt-8 text-xl font-extrabold font-heading text-white tracking-tight">
+                                <div className="lg:col-start-1">
+                                    <h3 className="mt-8 lg:mt-10 text-xl lg:text-2xl font-extrabold font-heading text-white tracking-tight">
                                         Lo que encontramos
                                     </h3>
                                     <HallazgosLista oferta={oferta} />
-                                </>
+                                </div>
                             )}
 
-                            {/* 4. Contacto: WhatsApp primero, email opcional */}
-                            <div className="mt-8 rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] p-5 sm:p-8 shadow-2xl">
-                                <div className="flex items-center gap-3">
-                                    <Image
-                                        src="/gabriel-cacabelos.jpg"
-                                        alt="Gabriel Cacabelos"
-                                        width={480}
-                                        height={480}
-                                        sizes="48px"
-                                        className="w-12 h-12 rounded-full object-cover border-2 border-[#FF5520]/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-lg sm:text-2xl font-extrabold font-heading text-white leading-tight tracking-tight">
-                                            ¿Lo revisamos juntos?
-                                        </h3>
-                                        <p className="text-xs text-neutral-400">Te escribe Gabriel, el fundador. No es un bot.</p>
+                            {/* 4. Contacto: WhatsApp primero, email opcional. En desktop, fijo a la derecha */}
+                            <div className="mt-8 lg:mt-0 lg:col-start-2 lg:row-start-1 lg:row-span-6 lg:self-stretch">
+                                <div className="lg:sticky lg:top-10 rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#16181C] via-[#111316] to-[#0A0C0E] p-5 sm:p-8 lg:p-7 shadow-2xl">
+                                    <div className="flex items-center gap-3">
+                                        <Image
+                                            src="/gabriel-cacabelos.jpg"
+                                            alt="Gabriel Cacabelos"
+                                            width={480}
+                                            height={480}
+                                            sizes="56px"
+                                            className="w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-[#FF5520]/50"
+                                        />
+                                        <div>
+                                            <h3 className="text-lg sm:text-2xl font-extrabold font-heading text-white leading-tight tracking-tight">
+                                                ¿Lo revisamos juntos?
+                                            </h3>
+                                            <p className="text-xs text-neutral-400">Te escribe Gabriel, el fundador. No es un bot.</p>
+                                        </div>
+                                    </div>
+                                    <p className="mt-4 text-sm leading-relaxed text-neutral-300">
+                                        {plataforma === 'logistica'
+                                            ? 'Te mando este cálculo y coordinamos 30 minutos para ver cómo filtrar ausencias en tu operación, sin apps para los choferes.'
+                                            : 'Te mando este informe y coordinamos 30 minutos para mirar tu cuenta con vos. Sin compromiso.'}
+                                    </p>
+
+                                    <form onSubmit={enviar} className="mt-5 flex flex-col gap-3">
+                                        <label className="sr-only" htmlFor="diag-nombre">Tu nombre</label>
+                                        <input
+                                            id="diag-nombre"
+                                            type="text"
+                                            autoComplete="name"
+                                            value={nombre}
+                                            onChange={(e) => setNombre(e.target.value)}
+                                            placeholder="Tu nombre"
+                                            className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
+                                        />
+                                        <label className="sr-only" htmlFor="diag-whatsapp">Tu WhatsApp</label>
+                                        <input
+                                            id="diag-whatsapp"
+                                            type="tel"
+                                            inputMode="tel"
+                                            autoComplete="tel"
+                                            value={whatsapp}
+                                            onChange={(e) => setWhatsapp(e.target.value)}
+                                            placeholder="Tu WhatsApp (ej: 11 2345 6789)"
+                                            className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
+                                        />
+                                        <label className="sr-only" htmlFor="diag-email">Tu email (opcional)</label>
+                                        <input
+                                            id="diag-email"
+                                            type="email"
+                                            autoComplete="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Tu email (opcional)"
+                                            className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
+                                        />
+                                        {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
+                                        <button
+                                            type="submit"
+                                            disabled={enviando}
+                                            className="mt-1 rounded-2xl bg-[#D4430E] hover:bg-[#BF3A0B] px-6 py-4 text-base font-bold font-heading text-white shadow-[0_4px_25px_rgba(255,85,32,0.35)] disabled:opacity-60 transition"
+                                        >
+                                            {enviando ? 'Enviando…' : 'Quiero que me escriban'}
+                                        </button>
+                                        <p className="text-[11px] text-[#8C8C8C] text-center">
+                                            Usamos tus datos solo para contactarte por este diagnóstico.
+                                        </p>
+                                    </form>
+                                    <div className="hidden lg:block mt-5 pt-5 border-t border-white/10 text-center text-sm text-neutral-400">
+                                        ¿Preferís hablar ahora?{' '}
+                                        <a href={waListo} target="_blank" rel="noopener noreferrer" className="text-[#FFA380] hover:text-white underline underline-offset-2 transition-colors">
+                                            Escribile por WhatsApp
+                                        </a>
                                     </div>
                                 </div>
-                                <p className="mt-4 text-sm leading-relaxed text-neutral-300">
-                                    {plataforma === 'logistica'
-                                        ? 'Te mando este cálculo y coordinamos 30 minutos para ver cómo filtrar ausencias en tu operación, sin apps para los choferes.'
-                                        : 'Te mando este informe y coordinamos 30 minutos para mirar tu cuenta con vos. Sin compromiso.'}
-                                </p>
-
-                                <form onSubmit={enviar} className="mt-5 flex flex-col gap-3">
-                                    <input
-                                        type="text"
-                                        autoComplete="name"
-                                        value={nombre}
-                                        onChange={(e) => setNombre(e.target.value)}
-                                        placeholder="Tu nombre"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
-                                    />
-                                    <input
-                                        type="tel"
-                                        inputMode="tel"
-                                        autoComplete="tel"
-                                        value={whatsapp}
-                                        onChange={(e) => setWhatsapp(e.target.value)}
-                                        placeholder="Tu WhatsApp (ej: 11 2345 6789)"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
-                                    />
-                                    <input
-                                        type="email"
-                                        autoComplete="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Tu email (opcional)"
-                                        className="rounded-xl border border-white/10 bg-black/60 px-4 py-3.5 text-base text-white outline-none placeholder:text-neutral-500 focus:border-[#FF5520]"
-                                    />
-                                    {error && <p className="text-sm text-red-400">{error}</p>}
-                                    <button
-                                        type="submit"
-                                        disabled={enviando}
-                                        className="mt-1 rounded-2xl bg-[#FF5520] hover:brightness-110 px-6 py-4 text-base font-bold font-heading text-white shadow-[0_4px_25px_rgba(255,85,32,0.35)] disabled:opacity-60"
-                                    >
-                                        {enviando ? 'Enviando…' : 'Quiero que me escriban'}
-                                    </button>
-                                    <p className="text-[11px] text-neutral-500 text-center">
-                                        Usamos tus datos solo para contactarte por este diagnóstico.
-                                    </p>
-                                </form>
                             </div>
 
                             {/* 5. Más detalle, para el que lo quiera */}
-                            <div className="mt-6 space-y-3">
+                            <div className="mt-6 lg:mt-8 space-y-3 lg:col-start-1">
                                 {oferta && (
                                     <details className="group rounded-2xl border border-white/10 bg-white/[0.03]">
-                                        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 font-semibold text-white">
+                                        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 lg:p-5 font-semibold text-white">
                                             Cómo seguiría y cuánto cuesta
                                             <ChevronRight className="w-4 h-4 text-[#FF5520] transition-transform group-open:rotate-90" />
                                         </summary>
@@ -1663,11 +1314,11 @@ export function DiagnosticoEnvios() {
                                     </details>
                                 )}
                                 <details className="group rounded-2xl border border-white/10 bg-white/[0.03]">
-                                    <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 font-semibold text-white">
+                                    <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4 lg:p-5 font-semibold text-white">
                                         3 cosas que podés hacer hoy, por tu cuenta
                                         <ChevronRight className="w-4 h-4 text-[#FF5520] transition-transform group-open:rotate-90" />
                                     </summary>
-                                    <ol className="px-4 pb-4 flex flex-col gap-3">
+                                    <ol className="px-4 pb-4 lg:px-5 lg:pb-5 flex flex-col gap-3">
                                         {acciones.map((accion, i) => (
                                             <li key={i} className="flex gap-3">
                                                 <span className="font-mono text-xs font-bold text-[#FFA380] bg-[#FF5520]/15 border border-[#FF5520]/30 px-1.5 py-0.5 rounded-md shrink-0 h-fit">
@@ -1689,21 +1340,27 @@ export function DiagnosticoEnvios() {
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
-                            className="text-center"
+                            className="w-full text-center"
                         >
-                            <h2 className="pt-16 md:pt-0 text-3xl font-bold sm:text-4xl">Listo, recibido.</h2>
+                            <motion.div
+                                initial={{ scale: 0.6, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
+                                className="mx-auto mt-16 lg:mt-0 w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center"
+                            >
+                                <CheckCircle2 className="w-7 h-7 text-emerald-400" aria-hidden />
+                            </motion.div>
+                            <h2 className="mt-5 text-3xl font-bold font-heading sm:text-4xl text-white">Listo, recibido.</h2>
                             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-[#B7B3B0]">
                                 Te escribimos a la brevedad para revisar los números juntos. Si no querés esperar,
                                 escribinos ahora o elegí un horario:
                             </p>
                             <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-4">
                                 <a
-                                    href={`https://wa.me/5491160152435?text=${encodeURIComponent(
-                                        `Hola Gabriel, terminé el autodiagnóstico de INDIVIDRA${oferta ? ` (me recomendó el ${oferta.plan.nombre})` : ''} y quiero coordinar el diagnóstico de 30 minutos.`
-                                    )}`}
+                                    href={waListo}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-bold font-heading text-[#0B0D0E]"
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:brightness-110 px-6 py-3.5 text-sm font-bold font-heading text-[#0B0D0E] transition"
                                 >
                                     Escribir por WhatsApp
                                 </a>
@@ -1711,22 +1368,134 @@ export function DiagnosticoEnvios() {
                                     href="https://calendly.com/individratec/30min"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5520] px-6 py-3.5 text-sm font-bold font-heading text-white"
+                                    className="lg:hidden inline-flex items-center justify-center gap-2 rounded-xl bg-[#D4430E] px-6 py-3.5 text-sm font-bold font-heading text-white"
                                 >
                                     Elegir horario (30 min)
                                     <ArrowRight className="w-4 h-4" />
                                 </a>
                                 <Link
                                     href={plataforma === 'logistica' ? '/logistica' : '/'}
-                                    className="inline-flex items-center justify-center rounded-xl border border-[#3E3D3A] px-6 py-3.5 text-sm font-semibold transition-colors hover:border-[#C84214]"
+                                    className="inline-flex items-center justify-center rounded-xl border border-[#3E3D3A] px-6 py-3.5 text-sm font-semibold transition-colors hover:border-[#FF5520]"
                                 >
                                     {plataforma === 'logistica' ? 'Ver solución de Logística' : 'Volver al inicio'}
                                 </Link>
+                            </div>
+                            {/* Desktop: la agenda a la vista, para cerrar el horario sin salir */}
+                            <div className="hidden lg:block mt-12 max-w-3xl mx-auto text-left">
+                                <CalendlyEmbed seccion="diagnostico_listo" />
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
         </main>
+    )
+}
+
+/** Desktop: progreso, respuestas (para corregir) y lo que viene al final. */
+function PanelEnVivo({
+    activas,
+    respuestas,
+    indice,
+    perdidaMensual,
+    onIr,
+}: {
+    activas: Pregunta[]
+    respuestas: Respuestas
+    indice: number
+    perdidaMensual: number | null
+    onIr: (i: number) => void
+}) {
+    const avance = Math.round((indice / activas.length) * 100)
+    const textoRespuesta = (p: Pregunta) => {
+        const r = respuestas[p.id]
+        if (p.tipo === 'reputacion') return r === 'cargado' ? 'Cargaste tus números de reputación' : 'Sin números por ahora'
+        return r
+    }
+    return (
+        <aside aria-label="Tu resultado se va armando" className="hidden lg:block lg:sticky lg:top-10">
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] p-6">
+                <div className="flex items-baseline justify-between gap-3">
+                    <p className="text-xs font-mono uppercase tracking-[0.16em] text-[#FFA380]">Tu resultado se va armando</p>
+                    <span className="font-mono text-sm font-bold text-white tabular-nums">{avance}%</span>
+                </div>
+                <div className="mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
+                    <motion.div
+                        className="h-full rounded-full bg-gradient-to-r from-[#FF5520] to-emerald-400"
+                        initial={false}
+                        animate={{ width: `${Math.max(3, avance)}%` }}
+                        transition={{ duration: 0.4 }}
+                    />
+                </div>
+
+                {perdidaMensual !== null && (
+                    <div className="mt-5 rounded-2xl border border-[#FF5520]/40 bg-[#FF5520]/10 p-4">
+                        <p className="text-[11px] font-mono uppercase tracking-wider text-neutral-300">Fuga estimada por mes</p>
+                        <motion.p
+                            key={perdidaMensual}
+                            initial={{ opacity: 0.4, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-1 font-mono text-2xl font-bold text-[#FF6E40] tabular-nums"
+                        >
+                            {formatearArs(perdidaMensual)}
+                        </motion.p>
+                        <p className="mt-0.5 text-[11px] text-neutral-400">Se ajusta con tus respuestas</p>
+                    </div>
+                )}
+
+                <ol className="mt-5 space-y-1">
+                    {activas.map((p, i) => {
+                        const hecha = i < indice
+                        const actual = i === indice
+                        return (
+                            <li key={p.id}>
+                                <button
+                                    type="button"
+                                    disabled={!hecha}
+                                    onClick={() => onIr(i)}
+                                    title={hecha ? 'Cambiar esta respuesta' : undefined}
+                                    className={`group w-full flex items-start gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${
+                                        hecha ? 'hover:bg-white/[0.05] cursor-pointer' : 'cursor-default'
+                                    }`}
+                                >
+                                    <span
+                                        className={`mt-0.5 shrink-0 w-5 h-5 rounded-full flex items-center justify-center border text-[10px] font-mono font-bold ${
+                                            hecha
+                                                ? 'bg-emerald-500/15 border-emerald-400/50 text-emerald-300'
+                                                : actual
+                                                  ? 'border-[#FF5520] text-[#FFA380]'
+                                                  : 'border-white/15 text-[#8C8C8C]'
+                                        }`}
+                                        aria-hidden
+                                    >
+                                        {hecha ? '✓' : i + 1}
+                                    </span>
+                                    <span
+                                        className={`text-sm leading-snug line-clamp-2 ${
+                                            hecha ? 'text-neutral-200 group-hover:text-white' : actual ? 'text-white font-medium' : 'text-[#8C8C8C]'
+                                        }`}
+                                    >
+                                        {hecha ? textoRespuesta(p) : actual ? 'Respondiendo ahora…' : `Pregunta ${i + 1}`}
+                                    </span>
+                                </button>
+                            </li>
+                        )
+                    })}
+                </ol>
+
+                <div className="mt-5 pt-5 border-t border-white/10">
+                    <p className="text-sm font-semibold text-white">Al terminar vas a ver</p>
+                    <ul className="mt-2.5 space-y-2 text-sm text-neutral-400">
+                        {['Tu nivel de riesgo', 'Lo que encontramos en tu operación', '3 cosas para hacer hoy'].map((t) => (
+                            <li key={t} className="flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-[#FF5520] shrink-0" aria-hidden />
+                                {t}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+            <p className="mt-3 text-center text-xs text-[#8C8C8C]">Sin conectar tu cuenta · Sin registrarte</p>
+        </aside>
     )
 }

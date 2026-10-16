@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -8,8 +7,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-heading: var(--font-archivo), var(--font-geist-sans), sans-serif;
-  --font-sans: 'Plus Jakarta Sans', var(--font-geist-sans), sans-serif;
-  --font-mono: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
   --color-brand-ember: #FF5520;
   --color-brand-ember-hover: #E04413;
   --color-brand-ember-light: #FFA07A;
@@ -471,6 +470,11 @@
     .custom-cursor-enabled * {
         cursor: none !important;
     }
+    /* En campos de texto se ve el cursor nativo: hace falta el caret para escribir */
+    .custom-cursor-enabled input:not([type=checkbox]):not([type=range]),
+    .custom-cursor-enabled textarea {
+        cursor: text !important;
+    }
 }
 
 /* ============================================================
@@ -481,13 +485,15 @@
    ============================================================ */
 
 /* Entrada del hero: visible desde el primer paint, sin esperar a la
-   hidratacion (antes el texto quedaba en opacity:0 hasta cargar el JS). */
+   hidratacion (antes el texto quedaba en opacity:0 hasta cargar el JS).
+   Arranca apenas visible (no en 0): con opacity 0 Chrome no toma el título
+   como LCP y termina midiendo otra cosa más tarde (el banner de cookies). */
 @keyframes hero-intro {
-    from { opacity: 0; transform: translateX(-50px); }
+    from { opacity: 0.12; transform: translateX(-28px); }
 }
 
 .hero-intro {
-    animation: hero-intro 0.8s ease-out both;
+    animation: hero-intro 0.7s ease-out both;
 }
 
 @keyframes hero-eyebrow-fade {

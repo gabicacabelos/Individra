@@ -17,13 +17,18 @@ npm run build
 
 | Ruta | Contenido |
 | --- | --- |
-| `/` | Home: alertas de reclamos, calculadora de margen de color, propuesta comercial, FAQ y agenda (Calendly) |
-| `/diagnostico` | Autodiagnóstico por plataforma (Mercado Libre, tienda propia, logística); envía el lead a `/api/diagnostico` |
-| `/logistica` | Landing para logística y distribuidoras |
-| `/ecommerce` | Landing multicanal (Mercado Libre, Tiendanube, Shopify, WhatsApp) |
+| `/` | Home: alertas de reclamos, calculadora de margen de color, piloto y precios, FAQ y contacto (Calendly embebido en desktop) |
+| `/diagnostico` | Autodiagnóstico por plataforma (Mercado Libre, cobro por WhatsApp, logística); envía el lead a `/api/diagnostico`. Es `noindex`: se entra desde la home y /logistica |
+| `/logistica` | Landing para logística y distribuidoras, con calculadora de entregas fallidas en desktop |
 | `/legal` | Términos y privacidad |
 
-El sitemap se genera en `src/app/sitemap.ts`. Si agregás una página pública, sumala ahí.
+`/ecommerce` redirige a la home (`next.config.ts`).
+
+El sitemap se genera en `src/app/sitemap.ts` y lista solo páginas indexables. Si agregás una página pública, sumala ahí.
+
+### Una sola versión por página
+
+Cada página se escribe una vez y se adapta: hasta 1023px (celular y tablet) es una columna compacta; desde 1024px (`lg:`) pasa a columnas. No hay DOM duplicado mobile/desktop: si cambiás un texto, cambia en todos los tamaños.
 
 ## Estructura
 
@@ -31,18 +36,22 @@ El sitemap se genera en `src/app/sitemap.ts`. Si agregás una página pública, 
 src/
 ├── app/                 # Rutas, layout, sitemap y API
 ├── components/
-│   ├── landing/         # Secciones de la home
+│   ├── sitio/           # Home, navbar, calculadora de margen, Calendly y piezas compartidas (shared.tsx)
 │   ├── diagnostico/     # Flujo de /diagnostico y armado de la oferta
-│   ├── logistica/       # Landing de /logistica
-│   ├── ecommerce/       # Landing de /ecommerce
+│   ├── logistica/       # Landing de /logistica y calculadora de entregas fallidas
 │   └── ui/              # Animaciones y piezas visuales compartidas
 ├── lib/                 # analytics, cálculo de reputación ML, utilidades
 └── providers/           # PostHog + consentimiento de cookies
 ```
 
+## Documentación de producto
+
+- `docs/validacion/matriz-promesas.md`: cada promesa de la web, con la API que la sostiene, la evidencia y lo que falta probar. Actualizala cuando cambie un texto de la web o se valide algo.
+- `docs/whatsapp/plantillas.md`: plantillas de WhatsApp para aprobar en Meta, con sus reglas y costos.
+
 ## Analítica (PostHog)
 
-PostHog se inicializa solo si el visitante acepta cookies (`src/providers/PostHogProvider.tsx`). Los eventos se mandan con `trackEvent` de `src/lib/analytics.ts`.
+PostHog se descarga e inicializa solo si el visitante acepta cookies (`src/providers/PostHogProvider.tsx`); sin consentimiento, `trackEvent` (`src/lib/analytics.ts`) no manda nada.
 
 `src/components/ConversionTracker.tsx` mide solo, en todo el sitio, los clics a:
 
@@ -57,6 +66,9 @@ Cada evento lleva `seccion` (el `id` de la sección donde está el link), `pagin
 
 Además:
 
-- `home_calculadora_usada` y `home_calculadora_cta_clicked`: uso de la calculadora de margen y clic en su CTA, con el color y el margen calculados.
-- `calendly_horario_elegido` y `calendly_reunion_agendada`: avance dentro del calendario embebido.
+- `bloque_visto`: hasta qué bloque (`data-bloque`) llega cada visita, con `bloque`, `pagina` y `vista` (`mobile` o `desktop`).
+- `sticky_cta_clicked`: clic en la barra fija de abajo (celular y tablet).
+- `home_calculadora_usada` y `home_calculadora_cta_clicked`: uso de la calculadora de margen y clic en su CTA, con el color, el margen calculado y `vista`.
+- `logistica_calculadora_usada`: primer uso de la calculadora de entregas fallidas en /logistica (desktop).
+- `calendly_horario_elegido` y `calendly_reunion_agendada`: avance dentro del calendario embebido; `seccion` dice dónde (`contacto`, `logistica_contacto`, `diagnostico_listo`).
 - `diagnostico_*`: cada paso del autodiagnóstico, hasta `diagnostico_contacto` cuando deja sus datos.

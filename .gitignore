@@ -44,8 +44,9 @@ next-env.d.ts
 # No se committea para no ensuciar diffs — cada dev genera el suyo con: graphify extract . --code-only
 graphify-out/
 
-# Local agent artifacts
-.claude/
+# Local agent artifacts (settings.json es config compartida del repo: bloquea las herramientas de escritura del MCP de Mercado Libre)
+.claude/*
+!.claude/settings.json
 scratch_artifact.json
 
 

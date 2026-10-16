@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "mercadolibre": {
+      "command": "npx",
+      "args": ["-y", "@nahuelalbornoz/mercadolibre-mcp@1.1.1"],
+      "env": {
+        "SUPABASE_URL": "https://jdjkyuftiaebxjvapiiv.supabase.co",
+        "SUPABASE_SERVICE_KEY": "${ML_TOKENS_SUPABASE_KEY}",
+        "ML_ACCOUNT_LABEL": "individra",
+        "ML_SITE_ID": "MLA",
+        "ML_SKIP_UPSTREAM_PROXY": "1",
+        "NODE_USE_ENV_PROXY": "1"
+      }
+    }
+  }
+}

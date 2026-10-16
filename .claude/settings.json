@@ -1,0 +1,11 @@
+{
+  "enabledMcpjsonServers": ["mercadolibre"],
+  "permissions": {
+    "deny": [
+      "mcp__mercadolibre__update_price",
+      "mcp__mercadolibre__update_stock",
+      "mcp__mercadolibre__answer_question",
+      "mcp__mercadolibre__manage_ads"
+    ]
+  }
+}

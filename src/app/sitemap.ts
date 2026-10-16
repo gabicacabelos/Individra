@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 
+// Solo páginas indexables: /diagnostico es noindex y /ecommerce redirige a la home.
 export default function sitemap(): MetadataRoute.Sitemap {
     return [
         {
@@ -13,18 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
-        },
-        {
-            url: 'https://www.individratec.com/ecommerce',
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: 'https://www.individratec.com/diagnostico',
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
         },
         {
             url: 'https://www.individratec.com/legal',
