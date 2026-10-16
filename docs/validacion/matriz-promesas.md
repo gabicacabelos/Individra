@@ -58,7 +58,7 @@ Cada frase que la web le promete a un cliente, con la API que la sostiene, la ev
 
 | Promesa | Cómo se construye | Estado | Falta |
 |---|---|---|---|
-| Conexión con Mercado Libre que no se corta | Tokens en Supabase y renovación automática cada hora. | ✅ renovación verificada el 16/10/2026 | Soportar varias cuentas (hoy renueva solo la de INDIVIDRA). |
+| Conexión con Mercado Libre que no se corta | Tokens en Supabase y renovación automática cada hora, para todas las cuentas conectadas (`ml-refresh` recorre cada `account_label`, de a una y con turno exclusivo). | ✅ renovación verificada el 16/10/2026, también con la versión multicuenta | — |
 | Instancia aislada, Ley 25.326, exportar todo | Separación por cliente en la base. | ⚠️ | Definir el diseño. |
 
 ## Lo que necesita al dueño de la cuenta
@@ -66,7 +66,7 @@ Cada frase que la web le promete a un cliente, con la API que la sostiene, la ev
 Credenciales y decisiones que no se pueden delegar:
 
 1. **Mercado Libre DevCenter**: pasar la app a lectura y escritura cuando se prueben escrituras.
-2. **Usuarios de prueba de Mercado Libre**: los crea Claude; el dueño los autoriza con un link, iniciando sesión en una ventana privada.
+2. **Usuarios de prueba de Mercado Libre**: creados el 16/10/2026 (vendedor `3767527720` y comprador `3767527722`). Las claves están en la tabla `ml_test_users` de Supabase, nunca en el chat. Falta que el dueño los autorice con su link, iniciando sesión en una ventana privada, después de pasar la app a lectura y escritura. Mercado Libre los borra tras 60 días sin actividad.
 3. **Tiendanube**: cuenta de partner y app.
 4. **Meta / Zernio**: cuenta y número. Claude redacta las plantillas.
 5. **Mercado Pago**: app separada para la conciliación.
