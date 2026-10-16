@@ -6,9 +6,11 @@ import { ArrowRight, Info } from 'lucide-react'
 import {
     COLOR_META,
     METRICAS,
+    VENTAS_MINIMAS_60_DIAS,
     calcularMargen,
     porcentaje,
     type ConteosReputacion,
+    type Ventana,
 } from '@/lib/reputacionML'
 import { trackEvent } from '@/lib/analytics'
 import { WHATSAPP_NUMERO } from './contacto'
@@ -18,7 +20,9 @@ function vistaActual() {
 }
 
 const AYUDA =
-    'Están en la sección Reputación de tu cuenta de Mercado Libre. Si tuviste menos de 101 ventas en 60 días, ML mira los últimos 365 días. Usamos los límites publicados por ML para Argentina; en el piloto lo recalculamos todos los días con tu cuenta real.'
+    'Están en la sección Reputación de tu cuenta de Mercado Libre. Con 101 ventas o más en los últimos 60 días, ML mide esos 60 días; con menos, mide los últimos 365. Usamos los límites que publica ML para Argentina (vigentes desde el 16/09/2026); en el piloto lo recalculamos todos los días con tu cuenta real.'
+
+const VENTANAS: Ventana[] = [60, 365]
 
 function aEntero(valor: string): number {
     return Math.max(0, Math.floor(Number(valor) || 0))
@@ -30,11 +34,13 @@ export function CalculadoraMargen() {
     const [ventas, setVentas] = useState(400)
     const [conteos, setConteos] = useState<ConteosReputacion>({ reclamos: 4, cancelaciones: 2, demoras: 20 })
     const [esLider, setEsLider] = useState(false)
+    const [ventana, setVentana] = useState<Ventana>(60)
 
     const { filas, colorActual, masAjustada, titular } = useMemo(
-        () => calcularMargen(ventas, conteos, esLider),
-        [ventas, conteos, esLider]
+        () => calcularMargen(ventas, conteos, esLider, ventana),
+        [ventas, conteos, esLider, ventana]
     )
+    const sugerir365 = ventana === 60 && ventas > 0 && ventas < VENTAS_MINIMAS_60_DIAS
 
     const usada = useRef(false)
     function marcarUso(campo: string) {
@@ -46,12 +52,12 @@ export function CalculadoraMargen() {
     const whatsappHref = useMemo(() => {
         const text =
             `Hola Gabriel, calculé mi margen de color en la web de INDIVIDRA:\n` +
-            `• Ventas en el período: ${ventas}\n` +
+            `• Ventas de los últimos ${ventana} días: ${ventas}\n` +
             filas.map((f) => `• ${f.label}: ${f.cantidad} (${porcentaje(f.tasa)})`).join('\n') +
             `\n• Resultado: ${titular}\n\n` +
             `Quiero recibir las alertas de reclamos con plazo en el piloto de 30 días.`
         return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(text)}`
-    }, [ventas, filas, titular])
+    }, [ventas, ventana, filas, titular])
 
     const color = COLOR_META[colorActual]
 
@@ -110,20 +116,62 @@ export function CalculadoraMargen() {
 
             {/* Campos */}
             <div className="rounded-2xl lg:rounded-3xl border border-white/10 bg-white/[0.03] p-5 lg:p-8 space-y-4 lg:space-y-6 lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:flex lg:flex-col">
-                <label className="block">
-                    <span className="text-sm lg:text-base font-semibold text-white">Ventas de los últimos 60 días</span>
-                    <input
-                        type="number"
-                        inputMode="numeric"
-                        min={0}
-                        value={ventas}
-                        onChange={(e) => {
-                            marcarUso('ventas')
-                            setVentas(aEntero(e.target.value))
-                        }}
-                        className="mt-2 w-full px-4 py-3 rounded-xl bg-black/60 border border-white/10 font-mono text-lg font-bold text-[#FFA380] focus:outline-none focus:border-[#FF5520]/60"
-                    />
-                </label>
+                <div>
+                    <span id="ventana-ml" className="text-sm lg:text-base font-semibold text-white">
+                        ML mide tu reputación con
+                    </span>
+                    <div role="group" aria-labelledby="ventana-ml" className="mt-2 grid grid-cols-2 gap-2">
+                        {VENTANAS.map((v) => (
+                            <button
+                                key={v}
+                                type="button"
+                                aria-pressed={ventana === v}
+                                onClick={() => {
+                                    marcarUso('ventana')
+                                    setVentana(v)
+                                }}
+                                className={`py-2.5 rounded-xl border text-sm font-semibold transition-colors ${
+                                    ventana === v
+                                        ? 'border-[#FF5520]/60 bg-[#FF5520]/15 text-white'
+                                        : 'border-white/10 bg-black/40 text-neutral-400 hover:text-white'
+                                }`}
+                            >
+                                Últimos {v} días
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <label className="block">
+                        <span className="text-sm lg:text-base font-semibold text-white">Ventas de los últimos {ventana} días</span>
+                        <input
+                            type="number"
+                            inputMode="numeric"
+                            min={0}
+                            value={ventas}
+                            onChange={(e) => {
+                                marcarUso('ventas')
+                                setVentas(aEntero(e.target.value))
+                            }}
+                            className="mt-2 w-full px-4 py-3 rounded-xl bg-black/60 border border-white/10 font-mono text-lg font-bold text-[#FFA380] focus:outline-none focus:border-[#FF5520]/60"
+                        />
+                    </label>
+                    {sugerir365 && (
+                        <p className="mt-2 text-xs text-[#FBBF24] leading-relaxed">
+                            Con menos de {VENTAS_MINIMAS_60_DIAS} ventas en 60 días, ML te mide con los últimos 365.{' '}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    marcarUso('ventana')
+                                    setVentana(365)
+                                }}
+                                className="underline underline-offset-2 font-semibold hover:text-white"
+                            >
+                                Usar 365 días
+                            </button>
+                        </p>
+                    )}
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                     {METRICAS.map((m) => (
                         <label key={m.id} className="block">
@@ -180,6 +228,7 @@ export function CalculadoraMargen() {
                         margen: masAjustada.margen,
                         metrica_ajustada: masAjustada.id,
                         ventas,
+                        ventana,
                         es_lider: esLider,
                         usada: usada.current,
                         vista: vistaActual(),

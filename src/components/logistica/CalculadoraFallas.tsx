@@ -17,6 +17,13 @@ import { useId } from 'react'
 export const COSTO_FALLO_UNITARIO_ARS = 9980
 export const DIAS_HABILES_MES = 22
 
+/**
+ * Confirmar una entrega por WhatsApp: 1 plantilla de utilidad de Meta para
+ * Argentina (USD 0,026 desde el 1/10/2026) × dólar MEP ~ARS 1.540 (13/10/2026).
+ * La cobra Meta a la logística, porque los avisos salen de su propio número.
+ */
+export const COSTO_CONFIRMACION_WHATSAPP_ARS = 40
+
 export function formatearArs(valor: number): string {
     return new Intl.NumberFormat('es-AR', {
         style: 'currency',
@@ -32,6 +39,7 @@ export function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos:
     const perdidaMensualArs = Math.round(fallosDia * DIAS_HABILES_MES * COSTO_FALLO_UNITARIO_ARS)
     const ahorroMensualMinArs = Math.round(perdidaMensualArs * 0.5)
     const ahorroMensualMaxArs = Math.round(perdidaMensualArs * 0.6)
+    const costoConfirmacionMesArs = Math.round(entregasDia * DIAS_HABILES_MES * COSTO_CONFIRMACION_WHATSAPP_ARS)
 
     return {
         entregasDia,
@@ -44,6 +52,7 @@ export function calcularEconomiaLogistica(entregasDia: number, porcentajeFallos:
         perdidaMensualArs,
         ahorroMensualMinArs,
         ahorroMensualMaxArs,
+        costoConfirmacionMesArs,
     }
 }
 
@@ -168,6 +177,9 @@ export function CalculadoraFinancieraViva({
                 <p className="mt-3.5 pt-2 text-[11px] text-[#8E8B88]">
                     * Costo unitario auditado ({formatearArs(COSTO_FALLO_UNITARIO_ARS)}/fallo): Gasoil desvío 8 km ($2.110) + 20 min
                     chofer CCT 40/89 ($2.880) + Re-ruteo y 2° viaje ($4.990).
+                    <br />
+                    Confirmar todas por WhatsApp cuesta ≈ {formatearArs(econ.costoConfirmacionMesArs)}/mes (≈{' '}
+                    {formatearArs(COSTO_CONFIRMACION_WHATSAPP_ARS)} por entrega; lo cobra Meta).
                 </p>
             )}
         </div>
