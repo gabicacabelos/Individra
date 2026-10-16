@@ -44,6 +44,11 @@ src/
 └── providers/           # PostHog + consentimiento de cookies
 ```
 
+## Documentación de producto
+
+- `docs/validacion/matriz-promesas.md`: cada promesa de la web, con la API que la sostiene, la evidencia y lo que falta probar. Actualizala cuando cambie un texto de la web o se valide algo.
+- `docs/whatsapp/plantillas.md`: plantillas de WhatsApp para aprobar en Meta, con sus reglas y costos.
+
 ## Analítica (PostHog)
 
 PostHog se descarga e inicializa solo si el visitante acepta cookies (`src/providers/PostHogProvider.tsx`); sin consentimiento, `trackEvent` (`src/lib/analytics.ts`) no manda nada.
