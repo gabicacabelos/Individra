@@ -8,7 +8,8 @@
         "SUPABASE_SERVICE_KEY": "${ML_TOKENS_SUPABASE_KEY}",
         "ML_ACCOUNT_LABEL": "individra",
         "ML_SITE_ID": "MLA",
-        "ML_SKIP_UPSTREAM_PROXY": "1"
+        "ML_SKIP_UPSTREAM_PROXY": "1",
+        "NODE_USE_ENV_PROXY": "1"
       }
     }
   }
