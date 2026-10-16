@@ -9,6 +9,7 @@ import {
     VENTAS_MINIMAS_60_DIAS,
     calcularMargen,
     porcentaje,
+    type ColorTermometro,
     type ConteosReputacion,
     type Ventana,
 } from '@/lib/reputacionML'
@@ -23,6 +24,15 @@ const AYUDA =
     'Están en la sección Reputación de tu cuenta de Mercado Libre. Con 101 ventas o más en los últimos 60 días, ML mide esos 60 días; con menos, mide los últimos 365. Usamos los límites que publica ML para Argentina (vigentes desde el 16/09/2026); en el piloto lo recalculamos todos los días con tu cuenta real.'
 
 const VENTANAS: Ventana[] = [60, 365]
+
+// Envío gratis en ventas desde $33.000: ML descuenta hasta 50% del costo con reputación verde y el
+// descuento depende del color (mercadolibre.com.ar/ayuda/48578 y /ayuda/16467). Los porcentajes de
+// los otros colores no están confirmados en una fuente oficial: por eso no se citan.
+function textoEnvio(color: ColorTermometro): string {
+    return color === 'verde'
+        ? 'En verde tenés hasta 50% de descuento en el envío gratis de cada venta desde $33.000. Si bajás de color, ese descuento baja o se pierde.'
+        : 'Fuera de verde, el descuento en el envío gratis de cada venta desde $33.000 baja o se pierde (en verde es de hasta 50%).'
+}
 
 function aEntero(valor: string): number {
     return Math.max(0, Math.floor(Number(valor) || 0))
@@ -112,6 +122,7 @@ export function CalculadoraMargen() {
                         )
                     })}
                 </div>
+                <p className="mt-4 lg:mt-6 text-xs lg:text-sm text-neutral-300 leading-relaxed">{textoEnvio(colorActual)}</p>
             </div>
 
             {/* Campos */}

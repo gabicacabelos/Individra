@@ -101,6 +101,15 @@ Cuando la persona toca un botón se abre la ventana de 24 h. Estas respuestas va
 - **Cambiar horario** → lista de franjas disponibles.
 - **BAJA** → "Listo, no te vamos a mandar más avisos." Se registra la baja y no se vuelve a escribir.
 
+## Plantillas que Meta probablemente clasifique como marketing
+
+- **Invitación a calificar en Google** (módulo Escudo de reputación de logística): pedir una reseña pública se acerca a lo promocional. Presupuestarla a tarifa de marketing (USD 0,0618 ≈ $95) y nunca mezclarla con una confirmación de entrega, porque arrastra toda la plantilla a marketing.
+- Si Meta reclasifica una plantilla de utilidad a marketing, el costo por mensaje pasa de ≈ $40 a ≈ $95 sin aviso previo para cuentas advertidas.
+
+## Por qué el diseño de botones sale más barato que un chatbot
+
+Desde el 1/10/2026, pasados los 1.000 mensajes de servicio gratis por mes y por número, cada mensaje libre que manda la empresa se cobra a tarifa de utilidad. Un chatbot que charla 8 mensajes por entrega consume esa franquicia en pocos días y después multiplica la factura. Una plantilla con 3 botones y una respuesta corta resuelve lo mismo con 1 o 2 mensajes.
+
 ## Costos de referencia (octubre de 2026)
 
 - Alertas al vendedor: 30 por mes ≈ USD 0,78 (≈ $1.200); 100 por mes ≈ USD 2,60 (≈ $4.000). Las paga INDIVIDRA.
