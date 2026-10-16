@@ -308,7 +308,7 @@ const PLANES = [
         detalle: 'Hasta 600 pedidos por mes. Alertas, termómetro, Venta Blindada y conciliación de liquidaciones.',
         incluye: [
             'Hasta 600 pedidos por mes',
-            'Alertas de reclamos por WhatsApp',
+            'Alertas de reclamos por WhatsApp, sin cargo de mensajes',
             'Termómetro de reputación',
             'Venta Blindada',
             'Conciliación de liquidaciones',
@@ -330,7 +330,7 @@ const INCLUYE_PILOTO = [
 ]
 
 const NOTA_PRECIOS =
-    'Precios en pesos, se actualizan cada 3 meses por IPC. Pedido adicional: $180. Los mensajes de WhatsApp los cobra Meta aparte, según tu uso.'
+    'Precios en pesos, se actualizan cada 3 meses por IPC. Pedido adicional: $180. Las alertas por WhatsApp que te mandamos a vos están incluidas. En el Plan 2, los avisos de entrega a tus clientes salen de tu propio número y Meta los cobra aparte, según tu uso.'
 
 function Piloto() {
     return (
@@ -479,7 +479,7 @@ const MODULOS = [
         gancho: '¿Cobrás por transferencia en WhatsApp?',
         resumen: 'Validás el comprobante y bajás el stock en Mercado Libre y Tiendanube con 1 clic.',
         detalle:
-            'Leemos el comprobante, chequeamos que no esté repetido y reservamos la unidad 15 minutos. El stock se descuenta recién cuando confirmás que la plata entró.',
+            'Leemos el comprobante y chequeamos que no esté repetido. El stock se descuenta en Mercado Libre y Tiendanube recién cuando confirmás que la plata entró. Aplica a publicaciones con stock propio: en Full el stock lo maneja Mercado Libre.',
     },
     {
         nombre: 'Conciliación de liquidaciones',
@@ -537,7 +537,7 @@ const PREGUNTAS = [
     },
     {
         q: '¿Tengo que cambiar cómo trabajo?',
-        a: 'No. Seguís usando Mercado Libre, Tiendanube y WhatsApp como siempre. Arrancamos en modo solo lectura. Si usás Producteca o Multivende, funcionamos junto con ellos.',
+        a: 'No. Seguís usando Mercado Libre, Tiendanube y WhatsApp como siempre. Arrancamos en modo solo lectura. Si usás Producteca o Multivende, seguimos leyendo tus ventas y reclamos; antes de activar Venta Blindada definimos con vos quién descuenta el stock, para no pisarnos.',
     },
     {
         q: '¿Le hablan al comprador o le piden que no reclame?',

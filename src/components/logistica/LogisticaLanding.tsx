@@ -722,7 +722,7 @@ function Contacto() {
                         </Link>
                     </div>
                     <p className="mt-4 text-center lg:text-left text-xs text-[#8C8C8C]">
-                        Planes desde $160.000/mes + IVA según volumen de guías.
+                        Planes desde $160.000/mes + IVA según volumen de guías. Los avisos a tus clientes salen de tu propio número de WhatsApp y Meta los cobra aparte, según tu uso.
                     </p>
                 </Reveal>
                 <div className="hidden lg:block">
