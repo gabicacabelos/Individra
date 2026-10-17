@@ -49,6 +49,22 @@ src/
 - `docs/validacion/matriz-promesas.md`: cada promesa de la web, con la API que la sostiene, la evidencia y lo que falta probar. Actualizala cuando cambie un texto de la web o se valide algo.
 - `docs/whatsapp/plantillas.md`: plantillas de WhatsApp para aprobar en Meta, con sus reglas y costos.
 
+## Backend (Supabase)
+
+`supabase/` tiene el código de lo que corre en el proyecto de Supabase `individra-ml-tokens`: las migraciones de la base y las funciones (Deno). No se publica con Vercel: cada función se sube aparte y lo que está en el repo tiene que ser igual a lo publicado.
+
+| Función | Qué hace |
+| --- | --- |
+| `ml-callback` | Recibe la autorización de Mercado Libre y guarda los tokens |
+| `ml-refresh` | Renueva los tokens de todas las cuentas (pg_cron, cada hora) |
+| `ml-notificaciones` | Recibe las notificaciones de Mercado Libre y las guarda |
+| `ml-stock` | Descuenta stock sin pisar ventas de Mercado Libre (Venta Blindada) |
+
+```bash
+deno test --config supabase/functions/deno.json supabase/functions
+deno lint --config supabase/functions/deno.json supabase/functions
+```
+
 ## Analítica (PostHog)
 
 PostHog se descarga e inicializa solo si el visitante acepta cookies (`src/providers/PostHogProvider.tsx`); sin consentimiento, `trackEvent` (`src/lib/analytics.ts`) no manda nada.
