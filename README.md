@@ -21,6 +21,8 @@ npm run build
 | `/diagnostico` | Autodiagnóstico por plataforma (Mercado Libre, cobro por WhatsApp, logística); envía el lead a `/api/diagnostico`. Es `noindex`: se entra desde la home y /logistica |
 | `/logistica` | Landing para logística y distribuidoras, con calculadora de entregas fallidas en desktop |
 | `/legal` | Términos y privacidad |
+| `/conectar/[piloto]` | Link para que un cliente del piloto conecte su cuenta de Mercado Libre. No vence: el intento de autorización se genera al tocar el botón. Es `noindex` |
+| `/conectar/resultado` | Cómo terminó la conexión (`?estado=listo`, `otra_cuenta`, `cancelado`, `vencido`, `invalido` o `error`) |
 
 `/ecommerce` redirige a la home (`next.config.ts`).
 
@@ -55,10 +57,13 @@ src/
 
 | Función | Qué hace |
 | --- | --- |
-| `ml-callback` | Recibe la autorización de Mercado Libre y guarda los tokens |
+| `ml-conectar` | Arranca la conexión de un piloto: genera el state y el PKCE y manda a Mercado Libre |
+| `ml-callback` | Recibe la autorización de Mercado Libre y guarda los tokens. No reemplaza una cuenta conectada por otra distinta |
 | `ml-refresh` | Renueva los tokens de todas las cuentas (pg_cron, cada hora) |
 | `ml-notificaciones` | Recibe las notificaciones de Mercado Libre y las guarda |
 | `ml-stock` | Descuenta stock sin pisar ventas de Mercado Libre (Venta Blindada) |
+
+Para dar de alta un piloto se agrega una fila en `pilotos` con un código aleatorio de 22 caracteres (por ejemplo, `secrets.token_urlsafe(16)` en Python) y su `account_label`; el link es `https://www.individratec.com/conectar/{codigo}`.
 
 ```bash
 deno test --config supabase/functions/deno.json supabase/functions

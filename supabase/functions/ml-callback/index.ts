@@ -1,11 +1,14 @@
 // Recibe la autorizacion de Mercado Libre (redirect de la app Individra),
 // canjea el code por tokens y los guarda en oauth_tokens. Nunca muestra tokens.
 // Soporta PKCE: si el state guardo un code_verifier, se manda en el canje.
-// Responde en texto simple: Supabase no deja mostrar paginas HTML desde su dominio.
+// Responde en texto simple: Supabase no deja mostrar paginas HTML desde su dominio. Si el intento salio
+// del link de un piloto (origen 'piloto', ver ml-conectar), redirige a la pagina de resultado del sitio.
+// Nunca reemplaza una cuenta ya conectada por otra distinta: descarta los tokens y avisa.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
 const CLIENT_ID = Deno.env.get("ML_CLIENT_ID") ?? "3327930655744100";
 const REDIRECT_URI = "https://jdjkyuftiaebxjvapiiv.supabase.co/functions/v1/ml-callback";
+const SITIO = "https://www.individratec.com";
 
 // Texto en ASCII (sin tildes) para que se lea bien aunque el navegador adivine mal la codificacion
 function texto(mensaje: string, status = 200) {
@@ -15,17 +18,41 @@ function texto(mensaje: string, status = 200) {
   });
 }
 
+// Para un piloto, la pagina del sitio; para los links internos, el texto de siempre
+function salida(origen: string | null | undefined, estado: string, mensaje: string, status: number) {
+  if (origen === "piloto") {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: `${SITIO}/conectar/resultado?estado=${estado}`, "Cache-Control": "no-store" },
+    });
+  }
+  return texto(mensaje, status);
+}
+
 Deno.serve(async (req) => {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  if (!code || !state) {
-    return texto("FALTA INFORMACION\nAbri de nuevo el link de autorizacion que te paso Claude.", 400);
-  }
 
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
     auth: { persistSession: false },
   });
+
+  if (!code || !state) {
+    // Si la persona toco "Cancelar" en Mercado Libre, vuelve con error y el state
+    let origen: string | null = null;
+    if (state) {
+      const { data } = await db.from("oauth_states").select("origen").eq("state", state).maybeSingle();
+      origen = data?.origen ?? null;
+    }
+    const cancelo = url.searchParams.has("error");
+    return salida(
+      origen,
+      cancelo ? "cancelado" : "error",
+      "FALTA INFORMACION\nAbri de nuevo el link de autorizacion que te paso Claude.",
+      400,
+    );
+  }
 
   // 1) El state tiene que existir, no estar usado y tener menos de 48 horas (todavia no se consume)
   const desde = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
@@ -37,7 +64,8 @@ Deno.serve(async (req) => {
     .gte("created_at", desde)
     .maybeSingle();
   if (!valido) {
-    return texto("LINK VENCIDO\nEste link ya se uso o vencio. Pedile a Claude uno nuevo.", 400);
+    const { data } = await db.from("oauth_states").select("origen").eq("state", state).maybeSingle();
+    return salida(data?.origen, "vencido", "LINK VENCIDO\nEste link ya se uso o vencio. Pedile a Claude uno nuevo.", 400);
   }
 
   // 2) La Secret Key tiene que estar cargada. Si falta, el link NO se gasta: sirve de nuevo cuando la cargues.
@@ -63,7 +91,7 @@ Deno.serve(async (req) => {
     .update({ used_at: new Date().toISOString() })
     .eq("state", state)
     .is("used_at", null)
-    .select("account_label, code_verifier")
+    .select("account_label, code_verifier, origen")
     .maybeSingle();
   if (!fila) {
     return texto("LINK VENCIDO\nEste link ya se uso o vencio. Pedile a Claude uno nuevo.", 400);
@@ -89,13 +117,32 @@ Deno.serve(async (req) => {
     const sinRefresh = r.ok && data.access_token && !data.refresh_token;
     const motivo = typeof data.error === "string" ? data.error : `HTTP ${r.status}`;
     console.error("ml-callback: canje fallido", sinRefresh ? "sin refresh_token" : motivo);
-    return texto(
+    return salida(
+      fila.origen,
+      "error",
       "NO SE PUDO CONECTAR\n" +
         (sinRefresh
           ? "Mercado Libre no dio acceso permanente. Tilda el flujo Refresh Token en la app Individra."
           : `Mercado Libre rechazo la autorizacion (${motivo}). Revisa la Redirect URI, los flujos y la Secret Key de la app.`) +
         "\nEste link ya se gasto: pedile a Claude uno nuevo.",
       502,
+    );
+  }
+
+  // Si la cuenta ya estaba conectada, solo se acepta la misma cuenta de Mercado Libre
+  const { data: previa } = await db
+    .from("oauth_tokens")
+    .select("ml_user_id")
+    .eq("account_label", fila.account_label)
+    .maybeSingle();
+  if (previa?.ml_user_id && Number(previa.ml_user_id) !== Number(data.user_id)) {
+    console.error("ml-callback: otra cuenta para", fila.account_label);
+    return salida(
+      fila.origen,
+      "otra_cuenta",
+      "OTRA CUENTA\nEsta conexion ya es de otra cuenta de Mercado Libre y no se cambio.\n" +
+        "Cerra sesion en Mercado Libre, entra con la cuenta correcta y pedile a Claude un link nuevo.",
+      409,
     );
   }
 
@@ -112,7 +159,7 @@ Deno.serve(async (req) => {
   });
   if (error) {
     console.error("ml-callback: no se pudo guardar", error.message);
-    return texto("ERROR AL GUARDAR\nLa autorizacion funciono pero no se pudo guardar. Avisale a Claude.", 500);
+    return salida(fila.origen, "error", "ERROR AL GUARDAR\nLa autorizacion funciono pero no se pudo guardar. Avisale a Claude.", 500);
   }
-  return texto("LISTO: MERCADO LIBRE QUEDO CONECTADO\nYa podes cerrar esta pestana. Avisale a Claude.");
+  return salida(fila.origen, "listo", "LISTO: MERCADO LIBRE QUEDO CONECTADO\nYa podes cerrar esta pestana. Avisale a Claude.", 200);
 });
