@@ -1231,6 +1231,7 @@ export function DiagnosticoEnvios() {
                                             alt="Gabriel Cacabelos"
                                             width={480}
                                             height={480}
+                                            quality={95}
                                             sizes="56px"
                                             className="w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-[#FF5520]/50"
                                         />

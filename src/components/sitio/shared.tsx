@@ -104,6 +104,7 @@ export function FounderCard({ frase, chips, whatsappHref }: { frase: string; chi
                         alt="Gabriel Cacabelos, fundador de INDIVIDRA"
                         width={480}
                         height={480}
+                        quality={95}
                         sizes="(min-width: 1024px) 96px, 72px"
                         className="w-[72px] h-[72px] lg:w-24 lg:h-24 rounded-full object-cover border-2 border-[#FF5520]/50"
                     />
